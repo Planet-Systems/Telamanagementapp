@@ -189,8 +189,11 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
+								
 								clearRegionWindowFields(window);
 
+								SessionManager.getInstance().manageSession(result, placeManager);
+								
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -258,9 +261,9 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
 				// GWT.log("ID "+record.getAttribute(RegionListGrid.ID));
-
+  
 				SC.showPrompt("", "", new SwizimaLoader());
-
+                
 				dispatcher.execute(new RequestAction(RequestConstant.UPDATE_REGION, map),
 						new AsyncCallback<RequestResult>() {
 
@@ -274,7 +277,10 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 
+								SessionManager.getInstance().manageSession(result, placeManager);
+								
 								if (result != null) {
+									
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
 									if (feedback.isResponse()) {
@@ -343,7 +349,10 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
 
+												SessionManager.getInstance().manageSession(result, placeManager);
+												
 												if (result != null) {
+													
 													SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 													if (feedbackDTO != null) {
 														if (feedbackDTO.isResponse()) {
@@ -397,8 +406,10 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 			public void onSuccess(RequestResult result) {
 
 				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
 
 				if (result != null) {
+					
 					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 					if (feedbackDTO != null) {
 						if (result.getSystemFeedbackDTO().isResponse()) {
@@ -473,7 +484,9 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 								clearDistrictWindowFields(window);
-
+								
+								SessionManager.getInstance().manageSession(result, placeManager);
+								
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -567,6 +580,8 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 
+								SessionManager.getInstance().manageSession(result, placeManager);
+								
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -622,6 +637,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 			public void onSuccess(RequestResult result) {
 
 				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
 
 				if (result != null) {
 
@@ -686,6 +702,8 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
 
+												SessionManager.getInstance().manageSession(result, placeManager);
+												
 												if (result != null) {
 													SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 													if (feedbackDTO != null) {
@@ -740,7 +758,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 			public void onSuccess(RequestResult result) {
 
 				SC.clearPrompt();
-
+				SessionManager.getInstance().manageSession(result, placeManager);
 				if (result != null) {
 
 					if (result.getSystemFeedbackDTO() != null) {

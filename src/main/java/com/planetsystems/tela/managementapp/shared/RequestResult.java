@@ -180,6 +180,13 @@ public class RequestResult implements Result  {
 	}
 
 
+	@Override
+	public String toString() {
+		return "RequestResult [systemErrorDTO=" + systemErrorDTO + "FEEDDTO "+systemFeedbackDTO+" ]";
+	}
+
+
+	
 	
 	
 	

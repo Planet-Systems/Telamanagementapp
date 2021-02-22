@@ -63,9 +63,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	@Inject
 	private PlaceManager placeManager;
-	
-	
-	
 
 	@SuppressWarnings("deprecation")
 	@ContentSlot
@@ -84,18 +81,18 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		this.eventBus = eventBus;
 		this.dispatcher = dispatcher;
 
-		GWT.log("YEAR TOKEN "+		SessionManager.getInstance().getLoginToken());
+		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
-		
+
 		onTabSelected();
 		getAllAcademicYears();
 		getAllAcademicTerms();
-		
-		GWT.log("Token "+ Cookies.getCookie(RequestConstant.AUTH_TOKEN));
+
+		GWT.log("Token " + Cookies.getCookie(RequestConstant.AUTH_TOKEN));
 	}
 
 	@Override
@@ -105,8 +102,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				placeManager.getCurrentPlaceRequest().getNameToken());
 		AcademicYearPresenter.this.eventBus.fireEvent(highlightActiveLinkEvent);
 	}
-
-	
 
 	private void onTabSelected() {
 		getView().getTabSet().addTabSelectedHandler(new TabSelectedHandler() {
@@ -118,10 +113,10 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_YEAR_TAB_TITLE)) {
 
-					 MenuButton editAcademicYearButton = new MenuButton("Edit");
-					 MenuButton deleteAcademicYearButton = new MenuButton("Delete");
-					 MenuButton filterAcademicYearButton = new MenuButton("Filter");
-					 MenuButton newAcademicYear = new MenuButton("New");
+					MenuButton editAcademicYearButton = new MenuButton("Edit");
+					MenuButton deleteAcademicYearButton = new MenuButton("Delete");
+					MenuButton filterAcademicYearButton = new MenuButton("Filter");
+					MenuButton newAcademicYear = new MenuButton("New");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newAcademicYear);
@@ -190,12 +185,12 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_ACADEMIC_YEAR , dto);
-				map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
+				map.put(RequestConstant.SAVE_ACADEMIC_YEAR, dto);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
 				SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_YEAR , map),
+				dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_YEAR, map),
 						new AsyncCallback<RequestResult>() {
 
 							public void onFailure(Throwable caught) {
@@ -207,18 +202,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
-						//		SessionManager.getInstance().manageSession(result, placeManager);
+								SessionManager.getInstance().manageSession(result, placeManager);
 								clearAcademicYearWindowFields(window);
 
-								
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
 									if (feedback.isResponse()) {
 										SC.say("SUCCESS", feedback.getMessage());
 										getView().getAcademicYearPane().getListGrid()
-										.addRecordsToGrid(result.getAcademicYearDTOs());
-									} else{
+												.addRecordsToGrid(result.getAcademicYearDTOs());
+									} else {
 										SC.warn("INFO", feedback.getMessage());
 									}
 
@@ -232,8 +226,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			}
 		});
 	}
-
-	
 
 	private void editAcademicYear(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
@@ -279,12 +271,12 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.UPDATE_ACADEMIC_YEAR , dto);
-				map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
+				map.put(RequestConstant.UPDATE_ACADEMIC_YEAR, dto);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
 				SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.UPDATE_ACADEMIC_YEAR , map),
+				dispatcher.execute(new RequestAction(RequestConstant.UPDATE_ACADEMIC_YEAR, map),
 						new AsyncCallback<RequestResult>() {
 
 							@Override
@@ -297,7 +289,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 							@Override
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
-							//	SessionManager.getInstance().manageSession(result, placeManager);
+								SessionManager.getInstance().manageSession(result, placeManager);
 								clearAcademicYearWindowFields(window);
 
 								if (result != null) {
@@ -338,13 +330,13 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 								String id = record.getAttributeAsString(AcademicYearListGrid.ID);
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_ACADEMIC_YEAR , id);
-								map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
+								map.put(RequestConstant.DELETE_ACADEMIC_YEAR, id);
+								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 								GWT.log("DELETE " + map);
 
 								SC.showPrompt("", "", new SwizimaLoader());
 
-								dispatcher.execute(new RequestAction(RequestConstant.DELETE_ACADEMIC_YEAR , map),
+								dispatcher.execute(new RequestAction(RequestConstant.DELETE_ACADEMIC_YEAR, map),
 										new AsyncCallback<RequestResult>() {
 
 											public void onFailure(Throwable caught) {
@@ -355,7 +347,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
-									//			SessionManager.getInstance().manageSession(result, placeManager);
+												SessionManager.getInstance().manageSession(result, placeManager);
 
 												if (result != null) {
 													SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
@@ -364,7 +356,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 														if (feedbackDTO.isResponse()) {
 															SC.say("SUCCESS", feedbackDTO.getMessage());
 
-															
 															getView().getAcademicYearPane().getListGrid()
 																	.addRecordsToGrid(result.getAcademicYearDTOs());
 
@@ -393,15 +384,15 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	public void getAllAcademicYears() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ACADEMIC_YEAR , null);
-		map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
+		map.put(RequestConstant.GET_ACADEMIC_YEAR, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
-		GWT.log("YEAR TOKEN "+		SessionManager.getInstance().getLoginToken());
-		GWT.log("YEAR TOKEN "+		map.get(RequestConstant.LOGIN_TOKEN));
-		
+		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
+		GWT.log("YEAR TOKEN " + map.get(RequestConstant.LOGIN_TOKEN));
+
 		SC.showPrompt("", "", new SwizimaLoader());
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR , map),
+		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR, map),
 				new AsyncCallback<RequestResult>() {
 					public void onFailure(Throwable caught) {
 						System.out.println(caught.getMessage());
@@ -411,10 +402,10 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					}
 
 					public void onSuccess(RequestResult result) {
-
 						SC.clearPrompt();
 						SessionManager.getInstance().manageSession(result, placeManager);
 
+						GWT.log("PRESENTER LIST " + result.getAcademicYearDTOs());
 						if (result != null) {
 
 							getView().getAcademicYearPane().getListGrid()
@@ -437,12 +428,12 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	public void loadAcademicYearCombo(final AcademicTermWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ACADEMIC_YEAR , null);
-		map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
+		map.put(RequestConstant.GET_ACADEMIC_YEAR, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
 		SC.showPrompt("", "", new SwizimaLoader());
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR , map),
+		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR, map),
 				new AsyncCallback<RequestResult>() {
 					public void onFailure(Throwable caught) {
 						System.out.println(caught.getMessage());
@@ -452,9 +443,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					}
 
 					public void onSuccess(RequestResult result) {
-
 						SC.clearPrompt();
-					//	SessionManager.getInstance().manageSession(result, placeManager);
+						SessionManager.getInstance().manageSession(result, placeManager);
 
 						if (result != null) {
 
@@ -513,11 +503,11 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				GWT.log("ID" + academicYear.getId());
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_ACADEMIC_TERM , academicTermDTO);
-				map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
+				map.put(RequestConstant.SAVE_ACADEMIC_TERM, academicTermDTO);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 				SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_TERM , map),
+				dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_TERM, map),
 						new AsyncCallback<RequestResult>() {
 							public void onFailure(Throwable caught) {
 								System.out.println(caught.getMessage());
@@ -548,7 +538,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 									SC.warn("ERROR", "Service Down");
 									// SC.warn("ERROR", "Unknow error");
 								}
-
 
 							}
 
@@ -610,12 +599,12 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				GWT.log("ID" + academicYear.getId());
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.UPDATE_ACADEMIC_TERM , academicTermDTO);
-				map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
-				
+				map.put(RequestConstant.UPDATE_ACADEMIC_TERM, academicTermDTO);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
 				SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.UPDATE_ACADEMIC_TERM , map),
+				dispatcher.execute(new RequestAction(RequestConstant.UPDATE_ACADEMIC_TERM, map),
 						new AsyncCallback<RequestResult>() {
 							public void onFailure(Throwable caught) {
 								System.out.println(caught.getMessage());
@@ -636,7 +625,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 										SC.say("SUCCESS", feedback.getMessage());
 
 										getView().getAcademicTermPane().getListGrid()
-										.addRecordsToGrid(result.getAcademicTermDTOs());
+												.addRecordsToGrid(result.getAcademicTermDTOs());
 									} else {
 										SC.warn("INFO", feedback.getMessage());
 									}
@@ -671,13 +660,13 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								// "+record.getAttributeAsString("name"));
 
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_ACADEMIC_TERM , record.getAttributeAsString("id"));
-								map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
+								map.put(RequestConstant.DELETE_ACADEMIC_TERM, record.getAttributeAsString("id"));
+								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 								GWT.log("DELETE " + map);
 
 								SC.showPrompt("", "", new SwizimaLoader());
 
-								dispatcher.execute(new RequestAction(RequestConstant.DELETE_ACADEMIC_TERM , map),
+								dispatcher.execute(new RequestAction(RequestConstant.DELETE_ACADEMIC_TERM, map),
 										new AsyncCallback<RequestResult>() {
 
 											public void onFailure(Throwable caught) {
@@ -687,11 +676,11 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 											}
 
 											public void onSuccess(RequestResult result) {
-											
+
 												SC.clearPrompt();
 
-											//	SessionManager.getInstance().manageSession(result, placeManager);
-												
+												SessionManager.getInstance().manageSession(result, placeManager);
+
 												if (result != null) {
 
 													if (result.getSystemFeedbackDTO() != null) {
@@ -741,15 +730,12 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	public void getAllAcademicTerms() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ACADEMIC_TERM , null);
-		map.put(RequestConstant.LOGIN_TOKEN , SessionManager.getInstance().getLoginToken());
-
-		GWT.log("Term TOKEN "+		SessionManager.getInstance().getLoginToken());
-		GWT.log("Term TOKEN "+		map.get(RequestConstant.LOGIN_TOKEN));
+		map.put(RequestConstant.GET_ACADEMIC_TERM, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 		
 		SC.showPrompt("", "", new SwizimaLoader());
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERM , map),
+		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERM, map),
 				new AsyncCallback<RequestResult>() {
 					public void onFailure(Throwable caught) {
 						System.out.println(caught.getMessage());
@@ -762,7 +748,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 						SC.clearPrompt();
 
-					//	SessionManager.getInstance().manageSession(result, placeManager);
+						SessionManager.getInstance().manageSession(result, placeManager);
 
 						if (result != null) {
 

@@ -15,6 +15,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent.HighlightActiveLinkHandler;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationData;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -24,6 +25,8 @@ import com.planetsystems.tela.managementapp.client.widget.NavigationPane;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 
@@ -58,6 +61,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
     protected void onBind() {
     	super.onBind();
     	registerEvents();
+    	logOut();
      loadMenu();
     }
     
@@ -139,5 +143,16 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		    break;
 		}
 	}
+	
+	public void logOut() {
+		getView().getMastHead().getLogoutLabel().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+             SessionManager.getInstance().logOut(placeManager);				
+			}
+		});
+	}
+	
     
 }

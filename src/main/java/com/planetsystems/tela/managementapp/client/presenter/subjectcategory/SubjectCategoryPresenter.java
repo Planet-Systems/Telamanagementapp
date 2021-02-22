@@ -207,7 +207,7 @@ public class SubjectCategoryPresenter
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 								clearSubjectCategoryWindowFields(window);
-
+								SessionManager.getInstance().manageSession(result, placeManager);
 								if (result != null) {
 									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 
@@ -281,7 +281,7 @@ public class SubjectCategoryPresenter
 
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
-					
+								SessionManager.getInstance().manageSession(result, placeManager);	
 								if (result != null) {
                                     SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 									if (feedbackDTO != null) {
@@ -352,7 +352,7 @@ public class SubjectCategoryPresenter
 
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
-
+												SessionManager.getInstance().manageSession(result, placeManager);
 												if (result != null) {
 
 													if (result.getSystemFeedbackDTO() != null) {
@@ -406,7 +406,7 @@ public class SubjectCategoryPresenter
 					public void onSuccess(RequestResult result) {
 
 						SC.clearPrompt();
-
+						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
 
 							if (result.getSystemFeedbackDTO() != null) {
@@ -470,7 +470,7 @@ public class SubjectCategoryPresenter
 					public void onSuccess(RequestResult result) {
 
 						SC.clearPrompt();
-
+						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
 
 							if (result.getSystemFeedbackDTO() != null) {
@@ -529,7 +529,7 @@ public class SubjectCategoryPresenter
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 								clearSubjectWindowFields(window);
-
+								SessionManager.getInstance().manageSession(result, placeManager);
 								if (result != null) {
 
 									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
@@ -611,13 +611,14 @@ public class SubjectCategoryPresenter
 							public void onFailure(Throwable caught) {
 
 								SC.clearPrompt();
+								
 								System.out.println(caught.getMessage());
 								SC.say("ERROR", caught.getMessage());
 							}
 
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
-								
+								SessionManager.getInstance().manageSession(result, placeManager);
 
 								if (result != null) {
 
@@ -678,7 +679,7 @@ public class SubjectCategoryPresenter
 
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
-
+												SessionManager.getInstance().manageSession(result, placeManager);
 												if (result != null) {
 
 													if (result.getSystemFeedbackDTO() != null) {
@@ -733,7 +734,7 @@ public class SubjectCategoryPresenter
 			public void onSuccess(RequestResult result) {
 
 				SC.clearPrompt();
-
+				SessionManager.getInstance().manageSession(result, placeManager);
 				if (result != null) {
 
 					if (result.getSystemFeedbackDTO() != null) {

@@ -77,7 +77,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				AcademicYearDTO dto = (AcademicYearDTO) action.getRequestBody().get(RequestConstant.SAVE_ACADEMIC_YEAR);
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				System.out.println("Handler DTO " + dto);
 				List<AcademicYearDTO> list = new ArrayList<AcademicYearDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -116,7 +115,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.UPDATE_ACADEMIC_YEAR);
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				System.out.println("DTO " + dto);
+		
 				List<AcademicYearDTO> list = new ArrayList<AcademicYearDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -151,8 +150,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_ACADEMIC_YEAR);
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-
-				System.out.println("DTO " + id);
 
 				List<AcademicYearDTO> list = new ArrayList<AcademicYearDTO>();
 
@@ -214,8 +211,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				AcademicTermDTO dto = (AcademicTermDTO) action.getRequestBody().get(RequestConstant.SAVE_ACADEMIC_TERM);
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
-				System.out.println("DTO " + dto);
+		
 				List<AcademicTermDTO> list = new ArrayList<AcademicTermDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -252,7 +248,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.UPDATE_ACADEMIC_TERM);
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				System.out.println("DTO " + dto);
 				List<AcademicTermDTO> list = new ArrayList<AcademicTermDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -288,8 +283,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_ACADEMIC_TERM);
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				
-				System.out.println("DTO " + id);
 				List<AcademicTermDTO> list = new ArrayList<AcademicTermDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -345,7 +338,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_REGION)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				RegionDto dto = (RegionDto) action.getRequestBody().get(RequestConstant.SAVE_REGION);
-				System.out.println("DTO " + dto);
+		
 				List<RegionDto> list = new ArrayList<RegionDto>();
 				
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -385,9 +378,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-				
 
-				System.out.println("DTO " + dto);
 				List<RegionDto> list = new ArrayList<RegionDto>();
 
 				Client client = ClientBuilder.newClient();
@@ -482,7 +473,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				DistrictDTO dto = (DistrictDTO) action.getRequestBody().get(RequestConstant.SAVE_DISTRICT);
-				System.out.println("DTO " + dto);
+
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
 				
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -556,7 +547,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_DISTRICT);
-				System.out.println("DTO " + id);
+
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
 				
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -621,7 +612,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				SchoolCategoryDTO dto = (SchoolCategoryDTO) action.getRequestBody()
 						.get(RequestConstant.SAVE_SCHOOL_CATEGORY);
-				System.out.println("DTO " + dto);
+
 				List<SchoolCategoryDTO> list = new ArrayList<SchoolCategoryDTO>();
 				
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -658,7 +649,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SchoolCategoryDTO dto = (SchoolCategoryDTO) action.getRequestBody()
 						.get(RequestConstant.UPDATE_SCHOOL_CATEGORY);
 
-				System.out.println("DTO " + dto);
 				List<SchoolCategoryDTO> list = new ArrayList<SchoolCategoryDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -757,7 +747,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(RequestConstant.SAVE_SCHOOL);
-				System.out.println("DTO " + dto);
+
 				List<SchoolDTO> list = new ArrayList<SchoolDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -791,7 +781,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(RequestConstant.UPDATE_SCHOOL);
 
-				System.out.println("DTO " + dto);
 				List<SchoolDTO> list = new ArrayList<SchoolDTO>();
 				
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -827,7 +816,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SCHOOL);
-				System.out.println("DTO " + id);
+
 				List<SchoolDTO> list = new ArrayList<SchoolDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -889,7 +878,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				SchoolClassDTO dto = (SchoolClassDTO) action.getRequestBody().get(RequestConstant.SAVE_SCHOOL_CLASS);
-				System.out.println("DTO " + dto);
+;
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -925,7 +914,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SchoolClassDTO dto = (SchoolClassDTO) action.getRequestBody().get(RequestConstant.UPDATE_SCHOOL_CLASS);
 
-				System.out.println("DTO " + dto);
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -961,7 +949,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SCHOOL_CLASS);
-				System.out.println("DTO " + id);
+
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
 
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -1026,7 +1014,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SubjectCategoryDTO dto = (SubjectCategoryDTO) action.getRequestBody()
 						.get(RequestConstant.SAVE_SUBJECT_CATEGORY);
-				System.out.println("DTO " + dto);
+
 				List<SubjectCategoryDTO> list = new ArrayList<SubjectCategoryDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -1064,7 +1052,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SubjectCategoryDTO dto = (SubjectCategoryDTO) action.getRequestBody()
 						.get(RequestConstant.UPDATE_SUBJECT_CATEGORY);
 
-				System.out.println("DTO " + dto);
 				List<SubjectCategoryDTO> list = new ArrayList<SubjectCategoryDTO>();
 
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -1100,7 +1087,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SUBJECT_CATEGORY);
-				System.out.println("DTO " + id);
+
 				List<SubjectCategoryDTO> list = new ArrayList<SubjectCategoryDTO>();
 
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -1163,7 +1150,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				SubjectDTO dto = (SubjectDTO) action.getRequestBody().get(RequestConstant.SAVE_SUBJECT);
-				System.out.println("DTO " + dto);
+
 				List<SubjectDTO> list = new ArrayList<SubjectDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -1200,7 +1187,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SubjectDTO dto = (SubjectDTO) action.getRequestBody().get(RequestConstant.UPDATE_SUBJECT);
 
-				System.out.println("DTO " + dto);
 				List<SubjectDTO> list = new ArrayList<SubjectDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -1236,7 +1222,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SUBJECT);
-				System.out.println("DTO " + id);
+
 				List<SubjectDTO> list = new ArrayList<SubjectDTO>();
 
 				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);

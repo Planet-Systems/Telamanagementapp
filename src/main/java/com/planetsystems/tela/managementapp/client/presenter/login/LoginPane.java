@@ -27,12 +27,14 @@ public class LoginPane extends VLayout {
 		  Img desLogo = new Img("/webapp/images/des_logo.jpg");
 			desLogo.setHeight(130);
 			desLogo.setWidth(130);
+			desLogo.setTooltip("DES LOGO");
 			desLogo.setLayoutAlign(Alignment.CENTER);
 			//desLogo.setAltText("Des Logo");
 			
 			Img telaLogo = new Img("/images/telalog.png");
 			telaLogo.setHeight(50);
 			telaLogo.setWidth(400);
+			telaLogo.setTooltip("TELA LOGO");
 			telaLogo.setLayoutAlign(Alignment.CENTER);
 			//telaLogo.setAltText("Tela log");
 

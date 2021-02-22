@@ -15,11 +15,12 @@ import com.smartgwt.client.widgets.Dialog;
 public class SessionManager {
 
 	private static SessionManager instance = new SessionManager();
-
+	
 	//private String defaultOrganisation;
 	
 	//private DispatchAsync dispatcher;
-
+	
+    
 	private SessionManager() {
 
 	}
@@ -32,9 +33,10 @@ public class SessionManager {
 
 		if (result != null) {
 			SystemErrorDTO errorDTO = result.getSystemErrorDTO();
-
-			if (errorDTO.getMessage() != null && errorDTO.getErrorCode() != 0) {
-				//if (result.getSystemFeedbackDTO().getStatusCode() != null) {
+//			GWT.log("Manager ERROR  "+errorDTO);
+			
+			if(errorDTO != null) {
+				if (errorDTO.getMessage() != null && errorDTO.getErrorCode() != 0) {
 					
 					GWT.log("result.getSystemError().getStatus(): "+errorDTO.getErrorCode());
 					
@@ -51,27 +53,26 @@ public class SessionManager {
 							public void execute(Boolean value) {
 
 								if (value) {
-									Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
-									Cookies.removeCookie(RequestConstant.LOGED_IN);
-
-									PlaceRequest placeRequest = new PlaceRequest.Builder()
-											.nameToken(NameTokens.login).build();
-									placeManager.revealPlace(placeRequest);
+									logOut(placeManager);							
 								}
 
 							}
 						}, dialogProperties);
 
 					} else if (errorDTO.getErrorCode() == 8082) {
+						GWT.log("ERROR "+ errorDTO.getMessage());
 						//processing exception
-						SC.warn("ERROR", errorDTO.getMessage());
+						SC.warn("ERROR ", errorDTO.getMessage());
+						
 					} else if(errorDTO.getErrorCode() == 500) {
-						SC.warn("ERROR", errorDTO.getMessage());
+						GWT.log("ERROR "+ errorDTO.getMessage());
+						SC.warn("ERROR ", errorDTO.getMessage());
 					} else {
+						GWT.log("ERROR "+ errorDTO.getMessage());
 						//exception
 						SC.warn("ERROR", errorDTO.getMessage());
 					}
-			//	}
+			}
 			}
 		}
 	}
@@ -100,6 +101,13 @@ public class SessionManager {
 
 	public String getLoginToken() {
 		return "Bearer " + Cookies.getCookie(RequestConstant.AUTH_TOKEN);
+	}
+	
+	public void logOut(PlaceManager placeManager) {
+		Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
+		Cookies.removeCookie(RequestConstant.LOGED_IN);
+		placeManager.revealPlace(new PlaceRequest.Builder()
+				.nameToken(NameTokens.login).build());
 	}
 
 //	public String getDefaultOrganisation() {

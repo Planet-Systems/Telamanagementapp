@@ -225,7 +225,7 @@ public class SchoolCategoryPresenter
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 								clearSchoolCategoryWindowFields(window);
-
+								SessionManager.getInstance().manageSession(result, placeManager);
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -306,7 +306,7 @@ public class SchoolCategoryPresenter
 
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
-
+								SessionManager.getInstance().manageSession(result, placeManager);
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -368,7 +368,7 @@ public class SchoolCategoryPresenter
 
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
-
+												SessionManager.getInstance().manageSession(result, placeManager);
 												if (result != null) {
 
 													if (result.getSystemFeedbackDTO() != null) {
@@ -424,7 +424,7 @@ public class SchoolCategoryPresenter
 					public void onSuccess(RequestResult result) {
 
 						SC.clearPrompt();
-
+						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
 
 							if (result.getSystemFeedbackDTO() != null) {
@@ -502,7 +502,7 @@ public class SchoolCategoryPresenter
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 								clearSchoolWindowFields(window);
-
+								SessionManager.getInstance().manageSession(result, placeManager);
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -603,7 +603,7 @@ public class SchoolCategoryPresenter
 
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
-								
+								SessionManager.getInstance().manageSession(result, placeManager);					
 
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
@@ -650,7 +650,7 @@ public class SchoolCategoryPresenter
 					public void onSuccess(RequestResult result) {
 
 						SC.clearPrompt();
-
+						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
 
 							if (result.getSystemFeedbackDTO() != null) {
@@ -694,7 +694,7 @@ public class SchoolCategoryPresenter
 			public void onSuccess(RequestResult result) {
 
 				SC.clearPrompt();
-
+				SessionManager.getInstance().manageSession(result, placeManager);
 				if (result != null) {
 
 					if (result.getSystemFeedbackDTO() != null) {
@@ -761,7 +761,7 @@ public class SchoolCategoryPresenter
 
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
-
+												SessionManager.getInstance().manageSession(result, placeManager);
 												if (result != null) {
 
 													if (result.getSystemFeedbackDTO() != null) {
@@ -816,7 +816,7 @@ public class SchoolCategoryPresenter
 			public void onSuccess(RequestResult result) {
 
 				SC.clearPrompt();
-
+				SessionManager.getInstance().manageSession(result, placeManager);
 				if (result != null) {
 
 					if (result.getSystemFeedbackDTO() != null) {
@@ -889,7 +889,7 @@ public class SchoolCategoryPresenter
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
 								clearSchoolClassWindowFields(window);
-
+								SessionManager.getInstance().manageSession(result, placeManager);
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -971,7 +971,7 @@ public class SchoolCategoryPresenter
 
 							public void onSuccess(RequestResult result) {
 								SC.clearPrompt();
-
+								SessionManager.getInstance().manageSession(result, placeManager);
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
@@ -1031,7 +1031,7 @@ public class SchoolCategoryPresenter
 			public void onSuccess(RequestResult result) {
 
 				SC.clearPrompt();
-
+				SessionManager.getInstance().manageSession(result, placeManager);
 				if (result != null) {
 
 					if (result.getSystemFeedbackDTO() != null) {
@@ -1075,7 +1075,7 @@ public class SchoolCategoryPresenter
 					public void onSuccess(RequestResult result) {
 
 						SC.clearPrompt();
-
+						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
 
 							if (result.getSystemFeedbackDTO() != null) {
@@ -1141,7 +1141,7 @@ public class SchoolCategoryPresenter
 
 											public void onSuccess(RequestResult result) {
 												SC.clearPrompt();
-
+												SessionManager.getInstance().manageSession(result, placeManager);
 												if (result != null) {
 
 													if (result.getSystemFeedbackDTO() != null) {
@@ -1197,7 +1197,7 @@ public class SchoolCategoryPresenter
 					public void onSuccess(RequestResult result) {
 
 						SC.clearPrompt();
-
+						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
 
 							if (result.getSystemFeedbackDTO() != null) {
