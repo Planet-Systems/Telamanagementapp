@@ -3,19 +3,13 @@
  */
 package com.planetsystems.tela.managementapp.client.widget;
 
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.menu.IMenuButton;
 
 public class Masthead extends VLayout {
 
@@ -31,7 +25,6 @@ public class Masthead extends VLayout {
 	private Label logedInUser;
 	private Label logedInUserRole;
 
-	private Label logoutLabel;
 	private Avata userProfile;
 	private Img menu;
 	
@@ -71,12 +64,6 @@ public class Masthead extends VLayout {
 		logedInUserRole.setStyleName("crm-Masthead-loginedUser");
 		logedInUserRole.setAlign(Alignment.RIGHT);
 
-		logoutLabel = new Label("Logout");
-		logoutLabel.setAutoHeight();
-		logoutLabel.setAutoWidth();
-		logoutLabel.setLayoutAlign(VerticalAlignment.CENTER);
-		logoutLabel.setMargin(5);
-		logoutLabel.setCursor(Cursor.NOT_ALLOWED);
 
 		userProfile = new Avata();
 
@@ -123,8 +110,7 @@ public class Masthead extends VLayout {
 		HLayout hLayout = new HLayout();
 		hLayout.addMember(westLayout);
 		hLayout.addMember(eastLayout);
-		hLayout.addMember(logoutLabel);
-		
+
 		hLayout.setMargin(2);
 
 		Label banner2 = new Label();
@@ -169,9 +155,6 @@ public class Masthead extends VLayout {
 		return menu;
 	}
 
-	public Label getLogoutLabel() {
-		return logoutLabel;
-	}
 
 	
 	

@@ -7,16 +7,19 @@ import java.util.List;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord; 
 
-/**
- * @author Planet Developer 001
- * 
- */
-public class SystemAdministrationData { 
-	
-   public	static	final String ACADEMIC_YEAR = "AcademicYear";
-   public	static	final String LOCATION = "Location";
-   public	static	final String SCHOOLS = "Schools";
-   public	static	final String SUBJECTS = "Subjects";
+
+public class SystemEnrollmentData { 
+
+	   public	static	final String STAFF = "Staff";
+   public	static	final String ENROLLMENT = "Enrollment";
+   //public	static	final String LEARNER_ENROLLMENT = "learnerEnrollment";
+//   public static final String STAFF_ATTENDANCE = "ataffAttendance";
+  // public	static	final String STAFF_CLOCK_IN = "clockIn";
+  // public	static	final String STAFF_CLOCK_OUT = "clockOut";
+   public	static	final String STAFF_ATTENDANCE = "Staff Attendance";
+   public	static	final String LEARNER_ATTENDANCE = "Learner Attendance";
+   
+  
   
 
 	private static ListGridRecord[] records;
@@ -46,10 +49,10 @@ public class SystemAdministrationData {
 //				createRecord("", "application_form",NameTokens.schoolcategory),
 //				createRecord("", "application_form",NameTokens.schoolclass),
 //				createRecord("", "application_form",NameTokens.subjectcategory),
-				createRecord("", "application_form" , ACADEMIC_YEAR),
-				createRecord("", "application_form" , LOCATION),
-				createRecord("", "application_form" , SCHOOLS),
-				createRecord("", "application_form" , SUBJECTS),
+				createRecord("", "application_form" , STAFF),
+				createRecord("", "application_form" , ENROLLMENT),
+				createRecord("", "application_form" , STAFF_ATTENDANCE),
+				createRecord("", "application_form" , LEARNER_ATTENDANCE),
 
 				
 		};

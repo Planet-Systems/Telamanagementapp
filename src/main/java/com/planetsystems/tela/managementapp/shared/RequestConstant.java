@@ -2,6 +2,7 @@ package com.planetsystems.tela.managementapp.shared;
 
 public class RequestConstant {
 	public static final String SYSTEM_CONFIGURATION = "System Configuration";
+	public static final String SYSTEM_ENROLLMENT = "System Enrollment";
 	public static final String SYSTEM_SETTINGS = "Settings";
 	public static final String SYSTEM_USERS = "System Users";
 	
@@ -58,6 +59,10 @@ public class RequestConstant {
 	public static final String AUTH_TOKEN = "AUTH_TOKEN"; //token key
 	
 	
+	public static final String SAVE_SCHOOL_STAFF = "SAVE_SCHOOL_STAFF";	
+	public static final String UPDATE_SCHOOL_STAFF = "UPDATE_SCHOOL_STAFF";
+	public static final String DELETE_SCHOOL_STAFF = "DELETE_SCHOOL_STAFF";
+	public static final String GET_SCHOOL_STAFF = "GET_SCHOOL_STAFF";
 	
 
 }

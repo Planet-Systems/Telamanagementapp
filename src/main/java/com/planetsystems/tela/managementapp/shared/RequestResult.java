@@ -10,6 +10,7 @@ import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
@@ -30,6 +31,7 @@ public class RequestResult implements Result  {
 	private List<SchoolDTO> schoolDTOs;
 	private List<SubjectCategoryDTO> subjectCategoryDTOs;
 	private List<SubjectDTO> subjectDTOs;
+	private List<SchoolStaffDTO> schoolStaffDTOs;
 
 
 	/**
@@ -97,6 +99,13 @@ public class RequestResult implements Result  {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.subjectDTOs = subjectDTOs;
+	}
+	
+	
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolStaffDTO> schoolStaffDTOs , SchoolStaffDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.schoolStaffDTOs = schoolStaffDTOs;
 	}
 	
 	
@@ -177,6 +186,13 @@ public class RequestResult implements Result  {
 
 	public SystemErrorDTO getSystemErrorDTO() {
 		return systemErrorDTO;
+	}
+
+
+	
+	
+	public List<SchoolStaffDTO> getSchoolStaffDTOs() {
+		return schoolStaffDTOs;
 	}
 
 

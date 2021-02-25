@@ -2,6 +2,13 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String learnerAttendance = "learnerAttendance";
+
+	public static final String staffAttendance = "staffAttendance";
+
+	public static final String enrollment = "enrollment";
+
+	public static final String schoolStaff = "schoolStaff";
 
 	public static final String login = "login";
 
@@ -43,6 +50,22 @@ public class NameTokens {
 
 	public static String getLogin() {
 		return login;
+	}
+
+	public static String getSchoolStaff() {
+		return schoolStaff;
+	}
+
+	public static String getEnrollment() {
+		return enrollment;
+	}
+
+	public static String getStaffAttendance() {
+		return staffAttendance;
+	}
+
+	public static String getLearnerAttendance() {
+		return learnerAttendance;
 	}
 
 	//	public static String getAcademicyear() {
