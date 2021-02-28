@@ -21,11 +21,17 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.AuthenticationDTO;
+import com.planetsystems.tela.dto.ClockInDTO;
+import com.planetsystems.tela.dto.ClockOutDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.LearnerAttendanceDTO;
+import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
@@ -1279,7 +1285,825 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 			}
+//////////////////////staff
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SCHOOL_STAFF) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SchoolStaffDTO dto = (SchoolStaffDTO) action.getRequestBody().get(RequestConstant.SAVE_SCHOOL_STAFF);
+
+				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				SystemResponseDTO<List<SchoolStaffDTO>> getResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
+						});
+
+				list = getResponseDTO.getData();
+				System.out.println("GET DTO " + getResponseDTO);
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_SCHOOL_STAFF) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SchoolStaffDTO dto = (SchoolStaffDTO) action.getRequestBody().get(RequestConstant.UPDATE_SCHOOL_STAFF);
+
+				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.path(dto.getId()).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+
+					SystemResponseDTO<List<SchoolStaffDTO>> getResponseDTO = client.target(API_LINK).path("schoolstaffs")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_SCHOOL_STAFF) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SCHOOL_STAFF);
+
+				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.path(id).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+
+					SystemResponseDTO<List<SchoolStaffDTO>> getResponseDTO = client.target(API_LINK).path("schoolstaffs")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_STAFF) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("schoolstaffs")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			///////////staff enrollment
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				StaffEnrollmentDto dto = (StaffEnrollmentDto) action.getRequestBody().get(RequestConstant.SAVE_STAFF_ENROLLMENT);
+
+				List<StaffEnrollmentDto> list = new ArrayList<StaffEnrollmentDto>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("staffenrollments")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				SystemResponseDTO<List<StaffEnrollmentDto>> getResponseDTO = client.target(API_LINK).path("staffenrollments")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<StaffEnrollmentDto>>>() {
+						});
+
+				list = getResponseDTO.getData();
+				System.out.println("GET DTO " + getResponseDTO);
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_STAFF_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				StaffEnrollmentDto dto = (StaffEnrollmentDto) action.getRequestBody().get(RequestConstant.UPDATE_STAFF_ENROLLMENT);
+
+				List<StaffEnrollmentDto> list = new ArrayList<StaffEnrollmentDto>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("staffenrollments")
+						.path(dto.getId()).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+
+					SystemResponseDTO<List<StaffEnrollmentDto>> getResponseDTO = client.target(API_LINK).path("staffenrollments")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<StaffEnrollmentDto>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_STAFF_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_STAFF_ENROLLMENT);
+
+				List<StaffEnrollmentDto> list = new ArrayList<StaffEnrollmentDto>();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("staffenrollments")
+						.path(id).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+
+					SystemResponseDTO<List<StaffEnrollmentDto>> getResponseDTO = client.target(API_LINK).path("staffenrollments")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<StaffEnrollmentDto>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffEnrollmentDto> list = new ArrayList<StaffEnrollmentDto>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK).path("staffenrollments")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<StaffEnrollmentDto>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			//learner emrollment
+	/////////// 
+				else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_LEARNER_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+					SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+					LearnerEnrollmentDTO dto = (LearnerEnrollmentDTO) action.getRequestBody().get(RequestConstant.SAVE_LEARNER_ENROLLMENT);
+
+					List<LearnerEnrollmentDTO> list = new ArrayList<LearnerEnrollmentDTO>();
+
+					Client client = ClientBuilder.newClient();
+					
+					String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					headers.add(HttpHeaders.AUTHORIZATION, token);
+
+					SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("learnerenrollments")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+									new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+									});
+
+					if (postResponseDTO != null) {
+						feedback = postResponseDTO.getData();
+					}
+
+					SystemResponseDTO<List<LearnerEnrollmentDTO>> getResponseDTO = client.target(API_LINK).path("learnerenrollments")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<LearnerEnrollmentDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+
+					client.close();
+					return new RequestResult(feedback, list, null);
+
+				} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_LEARNER_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+					SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+					LearnerEnrollmentDTO dto = (LearnerEnrollmentDTO) action.getRequestBody().get(RequestConstant.UPDATE_LEARNER_ENROLLMENT);
+
+					List<LearnerEnrollmentDTO> list = new ArrayList<LearnerEnrollmentDTO>();
+
+					Client client = ClientBuilder.newClient();
+					
+					String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					headers.add(HttpHeaders.AUTHORIZATION, token);
+
+					SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("learnerenrollments")
+							.path(dto.getId()).request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+									new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+									});
+
+					if (updateResponseDTO != null) {
+						feedback = updateResponseDTO.getData();
+
+						SystemResponseDTO<List<LearnerEnrollmentDTO>> getResponseDTO = client.target(API_LINK).path("learnerenrollments")
+								.request(MediaType.APPLICATION_JSON)
+								.headers(headers)
+								.get(new GenericType<SystemResponseDTO<List<LearnerEnrollmentDTO>>>() {
+								});
+
+						list = getResponseDTO.getData();
+						System.out.println("GET DTO " + getResponseDTO);
+					}
+
+					client.close();
+					return new RequestResult(feedback, list, null);
+
+				} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_LEARNER_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+					SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+					String id = (String) action.getRequestBody().get(RequestConstant.DELETE_LEARNER_ENROLLMENT);
+
+					List<LearnerEnrollmentDTO> list = new ArrayList<LearnerEnrollmentDTO>();
+
+					String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					headers.add(HttpHeaders.AUTHORIZATION, token);
+					
+					Client client = ClientBuilder.newClient();
+
+					SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("learnerenrollments")
+							.path(id).request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+							});
+
+					if (deleteResponseDTO != null) {
+						feedback = deleteResponseDTO.getData();
+
+						SystemResponseDTO<List<LearnerEnrollmentDTO>> getResponseDTO = client.target(API_LINK).path("learnerenrollments")
+								.request(MediaType.APPLICATION_JSON)
+								.headers(headers)
+								.get(new GenericType<SystemResponseDTO<List<LearnerEnrollmentDTO>>>() {
+								});
+
+						list = getResponseDTO.getData();
+						System.out.println("GET DTO " + getResponseDTO);
+					}
+
+					client.close();
+					return new RequestResult(feedback, list, null);
+
+				} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LEARNER_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+					SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+					List<LearnerEnrollmentDTO> list = new ArrayList<LearnerEnrollmentDTO>();
+
+					Client client = ClientBuilder.newClient();
+
+					String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					headers.add(HttpHeaders.AUTHORIZATION, token);
+					
+					SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK).path("learnerenrollments")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<LearnerEnrollmentDTO>>>() {
+							});
+
+					list = responseDto.getData();
+
+					System.out.println("RESPONSE " + responseDto);
+					System.out.println("RES DATA " + responseDto.getData());
+					feedback.setResponse(responseDto.isStatus());
+					feedback.setMessage(responseDto.getMessage());
+
+					client.close();
+					return new RequestResult(feedback, list, null);
+				}
+			
+			
+			///////////////CLOCK IN
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_CLOCK_IN) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				ClockInDTO dto = (ClockInDTO) action.getRequestBody().get(RequestConstant.SAVE_CLOCK_IN);
+
+				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("clockins")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				SystemResponseDTO<List<ClockInDTO>> getResponseDTO = client.target(API_LINK).path("clockins")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
+						});
+
+				list = getResponseDTO.getData();
+				System.out.println("GET DTO " + getResponseDTO);
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_CLOCK_IN) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				ClockInDTO dto = (ClockInDTO) action.getRequestBody().get(RequestConstant.UPDATE_CLOCK_IN);
+
+				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("clockins")
+						.path(dto.getId()).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+
+					SystemResponseDTO<List<ClockInDTO>> getResponseDTO = client.target(API_LINK).path("clockins")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_CLOCK_IN) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_CLOCK_IN);
+
+				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("clockins")
+						.path(id).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+
+					SystemResponseDTO<List<ClockInDTO>> getResponseDTO = client.target(API_LINK).path("clockins")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_CLOCK_IN) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("clockins")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			/////////////CLOCKOUT
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_CLOCK_OUT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				ClockOutDTO dto = (ClockOutDTO) action.getRequestBody().get(RequestConstant.SAVE_CLOCK_OUT);
+
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("clockouts")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
+				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("clockins")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_CLOCK_OUT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				ClockOutDTO dto = (ClockOutDTO) action.getRequestBody().get(RequestConstant.UPDATE_CLOCK_OUT);
+
+				List<ClockOutDTO> list = new ArrayList<ClockOutDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("clockouts")
+						.path(dto.getId()).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+
+					SystemResponseDTO<List<ClockOutDTO>> getResponseDTO = client.target(API_LINK).path("clockouts")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<ClockOutDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_CLOCK_OUT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_CLOCK_OUT);
+
+				List<ClockOutDTO> list = new ArrayList<ClockOutDTO>();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("clockouts")
+						.path(id).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+
+					SystemResponseDTO<List<ClockOutDTO>> getResponseDTO = client.target(API_LINK).path("clockouts")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<ClockOutDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_CLOCK_OUT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<ClockOutDTO> list = new ArrayList<ClockOutDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("clockouts")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<ClockOutDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			/////////// learner Alttendance//////////////////////////////////////////////////////////////////
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_LEARNER_ATTENDANCE) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				LearnerAttendanceDTO dto = (LearnerAttendanceDTO) action.getRequestBody().get(RequestConstant.SAVE_LEARNER_ATTENDANCE);
+
+				List<LearnerAttendanceDTO> list = new ArrayList<LearnerAttendanceDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("learnerattendances")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				SystemResponseDTO<List<LearnerAttendanceDTO>> getResponseDTO = client.target(API_LINK).path("learnerattendances")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<LearnerAttendanceDTO>>>() {
+						});
+
+				list = getResponseDTO.getData();
+				System.out.println("GET DTO " + getResponseDTO);
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_LEARNER_ATTENDANCE) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				LearnerAttendanceDTO dto = (LearnerAttendanceDTO) action.getRequestBody().get(RequestConstant.UPDATE_LEARNER_ATTENDANCE);
+
+				List<LearnerAttendanceDTO> list = new ArrayList<LearnerAttendanceDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("learnerattendances")
+						.path(dto.getId()).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+
+					SystemResponseDTO<List<LearnerAttendanceDTO>> getResponseDTO = client.target(API_LINK).path("learnerattendances")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<LearnerAttendanceDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_LEARNER_ATTENDANCE) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_LEARNER_ATTENDANCE);
+
+				List<LearnerAttendanceDTO> list = new ArrayList<LearnerAttendanceDTO>();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("learnerattendances")
+						.path(id).request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+
+					SystemResponseDTO<List<LearnerAttendanceDTO>> getResponseDTO = client.target(API_LINK).path("learnerattendances")
+							.request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<LearnerAttendanceDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LEARNER_ATTENDANCE) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<LearnerAttendanceDTO> list = new ArrayList<LearnerAttendanceDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK).path("learnerattendances")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<LearnerAttendanceDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			
 		}catch (ForbiddenException exception) {
             exception.printStackTrace();
 			SystemErrorDTO error = new SystemErrorDTO();

@@ -85,9 +85,19 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 		ListGridRecord record = new ListGridRecord();
 
 		record.setAttribute(ID, learnerAttendanceDTO.getId());
+		record.setAttribute(ATTENDANCE_DATE , learnerAttendanceDTO.getAttendanceDate());
+		record.setAttribute(GIRLS_ABSENT, learnerAttendanceDTO.getGirlsAbsent());
+		record.setAttribute(GIRLS_PRESENT, learnerAttendanceDTO.getGirlsPresent());
+		record.setAttribute(BOYS_ABSENT, learnerAttendanceDTO.getBoysAbsent());
+		record.setAttribute(BOYS_PRESENT, learnerAttendanceDTO.getBoysPresent());
+		record.setAttribute(COMMENT, learnerAttendanceDTO.getComment());
 		
-		record.setAttribute(SCHOOL_CLASS, learnerAttendanceDTO.getSchoolClassDTO().getName());
-		record.setAttribute(SCHOOL_CLASS_ID, learnerAttendanceDTO.getSchoolClassDTO().getId());
+		if(learnerAttendanceDTO.getSchoolClassDTO() != null) {
+			record.setAttribute(SCHOOL_CLASS, learnerAttendanceDTO.getSchoolClassDTO().getName());
+			record.setAttribute(SCHOOL_CLASS_ID, learnerAttendanceDTO.getSchoolClassDTO().getId());
+		}
+		
+		
 		
 		if(learnerAttendanceDTO.getAcademicTermDTO() != null) {
 			record.setAttribute(ACADEMIC_TERM, learnerAttendanceDTO.getAcademicTermDTO().getTerm());
@@ -105,12 +115,7 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 			record.setAttribute(SCHOOL_STAFF_ID, learnerAttendanceDTO.getSchoolStaffDTO().getId());
 		}
 		
-		record.setAttribute(ATTENDANCE_DATE , learnerAttendanceDTO.getAttendanceDate());
-		record.setAttribute(GIRLS_ABSENT, learnerAttendanceDTO.getGirlsAbsent());
-		record.setAttribute(GIRLS_PRESENT, learnerAttendanceDTO.getGirlsPresent());
-		record.setAttribute(BOYS_ABSENT, learnerAttendanceDTO.getBoysAbsent());
-		record.setAttribute(BOYS_PRESENT, learnerAttendanceDTO.getBoysPresent());
-		record.setAttribute(COMMENT, learnerAttendanceDTO.getComment());
+		
 		
 		return record;
 	}

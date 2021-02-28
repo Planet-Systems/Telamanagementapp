@@ -48,14 +48,14 @@ public class SchoolClassListGrid extends SuperListGrid {
 		record.setAttribute(CODE, schoolClassDTO.getCode());
 		record.setAttribute(NAME, schoolClassDTO.getName());
 
-		if(schoolClassDTO.getSchool() != null) {
-			record.setAttribute(SCHOOL, schoolClassDTO.getSchool().getName());
-			record.setAttribute(SCHOOL_ID, schoolClassDTO.getSchool().getId());
+		if(schoolClassDTO.getSchoolDTO() != null) {
+			record.setAttribute(SCHOOL, schoolClassDTO.getSchoolDTO().getName());
+			record.setAttribute(SCHOOL_ID, schoolClassDTO.getSchoolDTO().getId());
 		}
 		
-		if(schoolClassDTO.getAcademicTerm() != null) {
-			record.setAttribute(ACADEMIC_TERM, schoolClassDTO.getAcademicTerm().getTerm());
-			record.setAttribute(ACADEMIC_TERM_ID, schoolClassDTO.getAcademicTerm().getId());
+		if(schoolClassDTO.getAcademicTermDTO() != null) {
+			record.setAttribute(ACADEMIC_TERM, schoolClassDTO.getAcademicTermDTO().getTerm());
+			record.setAttribute(ACADEMIC_TERM_ID, schoolClassDTO.getAcademicTermDTO().getId());
 		}
 		
 		return record;

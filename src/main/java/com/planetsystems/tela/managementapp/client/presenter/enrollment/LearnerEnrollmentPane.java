@@ -26,5 +26,10 @@ private LearnerEnrollmentListGrid learnerEnrollmentListGrid;
 		this.addMember(learnerEnrollmentListGrid);		
 	}
 
+	public LearnerEnrollmentListGrid getLearnerEnrollmentListGrid() {
+		return learnerEnrollmentListGrid;
+	}
+
+	
 	
 }

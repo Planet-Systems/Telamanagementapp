@@ -6,7 +6,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class ClockOutPane extends VLayout {
 
-private ClockInListGrid clockInListGrid;
+private ClockOutListGrid clockOutListGrid;
 	
 	public ClockOutPane() {
 		super();
@@ -19,13 +19,17 @@ private ClockInListGrid clockInListGrid;
 		header.setMargin(10);
 		header.setAlign(Alignment.LEFT);
 
-		clockInListGrid = new ClockInListGrid();
+		clockOutListGrid = new ClockOutListGrid();
 
 		VLayout layout = new VLayout();
 		layout.addMember(header);
-		layout.addMember(clockInListGrid);
+		layout.addMember(clockOutListGrid);
 		this.addMember(layout);
 		
+	}
+
+	public ClockOutListGrid getClockOutListGrid() {
+		return clockOutListGrid;
 	}
 
 	

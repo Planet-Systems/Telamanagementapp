@@ -2,7 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.enrollment;
 
 import java.util.List;
 
-import com.planetsystems.tela.dto.StaffEnrollementDto;
+import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -11,10 +11,13 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 	public static String ID = "id";
 	public static String SCHOOL="school";
 	public static String SCHOOL_ID="schoolId";
+	
 	public static String ACADEMIC_TERM = "academicTerm";
 	public static String ACADEMIC_TERM_ID = "academicTermId";
+	
 	public static String TOTAL_MALE = "totalMale";
 	public static String TOTAL_FEMALE = "totalFemale";
+	
 	public static String STATUS = "status";
 	
 	
@@ -23,6 +26,7 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
  * private SchoolDTO schoolDTO;
 
     private AcademicTermDTO academicTermDTO;
+
 
     private long  totalMale;
 
@@ -57,32 +61,32 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 
 	}
 
-	public ListGridRecord addRowData(StaffEnrollementDto staffEnrollementDto) {
+	public ListGridRecord addRowData(StaffEnrollmentDto staffEnrollmentDto) {
 		ListGridRecord record = new ListGridRecord();
-		record.setAttribute(ID, staffEnrollementDto.getId());
-		record.setAttribute(TOTAL_MALE, staffEnrollementDto.getTotalMale());
-		record.setAttribute(TOTAL_FEMALE, staffEnrollementDto.getTotalFemale());
-		record.setAttribute(STATUS, staffEnrollementDto.getId());
+		record.setAttribute(ID, staffEnrollmentDto.getId());
+		record.setAttribute(TOTAL_MALE, staffEnrollmentDto.getTotalMale());
+		record.setAttribute(TOTAL_FEMALE, staffEnrollmentDto.getTotalFemale());
+		record.setAttribute(STATUS, staffEnrollmentDto.getStatus());
 		
 		
-		if(staffEnrollementDto.getAcademicTermDTO() != null) {
-			record.setAttribute(ACADEMIC_TERM, staffEnrollementDto.getAcademicTermDTO().getTerm());
-			record.setAttribute(ACADEMIC_TERM_ID, staffEnrollementDto.getAcademicTermDTO().getId());	
+		if(staffEnrollmentDto.getAcademicTermDTO() != null) {
+			record.setAttribute(ACADEMIC_TERM, staffEnrollmentDto.getAcademicTermDTO().getTerm());
+			record.setAttribute(ACADEMIC_TERM_ID, staffEnrollmentDto.getAcademicTermDTO().getId());	
 		}
 		
 
-		if(staffEnrollementDto.getSchoolDTO() != null) {
-			record.setAttribute(SCHOOL, staffEnrollementDto.getSchoolDTO().getName());
-			record.setAttribute(SCHOOL_ID, staffEnrollementDto.getSchoolDTO().getId());
+		if(staffEnrollmentDto.getSchoolDTO() != null) {
+			record.setAttribute(SCHOOL, staffEnrollmentDto.getSchoolDTO().getName());
+			record.setAttribute(SCHOOL_ID, staffEnrollmentDto.getSchoolDTO().getId());
 		}
 		
 		return record;
 	}
 
-	public void addRecordsToGrid(List<StaffEnrollementDto> list) {
+	public void addRecordsToGrid(List<StaffEnrollmentDto> list) {
 		ListGridRecord[] records = new ListGridRecord[list.size()];
 		int row = 0;
-		for (StaffEnrollementDto item : list) {
+		for (StaffEnrollmentDto item : list) {
 			records[row] = addRowData(item);
 			row++;
 		}

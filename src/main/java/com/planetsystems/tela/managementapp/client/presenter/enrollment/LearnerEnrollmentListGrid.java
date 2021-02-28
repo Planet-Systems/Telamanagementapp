@@ -2,7 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.enrollment;
 
 import java.util.List;
 
-import com.planetsystems.tela.dto.LearnerEnrollementDTO;
+import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -21,10 +21,11 @@ public class LearnerEnrollmentListGrid extends SuperListGrid {
 	
 	
 /*
- * private SchoolClassDTO schoolClassDTO;
+ *    private SchoolClassDTO schoolClassDTO;
     private long totalBoys;
     private long totalGirls;
     private String status;
+  
  */
 
 		
@@ -50,27 +51,27 @@ public class LearnerEnrollmentListGrid extends SuperListGrid {
 
 	}
 
-	public ListGridRecord addRowData(LearnerEnrollementDTO learnerEnrollementDTO) {
+	public ListGridRecord addRowData(LearnerEnrollmentDTO learnerEnrollmentDTO) {
 		ListGridRecord record = new ListGridRecord();
-		record.setAttribute(ID, learnerEnrollementDTO.getId());
-		record.setAttribute(TOTAL_BOYS, learnerEnrollementDTO.getTotalBoys());
-		record.setAttribute(TOTAL_GIRLS, learnerEnrollementDTO.getTotalGirls());
-		record.setAttribute(STATUS, learnerEnrollementDTO.getStatus());
+		record.setAttribute(ID, learnerEnrollmentDTO.getId());
+		record.setAttribute(TOTAL_BOYS, learnerEnrollmentDTO.getTotalBoys());
+		record.setAttribute(TOTAL_GIRLS, learnerEnrollmentDTO.getTotalGirls());
+		record.setAttribute(STATUS, learnerEnrollmentDTO.getStatus());
 		
 		
-		if(learnerEnrollementDTO.getSchoolClassDTO() != null) {
-			record.setAttribute(SCHOOL_CLASS, learnerEnrollementDTO.getSchoolClassDTO().getName());
-			record.setAttribute(SCHOOL_CLASS_ID, learnerEnrollementDTO.getSchoolClassDTO().getId());	
+		if(learnerEnrollmentDTO.getSchoolClassDTO() != null) {
+			record.setAttribute(SCHOOL_CLASS, learnerEnrollmentDTO.getSchoolClassDTO().getName());
+			record.setAttribute(SCHOOL_CLASS_ID, learnerEnrollmentDTO.getSchoolClassDTO().getId());	
 		}
 		
 		
 		return record;
 	}
 
-	public void addRecordsToGrid(List<LearnerEnrollementDTO> list) {
+	public void addRecordsToGrid(List<LearnerEnrollmentDTO> list) {
 		ListGridRecord[] records = new ListGridRecord[list.size()];
 		int row = 0;
-		for (LearnerEnrollementDTO item : list) {
+		for (LearnerEnrollmentDTO item : list) {
 			records[row] = addRowData(item);
 			row++;
 		}

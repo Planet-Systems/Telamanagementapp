@@ -1,11 +1,13 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolcategory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -32,6 +34,7 @@ import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -67,6 +70,9 @@ public class SchoolCategoryPresenter
 
 	@Inject
 	private DispatchAsync dispatchAsync;
+	
+	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	
 	//private String token = Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 
@@ -206,6 +212,7 @@ public class SchoolCategoryPresenter
 				SchoolCategoryDTO dto = new SchoolCategoryDTO();
 				dto.setCode(window.getCategoryCode().getValueAsString());
 				dto.setName(window.getCategoryName().getValueAsString());
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_SCHOOL_CATEGORY, dto);
@@ -288,6 +295,7 @@ public class SchoolCategoryPresenter
 				dto.setId(record.getAttribute(SchCategoryListGrid.ID));
 				dto.setCode(window.getCategoryCode().getValueAsString());
 				dto.setName(window.getCategoryName().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_SCHOOL_CATEGORY, dto);
@@ -475,14 +483,15 @@ public class SchoolCategoryPresenter
 				dto.setLongitude(window.getLongtitude().getValueAsString());
 				dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
 				dto.setName(window.getSchoolName().getValueAsString());
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				SchoolCategoryDTO schoolCategory = new SchoolCategoryDTO();
-				schoolCategory.setId(window.getSchoolCategory().getValueAsString());
-				dto.setSchoolCategory(schoolCategory);
+				SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
+				schoolCategoryDTO.setId(window.getSchoolCategory().getValueAsString());
+				dto.setSchoolCategoryDTO(schoolCategoryDTO);
 
-				DistrictDTO district = new DistrictDTO();
-				district.setId(window.getDistrict().getValueAsString());
-				dto.setDistrict(district);
+				DistrictDTO districtDTO = new DistrictDTO();
+				districtDTO.setId(window.getDistrict().getValueAsString());
+				dto.setDistrictDTO(districtDTO);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_SCHOOL, dto);
@@ -575,14 +584,15 @@ public class SchoolCategoryPresenter
 				dto.setLongitude(window.getLongtitude().getValueAsString());
 				dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
 				dto.setName(window.getSchoolName().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
-				SchoolCategoryDTO schoolCategory = new SchoolCategoryDTO();
-				schoolCategory.setId(window.getSchoolCategory().getValueAsString());
-				dto.setSchoolCategory(schoolCategory);
+				SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
+				schoolCategoryDTO.setId(window.getSchoolCategory().getValueAsString());
+				dto.setSchoolCategoryDTO(schoolCategoryDTO);
 
-				DistrictDTO district = new DistrictDTO();
-				district.setId(window.getDistrict().getValueAsString());
-				dto.setDistrict(district);
+				DistrictDTO districtDTO = new DistrictDTO();
+				districtDTO.setId(window.getDistrict().getValueAsString());
+				dto.setDistrictDTO(districtDTO);
 				
 				//GWT.log("SC "+schoolCategory.getId() +" d "+district.getId()+" id "+dto.getId());
 
@@ -863,13 +873,13 @@ public class SchoolCategoryPresenter
 				dto.setCode(window.getClassCode().getValueAsString());
 				dto.setName(window.getcName().getValueAsString());
 
-				SchoolDTO school = new SchoolDTO();
-				school.setId(window.getSchool().getValueAsString());
-				dto.setSchool(school);
+				SchoolDTO schoolDTO = new SchoolDTO();
+				schoolDTO.setId(window.getSchool().getValueAsString());
+				dto.setSchoolDTO(schoolDTO);
 
 				AcademicTermDTO academicTermDTO = new AcademicTermDTO();
 				academicTermDTO.setId(window.getAcademicTerm().getValueAsString());
-				dto.setAcademicTerm(academicTermDTO);
+				dto.setAcademicTermDTO(academicTermDTO);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_SCHOOL_CLASS, dto);
@@ -944,13 +954,13 @@ public class SchoolCategoryPresenter
 				dto.setCode(window.getClassCode().getValueAsString());
 				dto.setName(window.getcName().getValueAsString());
 
-				SchoolDTO school = new SchoolDTO();
-				school.setId(window.getSchool().getValueAsString());
-				dto.setSchool(school);
+				SchoolDTO schoolDTO = new SchoolDTO();
+				schoolDTO.setId(window.getSchool().getValueAsString());
+				dto.setSchoolDTO(schoolDTO);
 
 				AcademicTermDTO academicTermDTO = new AcademicTermDTO();
 				academicTermDTO.setId(window.getAcademicTerm().getValueAsString());
-				dto.setAcademicTerm(academicTermDTO);
+				dto.setAcademicTermDTO(academicTermDTO);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_SCHOOL_CLASS, dto);

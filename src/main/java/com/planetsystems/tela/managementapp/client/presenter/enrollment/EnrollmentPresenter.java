@@ -1,11 +1,13 @@
 package com.planetsystems.tela.managementapp.client.presenter.enrollment;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -19,22 +21,26 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.LearnerEnrollementDTO;
+import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
-import com.planetsystems.tela.dto.StaffEnrollementDto;
+import com.planetsystems.tela.dto.StaffEnrollmentDto;
+import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -59,6 +65,9 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
     
     @Inject
     private PlaceManager placeManager;
+    
+	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
     @NameToken(NameTokens.enrollment)
     @ProxyCodeSplit
@@ -78,6 +87,8 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
     protected void onBind() {
     	super.onBind();
      onTabSelected();
+     getAllLearnerEnrollments();
+     getAllStaffEnrollments();
     }
     private void onTabSelected() {
 		getView().getTabSet().addTabSelectedHandler(new TabSelectedHandler() {
@@ -161,9 +172,10 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 		
 		@Override
 		public void onClick(ClickEvent event) {
-		   StaffEnrollementDto dto = new StaffEnrollementDto();
+		   StaffEnrollmentDto dto = new StaffEnrollmentDto();
 		   dto.setTotalFemale(Long.valueOf(window.getTotalFemaleField().getValueAsString()));
 		   dto.setTotalMale(Long.valueOf(window.getTotalMaleField().getValueAsString()));
+		   dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 		   
 		   AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermComboBox().getValueAsString());
 		   dto.setAcademicTermDTO(academicTermDTO);
@@ -175,9 +187,61 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 		   GWT.log("term "+dto.getAcademicTermDTO().getId());
 		   GWT.log("DTO "+dto.getSchoolDTO().getId());
 		   
+		   LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			map.put(RequestConstant.SAVE_STAFF_ENROLLMENT, dto);
+			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+			SC.showPrompt("", "", new SwizimaLoader());
+
+			dispatcher.execute(new RequestAction(RequestConstant.SAVE_STAFF_ENROLLMENT, map),
+					new AsyncCallback<RequestResult>() {
+
+						public void onFailure(Throwable caught) {
+
+							SC.clearPrompt();
+							System.out.println(caught.getMessage());
+							SC.say("ERROR", caught.getMessage());
+						}
+
+						public void onSuccess(RequestResult result) {
+							SC.clearPrompt();
+							
+							clearStaffEnrollmentWindowFields(window);
+							window.close();
+
+							SessionManager.getInstance().manageSession(result, placeManager);
+							
+							if (result != null) {
+								SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+
+								if (feedback.isResponse()) {
+									SC.say("SUCCESS", feedback.getMessage());
+								} else {
+									SC.warn("INFO", feedback.getMessage());
+								}
+
+								getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid().addRecordsToGrid(result.getStaffEnrollmentDtos());
+
+							} else {
+								SC.warn("ERROR", "Unknow error");
+							}
+
+						}
+
+					});
+		   
+		   
 		}
 	});
 		
+	}
+	
+
+	private void clearStaffEnrollmentWindowFields(StaffEnrollmentWindow window) {
+ 
+		window.getAcademicTermComboBox().clearValue();
+		window.getTotalFemaleField().clearValue();
+		window.getTotalFemaleField().clearValue();
+		window.getStaffTotalField().clearValue();
 	}
 	
 	
@@ -415,10 +479,55 @@ window.getTotalGirlsField().addChangedHandler(new ChangedHandler() {
 				 window.getLearnerTotalField().setValue(total[0]);
 		}
 	});
-
-	  	
-	
+	  		
 	}
+
+
+private void getAllStaffEnrollments() {
+	LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+	map.put(RequestConstant.GET_STAFF_ENROLLMENT, null);
+	map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+	SC.showPrompt("", "", new SwizimaLoader());
+
+	dispatcher.execute(new RequestAction(RequestConstant.GET_STAFF_ENROLLMENT , map),
+			new AsyncCallback<RequestResult>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					System.out.println(caught.getMessage());
+					SC.warn("ERROR", caught.getMessage());
+					GWT.log("ERROR " + caught.getMessage());
+					SC.clearPrompt();
+
+				}
+
+				@Override
+				public void onSuccess(RequestResult result) {
+
+					SC.clearPrompt();
+					SessionManager.getInstance().manageSession(result, placeManager);
+					if (result != null) {
+                        SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+						if ( feedbackDTO != null) {
+							if (feedbackDTO.isResponse()) {
+								// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+								getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid()
+								.addRecordsToGrid(result.getStaffEnrollmentDtos());
+							} else {
+								SC.warn("Not Successful \n ERROR:", feedbackDTO.getMessage());
+							}
+						}
+					} else {
+						SC.warn("ERROR", "Unknow error");
+					}
+
+				}
+
+			});
+
+}
+
+
 	
 	///////////////////////////LEARNERS
 	
@@ -445,20 +554,129 @@ window.getTotalGirlsField().addChangedHandler(new ChangedHandler() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
-			LearnerEnrollementDTO dto = new LearnerEnrollementDTO();
+			LearnerEnrollmentDTO dto = new LearnerEnrollmentDTO();
 			//dto.setId(id);
 			dto.setTotalBoys(Long.valueOf(window.getTotalBoysField().getValueAsString()));
 			dto.setTotalGirls(Long.valueOf(window.getTotalGirlsField().getValueAsString()));
+			dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 			
 			SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassComboBox().getValueAsString());
 			dto.setSchoolClassDTO(schoolClassDTO);
 			
 			GWT.log("DTO "+dto);
 			GWT.log("ID "+dto.getSchoolClassDTO().getId());
+			
+			  LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.SAVE_LEARNER_ENROLLMENT, dto);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				SC.showPrompt("", "", new SwizimaLoader());
+
+				dispatcher.execute(new RequestAction(RequestConstant.SAVE_LEARNER_ENROLLMENT, map),
+						new AsyncCallback<RequestResult>() {
+
+							public void onFailure(Throwable caught) {
+
+								SC.clearPrompt();
+								System.out.println(caught.getMessage());
+								SC.say("ERROR", caught.getMessage());
+							}
+
+							public void onSuccess(RequestResult result) {
+								SC.clearPrompt();
+								
+								clearLearnerEnrollmentWindowFields(window);
+								window.close();
+
+								SessionManager.getInstance().manageSession(result, placeManager);
+								
+								if (result != null) {
+									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+
+									if (feedback.isResponse()) {
+										SC.say("SUCCESS", feedback.getMessage());
+									} else {
+										SC.warn("INFO", feedback.getMessage());
+									}
+
+									getView().getLearnerEnrollmentPane().getLearnerEnrollmentListGrid().addRecordsToGrid(result.getLearnerEnrollmentDTOs());
+
+								} else {
+									SC.warn("ERROR", "Unknow error");
+								}
+
+							}
+
+						});
+			
 		}
 	});
+
+	}
+	
+
+	private void clearLearnerEnrollmentWindowFields(LearnerEnrollmentWindow window) {
+       /*
+        * 	private ComboBox schoolClassComboBox;
+
+	private TextItem totalBoysField;
+	private TextItem totalGirlsField;
+	private TextItem learnerTotalField;
+        */
 		
+		window.getSchoolClassComboBox().clearValue();
+		window.getTotalBoysField().clearValue();
+		window.getTotalGirlsField().clearValue();
+		window.getLearnerTotalField().clearValue();
 		
 	}
+	
+	
+	
+	
+	private void getAllLearnerEnrollments() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_LEARNER_ENROLLMENT, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_LEARNER_ENROLLMENT , map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+	                        SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+							if ( feedbackDTO != null) {
+								if (feedbackDTO.isResponse()) {
+									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									getView().getLearnerEnrollmentPane().getLearnerEnrollmentListGrid()
+									.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
+								} else {
+									SC.warn("Not Successful \n ERROR:", feedbackDTO.getMessage());
+								}
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+
+				});
+
+	}
+
+	
 	
 }

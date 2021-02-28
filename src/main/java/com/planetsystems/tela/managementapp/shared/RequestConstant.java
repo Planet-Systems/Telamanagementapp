@@ -65,4 +65,32 @@ public class RequestConstant {
 	public static final String GET_SCHOOL_STAFF = "GET_SCHOOL_STAFF";
 	
 
+	public static final String SAVE_LEARNER_ENROLLMENT = "SAVE_LEARNER_ENROLLMENT";
+	public static final String UPDATE_LEARNER_ENROLLMENT = "UPDATE_LEARNER_ENROLLMENT";
+	public static final String DELETE_LEARNER_ENROLLMENT = "DELETE_LEARNER_ENROLLMENT";
+	public static final String GET_LEARNER_ENROLLMENT = "GET_LEARNER_ENROLLMENT";
+	
+	public static final String SAVE_STAFF_ENROLLMENT = "SAVE_STAFF_ENROLLMENT";
+	public static final String UPDATE_STAFF_ENROLLMENT = "UPDATE_STAFF_ENROLLMENT";
+	public static final String DELETE_STAFF_ENROLLMENT = "DELETE_STAFF_ENROLLMENT";
+	public static final String GET_STAFF_ENROLLMENT = "GET_STAFF_ENROLLMENT";
+	
+	public static final String SAVE_CLOCK_IN = "SAVE_CLOCK_IN";
+	public static final String UPDATE_CLOCK_IN = "UPDATE_CLOCK_IN";
+	public static final String DELETE_CLOCK_IN = "DELETE_CLOCK_IN";
+	public static final String GET_CLOCK_IN = "GET_CLOCK_IN";
+	
+	
+	public static final String SAVE_CLOCK_OUT = "SAVE_CLOCK_OUT";
+	public static final String UPDATE_CLOCK_OUT = "UPDATE_CLOCK_OUT";
+	public static final String DELETE_CLOCK_OUT = "DELETE_CLOCK_OUT";
+	public static final String GET_CLOCK_OUT = "GET_CLOCK_OUT";
+	
+	public static final String SAVE_LEARNER_ATTENDANCE = "SAVE_LEARNER_ATTENDANCE";
+	public static final String UPDATE_LEARNER_ATTENDANCE = "UPDATE_LEARNER_ATTENDANCE";
+	public static final String DELETE_LEARNER_ATTENDANCE = "DELETE_LEARNER_ATTENDANCE";
+	public static final String GET_LEARNER_ATTENDANCE = "GET_LEARNER_ATTENDANCE";
+	
+	
+
 }

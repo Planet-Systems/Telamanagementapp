@@ -5,12 +5,17 @@ import java.util.List;
 import com.gwtplatform.dispatch.rpc.shared.Result;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.ClockInDTO;
+import com.planetsystems.tela.dto.ClockOutDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.LearnerAttendanceDTO;
+import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
@@ -32,8 +37,12 @@ public class RequestResult implements Result  {
 	private List<SubjectCategoryDTO> subjectCategoryDTOs;
 	private List<SubjectDTO> subjectDTOs;
 	private List<SchoolStaffDTO> schoolStaffDTOs;
-
-
+	private List<StaffEnrollmentDto> staffEnrollmentDtos;
+	private List<LearnerEnrollmentDTO> learnerEnrollmentDTOs;
+    private List<ClockInDTO> clockInDTOs;
+    private List<ClockOutDTO> clockOutDTOs;
+    private List<LearnerAttendanceDTO> learnerAttendanceDTOs;
+    
 	/**
 	 * 
 	 */
@@ -108,7 +117,49 @@ public class RequestResult implements Result  {
 		this.schoolStaffDTOs = schoolStaffDTOs;
 	}
 	
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<StaffEnrollmentDto> staffEnrollmentDtos , StaffEnrollmentDto staffEnrollmentDto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.staffEnrollmentDtos = staffEnrollmentDtos;
+	}
+
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<ClockInDTO> clockInDTOs , ClockInDTO clockInDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.clockInDTOs = clockInDTOs;
+	}
 	
+	
+
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<ClockOutDTO> clockOutDTOs , ClockOutDTO clockOutDTO ) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.clockOutDTOs = clockOutDTOs;
+	}
+
+	
+
+	
+	
+	
+
+	
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<LearnerEnrollmentDTO> learnerEnrollmentDTOs , LearnerEnrollmentDTO learnerEnrollmentDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.learnerEnrollmentDTOs = learnerEnrollmentDTOs;
+	}
+
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<LearnerAttendanceDTO> learnerAttendanceDTOs , LearnerAttendanceDTO learnerAttendanceDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.learnerAttendanceDTOs = learnerAttendanceDTOs;
+	}
 
 
 	public RequestResult() {
@@ -193,6 +244,33 @@ public class RequestResult implements Result  {
 	
 	public List<SchoolStaffDTO> getSchoolStaffDTOs() {
 		return schoolStaffDTOs;
+	}
+	
+	
+
+
+	public List<StaffEnrollmentDto> getStaffEnrollmentDtos() {
+		return staffEnrollmentDtos;
+	}
+
+
+	public  List<LearnerEnrollmentDTO> getLearnerEnrollmentDTOs() {
+		return learnerEnrollmentDTOs;
+	}
+
+
+	public List<ClockInDTO> getClockInDTOs() {
+		return clockInDTOs;
+	}
+
+
+	public List<ClockOutDTO> getClockOutDTOs() {
+		return clockOutDTOs;
+	}
+
+
+	public List<LearnerAttendanceDTO> getLearnerAttendanceDTOs() {
+		return learnerAttendanceDTOs;
 	}
 
 

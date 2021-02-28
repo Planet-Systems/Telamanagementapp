@@ -10,6 +10,8 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class ClockInListGrid extends SuperListGrid {
 	public static String ID = "id";
 	public static String CLOCKED_IN_DATE = "clockInDate";
+	public static String CLOCKED_IN_TIME = "clockInTime";
+	
 	public static String COMMENT = "comment";
 	public static String LATITUDE = "latitude";
 	public static String LONGTITUDE = "longitude";
@@ -52,6 +54,9 @@ private AcademicTermDTO academicTerm;
 		ListGridField academicField = new ListGridField(ACADEMIC_TERM, "AcademicTerm");
 		ListGridField academicIdField = new ListGridField(ACADEMIC_TERM_ID, "AcademicTermId");
 		academicIdField.setHidden(true);
+		
+		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE , "clockInDate");
+		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME , "clockInTime");
 	
 		ListGridField latitudeField = new ListGridField(LATITUDE, "latitude");
 		ListGridField longitudeField = new ListGridField(LONGTITUDE, "logitude");
@@ -61,7 +66,7 @@ private AcademicTermDTO academicTerm;
 			
 		
 
-		this.setFields(idField , schoolIdField , academicIdField , schoolField , academicField , commentField , statusField , latitudeField , longitudeField);
+		this.setFields(idField , schoolIdField , academicIdField , schoolField , academicField , clockInDateField , clockInTimeField , commentField , statusField , latitudeField , longitudeField);
 
 	}
 
@@ -71,7 +76,10 @@ private AcademicTermDTO academicTerm;
 		record.setAttribute(LONGTITUDE, clockInDTO.getLongitude());
 		record.setAttribute(LATITUDE, clockInDTO.getLatitude());
 		record.setAttribute(STATUS, clockInDTO.getStatus());
-		
+		record.setAttribute(COMMENT, clockInDTO.getComment());
+
+		record.setAttribute(CLOCKED_IN_DATE, clockInDTO.getClockInDate());
+		record.setAttribute(CLOCKED_IN_TIME, clockInDTO.getClockInTime());
 		
 		if(clockInDTO.getAcademicTermDTO() != null) {
 			record.setAttribute(ACADEMIC_TERM, clockInDTO.getAcademicTermDTO().getTerm());

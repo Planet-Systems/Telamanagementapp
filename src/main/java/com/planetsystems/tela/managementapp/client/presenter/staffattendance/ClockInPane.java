@@ -28,6 +28,11 @@ private ClockInListGrid clockInListGrid;
 		
 	}
 
+	public ClockInListGrid getClockInListGrid() {
+		return clockInListGrid;
+	}
+
+	
 	
 	
 }

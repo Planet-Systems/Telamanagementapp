@@ -59,8 +59,8 @@ public class SchoolStaffListGrid extends SuperListGrid {
 
 		ListGridField staffCodeField = new ListGridField(STAFF_CODE, "Code");
 		ListGridField registeredField = new ListGridField(REGISTERED, "Registerd");
-		ListGridField schoolField = new ListGridField(SCHOOL, "School");
 		
+		ListGridField schoolField = new ListGridField(SCHOOL, "School");
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "SchoolId");
 		schoolIdField.setHidden(true);
 		
@@ -76,25 +76,34 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		     	
 		
 
-		this.setFields(idField , schoolIdField , firstNameField , lastNameField , emailField , nameAbrevField, phoneNumberField , nationalIdField , genderField , dobField,schoolField,staffCodeField,registeredField);
+		this.setFields(idField , schoolIdField ,  firstNameField , lastNameField , emailField , nameAbrevField, phoneNumberField , nationalIdField , genderField , dobField,schoolField,staffCodeField,registeredField);
 
 	}
 
 	public ListGridRecord addRowData(SchoolStaffDTO schoolStaffDTO) {
 		ListGridRecord record = new ListGridRecord();
-//		record.setAttribute(ID, districtDTO.getId());
-//		record.setAttribute(CODE, districtDTO.getCode());
-//		record.setAttribute(NAME, districtDTO.getName());
-//		if(districtDTO.getRegion() != null) {
-//			record.setAttribute(REGION, districtDTO.getRegion().getName());
-//			record.setAttribute(REGION_ID, districtDTO.getRegion().getId());
-//		}
-//		String roll = districtDTO.isRolledOut() ? "Yes" : "No" ;
-//		record.setAttribute(ROLLEDOUT, roll);
-//		record.setAttribute(ROLLEDOUT_STATUS, districtDTO.isRolledOut());
-//	
-		
-		return record;
+         record.setAttribute(ID, schoolStaffDTO.getId());
+         record.setAttribute(STAFF_CODE, schoolStaffDTO.getStaffCode());
+         String registered = schoolStaffDTO.isRegistered() ? "Yes" : "NO";
+         record.setAttribute(REGISTERED, registered);
+         
+         if(schoolStaffDTO.getSchoolDTO() != null) {
+        	 record.setAttribute(SCHOOL_ID, schoolStaffDTO.getSchoolDTO().getId());
+             record.setAttribute(SCHOOL, schoolStaffDTO.getSchoolDTO().getName());
+         }
+         
+         if(schoolStaffDTO.getGeneralUserDetailDTO() != null) {
+            record.setAttribute(FIRSTNAME, schoolStaffDTO.getGeneralUserDetailDTO().getFirstName());
+             record.setAttribute(LASTNAME, schoolStaffDTO.getGeneralUserDetailDTO().getLastName());
+             record.setAttribute(EMAIL, schoolStaffDTO.getGeneralUserDetailDTO().getEmail());
+             record.setAttribute(NAME_ABREV, schoolStaffDTO.getGeneralUserDetailDTO().getNameAbbrev());
+             record.setAttribute(DOB, schoolStaffDTO.getGeneralUserDetailDTO().getDob());
+             record.setAttribute(NATIONAL_ID, schoolStaffDTO.getGeneralUserDetailDTO().getNationalId());
+             record.setAttribute(GENDER, schoolStaffDTO.getGeneralUserDetailDTO().getGender());
+             record.setAttribute(PHONE_NUMBER, schoolStaffDTO.getGeneralUserDetailDTO().getPhoneNumber());
+    	  }
+         
+         	return record;
 	}
 
 	public void addRecordsToGrid(List<SchoolStaffDTO> list) {

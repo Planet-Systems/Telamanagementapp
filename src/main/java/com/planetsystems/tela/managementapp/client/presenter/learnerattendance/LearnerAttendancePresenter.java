@@ -1,11 +1,13 @@
 package com.planetsystems.tela.managementapp.client.presenter.learnerattendance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -23,6 +25,7 @@ import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -35,6 +38,7 @@ import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 
@@ -54,6 +58,9 @@ public class LearnerAttendancePresenter
 
 	@Inject
 	private DispatchAsync dispatcher;
+	
+	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	@NameToken(NameTokens.learnerAttendance)
 	@ProxyCodeSplit
@@ -70,6 +77,7 @@ public class LearnerAttendancePresenter
 	protected void onBind() {
 		super.onBind();
 		setControlsPaneMenuButtons();
+		getAllLearnerAttendance();
 	}
 
 	public void setControlsPaneMenuButtons() {
@@ -123,6 +131,7 @@ public class LearnerAttendancePresenter
 				dto.setGirlsAbsent(Long.parseLong(window.getGirlsAbsentField().getValueAsString()));
 				dto.setGirlsPresent(Long.parseLong(window.getGirlsPresentField().getValueAsString()));
 				dto.setComment(window.getCommentField().getValueAsString());
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 				AcademicTermDTO academicTermDTO = new AcademicTermDTO(
 						window.getAcademicTermComboBox().getValueAsString());
@@ -137,6 +146,47 @@ public class LearnerAttendancePresenter
 				GWT.log("DTO " + dto);
 				GWT.log("term " + dto.getAcademicTermDTO().getId());
 				GWT.log("class " + dto.getSchoolClassDTO().getId());
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, null);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				SC.showPrompt("", "", new SwizimaLoader());
+
+				dispatcher.execute(new RequestAction(RequestConstant.SAVE_LEARNER_ATTENDANCE, map),
+						new AsyncCallback<RequestResult>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								System.out.println(caught.getMessage());
+								SC.warn("ERROR", caught.getMessage());
+								GWT.log("ERROR " + caught.getMessage());
+								SC.clearPrompt();
+
+							}
+
+							@Override
+							public void onSuccess(RequestResult result) {
+
+								SC.clearPrompt();
+								SessionManager.getInstance().manageSession(result, placeManager);
+								if (result != null) {
+									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+									if (feedbackDTO != null) {
+										if (feedbackDTO.isResponse()) {
+											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+											getView().getAttendancePane().getLearnerAttendanceListGrid()
+													.addRecordsToGrid(result.getLearnerAttendanceDTOs());
+										} else {
+											SC.warn("Not Successful \n ERROR:",
+													result.getSystemFeedbackDTO().getMessage());
+										}
+									}
+								} else {
+									SC.warn("ERROR", "Unknow error");
+								}
+
+							}
+						});
 
 			}
 		});
@@ -192,47 +242,48 @@ public class LearnerAttendancePresenter
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//SC.showPrompt("", "", new SwizimaLoader());
-//
-//dispatcher.execute(new RequestAction( RequestConstant.GET_SCHOOL_STAFF , map),
-//new AsyncCallback<RequestResult>() {
-//
-//	@Override
-//	public void onFailure(Throwable caught) {
-//		System.out.println(caught.getMessage());
-//		SC.warn("ERROR", caught.getMessage());
-//		GWT.log("ERROR " + caught.getMessage());
-//		SC.clearPrompt();
-//
-//	}
-//
-//	@Override
-//	public void onSuccess(RequestResult result) {
-//
-//		SC.clearPrompt();
-//		SessionManager.getInstance().manageSession(result, placeManager);
-//		if (result != null) {
-//
-//			if (result.getSystemFeedbackDTO() != null) {
-//				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-//					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + schoolStaffDTO.getGeneralUserDetailDTO().getLastName(); 
-//					valueMap.put(schoolStaffDTO.getId(), fullName);
-//				}
-//				window.getSchoolStaffComboBox().setValueMap(valueMap);
-//
-//				if (defaultValue != null) {
-//					window.getSchoolStaffComboBox().setValue(defaultValue);
-//				}
-//
-//			}
-//		} else {
-//			SC.warn("ERROR", "Unknow error");
-//		}
-//
-//	}
-//});
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+								for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+									String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName()
+											+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+									valueMap.put(schoolStaffDTO.getId(), fullName);
+								}
+								window.getSchoolStaffComboBox().setValueMap(valueMap);
+
+								if (defaultValue != null) {
+									window.getSchoolStaffComboBox().setValue(defaultValue);
+								}
+
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
 	}
 
 	private void loadSchoolClassCombo(final LearnerAttendanceWindow window, final String defaultValue) {
@@ -281,6 +332,50 @@ public class LearnerAttendancePresenter
 				});
 	}
 
+	private void getAllLearnerAttendance() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_LEARNER_ATTENDANCE, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_LEARNER_ATTENDANCE, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+							SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+							if (feedbackDTO != null) {
+								if (feedbackDTO.isResponse()) {
+									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									getView().getAttendancePane().getLearnerAttendanceListGrid()
+											.addRecordsToGrid(result.getLearnerAttendanceDTOs());
+								} else {
+									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+								}
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+
+				});
+
+	}
+
 	public void setTotalAbsentPresent(final LearnerAttendanceWindow window) {
 		final int[] totalGirlsPresent = new int[1];
 		final int[] totalBoysPresent = new int[1];
@@ -308,8 +403,6 @@ public class LearnerAttendancePresenter
 			}
 		});
 
-		
-		
 		window.getBoysAbsentField().addChangedHandler(new ChangedHandler() {
 
 			@Override
@@ -329,9 +422,8 @@ public class LearnerAttendancePresenter
 				window.getTotalAbsentField().setValue(totalAbsent[0]);
 			}
 		});
-		
-		
-		/////////////////////////////////////////present
+
+		///////////////////////////////////////// present
 		window.getGirlsPresentField().addChangedHandler(new ChangedHandler() {
 
 			@Override
@@ -350,8 +442,7 @@ public class LearnerAttendancePresenter
 				window.getTotalPresentField().setValue(totalPresent[0]);
 			}
 		});
-		
-		
+
 		window.getBoysPresentField().addChangedHandler(new ChangedHandler() {
 
 			@Override
@@ -370,9 +461,6 @@ public class LearnerAttendancePresenter
 				window.getTotalPresentField().setValue(totalPresent[0]);
 			}
 		});
-		
-		
-		
 
 	}
 

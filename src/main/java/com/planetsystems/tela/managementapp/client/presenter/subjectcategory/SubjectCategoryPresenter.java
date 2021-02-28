@@ -1,11 +1,13 @@
 package com.planetsystems.tela.managementapp.client.presenter.subjectcategory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -40,6 +42,7 @@ import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -73,6 +76,9 @@ public class SubjectCategoryPresenter
 
 	@Inject
 	private PlaceManager placeManager;
+	
+	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	
 	//private String token = Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 
@@ -188,6 +194,7 @@ public class SubjectCategoryPresenter
 				SubjectCategoryDTO dto = new SubjectCategoryDTO();
 				dto.setName(window.getCategoryName().getValueAsString());
 				dto.setCode(window.getCategoryCode().getValueAsString());
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_SUBJECT_CATEGORY, dto);
@@ -261,6 +268,7 @@ public class SubjectCategoryPresenter
 				dto.setName(window.getCategoryName().getValueAsString());
 				dto.setCode(window.getCategoryCode().getValueAsString());
 				dto.setId(record.getAttribute(SubCategoryListGrid.ID));
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_SUBJECT_CATEGORY, dto);
@@ -506,6 +514,7 @@ public class SubjectCategoryPresenter
 				SubjectDTO dto = new SubjectDTO();
 				dto.setName(window.getSubjectName().getValueAsString());
 				dto.setCode(window.getSubjectCode().getValueAsString());
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 				SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
 				subjectCategory.setId(window.getSubjectCategory().getValueAsString());
@@ -592,6 +601,7 @@ public class SubjectCategoryPresenter
 				dto.setId(record.getAttribute(SubjectListGrid.ID));
 				dto.setName(window.getSubjectName().getValueAsString());
 				dto.setCode(window.getSubjectCode().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
 				subjectCategory.setId(window.getSubjectCategory().getValueAsString());

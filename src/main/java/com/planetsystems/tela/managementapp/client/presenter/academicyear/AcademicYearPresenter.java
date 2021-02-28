@@ -1,12 +1,14 @@
 package com.planetsystems.tela.managementapp.client.presenter.academicyear;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -30,6 +32,7 @@ import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -57,7 +60,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	}
 
 //	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
-	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd-MM-yyyy");
+	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	private DispatchAsync dispatcher;
 
@@ -183,6 +187,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				dto.setCode(window.getYearCode().getValueAsString());
 				dto.setStartDate(dateFormat.format(window.getStartDate().getValueAsDate()));
 				dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_ACADEMIC_YEAR, dto);
@@ -269,6 +274,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				dto.setCode(window.getYearCode().getValueAsString());
 				dto.setStartDate(dateFormat.format(window.getStartDate().getValueAsDate()));
 				dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_ACADEMIC_YEAR, dto);
@@ -489,18 +495,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onClick(ClickEvent event) {
 				AcademicTermDTO academicTermDTO = new AcademicTermDTO();
-				// academicTermDTO.setId(window.getYearComboBox().getVa);
-				academicTermDTO.setAcademicYear(new AcademicYearDTO());
 				academicTermDTO.setCode(window.getTermCodeField().getValueAsString());
 				academicTermDTO.setStartDate(dateFormat.format(window.getStartDateItem().getValueAsDate()));
 				academicTermDTO.setEndDate(dateFormat.format(window.getEndDateItem().getValueAsDate()));
 				academicTermDTO.setTerm(window.getTermNameField().getValueAsString());
+				academicTermDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				AcademicYearDTO academicYear = new AcademicYearDTO();
-				academicYear.setId(window.getYearComboBox().getValueAsString());
+				AcademicYearDTO academicYearDTO = new AcademicYearDTO();
+				academicYearDTO.setId(window.getYearComboBox().getValueAsString());
 
-				academicTermDTO.setAcademicYear(academicYear);
-				GWT.log("ID" + academicYear.getId());
+				academicTermDTO.setAcademicYearDTO(academicYearDTO);
+				GWT.log("ID" + academicYearDTO.getId());
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_ACADEMIC_TERM, academicTermDTO);
@@ -586,17 +591,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				AcademicTermDTO academicTermDTO = new AcademicTermDTO();
 
 				academicTermDTO.setId(record.getAttribute(AcademicTermListGrid.ID));
-				academicTermDTO.setAcademicYear(new AcademicYearDTO());
 				academicTermDTO.setCode(window.getTermCodeField().getValueAsString());
 				academicTermDTO.setStartDate(dateFormat.format(window.getStartDateItem().getValueAsDate()));
 				academicTermDTO.setEndDate(dateFormat.format(window.getEndDateItem().getValueAsDate()));
 				academicTermDTO.setTerm(window.getTermNameField().getValueAsString());
+				academicTermDTO.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
-				AcademicYearDTO academicYear = new AcademicYearDTO();
-				academicYear.setId(window.getYearComboBox().getValueAsString());
+				AcademicYearDTO academicYearDTO = new AcademicYearDTO();
+				academicYearDTO.setId(window.getYearComboBox().getValueAsString());
 
-				academicTermDTO.setAcademicYear(academicYear);
-				GWT.log("ID" + academicYear.getId());
+				academicTermDTO.setAcademicYearDTO(academicYearDTO);
+				GWT.log("ID" + academicYearDTO.getId());
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_ACADEMIC_TERM, academicTermDTO);

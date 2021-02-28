@@ -91,16 +91,16 @@ public class SchoolListGrid extends SuperListGrid {
 		record.setAttribute(LATITUDE, schoolDTO.getLatitude());
 		record.setAttribute(LONGITUDE, schoolDTO.getLongitude());
 
-		if(schoolDTO.getDistrict() != null) {
-			record.setAttribute(DISTRICT, schoolDTO.getDistrict().getName());
-			record.setAttribute(DISTRICT_ID, schoolDTO.getDistrict().getId());
+		if(schoolDTO.getDistrictDTO() != null) {
+			record.setAttribute(DISTRICT, schoolDTO.getDistrictDTO().getName());
+			record.setAttribute(DISTRICT_ID, schoolDTO.getDistrictDTO().getId());
 		}
 		
 		record.setAttribute(DEVICE_NUMBER, schoolDTO.getDeviceNumber());
 		
-		if(schoolDTO.getSchoolCategory() != null) {
-			record.setAttribute(CATEGORY, schoolDTO.getSchoolCategory().getName());
-			record.setAttribute(CATEGORY_ID, schoolDTO.getSchoolCategory().getId());
+		if(schoolDTO.getSchoolCategoryDTO() != null) {
+			record.setAttribute(CATEGORY, schoolDTO.getSchoolCategoryDTO().getName());
+			record.setAttribute(CATEGORY_ID, schoolDTO.getSchoolCategoryDTO().getId());
 					
 		}
 	

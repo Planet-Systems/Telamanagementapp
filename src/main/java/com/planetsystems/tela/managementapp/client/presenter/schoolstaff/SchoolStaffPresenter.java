@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolstaff;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -21,24 +22,30 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolClassWindow;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
+import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView, SchoolStaffPresenter.MyProxy>  {
     interface MyView extends View  {
      ControlsPane getControlsPane();
- 	public SchoolStaffPane getStaffPane();
+ 	 SchoolStaffPane getStaffPane();
     }
     @ContentSlot
     public static final Type<RevealContentHandler<?>> SLOT_SchoolStaff = new Type<RevealContentHandler<?>>();
@@ -50,7 +57,8 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
     private PlaceManager placeManager;
     
 //	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
-	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd-MM-yyyy");
+	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
     @NameToken(NameTokens.schoolStaff)
     @ProxyCodeSplit
@@ -118,6 +126,7 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 		 //  dto.setId(id);
 		   
 		   dto.setRegistered(Boolean.valueOf(window.getRegisteredComboBox().getValueAsString()));
+		   dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 		 
 		   dto.setStaffCode(window.getStaffCode().getValueAsString());
 		 //  dto.setStatus(status);
@@ -132,7 +141,7 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 		   generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
 		   generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
 		   generalUserDetailDTO.setGender(window.getGenderComboBox().getValueAsString());
-		   generalUserDetailDTO.setNameAbrev(window.getNameAbrevField().getValueAsString());
+		   generalUserDetailDTO.setNameAbbrev(window.getNameAbrevField().getValueAsString());
 		   generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
 		   generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
 		   
@@ -140,11 +149,66 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 		   
 		   GWT.log("STAFF "+dto);
 		   GWT.log("School "+dto.getSchoolDTO().getId());
-		
+		   
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			map.put(RequestConstant.SAVE_SCHOOL_STAFF, dto);
+			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+			SC.showPrompt("", "", new SwizimaLoader());
+
+			dispatcher.execute(new RequestAction(RequestConstant.SAVE_SCHOOL_STAFF, map),
+					new AsyncCallback<RequestResult>() {
+
+						public void onFailure(Throwable caught) {
+
+							SC.clearPrompt();
+							System.out.println(caught.getMessage());
+							SC.say("ERROR", caught.getMessage());
+						}
+
+						public void onSuccess(RequestResult result) {
+							SC.clearPrompt();
+							
+							clearSchoolStaffWindowFields(window);
+
+							SessionManager.getInstance().manageSession(result, placeManager);
+							
+							if (result != null) {
+								SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+
+								if (feedback.isResponse()) {
+									SC.say("SUCCESS", feedback.getMessage());
+								} else {
+									SC.warn("INFO", feedback.getMessage());
+								}
+
+								getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+
+							} else {
+								SC.warn("ERROR", "Unknow error");
+							}
+
+						}
+
+					});
+		   
 		}
 	});
 	}
-	
+
+	private void clearSchoolStaffWindowFields(SchoolStaffWindow window) {
+		
+		window.getFirstNameField().clearValue();
+		window.getLastNameField().clearValue();
+		window.getPhoneNumberField().clearValue();
+		window.getEmailField().clearValue();
+		window.getDobItem().clearValue();
+		window.getNationalIdField().clearValue();
+		window.getGenderComboBox().clearValue();
+		window.getNameAbrevField().clearValue();
+		window.getStaffCode().clearValue();
+		window.getRegisteredComboBox().clearValue();
+		window.getSchoolComboBox().clearValue();
+	}
 	
 	private void loadGenderCombo(final SchoolStaffWindow window , final String defaultValue) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
@@ -211,42 +275,42 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		//SC.showPrompt("", "", new SwizimaLoader());
+		SC.showPrompt("", "", new SwizimaLoader());
 
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF , map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							if (result.getSystemFeedbackDTO() != null) {
-//								if (result.getSystemFeedbackDTO().isResponse()) {
-//									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-//									getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
-//								} else {
-//									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-//								}
-//							}
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//
-//				});
+		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF , map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+							if ( feedbackDTO != null) {
+								if (result.getSystemFeedbackDTO().isResponse()) {
+									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+								} else {
+									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+								}
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+
+				});
 
 	}
 

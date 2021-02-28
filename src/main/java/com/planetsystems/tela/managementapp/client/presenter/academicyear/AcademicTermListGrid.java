@@ -57,9 +57,9 @@ public class AcademicTermListGrid extends SuperListGrid {
 		record.setAttribute(CODE, academicTermDTO.getCode());
 		
 		record.setAttribute(NAME, academicTermDTO.getTerm());
-		if(academicTermDTO.getAcademicYear() != null) {
-			record.setAttribute(YEAR, academicTermDTO.getAcademicYear().getName());
-			record.setAttribute(YEAR_ID, academicTermDTO.getAcademicYear().getId());
+		if(academicTermDTO.getAcademicYearDTO() != null) {
+			record.setAttribute(YEAR, academicTermDTO.getAcademicYearDTO().getName());
+			record.setAttribute(YEAR_ID, academicTermDTO.getAcademicYearDTO().getId());
 		}
 		record.setAttribute(START_DATE, academicTermDTO.getStartDate());
 		record.setAttribute(END_DATE, academicTermDTO.getEndDate() );

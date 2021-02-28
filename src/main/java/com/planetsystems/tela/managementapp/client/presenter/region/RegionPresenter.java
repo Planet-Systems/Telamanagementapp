@@ -1,12 +1,14 @@
 package com.planetsystems.tela.managementapp.client.presenter.region;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -30,6 +32,7 @@ import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -60,6 +63,9 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	@Inject
 	private DispatchAsync dispatcher;
+	
+	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	//private String token = Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 
@@ -171,6 +177,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				RegionDto dto = new RegionDto();
 				dto.setName(window.getNameField().getValueAsString());
 				dto.setCode(window.getCodeField().getValueAsString());
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_REGION, dto);
@@ -255,6 +262,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				dto.setId(record.getAttribute(RegionListGrid.ID));
 				dto.setName(window.getNameField().getValueAsString());
 				dto.setCode(window.getCodeField().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_REGION, dto);
@@ -456,6 +464,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				DistrictDTO dto = new DistrictDTO();
 				dto.setCode(window.getDistrictCode().getValueAsString());
 				dto.setName(window.getDistrictName().getValueAsString());
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 				dto.setRolledOut(Boolean.parseBoolean(window.getRolledOut().getValueAsString()));
 
@@ -552,6 +561,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				dto.setId(record.getAttribute(DistrictListGrid.ID));
 				dto.setCode(window.getDistrictCode().getValueAsString());
 				dto.setName(window.getDistrictName().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				dto.setRolledOut(Boolean.parseBoolean(window.getRolledOut().getValueAsString()));
 
