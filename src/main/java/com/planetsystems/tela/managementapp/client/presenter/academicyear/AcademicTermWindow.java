@@ -27,9 +27,13 @@ public class AcademicTermWindow extends Window {
 		super();
 		termCodeField = new TextField();
 		termCodeField.setTitle("Code");
+		termCodeField.setHint("Code");
+		termCodeField.setShowHintInField(true);
 
 		termNameField = new TextField();
 		termNameField.setTitle("Academic term");
+		termNameField.setHint("Term");
+		termNameField.setShowHintInField(true);
 		
 		startDateItem = new DateItem();
 		startDateItem.setTitle("Start date");
@@ -43,11 +47,15 @@ public class AcademicTermWindow extends Window {
 		
 		yearComboBox = new ComboBox();
 		yearComboBox.setTitle("AcademicYear");
+		yearComboBox.setHint("Year");
+		yearComboBox.setShowHintInField(true);
+		
 
 		DynamicForm form = new DynamicForm();
 		form.setFields(yearComboBox , termCodeField, termNameField , startDateItem , endDateItem);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
+		form.setAutoFocus(true);
 		
 		form.setColWidths("150","250");
 		form.setCellPadding(10);

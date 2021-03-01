@@ -28,9 +28,13 @@ public class AcademicYearWindow extends Window {
 		
 		yearCode = new TextField();
 		yearCode.setTitle("Code");
+		yearCode.setHint("Code");
+		yearCode.setShowHintInField(true);
 
 		yearName = new TextField();
 		yearName.setTitle("Academic year");
+		yearName.setHint("Year");
+		yearName.setShowHintInField(true);
 		
 		startDate = new DateItem();
 		startDate.setTitle("Start date");
@@ -49,6 +53,7 @@ public class AcademicYearWindow extends Window {
 		form.setMargin(10);
 		form.setColWidths("150","250");
 		form.setCellPadding(10);
+		form.setAutoFocus(true);
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , saveButton);

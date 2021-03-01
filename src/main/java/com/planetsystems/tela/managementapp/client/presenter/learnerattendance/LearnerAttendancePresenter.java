@@ -22,6 +22,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.managementapp.client.presenter.enrollment.StaffEnrollmentWindow;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -32,6 +33,8 @@ import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.TextAreaItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
@@ -124,74 +127,102 @@ public class LearnerAttendancePresenter
 			@Override
 			public void onClick(ClickEvent event) {
 
-				LearnerAttendanceDTO dto = new LearnerAttendanceDTO();
+				if(checkIfNoLearnerAttendanceWindowFieldIsEmpty(window)) {
+					LearnerAttendanceDTO dto = new LearnerAttendanceDTO();
 
-				dto.setBoysAbsent(Long.parseLong(window.getBoysAbsentField().getValueAsString()));
-				dto.setBoysPresent(Long.parseLong(window.getBoysPresentField().getValueAsString()));
-				dto.setGirlsAbsent(Long.parseLong(window.getGirlsAbsentField().getValueAsString()));
-				dto.setGirlsPresent(Long.parseLong(window.getGirlsPresentField().getValueAsString()));
-				dto.setComment(window.getCommentField().getValueAsString());
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					dto.setBoysAbsent(Long.parseLong(window.getBoysAbsentField().getValueAsString()));
+					dto.setBoysPresent(Long.parseLong(window.getBoysPresentField().getValueAsString()));
+					dto.setGirlsAbsent(Long.parseLong(window.getGirlsAbsentField().getValueAsString()));
+					dto.setGirlsPresent(Long.parseLong(window.getGirlsPresentField().getValueAsString()));
+					dto.setComment(window.getCommentField().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				AcademicTermDTO academicTermDTO = new AcademicTermDTO(
-						window.getAcademicTermComboBox().getValueAsString());
-				dto.setAcademicTermDTO(academicTermDTO);
+					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
+							window.getAcademicTermComboBox().getValueAsString());
+					dto.setAcademicTermDTO(academicTermDTO);
 
-				SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassComboBox().getValueAsString());
-				dto.setSchoolClassDTO(schoolClassDTO);
+					SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassComboBox().getValueAsString());
+					dto.setSchoolClassDTO(schoolClassDTO);
 
-				SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffComboBox().getValueAsString());
-				dto.setSchoolStaffDTO(schoolStaffDTO);
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffComboBox().getValueAsString());
+					dto.setSchoolStaffDTO(schoolStaffDTO);
 
-				GWT.log("DTO " + dto);
-				GWT.log("term " + dto.getAcademicTermDTO().getId());
-				GWT.log("class " + dto.getSchoolClassDTO().getId());
+					GWT.log("DTO " + dto);
+					GWT.log("term " + dto.getAcademicTermDTO().getId());
+					GWT.log("class " + dto.getSchoolClassDTO().getId());
 
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, null);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, null);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_LEARNER_ATTENDANCE, map),
-						new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_LEARNER_ATTENDANCE, map),
+							new AsyncCallback<RequestResult>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
+								@Override
+								public void onFailure(Throwable caught) {
+									System.out.println(caught.getMessage());
+									SC.warn("ERROR", caught.getMessage());
+									GWT.log("ERROR " + caught.getMessage());
+									SC.clearPrompt();
 
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if (feedbackDTO != null) {
-										if (feedbackDTO.isResponse()) {
-											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-											getView().getAttendancePane().getLearnerAttendanceListGrid()
-													.addRecordsToGrid(result.getLearnerAttendanceDTOs());
-										} else {
-											SC.warn("Not Successful \n ERROR:",
-													result.getSystemFeedbackDTO().getMessage());
-										}
-									}
-								} else {
-									SC.warn("ERROR", "Unknow error");
 								}
 
-							}
-						});
+								@Override
+								public void onSuccess(RequestResult result) {
+
+									SC.clearPrompt();
+									SessionManager.getInstance().manageSession(result, placeManager);
+									if (result != null) {
+										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+										if (feedbackDTO != null) {
+											if (feedbackDTO.isResponse()) {
+												// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+												getView().getAttendancePane().getLearnerAttendanceListGrid()
+														.addRecordsToGrid(result.getLearnerAttendanceDTOs());
+											} else {
+												SC.warn("Not Successful \n ERROR:",
+														result.getSystemFeedbackDTO().getMessage());
+											}
+										}
+									} else {
+										SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+							});
+				}else {
+					SC.warn("Please fill all fields");
+				}
 
 			}
+
 		});
 	}
 
+	private boolean checkIfNoLearnerAttendanceWindowFieldIsEmpty(LearnerAttendanceWindow window) {
+	    boolean flag = true;
+
+	    if(window.getAcademicTermComboBox().getValueAsString() == null) flag = false;
+	    
+	    if(window.getSchoolClassComboBox().getValueAsString() == null) flag = false;
+	    
+	    if(window.getSchoolStaffComboBox().getValueAsString() == null) flag = false;
+	    
+//	    if(window.getCommentField().getValueAsString() == null) flag = false;
+	    
+	    if(window.getGirlsAbsentField().getValueAsString() == null) flag = false;
+	    
+	    if(window.getBoysAbsentField().getValueAsString() == null) flag = false;
+	    
+	    if(window.getBoysPresentField().getValueAsString() == null) flag = false;
+	    
+	    if(window.getGirlsPresentField().getValueAsString() == null) flag = false;
+	    
+	    
+		return flag;
+	}
+	
 	private void loadAcademicTermCombo(final LearnerAttendanceWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_ACADEMIC_TERM, null);

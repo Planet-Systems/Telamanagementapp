@@ -173,76 +173,98 @@ public class StaffAttendancePresenter extends Presenter<StaffAttendancePresenter
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				ClockInDTO dto = new ClockInDTO();
-				//dto.setClockInDate(clockInDate);
-				dto.setComment(window.getCommentField().getValueAsString());
-				//dto.setId(id);
-				dto.setLatitude(window.getLatitudeField().getValueAsString());
-				dto.setLongitude(window.getLongitudeField().getValueAsString());
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 				
-				
-				AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermComboBox().getValueAsString());
-				dto.setAcademicTermDTO(academicTermDTO);
-				
-				SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO();
-				schoolStaffDTO.setId(window.getSchoolStaffComboBox().getValueAsString());
-				dto.setSchoolStaffDTO(schoolStaffDTO);
-				
-				GWT.log("DTO "+dto);
-				GWT.log("Term "+dto.getAcademicTermDTO().getId());
-				GWT.log("Staff "+dto.getSchoolStaffDTO().getId());
-				
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_CLOCK_IN, dto);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				if(checkIfNoClockInWindowFieldIsEmpty(window)) {
+					ClockInDTO dto = new ClockInDTO();
+					//dto.setClockInDate(clockInDate);
+					dto.setComment(window.getCommentField().getValueAsString());
+					//dto.setId(id);
+					dto.setLatitude(window.getLatitudeField().getValueAsString());
+					dto.setLongitude(window.getLongitudeField().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					
+					
+					AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermComboBox().getValueAsString());
+					dto.setAcademicTermDTO(academicTermDTO);
+					
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO();
+					schoolStaffDTO.setId(window.getSchoolStaffComboBox().getValueAsString());
+					dto.setSchoolStaffDTO(schoolStaffDTO);
+					
+					GWT.log("DTO "+dto);
+					GWT.log("Term "+dto.getAcademicTermDTO().getId());
+					GWT.log("Staff "+dto.getSchoolStaffDTO().getId());
+					
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_CLOCK_IN, dto);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_CLOCK_IN, map),
-						new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_CLOCK_IN, map),
+							new AsyncCallback<RequestResult>() {
 
-							public void onFailure(Throwable caught) {
+								public void onFailure(Throwable caught) {
 
-								SC.clearPrompt();
-								System.out.println(caught.getMessage());
-								SC.say("ERROR", caught.getMessage());
-							}
-
-							public void onSuccess(RequestResult result) {
-								SC.clearPrompt();
-								
-								clearClockInWindowFields(window);
-								window.close();
-
-								SessionManager.getInstance().manageSession(result, placeManager);
-								
-								if (result != null) {
-									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-									if (feedback.isResponse()) {
-										SC.say("SUCCESS", feedback.getMessage());
-									} else {
-										SC.warn("INFO", feedback.getMessage());
-									}
-
-									getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
-
-								} else {
-									SC.warn("ERROR", "Unknow error");
+									SC.clearPrompt();
+									System.out.println(caught.getMessage());
+									SC.say("ERROR", caught.getMessage());
 								}
 
-							}
+								public void onSuccess(RequestResult result) {
+									SC.clearPrompt();
+									
+									clearClockInWindowFields(window);
+									window.close();
+
+									SessionManager.getInstance().manageSession(result, placeManager);
+									
+									if (result != null) {
+										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+
+										if (feedback.isResponse()) {
+											SC.say("SUCCESS", feedback.getMessage());
+										} else {
+											SC.warn("INFO", feedback.getMessage());
+										}
+
+										getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
+
+									} else {
+										SC.warn("ERROR", "Unknow error");
+									}
+
+								}
 
 
-						});
-				
+							});
+						
+				}else {
+					SC.say("Please fill all the fields");
+				}
+
 
 			}
+
+			
 		});
 		
 	}
 
-
+	private boolean checkIfNoClockInWindowFieldIsEmpty(ClockInWindow window) {
+	    boolean flag = true;
+	
+	    if(window.getAcademicTermComboBox().getValueAsString() == null) flag = false;
+	    
+	    if(window.getSchoolStaffComboBox().getValueAsString() == null) flag = false;
+	    
+	    //if(window.getCommentField().getValueAsString() == null) flag = false;
+	    
+	    if(window.getLatitudeField().getValueAsString() == null) flag = false;
+	    
+	    if(window.getLongitudeField().getValueAsString() == null) flag = false;
+	    
+		return flag;
+	}
 	private void clearClockInWindowFields(ClockInWindow window) {	
 		window.getAcademicTermComboBox().clearValue();
 		window.getSchoolStaffComboBox().clearValue();

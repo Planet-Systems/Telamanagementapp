@@ -29,9 +29,11 @@ import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEven
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
+import com.planetsystems.tela.managementapp.client.widget.TextField;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
@@ -40,6 +42,7 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -183,55 +186,80 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onClick(ClickEvent event) {
 				AcademicYearDTO dto = new AcademicYearDTO();
-				dto.setName(window.getYearName().getValueAsString());
-				dto.setCode(window.getYearCode().getValueAsString());
-				dto.setStartDate(dateFormat.format(window.getStartDate().getValueAsDate()));
-				dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				
+				if(checkIfNoAcademicYearWindowFieldIsEmpty(window)) {
+					dto.setName(window.getYearName().getValueAsString());
+					dto.setCode(window.getYearCode().getValueAsString());
+					dto.setStartDate(dateFormat.format(window.getStartDate().getValueAsDate()));
+					dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_ACADEMIC_YEAR, dto);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_ACADEMIC_YEAR, dto);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
-				SC.showPrompt("", "", new SwizimaLoader());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_YEAR, map),
-						new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_YEAR, map),
+							new AsyncCallback<RequestResult>() {
 
-							public void onFailure(Throwable caught) {
+								public void onFailure(Throwable caught) {
 
-								SC.clearPrompt();
-								System.out.println(caught.getMessage());
-								SC.say("ERROR", caught.getMessage());
-							}
-
-							public void onSuccess(RequestResult result) {
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								clearAcademicYearWindowFields(window);
-
-								if (result != null) {
-									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-									if (feedback.isResponse()) {
-										SC.say("SUCCESS", feedback.getMessage());
-										getView().getAcademicYearPane().getListGrid()
-												.addRecordsToGrid(result.getAcademicYearDTOs());
-									} else {
-										SC.warn("INFO", feedback.getMessage());
-									}
-
-								} else {
-									SC.warn("ERROR", "Unknow error");
+									SC.clearPrompt();
+									System.out.println(caught.getMessage());
+									SC.say("ERROR", caught.getMessage());
 								}
 
-							}
-						});
+								public void onSuccess(RequestResult result) {
+									SC.clearPrompt();
+									SessionManager.getInstance().manageSession(result, placeManager);
+									clearAcademicYearWindowFields(window);
 
+									if (result != null) {
+										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+
+										if (feedback.isResponse()) {
+											SC.say("SUCCESS", feedback.getMessage());
+											getView().getAcademicYearPane().getListGrid()
+													.addRecordsToGrid(result.getAcademicYearDTOs());
+										} else {
+											SC.warn("INFO", feedback.getMessage());
+										}
+
+									} else {
+										SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+							});
+				}else {
+					SC.say("Fill all fields");
+				}
+				
 			}
+
 		});
 	}
 
+	
+	private boolean checkIfNoAcademicYearWindowFieldIsEmpty(AcademicYearWindow window) {
+	  boolean flag = true;
+	
+	  if(window.getYearName().getValueAsString() == null)
+		  flag = false;
+	  
+	  if(window.getYearCode().getValueAsString() == null)
+		  flag = false;
+	  
+	  if(window.getStartDate().getValueAsDate() == null)
+		  flag = false;
+	  
+	  if(window.getEndDate().getValueAsDate() == null)
+		  flag = false;
+	 
+		return flag;
+	}
+	
 	private void editAcademicYear(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -297,6 +325,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								SC.clearPrompt();
 								SessionManager.getInstance().manageSession(result, placeManager);
 								clearAcademicYearWindowFields(window);
+								window.show();
 
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
@@ -494,62 +523,83 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 			@Override
 			public void onClick(ClickEvent event) {
-				AcademicTermDTO academicTermDTO = new AcademicTermDTO();
-				academicTermDTO.setCode(window.getTermCodeField().getValueAsString());
-				academicTermDTO.setStartDate(dateFormat.format(window.getStartDateItem().getValueAsDate()));
-				academicTermDTO.setEndDate(dateFormat.format(window.getEndDateItem().getValueAsDate()));
-				academicTermDTO.setTerm(window.getTermNameField().getValueAsString());
-				academicTermDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				
+				if(checkIfNoAcademicTermWindowFieldIsEmpty(window)){
+					AcademicTermDTO academicTermDTO = new AcademicTermDTO();
+					academicTermDTO.setCode(window.getTermCodeField().getValueAsString());
+					academicTermDTO.setStartDate(dateFormat.format(window.getStartDateItem().getValueAsDate()));
+					academicTermDTO.setEndDate(dateFormat.format(window.getEndDateItem().getValueAsDate()));
+					academicTermDTO.setTerm(window.getTermNameField().getValueAsString());
+					academicTermDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				AcademicYearDTO academicYearDTO = new AcademicYearDTO();
-				academicYearDTO.setId(window.getYearComboBox().getValueAsString());
+					AcademicYearDTO academicYearDTO = new AcademicYearDTO();
+					academicYearDTO.setId(window.getYearComboBox().getValueAsString());
 
-				academicTermDTO.setAcademicYearDTO(academicYearDTO);
-				GWT.log("ID" + academicYearDTO.getId());
+					academicTermDTO.setAcademicYearDTO(academicYearDTO);
+					GWT.log("ID" + academicYearDTO.getId());
 
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_ACADEMIC_TERM, academicTermDTO);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_ACADEMIC_TERM, academicTermDTO);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_TERM, map),
-						new AsyncCallback<RequestResult>() {
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
-							}
-
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								clearAcademicTermWindowFields(window);
-
-								if (result != null) {
-									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-									if (feedback.isResponse()) {
-										SC.say("SUCCESS", feedback.getMessage());
-									} else {
-										SC.warn("INFO", feedback.getMessage());
-									}
-
-									getView().getAcademicTermPane().getListGrid()
-											.addRecordsToGrid(result.getAcademicTermDTOs());
-
-								} else {
-									SC.warn("ERROR", "Service Down");
-									// SC.warn("ERROR", "Unknow error");
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_TERM, map),
+							new AsyncCallback<RequestResult>() {
+								public void onFailure(Throwable caught) {
+									System.out.println(caught.getMessage());
+									SC.warn("ERROR", caught.getMessage());
+									GWT.log("ERROR " + caught.getMessage());
+									SC.clearPrompt();
 								}
 
-							}
+								public void onSuccess(RequestResult result) {
 
-						});
+									SC.clearPrompt();
+									SessionManager.getInstance().manageSession(result, placeManager);
+									clearAcademicTermWindowFields(window);
+
+									if (result != null) {
+										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+
+										if (feedback.isResponse()) {
+											SC.say("SUCCESS", feedback.getMessage());
+										} else {
+											SC.warn("INFO", feedback.getMessage());
+										}
+
+										getView().getAcademicTermPane().getListGrid()
+												.addRecordsToGrid(result.getAcademicTermDTOs());
+
+									} else {
+										SC.warn("ERROR", "Service Down");
+										// SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+
+							});
+				}else {
+					SC.warn("Please fill all fields");
+				}
 
 			}
 		});
+	}
+
+	protected boolean checkIfNoAcademicTermWindowFieldIsEmpty(AcademicTermWindow window) {
+		boolean flag = true;
+	
+		if(window.getTermCodeField().getValueAsString() == null) flag = false;
+		
+		if(window.getTermNameField().getValueAsString() == null) flag = false;
+		
+		if(window.getStartDateItem().getValueAsDate() == null) flag = false;
+		
+		if(window.getEndDateItem().getValueAsDate() == null) flag = false;
+		
+		if(window.getYearComboBox().getValueAsString() == null) flag = false;
+		
+		return flag;
 	}
 
 	private void clearAcademicTermWindowFields(AcademicTermWindow window) {
@@ -623,6 +673,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								SC.clearPrompt();
 								SessionManager.getInstance().manageSession(result, placeManager);
 								clearAcademicTermWindowFields(window);
+								window.show();
 
 								if (result != null) {
 									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();

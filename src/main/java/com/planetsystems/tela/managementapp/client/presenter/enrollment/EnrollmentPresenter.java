@@ -28,6 +28,7 @@ import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicTermWindow;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
@@ -172,67 +173,87 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 		
 		@Override
 		public void onClick(ClickEvent event) {
-		   StaffEnrollmentDto dto = new StaffEnrollmentDto();
-		   dto.setTotalFemale(Long.valueOf(window.getTotalFemaleField().getValueAsString()));
-		   dto.setTotalMale(Long.valueOf(window.getTotalMaleField().getValueAsString()));
-		   dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-		   
-		   AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermComboBox().getValueAsString());
-		   dto.setAcademicTermDTO(academicTermDTO);
-		   //dto.setId(id);
-		   SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolComboBox().getValueAsString());
-		   dto.setSchoolDTO(schoolDTO);
-		   
-		   GWT.log("DTO "+dto);
-		   GWT.log("term "+dto.getAcademicTermDTO().getId());
-		   GWT.log("DTO "+dto.getSchoolDTO().getId());
-		   
-		   LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestConstant.SAVE_STAFF_ENROLLMENT, dto);
-			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-			SC.showPrompt("", "", new SwizimaLoader());
+			if(checkIfNoStaffEnrollmentWindowFieldIsEmpty(window)) {
+				StaffEnrollmentDto dto = new StaffEnrollmentDto();
+				   dto.setTotalFemale(Long.valueOf(window.getTotalFemaleField().getValueAsString()));
+				   dto.setTotalMale(Long.valueOf(window.getTotalMaleField().getValueAsString()));
+				   dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				   
+				   AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermComboBox().getValueAsString());
+				   dto.setAcademicTermDTO(academicTermDTO);
+				   //dto.setId(id);
+				   SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolComboBox().getValueAsString());
+				   dto.setSchoolDTO(schoolDTO);
+				   
+				   GWT.log("DTO "+dto);
+				   GWT.log("term "+dto.getAcademicTermDTO().getId());
+				   GWT.log("DTO "+dto.getSchoolDTO().getId());
+				   
+				   LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_STAFF_ENROLLMENT, dto);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-			dispatcher.execute(new RequestAction(RequestConstant.SAVE_STAFF_ENROLLMENT, map),
-					new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_STAFF_ENROLLMENT, map),
+							new AsyncCallback<RequestResult>() {
 
-						public void onFailure(Throwable caught) {
+								public void onFailure(Throwable caught) {
 
-							SC.clearPrompt();
-							System.out.println(caught.getMessage());
-							SC.say("ERROR", caught.getMessage());
-						}
-
-						public void onSuccess(RequestResult result) {
-							SC.clearPrompt();
-							
-							clearStaffEnrollmentWindowFields(window);
-							window.close();
-
-							SessionManager.getInstance().manageSession(result, placeManager);
-							
-							if (result != null) {
-								SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-								if (feedback.isResponse()) {
-									SC.say("SUCCESS", feedback.getMessage());
-								} else {
-									SC.warn("INFO", feedback.getMessage());
+									SC.clearPrompt();
+									System.out.println(caught.getMessage());
+									SC.say("ERROR", caught.getMessage());
 								}
 
-								getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid().addRecordsToGrid(result.getStaffEnrollmentDtos());
+								public void onSuccess(RequestResult result) {
+									SC.clearPrompt();
+									
+									clearStaffEnrollmentWindowFields(window);
+									window.close();
 
-							} else {
-								SC.warn("ERROR", "Unknow error");
-							}
+									SessionManager.getInstance().manageSession(result, placeManager);
+									
+									if (result != null) {
+										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
-						}
+										if (feedback.isResponse()) {
+											SC.say("SUCCESS", feedback.getMessage());
+										} else {
+											SC.warn("INFO", feedback.getMessage());
+										}
 
-					});
-		   
-		   
+										getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid().addRecordsToGrid(result.getStaffEnrollmentDtos());
+
+									} else {
+										SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+
+							});
+				   
+			}else {
+				SC.warn("Please Fill all fields");
+			}
+
 		}
 	});
 		
+	}
+	
+	private boolean checkIfNoStaffEnrollmentWindowFieldIsEmpty(StaffEnrollmentWindow window) {
+		boolean flag = true;
+
+		if(window.getAcademicTermComboBox().getValueAsString() == null) flag = false;
+		
+		if(window.getSchoolComboBox().getValueAsString() == null) flag = false;
+		
+		if(window.getTotalFemaleField().getValueAsString() == null) flag = false;
+		
+		if(window.getTotalMaleField().getValueAsString() == null) flag = false;
+		
+		if(window.getStaffTotalField().getValueAsString() == null) flag = false;
+		
+		return flag;
 	}
 	
 
@@ -554,6 +575,13 @@ private void getAllStaffEnrollments() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
+			
+			if(checkIfNoLearnerEnrollmentWindowFieldIsEmpty(window)) {
+				
+			}else {
+			  SC.warn("Please Fill all fields");	
+			}
+			
 			LearnerEnrollmentDTO dto = new LearnerEnrollmentDTO();
 			//dto.setId(id);
 			dto.setTotalBoys(Long.valueOf(window.getTotalBoysField().getValueAsString()));
@@ -613,6 +641,18 @@ private void getAllStaffEnrollments() {
 
 	}
 	
+
+	protected boolean checkIfNoLearnerEnrollmentWindowFieldIsEmpty(LearnerEnrollmentWindow window) {
+		boolean flag = true;
+
+		if(window.getTotalBoysField().getValueAsString() == null) flag = false;
+		
+		if(window.getTotalGirlsField().getValueAsString() == null) flag = false;
+		
+		if(window.getSchoolClassComboBox().getValueAsString() == null) flag = false;
+		
+		return flag;
+	}
 
 	private void clearLearnerEnrollmentWindowFields(LearnerEnrollmentWindow window) {
        /*

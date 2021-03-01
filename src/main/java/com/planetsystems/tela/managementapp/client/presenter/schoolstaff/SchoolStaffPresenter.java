@@ -122,77 +122,111 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 		
 		@Override
 		public void onClick(ClickEvent event) {
-		   SchoolStaffDTO dto = new SchoolStaffDTO();
-		 //  dto.setId(id);
-		   
-		   dto.setRegistered(Boolean.valueOf(window.getRegisteredComboBox().getValueAsString()));
-		   dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-		 
-		   dto.setStaffCode(window.getStaffCode().getValueAsString());
-		 //  dto.setStatus(status);
-		  // dto.setStaffType(staffType);
-	
-		   SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolComboBox().getValueAsString());
-		   dto.setSchoolDTO(schoolDTO);
 			
-		   GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
-		   generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
-		   generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
-		   generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
-		   generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
-		   generalUserDetailDTO.setGender(window.getGenderComboBox().getValueAsString());
-		   generalUserDetailDTO.setNameAbbrev(window.getNameAbrevField().getValueAsString());
-		   generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
-		   generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
-		   
-		   dto.setGeneralUserDetailDTO(generalUserDetailDTO);
-		   
-		   GWT.log("STAFF "+dto);
-		   GWT.log("School "+dto.getSchoolDTO().getId());
-		   
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestConstant.SAVE_SCHOOL_STAFF, dto);
-			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-			SC.showPrompt("", "", new SwizimaLoader());
+			if(checkIfNoSchoolStaffWindowFieldIsEmpty(window)){
+				 SchoolStaffDTO dto = new SchoolStaffDTO();
+				 //  dto.setId(id);
+				   
+				   dto.setRegistered(Boolean.valueOf(window.getRegisteredComboBox().getValueAsString()));
+				   dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				 
+				   dto.setStaffCode(window.getStaffCode().getValueAsString());
+				 //  dto.setStatus(status);
+				  // dto.setStaffType(staffType);
+			
+				   SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolComboBox().getValueAsString());
+				   dto.setSchoolDTO(schoolDTO);
+					
+				   GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
+				   generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+				   generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+				   generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
+				   generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+				   generalUserDetailDTO.setGender(window.getGenderComboBox().getValueAsString());
+				   generalUserDetailDTO.setNameAbbrev(window.getNameAbrevField().getValueAsString());
+				   generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+				   generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+				   
+				   dto.setGeneralUserDetailDTO(generalUserDetailDTO);
+				   
+				   GWT.log("STAFF "+dto);
+				   GWT.log("School "+dto.getSchoolDTO().getId());
+				   
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_SCHOOL_STAFF, dto);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-			dispatcher.execute(new RequestAction(RequestConstant.SAVE_SCHOOL_STAFF, map),
-					new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SCHOOL_STAFF, map),
+							new AsyncCallback<RequestResult>() {
 
-						public void onFailure(Throwable caught) {
+								public void onFailure(Throwable caught) {
 
-							SC.clearPrompt();
-							System.out.println(caught.getMessage());
-							SC.say("ERROR", caught.getMessage());
-						}
-
-						public void onSuccess(RequestResult result) {
-							SC.clearPrompt();
-							
-							clearSchoolStaffWindowFields(window);
-
-							SessionManager.getInstance().manageSession(result, placeManager);
-							
-							if (result != null) {
-								SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-								if (feedback.isResponse()) {
-									SC.say("SUCCESS", feedback.getMessage());
-								} else {
-									SC.warn("INFO", feedback.getMessage());
+									SC.clearPrompt();
+									System.out.println(caught.getMessage());
+									SC.say("ERROR", caught.getMessage());
 								}
 
-								getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+								public void onSuccess(RequestResult result) {
+									SC.clearPrompt();
+									
+									clearSchoolStaffWindowFields(window);
 
-							} else {
-								SC.warn("ERROR", "Unknow error");
-							}
+									SessionManager.getInstance().manageSession(result, placeManager);
+									
+									if (result != null) {
+										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
 
-						}
+										if (feedback.isResponse()) {
+											SC.say("SUCCESS", feedback.getMessage());
+										} else {
+											SC.warn("INFO", feedback.getMessage());
+										}
 
-					});
-		   
+										getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+
+									} else {
+										SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+
+							});
+			}else {
+				SC.warn("Please Fill the fields");
+			}
+			
 		}
 	});
+	}
+
+	protected boolean checkIfNoSchoolStaffWindowFieldIsEmpty(SchoolStaffWindow window) {
+		boolean flag = true;
+		
+		if(window.getFirstNameField().getValueAsString() == null) flag = false;
+		
+		if(window.getLastNameField().getValueAsString() == null) flag = false;
+		
+		if(window.getPhoneNumberField().getValueAsString() == null) flag = false;
+		
+		if(window.getEmailField().getValueAsString() == null) flag = false;
+		
+		if(window.getDobItem().getValueAsDate() == null) flag = false;
+		
+		if(window.getNationalIdField().getValueAsString() == null) flag = false;
+		
+		if(window.getGenderComboBox().getValueAsString() == null) flag = false;
+		
+		if(window.getNameAbrevField().getValueAsString() == null) flag = false;
+		
+		if(window.getStaffCode().getValueAsString() == null) flag = false;
+		
+		if(window.getRegisteredComboBox().getValueAsString() == null) flag = false;
+		
+		if(window.getSchoolComboBox().getValueAsString() == null) flag = false;
+		
+		
+		return flag;
 	}
 
 	private void clearSchoolStaffWindowFields(SchoolStaffWindow window) {

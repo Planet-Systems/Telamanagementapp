@@ -41,10 +41,14 @@ public class StaffEnrollmentWindow extends Window {
 		
 		totalMaleField = new TextItem();
 		totalMaleField.setTitle("Number Of Male");
+		totalMaleField.setHint("Numeric only<br>[0-9.]");          
+		totalMaleField.setKeyPressFilter("[0-9.]"); 
 
 		
 		totalFemaleField = new TextItem();
 		totalFemaleField.setTitle("Number Of Female");
+		totalFemaleField.setHint("Numeric only<br>[0-9.]");          
+		totalFemaleField.setKeyPressFilter("[0-9.]"); 
 		
 		academicTermComboBox = new ComboBox();
 		academicTermComboBox.setTitle("AcademicTerm");
@@ -92,7 +96,7 @@ public class StaffEnrollmentWindow extends Window {
 		
 	
 		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setHeight("65%");
 		this.setAutoCenter(true);
 		this.setTitle("Staff Enrollment");
 		this.setIsModal(true);

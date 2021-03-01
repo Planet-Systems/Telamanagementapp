@@ -40,6 +40,10 @@ public class SchoolStaffWindow extends Window {
 		
 		phoneNumberField = new TextItem();
 		phoneNumberField.setTitle("PhoneNumber");
+		phoneNumberField.setMask("#### ###-###");  
+        phoneNumberField.setHint("#### ###-###");  
+        phoneNumberField.setShowHintInField(true);  
+		
 		
 		emailField = new TextItem();
 		emailField.setTitle("Email");
@@ -104,7 +108,7 @@ public class SchoolStaffWindow extends Window {
 		this.setAutoCenter(true);
 		this.setTitle("SchoolStaff");
 		this.setIsModal(true);
-		this.setShowModalMask(true);
+		//this.setShowModalMask(true);
 		
 		this.addMember(layout);
 		

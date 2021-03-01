@@ -191,54 +191,72 @@ public class SubjectCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				SubjectCategoryDTO dto = new SubjectCategoryDTO();
-				dto.setName(window.getCategoryName().getValueAsString());
-				dto.setCode(window.getCategoryCode().getValueAsString());
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				
+				if(checkIfNoSubjectCategoryWindowFieldIsEmpty(window)) {
+					SubjectCategoryDTO dto = new SubjectCategoryDTO();
+					dto.setName(window.getCategoryName().getValueAsString());
+					dto.setCode(window.getCategoryCode().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_SUBJECT_CATEGORY, dto);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_SUBJECT_CATEGORY, dto);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_SUBJECT_CATEGORY , map),
-						new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SUBJECT_CATEGORY , map),
+							new AsyncCallback<RequestResult>() {
 
-							public void onFailure(Throwable caught) {
+								public void onFailure(Throwable caught) {
 
-								SC.clearPrompt();
-								System.out.println(caught.getMessage());
-								SC.say("ERROR", caught.getMessage());
-							}
-
-							public void onSuccess(RequestResult result) {
-								SC.clearPrompt();
-								clearSubjectCategoryWindowFields(window);
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-
-									if (feedbackDTO.isResponse()) {
-										SC.say("SUCCESS", feedbackDTO.getMessage());
-
-										getView().getSubCategoryPane().getListGrid()
-												.addRecordsToGrid(result.getSubjectCategoryDTOs());
-									} else {
-										SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
-									}
-
-								} else {
-									SC.warn("ERROR", "Service Down");
-									// SC.warn("ERROR", "Unknow error");
+									SC.clearPrompt();
+									System.out.println(caught.getMessage());
+									SC.say("ERROR", caught.getMessage());
 								}
 
-							}
-						});
+								public void onSuccess(RequestResult result) {
+									SC.clearPrompt();
+									clearSubjectCategoryWindowFields(window);
+									SessionManager.getInstance().manageSession(result, placeManager);
+									if (result != null) {
+										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+
+										if (feedbackDTO.isResponse()) {
+											SC.say("SUCCESS", feedbackDTO.getMessage());
+
+											getView().getSubCategoryPane().getListGrid()
+													.addRecordsToGrid(result.getSubjectCategoryDTOs());
+										} else {
+											SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
+										}
+
+									} else {
+										SC.warn("ERROR", "Service Down");
+										// SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+							});
+
+				}else {
+					SC.say("Please fill all fields");
+				}
 
 			}
+
+			
 		});
 	}
 
+	private boolean checkIfNoSubjectCategoryWindowFieldIsEmpty(SubjectCategoryWindow window) {
+		boolean flag = true;
+		
+		if(window.getCategoryCode().getValueAsString() == null) flag = false;
+		
+		if(window.getCategoryName().getValueAsString() == null) flag = false;
+		
+		return flag;
+	}
+	
 	private void editSubjectCategory(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -246,6 +264,7 @@ public class SubjectCategoryPresenter
 			public void onClick(ClickEvent event) {
 				if (getView().getSubCategoryPane().getListGrid().anySelected()) {
 					SubjectCategoryWindow window = new SubjectCategoryWindow();
+					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
 					updateSubjectCategory(window);
 					window.show();
@@ -511,55 +530,73 @@ public class SubjectCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				SubjectDTO dto = new SubjectDTO();
-				dto.setName(window.getSubjectName().getValueAsString());
-				dto.setCode(window.getSubjectCode().getValueAsString());
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				
+				if(checkIfNoSubjectWindowFieldIsEmpty(window)) {
+					SubjectDTO dto = new SubjectDTO();
+					dto.setName(window.getSubjectName().getValueAsString());
+					dto.setCode(window.getSubjectCode().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
-				subjectCategory.setId(window.getSubjectCategory().getValueAsString());
-				dto.setSubjectCategory(subjectCategory);
+					SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
+					subjectCategory.setId(window.getSubjectCategory().getValueAsString());
+					dto.setSubjectCategory(subjectCategory);
 
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_SUBJECT, dto);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_SUBJECT, dto);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_SUBJECT , map),
-						new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SUBJECT , map),
+							new AsyncCallback<RequestResult>() {
 
-							public void onFailure(Throwable caught) {
+								public void onFailure(Throwable caught) {
 
-								SC.clearPrompt();
-								System.out.println(caught.getMessage());
-								SC.say("ERROR", caught.getMessage());
-							}
-
-							public void onSuccess(RequestResult result) {
-								SC.clearPrompt();
-								clearSubjectWindowFields(window);
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-
-									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if (feedbackDTO.isResponse()) {
-										SC.say("SUCCESS", feedbackDTO.getMessage());
-
-										getView().getSubjectPane().getListGrid().addRecordsToGrid(result.getSubjectDTOs());
-										
-									} else {
-										SC.warn("ERROR", feedbackDTO.getMessage());
-									}
-
-								} else {
-									SC.warn("ERROR", "Unknow error");
+									SC.clearPrompt();
+									System.out.println(caught.getMessage());
+									SC.say("ERROR", caught.getMessage());
 								}
 
-							}
-						});
+								public void onSuccess(RequestResult result) {
+									SC.clearPrompt();
+									clearSubjectWindowFields(window);
+									SessionManager.getInstance().manageSession(result, placeManager);
+									if (result != null) {
+
+										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+										if (feedbackDTO.isResponse()) {
+											SC.say("SUCCESS", feedbackDTO.getMessage());
+
+											getView().getSubjectPane().getListGrid().addRecordsToGrid(result.getSubjectDTOs());
+											
+										} else {
+											SC.warn("ERROR", feedbackDTO.getMessage());
+										}
+
+									} else {
+										SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+							});
+				}else {
+					SC.warn("Please fill all fields");
+				}
 
 			}
+
+			
 		});
+	}
+	
+	private boolean checkIfNoSubjectWindowFieldIsEmpty(SubjectWindow window) {
+		boolean flag = true;
+		if(window.getSubjectCategory().getValueAsString() == null) flag = false;
+		
+		if(window.getSubjectName().getValueAsString() == null) flag = false;
+		
+		if(window.getSubjectCode().getValueAsString() == null) flag = false;
+		
+		return flag;
 	}
 
 	public void editSubject(MenuButton button) {
@@ -569,6 +606,7 @@ public class SubjectCategoryPresenter
 			public void onClick(ClickEvent event) {
 				if (getView().getSubjectPane().getListGrid().anySelected()) {
 					SubjectWindow window = new SubjectWindow();
+					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
 					updateSubject(window);
 					window.show();

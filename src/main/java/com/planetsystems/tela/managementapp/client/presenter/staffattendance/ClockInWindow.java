@@ -17,11 +17,9 @@ public class ClockInWindow extends Window {
 
 	private ComboBox schoolStaffComboBox;
 
-	// private DateItem clockInDate; taken from server
 	private TextAreaItem commentField;
 	private TextItem latitudeField;
 	private TextItem longitudeField;
-	// private TextItem statusField; set from server side
 
 	private IButton saveButton;
 	private IButton cancelButton;
