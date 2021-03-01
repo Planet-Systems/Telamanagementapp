@@ -2,6 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.academicyear;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -55,9 +56,11 @@ public class AcademicTermWindow extends Window {
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , saveButton);
 		buttonLayout.setAutoHeight();
-		buttonLayout.setWidth100();
+		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
 		buttonLayout.setMembersMargin(4);
+		
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);

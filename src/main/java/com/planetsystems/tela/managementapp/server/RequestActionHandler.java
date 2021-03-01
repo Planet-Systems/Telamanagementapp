@@ -1853,18 +1853,18 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				}
 
 				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
-				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("clockins")
-						.request(MediaType.APPLICATION_JSON)
-						.headers(headers)
-						.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
-						});
+//				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("clockins")
+//						.request(MediaType.APPLICATION_JSON)
+//						.headers(headers)
+//						.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
+//						});
 
-				list = responseDto.getData();
+//				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
-				feedback.setResponse(responseDto.isStatus());
-				feedback.setMessage(responseDto.getMessage());
+				System.out.println("RESPONSE " + feedback);
+				System.out.println("RES DATA " + feedback.getMessage());
+				//feedback.setResponse(feedback.isResponse());
+				//feedback.setMessage(responseDto.getMessage());
 
 				client.close();
 				return new RequestResult(feedback, list, null);

@@ -59,10 +59,9 @@ public class ClockInWindow extends Window {
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , saveButton);
 		buttonLayout.setAutoHeight();
-		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
 		buttonLayout.setMembersMargin(4);
-		
+		buttonLayout.setAutoWidth();
 		
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 		

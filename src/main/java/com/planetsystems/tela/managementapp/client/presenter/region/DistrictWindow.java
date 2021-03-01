@@ -2,6 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.region;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -36,21 +37,26 @@ public class DistrictWindow extends Window {
 		rolledOut.setTitle("Rolled Out");
 
 		saveButton = new IButton("Save");
-		
+
 		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields( region, rolledOut ,districtCode, districtName);
+		form.setFields(region, rolledOut, districtCode, districtName);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
+		form.setColWidths("150","250");
+		form.setCellPadding(10);
 
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(cancelButton , saveButton);
+		buttonLayout.setMembers(cancelButton, saveButton);
 		buttonLayout.setAutoHeight();
-		buttonLayout.setWidth100();
+		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
 		buttonLayout.setMembersMargin(4);
+		
+
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -59,7 +65,7 @@ public class DistrictWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("40%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
 		this.setTitle("Region");
 		this.setIsModal(true);
@@ -67,17 +73,16 @@ public class DistrictWindow extends Window {
 		cancel(this);
 	}
 
-	
 	private void cancel(final Window window) {
 		cancelButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				window.close();
 			}
 		});
 	}
-	
+
 	public TextField getDistrictCode() {
 		return districtCode;
 	}

@@ -88,8 +88,6 @@ public class StaffAttendancePresenter extends Presenter<StaffAttendancePresenter
 		super.onBind();
 		onTabSelected();
 		getAllStaffClockIn();
-		getAllStaffClockOut();
-	
 	}
 	private void onTabSelected() {
 		getView().getTabSet().addTabSelectedHandler(new TabSelectedHandler() {
@@ -121,7 +119,7 @@ public class StaffAttendancePresenter extends Presenter<StaffAttendancePresenter
 		
 
 				} else if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKOUT_TAB_TITLE)) {
-
+					getAllStaffClockOut();
 					//MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -446,7 +444,8 @@ public class StaffAttendancePresenter extends Presenter<StaffAttendancePresenter
           							if ( feedbackDTO != null) {
           								if (feedbackDTO.isResponse()) {
           									 SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-          									getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
+//          									getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
+          									 getAllStaffClockIn();
           								} else {
           									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
           								}

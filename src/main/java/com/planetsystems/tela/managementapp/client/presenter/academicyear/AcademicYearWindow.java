@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.academicyear;
 
 import com.planetsystems.tela.managementapp.client.widget.TextField;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
@@ -46,13 +47,16 @@ public class AcademicYearWindow extends Window {
 		form.setFields(yearCode, yearName , startDate , endDate);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
+		form.setColWidths("150","250");
+		form.setCellPadding(10);
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , saveButton);
 		buttonLayout.setAutoHeight();
-		buttonLayout.setWidth100();
+		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
 		buttonLayout.setMembersMargin(4);
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -61,7 +65,7 @@ public class AcademicYearWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("40%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
 		this.setTitle("Academic year");
 		this.setIsModal(true);

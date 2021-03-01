@@ -63,8 +63,9 @@ public class StaffEnrollmentWindow extends Window {
 		dynamicForm.setFields(academicTermComboBox , schoolComboBox , totalMaleField , totalFemaleField , staffTotalField);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
+		dynamicForm.setColWidths("100","250");
 		dynamicForm.setCellPadding(10);
-		dynamicForm.setColWidths("60", "220");
+		
 		
 		
 		saveButton = new IButton("Save");

@@ -54,8 +54,8 @@ public class LearnerEnrollmentWindow extends Window {
 		dynamicForm.setFields(schoolClassComboBox , totalBoysField , totalGirlsField , learnerTotalField );
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
+		dynamicForm.setColWidths("150","250");
 		dynamicForm.setCellPadding(10);
-		dynamicForm.setColWidths("60", "220");
 		
 		
 		saveButton = new IButton("Save");

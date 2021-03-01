@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolcategory;
 
 import com.planetsystems.tela.managementapp.client.widget.TextField;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -34,6 +35,8 @@ public class SchoolCategoryWindow extends Window {
 		form.setFields(categoryCode, categoryName);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
+		form.setColWidths("150","250");
+		form.setCellPadding(10);
 
 		HLayout buttonLayout = new HLayout();
 		
@@ -41,9 +44,10 @@ public class SchoolCategoryWindow extends Window {
 		
 		
 		buttonLayout.setAutoHeight();
-		buttonLayout.setWidth100();
+		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
 		buttonLayout.setMembersMargin(4);
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -52,7 +56,7 @@ public class SchoolCategoryWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("28%");
+		this.setHeight("40%");
 		this.setAutoCenter(true);
 		this.setTitle("School category");
 		this.setIsModal(true);
