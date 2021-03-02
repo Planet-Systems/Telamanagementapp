@@ -104,7 +104,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 											Cookies.setCookie(RequestConstant.LOGED_IN , "true");
 
 											PlaceRequest placeRequest = new PlaceRequest.Builder()
-													.nameToken(NameTokens.academicyear).build();
+													.nameToken(NameTokens.academicYear).build();
 
 											placeManager.revealPlace(placeRequest);
 										} else {
@@ -134,7 +134,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 
 	private void goToMain(String token) {
 		 PlaceRequest mainPlaceRequest = new
-		 PlaceRequest.Builder().nameToken(NameTokens.academicyear).build();
+		 PlaceRequest.Builder().nameToken(NameTokens.academicYear).build();
 		 placeManager.revealPlace(mainPlaceRequest);
 
 	//	SC.say("going to main");

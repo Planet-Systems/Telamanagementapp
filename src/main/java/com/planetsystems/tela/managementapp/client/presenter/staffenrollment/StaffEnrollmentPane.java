@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.enrollment;
+package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
@@ -13,7 +13,7 @@ public class StaffEnrollmentPane extends VLayout {
 		Label header = new Label();
 		
 		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("Staffs");
+		header.setContents("Staff Head Count");
 		header.setWidth("100%");
 		header.setAutoHeight();
 		header.setMargin(10);

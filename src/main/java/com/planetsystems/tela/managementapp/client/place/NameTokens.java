@@ -2,34 +2,64 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
-	public static final String learnerAttendance = "learnerAttendance";
+	public static final String learnerEnrollment = "LearnerEnrollment";
 
-	public static final String staffAttendance = "staffAttendance";
+	public static final String learnerAttendance = "LearnerAttendance";
 
-	public static final String enrollment = "enrollment";
+	public static final String staffAttendance = "StaffAttendance";
 
-	public static final String schoolStaff = "schoolStaff";
+	public static final String enrollment = "Enrollment";
 
-	public static final String login = "login";
+	public static final String schoolStaff = "SchoolStaff";
 
-	public static final String authentication = "authentication";
+	public static final String login = "Login";
 
-	public static final String subjectcategory = "subject categories";
+	public static final String authentication = "Authentication";
 
-	public static final String schoolclasscategory = "school categories classes";
+	public static final String subjectCategory = "SubjectCategories";
 
-	public static final String region = "region districts";
+	public static final String schoolClassCategory = "SchoolClassCategory";
 
-	public static final String academicyear = "academic years";
+	public static final String region = "RegionDistricts";
 
-	public static final String dashboard = "dashboard";
+	public static final String academicYear = "AcademicYears";
+
+	public static final String dashboard = "Dashboard";
+
+	public static String getLearnerenrollment() {
+		return learnerEnrollment;
+	}
+
+	public static String getLearnerattendance() {
+		return learnerAttendance;
+	}
+
+	public static String getStaffattendance() {
+		return staffAttendance;
+	}
+
+	public static String getEnrollment() {
+		return enrollment;
+	}
+
+	public static String getSchoolstaff() {
+		return schoolStaff;
+	}
+
+	public static String getLogin() {
+		return login;
+	}
+
+	public static String getAuthentication() {
+		return authentication;
+	}
 
 	public static String getSubjectcategory() {
-		return subjectcategory;
+		return subjectCategory;
 	}
 
 	public static String getSchoolclasscategory() {
-		return schoolclasscategory;
+		return schoolClassCategory;
 	}
 
 	public static String getRegion() {
@@ -37,36 +67,62 @@ public class NameTokens {
 	}
 
 	public static String getAcademicyear() {
-		return academicyear;
+		return academicYear;
 	}
 
 	public static String getDashboard() {
 		return dashboard;
 	}
+	
+	
 
-	public static String getAuthentication() {
-		return authentication;
-	}
-
-	public static String getLogin() {
-		return login;
-	}
-
-	public static String getSchoolStaff() {
-		return schoolStaff;
-	}
-
-	public static String getEnrollment() {
-		return enrollment;
-	}
-
-	public static String getStaffAttendance() {
-		return staffAttendance;
-	}
-
-	public static String getLearnerAttendance() {
-		return learnerAttendance;
-	}
+//	public static String getSubjectcategory() {
+//		return subjectcategory;
+//	}
+//
+//	public static String getSchoolclasscategory() {
+//		return schoolclasscategory;
+//	}
+//
+//	public static String getRegion() {
+//		return region;
+//	}
+//
+//	public static String getAcademicyear() {
+//		return academicyear;
+//	}
+//
+//	public static String getDashboard() {
+//		return dashboard;
+//	}
+//
+//	public static String getAuthentication() {
+//		return authentication;
+//	}
+//
+//	public static String getLogin() {
+//		return login;
+//	}
+//
+//	public static String getSchoolStaff() {
+//		return schoolStaff;
+//	}
+//
+//	public static String getEnrollment() {
+//		return enrollment;
+//	}
+//
+//	public static String getStaffAttendance() {
+//		return staffAttendance;
+//	}
+//
+//	public static String getLearnerAttendance() {
+//		return learnerAttendance;
+//	}
+//
+//	public static String getLearnerEnrollment() {
+//		return learnerEnrollment;
+//	}
 
 	//	public static String getAcademicyear() {
 	//		return academicyear;

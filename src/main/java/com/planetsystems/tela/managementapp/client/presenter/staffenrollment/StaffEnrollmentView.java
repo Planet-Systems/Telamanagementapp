@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.enrollment;
+package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 
 import javax.inject.Inject;
 
@@ -11,20 +11,20 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
-class EnrollmentView extends ViewImpl implements EnrollmentPresenter.MyView {
+class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.MyView {
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
 	private StaffEnrollmentPane staffEnrollmentPane;
-	private LearnerEnrollmentPane learnerEnrollmentPane;
+	private SchoolStaffPane schoolStaffPane  ;
 	private TabSet tabSet;
 	private ControlsPane controlsPane;
-	public static final String STAFF_ENROLLMENT="Staff Enrollment";
-	public static final String LEARNERS_ENROLLMENT="Learner Enrollment";
+	public static final String STAFF_ENROLLMENT="Head Count";
+	public static final String TEACHER_LIST="Teacher List";
 
     @Inject
-    EnrollmentView() {
+    StaffEnrollmentView() {
     	panel = new VLayout();
-    	learnerEnrollmentPane = new  LearnerEnrollmentPane();
+    	schoolStaffPane = new  SchoolStaffPane();
     	staffEnrollmentPane = new StaffEnrollmentPane();
     	controlsPane = new ControlsPane();
     	tabSet = new TabSet();
@@ -33,11 +33,11 @@ class EnrollmentView extends ViewImpl implements EnrollmentPresenter.MyView {
     	staffTab.setTitle(STAFF_ENROLLMENT);
     	staffTab.setPane(staffEnrollmentPane);
     	
-    	Tab learnerTab = new Tab();
-    	learnerTab.setTitle(LEARNERS_ENROLLMENT);
-    	learnerTab.setPane(learnerEnrollmentPane);
+    	Tab teacherTab = new Tab();
+    	teacherTab.setTitle(TEACHER_LIST);
+    	teacherTab.setPane(schoolStaffPane);
     
-    	tabSet.addTab(learnerTab);
+    	tabSet.addTab(teacherTab);
     	tabSet.addTab(staffTab);
     
     	controlsPane.addMember(new Label("Menus"));
@@ -64,8 +64,10 @@ class EnrollmentView extends ViewImpl implements EnrollmentPresenter.MyView {
 		return staffEnrollmentPane;
 	}
 
-	public LearnerEnrollmentPane getLearnerEnrollmentPane() {
-		return learnerEnrollmentPane;
+
+
+	public SchoolStaffPane getSchoolStaffPane() {
+		return schoolStaffPane;
 	}
 
 	@Override

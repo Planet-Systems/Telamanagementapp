@@ -50,36 +50,58 @@ public class LearnerAttendanceWindow extends Window {
 		
 		commentField = new TextAreaItem();
 		commentField.setTitle("Comment");
+		commentField.setHint("Comment on attendance");
+		commentField.setShowHintInField(true);
 		commentField.setRowSpan(2);
 		
 		girlsAbsentField = new TextItem();
 		girlsAbsentField.setTitle("GirlsAbsent");
+		girlsAbsentField.setHint("GirlsAbsent");
+		girlsAbsentField.setShowHintInField(true);
+		
 		
 		boysAbsentField = new TextItem();
 		boysAbsentField.setTitle("BoysAbsent");
+		boysAbsentField.setHint("BoysAbsent");
+		boysAbsentField.setShowHintInField(true);
 		
 		girlsPresentField = new TextItem();
 		girlsPresentField.setTitle("GirlsPresent");
+		girlsPresentField.setHint("GirlsPresent");
+		girlsPresentField.setShowHintInField(true);
 		
 		boysPresentField = new TextItem();
 		boysPresentField.setTitle("BoysPresent");
+		boysPresentField.setHint("BoysPresent");
+		boysPresentField.setShowHintInField(true);
 		
 		totalAbsentField = new TextItem();
 		totalAbsentField.setTitle("TotalAbsent");
 		totalAbsentField.disable();
+		totalAbsentField.setHint("TotalAbsent: 0");
+		totalAbsentField.setShowHintInField(true);
+		
 		
 		totalPresentField = new TextItem();
 		totalPresentField.setTitle("TotalPresent");
 		totalPresentField.disable();
+		totalPresentField.setHint("TotalPresent: 0");
+		totalPresentField.setShowHintInField(true);
 		
 		academicTermComboBox = new ComboBox();
 		academicTermComboBox.setTitle("AcademicTerm");
+		academicTermComboBox.setHint("AcademicTerm");
+		academicTermComboBox.setShowHintInField(true);
 		
 		schoolStaffComboBox = new ComboBox();
 		schoolStaffComboBox.setTitle("Staff");
+		schoolStaffComboBox.setHint("Staff");
+		schoolStaffComboBox.setShowHintInField(true);
 		
 		schoolClassComboBox = new ComboBox();
 		schoolClassComboBox.setTitle("Class");
+		schoolClassComboBox.setHint("Class");
+		schoolClassComboBox.setShowHintInField(true);
        
 		
 		DynamicForm dynamicForm = new DynamicForm();

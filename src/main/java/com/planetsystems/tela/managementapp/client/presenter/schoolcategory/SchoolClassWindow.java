@@ -26,15 +26,23 @@ public class SchoolClassWindow extends Window {
 		super();
 		classCode = new TextField();
 		classCode.setTitle("Code");
+		classCode.setHint("Code");
+		classCode.setShowHintInField(true);
 
 		cName = new TextField();
 		cName.setTitle("Class");
+		cName.setHint("Class");
+		cName.setShowHintInField(true);
 
 		school = new ComboBox();
 		school.setTitle("School");
+		school.setHint("School");
+		school.setShowHintInField(true);
 		
 		academicTerm = new ComboBox();
-		academicTerm.setTitle("Term");
+		academicTerm.setTitle("Academic Term");
+		academicTerm.setHint("Academic Term");
+		academicTerm.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
 		

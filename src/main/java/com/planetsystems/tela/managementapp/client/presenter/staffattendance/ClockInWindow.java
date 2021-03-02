@@ -29,18 +29,29 @@ public class ClockInWindow extends Window {
 		commentField = new TextAreaItem();
 		commentField.setTitle("Comment");
 		commentField.setRowSpan(2);
+		commentField.setHint("Comment");
+		commentField.setShowHintInField(true);
 		
 		latitudeField = new TextItem();
 		latitudeField.setTitle("Latitude");
+		latitudeField.setHint("Latitude");
+		latitudeField.setShowHintInField(true);
 		
 		longitudeField = new TextItem();
 		longitudeField.setTitle("longitude");
+		longitudeField.setHint("longitude");
+		longitudeField.setShowHintInField(true);
 		
 		academicTermComboBox = new ComboBox();
 		academicTermComboBox.setTitle("AcademicTerm");
+		academicTermComboBox.setHint("AcademicTerm");
+		academicTermComboBox.setShowHintInField(true);
+		
 		
 		schoolStaffComboBox = new ComboBox();
 		schoolStaffComboBox.setTitle("Staff");
+		schoolStaffComboBox.setHint("Staff");
+		schoolStaffComboBox.setShowHintInField(true);
        
 		
 		DynamicForm dynamicForm = new DynamicForm();

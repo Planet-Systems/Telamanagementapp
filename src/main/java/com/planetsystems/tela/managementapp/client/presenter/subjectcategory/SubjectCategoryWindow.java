@@ -23,9 +23,13 @@ public class SubjectCategoryWindow extends Window {
 		super();
 		categoryCode = new TextField();
 		categoryCode.setTitle("Code");
+		categoryCode.setHint("Code");
+		categoryCode.setShowHintInField(true);
 
 		categoryName = new TextField();
 		categoryName.setTitle("Category");
+		categoryName.setHint("Category");
+		categoryName.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
 		

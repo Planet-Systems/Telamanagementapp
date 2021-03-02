@@ -57,10 +57,14 @@ public class LoginPane extends VLayout {
 			
 			username = new TextField();
 			username.setTitle("Username"); 
+			username.setHint("Username");
+			username.setShowHintInField(true);
 			
 			password = new PasswordItem();
 			password.setTitle("Password");
 			password.setWidth("*");
+			password.setHint("Password");
+			password.setShowHintInField(true);
 			
 			DynamicForm form = new DynamicForm();
 			form.setFields(username, password);

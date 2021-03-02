@@ -22,9 +22,13 @@ public class SchoolCategoryWindow extends Window {
 		super();
 		categoryCode = new TextField();
 		categoryCode.setTitle("Code");
+		categoryCode.setHint("Category");
+		categoryCode.setShowHintInField(true);
 
 		categoryName = new TextField();
 		categoryName.setTitle("Category");
+		categoryName.setHint("Category");
+		categoryName.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
 

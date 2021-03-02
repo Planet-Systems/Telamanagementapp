@@ -82,7 +82,7 @@ public class SubjectCategoryPresenter
 	
 	//private String token = Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 
-	@NameToken(NameTokens.subjectcategory)
+	@NameToken(NameTokens.subjectCategory)
 	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<SubjectCategoryPresenter> {
 	}

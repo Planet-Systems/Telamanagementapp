@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.enrollment;
+package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 
 import java.util.List;
 

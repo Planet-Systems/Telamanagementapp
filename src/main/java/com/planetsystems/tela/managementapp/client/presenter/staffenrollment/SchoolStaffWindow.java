@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.schoolstaff;
+package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.types.Alignment;
@@ -34,7 +34,7 @@ public class SchoolStaffWindow extends Window {
 		
 		firstNameField = new TextItem();
 		firstNameField.setTitle("FirstName");
-		firstNameField.setHint("firstName");
+		firstNameField.setHint("FirstName");
 		firstNameField.setShowHintInField(true);
 		
 		lastNameField = new TextItem();
@@ -51,7 +51,7 @@ public class SchoolStaffWindow extends Window {
 		
 		emailField = new TextItem();
 		emailField.setTitle("Email");
-		emailField.setHint("Email");
+		emailField.setHint("LastName");
 		emailField.setShowHintInField(true);
 
 		dobItem = new DateItem();
@@ -64,12 +64,12 @@ public class SchoolStaffWindow extends Window {
 
 		nameAbrevField = new TextItem();
 		nameAbrevField.setTitle("NameAbbrev");
-		nameAbrevField.setHint("NameAbbreviation");
+		nameAbrevField.setHint("Name Abbreviation");
 		nameAbrevField.setShowHintInField(true);
 		
 		staffCode = new TextItem();
 		staffCode.setTitle("StaffCode");
-		staffCode.setHint("StaffCode");
+		staffCode.setHint("staffCode");
 		staffCode.setShowHintInField(true);
 		
 		genderComboBox = new ComboBox();
@@ -83,9 +83,10 @@ public class SchoolStaffWindow extends Window {
 		registeredComboBox.setShowHintInField(true);
 		
 		
+		
 		schoolComboBox = new ComboBox();
 		schoolComboBox.setTitle("School");
-		schoolComboBox.setHint("School");
+		schoolComboBox.setHint("schoolComboBox");
 		schoolComboBox.setShowHintInField(true);
 		
 		DynamicForm dynamicForm = new DynamicForm();

@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.enrollment;
+package com.planetsystems.tela.managementapp.client.presenter.learnerenrollment;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class LearnerEnrollmentListGrid extends SuperListGrid {
+public class LearnerEnrollmentListGrid extends SuperListGrid  {
 	public static String ID = "id";
 
 	public static String TOTAL_BOYS = "totalBoys";

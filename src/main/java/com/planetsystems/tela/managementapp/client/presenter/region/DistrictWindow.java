@@ -26,15 +26,23 @@ public class DistrictWindow extends Window {
 		super();
 		districtCode = new TextField();
 		districtCode.setTitle("Code");
+		districtCode.setHint("Code");
+		districtCode.setShowHintInField(true);
 
 		districtName = new TextField();
 		districtName.setTitle("District");
+		districtName.setHint("District");
+		districtName.setShowHintInField(true);
 
 		region = new ComboBox();
 		region.setTitle("Region");
+		region.setHint("Region");
+		region.setShowHintInField(true);
 
 		rolledOut = new ComboBox();
 		rolledOut.setTitle("Rolled Out");
+		rolledOut.setHint("Rolled Out");
+		rolledOut.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
 

@@ -14,20 +14,20 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
 
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
-	private SchCategoryPane schCategoryPane;
+	private SchCategoryPane schoolCategoryPane;
 	private SchoolPane schoolPane;
 	private SchoolClassPane schoolClassPane;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
 	
-	public static final String SCH_CATEGORY_TAB_TITLE = "School Categories";
+	public static final String SCHOOL_CATEGORY_TAB_TITLE = "School Categories";
 	public static final String SCHOOL_TAB_TITLE = "Schools";
-	public static final String SCH_CLASSES_TAB_TITLE = "Classes";
+	public static final String SCHOOL_CLASSES_TAB_TITLE = "Classes";
 
     @Inject
     SchoolCategoryView() {
     	panel = new VLayout();
-    	schCategoryPane = new SchCategoryPane();
+    	schoolCategoryPane = new SchCategoryPane();
     	schoolPane = new SchoolPane();
     	schoolClassPane = new SchoolClassPane();
     	controlsPane = new ControlsPane();
@@ -38,12 +38,12 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
     	tab1.setPane(schoolPane);
     	
     	Tab tab2 = new Tab();
-    	tab2.setTitle(SCH_CLASSES_TAB_TITLE);
+    	tab2.setTitle(SCHOOL_CLASSES_TAB_TITLE);
     	tab2.setPane(schoolClassPane);
     	
     	Tab tab3 = new Tab();
-    	tab3.setTitle(SCH_CATEGORY_TAB_TITLE);
-    	tab3.setPane(schCategoryPane);
+    	tab3.setTitle(SCHOOL_CATEGORY_TAB_TITLE);
+    	tab3.setPane(schoolCategoryPane);
     	
     	tabSet.addTab(tab1);
     	tabSet.addTab(tab2);
@@ -70,8 +70,8 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
 		return tabSet;
 	}
 
-	public SchCategoryPane getSchCategoryPane() {
-		return schCategoryPane;
+	public SchCategoryPane getSchoolCategoryPane() {
+		return schoolCategoryPane;
 	}
 
 	public SchoolPane getSchoolPane() {
@@ -81,6 +81,9 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
 	public SchoolClassPane getSchoolClassPane() {
 		return schoolClassPane;
 	}
+
+	
+	
 	
 	
     

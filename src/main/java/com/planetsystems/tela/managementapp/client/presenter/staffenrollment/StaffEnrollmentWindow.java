@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.enrollment;
+package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.types.Alignment;
@@ -42,24 +42,32 @@ public class StaffEnrollmentWindow extends Window {
 		totalMaleField = new TextItem();
 		totalMaleField.setTitle("Number Of Male");
 		totalMaleField.setHint("Numeric only<br>[0-9.]");          
-		totalMaleField.setKeyPressFilter("[0-9.]"); 
+		totalMaleField.setKeyPressFilter("[0-9.]");
+		totalMaleField.setShowHintInField(true);
 
 		
 		totalFemaleField = new TextItem();
 		totalFemaleField.setTitle("Number Of Female");
 		totalFemaleField.setHint("Numeric only<br>[0-9.]");          
 		totalFemaleField.setKeyPressFilter("[0-9.]"); 
+		totalFemaleField.setShowHintInField(true);
 		
 		academicTermComboBox = new ComboBox();
 		academicTermComboBox.setTitle("AcademicTerm");
+		academicTermComboBox.setHint("AcademicTerm");
+		academicTermComboBox.setShowHintInField(true);
 		
 		schoolComboBox = new ComboBox();
 		schoolComboBox.setTitle("School");
+		schoolComboBox.setHint("School");
+		schoolComboBox.setShowHintInField(true);
 		
 		staffTotalField = new TextItem();
 		staffTotalField.setTitle("Total");
 		staffTotalField.setValue(0);
 		staffTotalField.disable();
+		staffTotalField.setHint("Total");
+		staffTotalField.setShowHintInField(true);
 		
        
 		

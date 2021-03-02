@@ -1,19 +1,19 @@
-package com.planetsystems.tela.managementapp.client.presenter.enrollment;
+package com.planetsystems.tela.managementapp.client.presenter.learnerenrollment;
 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class LearnerEnrollmentPane extends VLayout {
+public class LearnerEnrollementPane extends VLayout{
 
-private LearnerEnrollmentListGrid learnerEnrollmentListGrid;
-	
-	public LearnerEnrollmentPane() {
+	private LearnerEnrollmentListGrid learnerEnrollmentListGrid;
+
+	public LearnerEnrollementPane() {
 		super();
-		Label header = new Label();
+	Label header = new Label();
 		
 		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("Learners");
+		header.setContents("Head Count");
 		header.setWidth("100%");
 		header.setAutoHeight();
 		header.setMargin(10);
@@ -29,7 +29,8 @@ private LearnerEnrollmentListGrid learnerEnrollmentListGrid;
 	public LearnerEnrollmentListGrid getLearnerEnrollmentListGrid() {
 		return learnerEnrollmentListGrid;
 	}
-
+	
+	
 	
 	
 }

@@ -16,6 +16,8 @@ import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEven
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationData;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationDataSource;
+import com.planetsystems.tela.managementapp.client.menu.SystemAttendanceData;
+import com.planetsystems.tela.managementapp.client.menu.SystemAttendanceDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemEnrollmentData;
 import com.planetsystems.tela.managementapp.client.menu.SystemEnrollmentDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -25,10 +27,8 @@ import com.planetsystems.tela.managementapp.client.widget.NavigationPane;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VStack;
@@ -89,53 +89,147 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
 				SystemAdministrationDataSource.getInstance(SystemAdministrationData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_CONFIGURATION,
-				new NavigationPaneClickHandler());
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_CONFIGURATION , new RecordClickHandler() {
+			
+			@Override
+			public void onRecordClick(RecordClickEvent event) {
+				onSystemConfigurationMenuClick(event);
+			}
+
+		});
 		
 		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
 				SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
-				new NavigationPaneClickHandler());
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT , new RecordClickHandler() {
+			
+			@Override
+			public void onRecordClick(RecordClickEvent event) {
+				onSystemEnrollmentMenuClick(event);
+			}
+
+		} );
+		
+		
+		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
+				SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords()));
+
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE , new RecordClickHandler() {
+			
+			@Override
+			public void onRecordClick(RecordClickEvent event) {
+				onSystemAttendanceMenuClick(event);
+			}
+
+		});
 		
 	}
+    
+	private void onSystemAttendanceMenuClick(RecordClickEvent event) {
 
+		Record record = event.getRecord();
+		String name = record.getAttributeAsString("name");
+
+		PlaceRequest placeRequest = null;
+		
+		switch (name) {
+		case SystemAttendanceData.LEARNER :
+			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerAttendance).build();
+			break;
+			
+		case SystemAttendanceData.STAFF:
+			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.staffAttendance).build();
+			break;
+		}
+		placeManager.revealPlace(placeRequest);
+	}
+    
+	private void onSystemConfigurationMenuClick(RecordClickEvent event) {
+		Record record = event.getRecord();
+		String name = record.getAttributeAsString("name");
+
+		PlaceRequest placeRequest = null;
+		
+		switch (name) {
+		case SystemAdministrationData.ACADEMIC_YEAR:
+			placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.academicYear).build();
+			break;
+		case SystemAdministrationData.LOCATION:
+		    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.region).build();
+		    break;
+		case SystemAdministrationData.SCHOOLS:
+		    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.schoolClassCategory).build();
+	
+		    break;
+		case SystemAdministrationData.SUBJECTS:
+		    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.subjectCategory).build();
+		    break;
+		}
+		
+		placeManager.revealPlace(placeRequest);
+		
+	}
+    
+    private void onSystemEnrollmentMenuClick(RecordClickEvent event) {
+    	Record record = event.getRecord();
+		String name = record.getAttributeAsString("name");
+
+		PlaceRequest placeRequest = null;
+	
+		switch (name) {
+		case SystemEnrollmentData.STAFF_ENROLLMENT :
+			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.enrollment).build();
+			break;
+			
+		case SystemEnrollmentData.LEARNER_ENROLLMENT :
+			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerEnrollment).build();
+			break;
+		}
+		placeManager.revealPlace(placeRequest);
+	}
+
+    /*
+     * to be removed after agreeing
+     */
+    @Deprecated
     private class NavigationPaneClickHandler implements RecordClickHandler {
 		public void onRecordClick(RecordClickEvent event) {
 
 			Record record = event.getRecord();
 			String name = record.getAttributeAsString("name");
+			
 
 			PlaceRequest placeRequest = null;
-			//new PlaceRequest.Builder().nameToken(name).build();
 			switch(name) {
-			case SystemAdministrationData.ACADEMIC_YEAR:
-				placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.academicyear).build();
-				break;
-			case SystemAdministrationData.LOCATION:
-			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.region).build();
-			    break;
-			case SystemAdministrationData.SCHOOLS:
-			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.schoolclasscategory).build();
-		
-			    break;
-			case SystemAdministrationData.SUBJECTS:
-			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.subjectcategory).build();
-			    break;
-			    
-			case SystemEnrollmentData.STAFF:
-				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.schoolStaff).build();
-				break;
-			case SystemEnrollmentData.STAFF_ATTENDANCE:
-				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.staffAttendance).build();
-				break;
+//			case SystemAdministrationData.ACADEMIC_YEAR:
+//				placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.academicyear).build();
+//				break;
+//			case SystemAdministrationData.LOCATION:
+//			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.region).build();
+//			    break;
+//			case SystemAdministrationData.SCHOOLS:
+//			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.schoolclasscategory).build();
+//		
+//			    break;
+//			case SystemAdministrationData.SUBJECTS:
+//			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.subjectcategory).build();
+//			    break;
+
+//			case SystemEnrollmentData.STAFF_ENROLLMENT :
+//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.enrollment).build();
+//				break;
+//				
+//			case SystemEnrollmentData.LEARNER_ENROLLMENT :
+//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerEnrollment).build();
+//				break;	
 				
-			case SystemEnrollmentData.ENROLLMENT :
-				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.enrollment).build();
-				break;
-			case SystemEnrollmentData.LEARNER_ATTENDANCE :
-				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerAttendance).build();
-				break;
+//			case SystemAttendanceData.LEARNER :
+//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerAttendance).build();
+//				break;
+//				
+//			case SystemAttendanceData.STAFF:
+//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.staffAttendance).build();
+//				break;
 		
 			}
 
@@ -150,7 +244,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 //	    SC.say("EVENT TRIGGERED "+event.getMessage());
 //	      GWT.log("EVENT TRIGGERED "+event.getMessage());
 		switch(event.getMessage()) {
-		case NameTokens.academicyear:
+		case NameTokens.academicYear:
 			
 			//getView().getNavigationPane().setBackgroundColor("blue");
 		
@@ -160,12 +254,12 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 			//getView().getNavigationPane().setBackgroundColor("red");
 		  
 			 break;
-		case NameTokens.schoolclasscategory:
+		case NameTokens.schoolClassCategory:
 
 			 //getView().getNavigationPane().setBackgroundColor("green");
 
 			 break;
-		case NameTokens.subjectcategory:
+		case NameTokens.subjectCategory:
 		  
 			 //getView().getNavigationPane().setBackgroundColor("pink");
 		    break;

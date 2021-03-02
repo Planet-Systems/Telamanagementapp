@@ -6,6 +6,8 @@ public class RequestConstant {
 	public static final String SYSTEM_SETTINGS = "Settings";
 	public static final String SYSTEM_USERS = "System Users";
 	
+	public static final String SYSTEM_ATTENDANCE = "System Attendance";
+	
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";
 	public static final String DELETE_ACADEMIC_YEAR = "DELETE_ACADEMIC_YEAR";

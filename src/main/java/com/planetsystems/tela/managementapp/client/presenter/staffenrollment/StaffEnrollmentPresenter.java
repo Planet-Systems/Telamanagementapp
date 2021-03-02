@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.enrollment;
+package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,16 +21,15 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
-import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
-import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicTermWindow;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.widget.ComboBox;
+import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -41,13 +40,12 @@ import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
-public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, EnrollmentPresenter.MyProxy>  {
+public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter.MyView, StaffEnrollmentPresenter.MyProxy>  {
     interface MyView extends View  {
     	public ControlsPane getControlsPane();
 
@@ -55,7 +53,7 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 
     	public StaffEnrollmentPane getStaffEnrollmentPane();
 
-    	public LearnerEnrollmentPane getLearnerEnrollmentPane();
+    	public SchoolStaffPane getSchoolStaffPane();
     
     }
     @ContentSlot
@@ -72,11 +70,11 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 
     @NameToken(NameTokens.enrollment)
     @ProxyCodeSplit
-    interface MyProxy extends ProxyPlace<EnrollmentPresenter> {
+    interface MyProxy extends ProxyPlace<StaffEnrollmentPresenter> {
     }
 
     @Inject
-    EnrollmentPresenter(
+    StaffEnrollmentPresenter(
             EventBus eventBus,
             MyView view, 
             MyProxy proxy) {
@@ -88,8 +86,9 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
     protected void onBind() {
     	super.onBind();
      onTabSelected();
-     getAllLearnerEnrollments();
      getAllStaffEnrollments();
+     getAllSchoolStaff();
+     
     }
     private void onTabSelected() {
 		getView().getTabSet().addTabSelectedHandler(new TabSelectedHandler() {
@@ -99,7 +98,7 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 
 				String selectedTab = event.getTab().getTitle();
 
-				if (selectedTab.equalsIgnoreCase(EnrollmentView.STAFF_ENROLLMENT)) {
+				if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.STAFF_ENROLLMENT)) {
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -116,7 +115,7 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 //					deleteRegion(delete);
 //					editRegion(edit);
 
-				} else if (selectedTab.equalsIgnoreCase(EnrollmentView.LEARNERS_ENROLLMENT)){
+				} else if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.TEACHER_LIST)){
 		
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
@@ -130,10 +129,7 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 					buttons.add(fiter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
-					addLearnerEnrollment(newButton);
-//					addDistrict(newButton);
-//					deleteDistrict(delete);
-//					editDistrict(edit);
+					addSchoolStaff(newButton);
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -141,8 +137,6 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 				}
 
 			}
-
-		
 
 		});
 	}
@@ -358,49 +352,6 @@ public class EnrollmentPresenter extends Presenter<EnrollmentPresenter.MyView, E
 		});
 	}
 
-	private void loadSchoolClassCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL_CLASS, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_CLASS , map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
-
-			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-
-					if (result.getSystemFeedbackDTO() != null) {
-						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-						for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
-							valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-						}
-						window.getSchoolClassComboBox().setValueMap(valueMap);
-						if (defaultValue != null) {
-							window.getSchoolClassComboBox().setValue(defaultValue);
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
-			}
-		});
-	}
-	
 	
 	///////////////////////////////////////END COMBOS
 	
@@ -457,51 +408,6 @@ window.getTotalMaleField().addChangedHandler(new ChangedHandler() {
 
 
 
-public void	setLearnerTotal(final LearnerEnrollmentWindow window){
-	final int[] totalGirls = new int[1];
-	final int[] totalBoys = new int[1];
-	final int[] total = {0};
-	window.getTotalBoysField().addChangedHandler(new ChangedHandler() {
-		
-		@Override
-		public void onChanged(ChangedEvent event) {
-			
-			if(window.getTotalBoysField().getValueAsString() == null) {
-				totalBoys[0] = 0;
-			}else {
-				totalBoys[0] = Integer.parseInt(window.getTotalBoysField().getValueAsString());
-			}
-		
-			if(window.getTotalGirlsField().getValueAsString() == null) {
-				totalGirls[0] = 0;
-			}
-			
-				total[0] = totalGirls[0] + totalBoys[0];
-				 window.getLearnerTotalField().setValue(total[0]);
-		}
-	});
-	
-	
-window.getTotalGirlsField().addChangedHandler(new ChangedHandler() {
-		
-		@Override
-		public void onChanged(ChangedEvent event) {
-			if(window.getTotalGirlsField().getValueAsString() == null) {
-				totalGirls[0] = 0;
-			}else {
-				totalGirls[0] = Integer.parseInt(window.getTotalGirlsField().getValueAsString());	
-			}
-			
-			if(window.getTotalBoysField().getValueAsString() == null) {
-				totalBoys[0] = 0;
-			}
-
-				total[0] = totalGirls[0] + totalBoys[0];
-				 window.getLearnerTotalField().setValue(total[0]);
-		}
-	});
-	  		
-	}
 
 
 private void getAllStaffEnrollments() {
@@ -548,138 +454,220 @@ private void getAllStaffEnrollments() {
 
 }
 
-
-	
-	///////////////////////////LEARNERS
-	
-	
-	
-	private void addLearnerEnrollment(MenuButton newButton) {
-	newButton.addClickHandler(new ClickHandler() {
+/////////////////////////////////////////////////////////school Staff
+private void addSchoolStaff(MenuButton newButton) {
+	newButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent event) {
+			SchoolStaffWindow window = new SchoolStaffWindow();
+			loadGenderCombo(window, null);
+			loadRegisteredCombo(window, null);
+			loadSchoolCombo(window, null);
+			saveSchoolStaff(window);
+			window.show();
 			
-			@Override
-			public void onClick(ClickEvent event) {
-				  LearnerEnrollmentWindow window = new LearnerEnrollmentWindow();
-				  setLearnerTotal(window);
-				  loadSchoolClassCombo(window, null);
-				  window.show();
-				  
-				  saveLearnerEnrollment(window);
-			}
+		}
 
-		});
-	}
+	});
+	
+}
 
-	private void saveLearnerEnrollment(final LearnerEnrollmentWindow window) {
-	  window.getSaveButton().addClickHandler(new ClickHandler() {
+private void saveSchoolStaff(final SchoolStaffWindow window) {
+	window.getSaveButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 		
 		@Override
 		public void onClick(ClickEvent event) {
 			
-			if(checkIfNoLearnerEnrollmentWindowFieldIsEmpty(window)) {
-				
-			}else {
-			  SC.warn("Please Fill all fields");	
-			}
+			if(checkIfNoSchoolStaffWindowFieldIsEmpty(window)){
+				 SchoolStaffDTO dto = new SchoolStaffDTO();
+				 //  dto.setId(id);
+				   
+				   dto.setRegistered(Boolean.valueOf(window.getRegisteredComboBox().getValueAsString()));
+				   dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				 
+				   dto.setStaffCode(window.getStaffCode().getValueAsString());
+				 //  dto.setStatus(status);
+				  // dto.setStaffType(staffType);
 			
-			LearnerEnrollmentDTO dto = new LearnerEnrollmentDTO();
-			//dto.setId(id);
-			dto.setTotalBoys(Long.valueOf(window.getTotalBoysField().getValueAsString()));
-			dto.setTotalGirls(Long.valueOf(window.getTotalGirlsField().getValueAsString()));
-			dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-			
-			SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassComboBox().getValueAsString());
-			dto.setSchoolClassDTO(schoolClassDTO);
-			
-			GWT.log("DTO "+dto);
-			GWT.log("ID "+dto.getSchoolClassDTO().getId());
-			
-			  LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_LEARNER_ENROLLMENT, dto);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				   SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolComboBox().getValueAsString());
+				   dto.setSchoolDTO(schoolDTO);
+					
+				   GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
+				   generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+				   generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+				   generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
+				   generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+				   generalUserDetailDTO.setGender(window.getGenderComboBox().getValueAsString());
+				   generalUserDetailDTO.setNameAbbrev(window.getNameAbrevField().getValueAsString());
+				   generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+				   generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+				   
+				   dto.setGeneralUserDetailDTO(generalUserDetailDTO);
+				   
+				   GWT.log("STAFF "+dto);
+				   GWT.log("School "+dto.getSchoolDTO().getId());
+				   
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_SCHOOL_STAFF, dto);
+					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					SC.showPrompt("", "", new SwizimaLoader());
 
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_LEARNER_ENROLLMENT, map),
-						new AsyncCallback<RequestResult>() {
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SCHOOL_STAFF, map),
+							new AsyncCallback<RequestResult>() {
 
-							public void onFailure(Throwable caught) {
+								public void onFailure(Throwable caught) {
 
-								SC.clearPrompt();
-								System.out.println(caught.getMessage());
-								SC.say("ERROR", caught.getMessage());
-							}
-
-							public void onSuccess(RequestResult result) {
-								SC.clearPrompt();
-								
-								clearLearnerEnrollmentWindowFields(window);
-								window.close();
-
-								SessionManager.getInstance().manageSession(result, placeManager);
-								
-								if (result != null) {
-									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-									if (feedback.isResponse()) {
-										SC.say("SUCCESS", feedback.getMessage());
-									} else {
-										SC.warn("INFO", feedback.getMessage());
-									}
-
-									getView().getLearnerEnrollmentPane().getLearnerEnrollmentListGrid().addRecordsToGrid(result.getLearnerEnrollmentDTOs());
-
-								} else {
-									SC.warn("ERROR", "Unknow error");
+									SC.clearPrompt();
+									System.out.println(caught.getMessage());
+									SC.say("ERROR", caught.getMessage());
 								}
 
-							}
+								public void onSuccess(RequestResult result) {
+									SC.clearPrompt();
+									
+									clearSchoolStaffWindowFields(window);
 
-						});
+									SessionManager.getInstance().manageSession(result, placeManager);
+									
+									if (result != null) {
+										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+
+										if (feedback.isResponse()) {
+											SC.say("SUCCESS", feedback.getMessage());
+										} else {
+											SC.warn("INFO", feedback.getMessage());
+										}
+
+										getView().getSchoolStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+
+									} else {
+										SC.warn("ERROR", "Unknow error");
+									}
+
+								}
+
+							});
+			}else {
+				SC.warn("Please Fill the fields");
+			}
 			
 		}
 	});
-
 	}
-	
 
-	protected boolean checkIfNoLearnerEnrollmentWindowFieldIsEmpty(LearnerEnrollmentWindow window) {
+	protected boolean checkIfNoSchoolStaffWindowFieldIsEmpty(SchoolStaffWindow window) {
 		boolean flag = true;
-
-		if(window.getTotalBoysField().getValueAsString() == null) flag = false;
 		
-		if(window.getTotalGirlsField().getValueAsString() == null) flag = false;
+		if(window.getFirstNameField().getValueAsString() == null) flag = false;
 		
-		if(window.getSchoolClassComboBox().getValueAsString() == null) flag = false;
+		if(window.getLastNameField().getValueAsString() == null) flag = false;
+		
+		if(window.getPhoneNumberField().getValueAsString() == null) flag = false;
+		
+		if(window.getEmailField().getValueAsString() == null) flag = false;
+		
+		if(window.getDobItem().getValueAsDate() == null) flag = false;
+		
+		if(window.getNationalIdField().getValueAsString() == null) flag = false;
+		
+		if(window.getGenderComboBox().getValueAsString() == null) flag = false;
+		
+		if(window.getNameAbrevField().getValueAsString() == null) flag = false;
+		
+		if(window.getStaffCode().getValueAsString() == null) flag = false;
+		
+		if(window.getRegisteredComboBox().getValueAsString() == null) flag = false;
+		
+		if(window.getSchoolComboBox().getValueAsString() == null) flag = false;
+		
 		
 		return flag;
 	}
 
-	private void clearLearnerEnrollmentWindowFields(LearnerEnrollmentWindow window) {
-       /*
-        * 	private ComboBox schoolClassComboBox;
-
-	private TextItem totalBoysField;
-	private TextItem totalGirlsField;
-	private TextItem learnerTotalField;
-        */
+	private void clearSchoolStaffWindowFields(SchoolStaffWindow window) {
 		
-		window.getSchoolClassComboBox().clearValue();
-		window.getTotalBoysField().clearValue();
-		window.getTotalGirlsField().clearValue();
-		window.getLearnerTotalField().clearValue();
+		window.getFirstNameField().clearValue();
+		window.getLastNameField().clearValue();
+		window.getPhoneNumberField().clearValue();
+		window.getEmailField().clearValue();
+		window.getDobItem().clearValue();
+		window.getNationalIdField().clearValue();
+		window.getGenderComboBox().clearValue();
+		window.getNameAbrevField().clearValue();
+		window.getStaffCode().clearValue();
+		window.getRegisteredComboBox().clearValue();
+		window.getSchoolComboBox().clearValue();
+	}
+	
+	private void loadGenderCombo(final SchoolStaffWindow window , final String defaultValue) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		valueMap.put("female", "Female");
+		valueMap.put("male", "Male");
 		
+		window.getGenderComboBox().setValueMap(valueMap);
+	}
+	
+	private void loadRegisteredCombo(final SchoolStaffWindow window , final String defaultValue) {
+		LinkedHashMap<Boolean, String> valueMap = new LinkedHashMap<>();
+		valueMap.put(true, "Yes");
+		valueMap.put(false, "No");
+		
+		window.getRegisteredComboBox().setValueMap(valueMap);
 	}
 	
 	
 	
-	
-	private void getAllLearnerEnrollments() {
+	private void loadSchoolCombo(final SchoolStaffWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_LEARNER_ENROLLMENT, null);
+		map.put(RequestConstant.GET_SCHOOL, null);
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 		SC.showPrompt("", "", new SwizimaLoader());
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_LEARNER_ENROLLMENT , map),
+		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL , map), new AsyncCallback<RequestResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+				SC.warn("ERROR", caught.getMessage());
+				GWT.log("ERROR " + caught.getMessage());
+				SC.clearPrompt();
+
+			}
+
+			@Override
+			public void onSuccess(RequestResult result) {
+
+				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
+				if (result != null) {
+
+					if (result.getSystemFeedbackDTO() != null) {
+						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+						for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
+							valueMap.put(schoolDTO.getId(), schoolDTO.getName());
+						}
+						window.getSchoolComboBox().setValueMap(valueMap);
+						if (defaultValue != null) {
+							window.getSchoolComboBox().setValue(defaultValue);
+						}
+					}
+				} else {
+					SC.warn("ERROR", "Unknow error");
+				}
+
+			}
+		});
+	}
+
+	private void getAllSchoolStaff() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF , map),
 				new AsyncCallback<RequestResult>() {
 
 					@Override
@@ -697,14 +685,13 @@ private void getAllStaffEnrollments() {
 						SC.clearPrompt();
 						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
-	                        SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 							if ( feedbackDTO != null) {
-								if (feedbackDTO.isResponse()) {
+								if (result.getSystemFeedbackDTO().isResponse()) {
 									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-									getView().getLearnerEnrollmentPane().getLearnerEnrollmentListGrid()
-									.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
+									getView().getSchoolStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
 								} else {
-									SC.warn("Not Successful \n ERROR:", feedbackDTO.getMessage());
+									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
 								}
 							}
 						} else {
@@ -717,6 +704,5 @@ private void getAllStaffEnrollments() {
 
 	}
 
-	
 	
 }

@@ -57,7 +57,7 @@ public class SchoolCategoryPresenter
 
 		TabSet getTabSet();
 
-		SchCategoryPane getSchCategoryPane();
+		SchCategoryPane getSchoolCategoryPane();
 
 		SchoolPane getSchoolPane();
 
@@ -82,7 +82,7 @@ public class SchoolCategoryPresenter
 	@Inject
 	PlaceManager placeManager;
 
-	@NameToken(NameTokens.schoolclasscategory)
+	@NameToken(NameTokens.schoolClassCategory)
 	@ProxyStandard
 	interface MyProxy extends ProxyPlace<SchoolCategoryPresenter> {
 	}
@@ -120,7 +120,7 @@ public class SchoolCategoryPresenter
 
 				String selectedTab = event.getTab().getTitle();
 
-				if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCH_CATEGORY_TAB_TITLE)) {
+				if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CATEGORY_TAB_TITLE)) {
 
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
@@ -158,7 +158,7 @@ public class SchoolCategoryPresenter
 					deleteSchool(delete);
 					editSchool(edit);
 
-				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCH_CLASSES_TAB_TITLE)) {
+				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CLASSES_TAB_TITLE)) {
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -247,7 +247,7 @@ public class SchoolCategoryPresenter
 											SC.warn("INFO", feedback.getMessage());
 										}
 
-										getView().getSchCategoryPane().getListGrid()
+										getView().getSchoolCategoryPane().getListGrid()
 												.addRecordsToGrid(result.getSchoolCategoryDTOs());
 
 									} else {
@@ -289,7 +289,7 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().getSchCategoryPane().getListGrid().anySelected()) {
+				if (getView().getSchoolCategoryPane().getListGrid().anySelected()) {
 					SchoolCategoryWindow window = new SchoolCategoryWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
@@ -306,7 +306,7 @@ public class SchoolCategoryPresenter
 	}
 
 	private void loadFieldsToEdit(SchoolCategoryWindow window) {
-		ListGridRecord record = getView().getSchCategoryPane().getListGrid().getSelectedRecord();
+		ListGridRecord record = getView().getSchoolCategoryPane().getListGrid().getSelectedRecord();
 		window.getCategoryCode().setValue(record.getAttribute(SchCategoryListGrid.CODE));
 		window.getCategoryName().setValue(record.getAttribute(SchCategoryListGrid.NAME));
 	}
@@ -316,7 +316,7 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				ListGridRecord record = getView().getSchCategoryPane().getListGrid().getSelectedRecord();
+				ListGridRecord record = getView().getSchoolCategoryPane().getListGrid().getSelectedRecord();
 			
 				SchoolCategoryDTO dto = new SchoolCategoryDTO();
 				dto.setId(record.getAttribute(SchCategoryListGrid.ID));
@@ -350,7 +350,7 @@ public class SchoolCategoryPresenter
 										clearSchoolCategoryWindowFields(window);
 										window.close();
 										
-										getView().getSchCategoryPane().getListGrid()
+										getView().getSchoolCategoryPane().getListGrid()
 										.addRecordsToGrid(result.getSchoolCategoryDTOs());
 									} else  {
 										SC.warn("INFO", feedback.getMessage());
@@ -374,13 +374,13 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().getSchCategoryPane().getListGrid().anySelected()) {
+				if (getView().getSchoolCategoryPane().getListGrid().anySelected()) {
 					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
 
 						@Override
 						public void execute(Boolean value) {
 							if (value) {
-								ListGridRecord record = getView().getSchCategoryPane().getListGrid()
+								ListGridRecord record = getView().getSchoolCategoryPane().getListGrid()
 										.getSelectedRecord();
 								// SC.say("Id "+record.getAttributeAsString("id")+" Name
 								// "+record.getAttributeAsString("name"));
@@ -411,7 +411,7 @@ public class SchoolCategoryPresenter
 															SC.say("SUCCESS",
 																	result.getSystemFeedbackDTO().getMessage());
 
-															getView().getSchCategoryPane().getListGrid()
+															getView().getSchoolCategoryPane().getListGrid()
 																	.addRecordsToGrid(result.getSchoolCategoryDTOs());
 
 														} else {
@@ -466,7 +466,7 @@ public class SchoolCategoryPresenter
 								if (result.getSystemFeedbackDTO().isResponse()) {
 									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 
-									getView().getSchCategoryPane().getListGrid()
+									getView().getSchoolCategoryPane().getListGrid()
 											.addRecordsToGrid(result.getSchoolCategoryDTOs());
 
 								} else {
@@ -933,6 +933,7 @@ public class SchoolCategoryPresenter
 					SchoolClassDTO dto = new SchoolClassDTO();
 					dto.setCode(window.getClassCode().getValueAsString());
 					dto.setName(window.getcName().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					SchoolDTO schoolDTO = new SchoolDTO();
 					schoolDTO.setId(window.getSchool().getValueAsString());

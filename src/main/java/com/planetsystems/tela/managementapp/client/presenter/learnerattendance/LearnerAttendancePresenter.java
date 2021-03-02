@@ -20,8 +20,8 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.planetsystems.tela.managementapp.client.presenter.enrollment.StaffEnrollmentWindow;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.StaffEnrollmentWindow;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
@@ -136,6 +136,7 @@ public class LearnerAttendancePresenter
 					dto.setGirlsPresent(Long.parseLong(window.getGirlsPresentField().getValueAsString()));
 					dto.setComment(window.getCommentField().getValueAsString());
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					dto.setAttendanceDate(dateFormat.format(new Date()));
 
 					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
 							window.getAcademicTermComboBox().getValueAsString());
@@ -147,12 +148,8 @@ public class LearnerAttendancePresenter
 					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffComboBox().getValueAsString());
 					dto.setSchoolStaffDTO(schoolStaffDTO);
 
-					GWT.log("DTO " + dto);
-					GWT.log("term " + dto.getAcademicTermDTO().getId());
-					GWT.log("class " + dto.getSchoolClassDTO().getId());
-
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, null);
+					map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, dto);
 					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 					SC.showPrompt("", "", new SwizimaLoader());
 
@@ -173,10 +170,14 @@ public class LearnerAttendancePresenter
 
 									SC.clearPrompt();
 									SessionManager.getInstance().manageSession(result, placeManager);
+									
+									
 									if (result != null) {
 										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 										if (feedbackDTO != null) {
 											if (feedbackDTO.isResponse()) {
+												clearAcademicYearWindowFields(window);
+												window.close();
 												// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 												getView().getAttendancePane().getLearnerAttendanceListGrid()
 														.addRecordsToGrid(result.getLearnerAttendanceDTOs());
@@ -190,6 +191,7 @@ public class LearnerAttendancePresenter
 									}
 
 								}
+
 							});
 				}else {
 					SC.warn("Please fill all fields");
@@ -200,6 +202,21 @@ public class LearnerAttendancePresenter
 		});
 	}
 
+	private void clearAcademicYearWindowFields(LearnerAttendanceWindow window) {
+
+		window.getAcademicTermComboBox().clearValue();
+		window.getSchoolClassComboBox().clearValue();
+		window.getSchoolStaffComboBox().clearValue();
+		window.getCommentField().clearValue();
+		window.getGirlsAbsentField().clearValue();
+		window.getBoysAbsentField().clearValue();
+		window.getGirlsPresentField().clearValue();
+		window.getBoysPresentField().clearValue();
+		window.getTotalAbsentField().clearValue();
+		window.getTotalPresentField().clearValue();
+		
+	}
+	
 	private boolean checkIfNoLearnerAttendanceWindowFieldIsEmpty(LearnerAttendanceWindow window) {
 	    boolean flag = true;
 
