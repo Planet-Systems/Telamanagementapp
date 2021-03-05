@@ -54,6 +54,7 @@ public class CreateTimeTablePane extends VLayout {
 		addLessonButton = new IButton("Add");
 		addLessonButton.setLayoutAlign(Alignment.RIGHT);
 		addLessonButton.setPadding(10);
+		addLessonButton.disable();
 
 		
 		DynamicForm filterForm = new DynamicForm();
@@ -66,7 +67,8 @@ public class CreateTimeTablePane extends VLayout {
 
 		
 		saveButton = new IButton("Save");
-
+        saveButton.disable();
+		
 		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 		

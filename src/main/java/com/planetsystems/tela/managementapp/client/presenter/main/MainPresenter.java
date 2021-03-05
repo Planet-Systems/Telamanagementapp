@@ -146,16 +146,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 	private void onSystemTimeTableMenuClick(RecordClickEvent event) {
 		Record record = event.getRecord();
 		String name = record.getAttributeAsString("name");
-
-		PlaceRequest placeRequest = null;
-	
-		switch (name) {
-		case SystemTimeTableData.TIME_TABLE :
-			SC.say("TimeTable");
-			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.timeTable).build();
-			break;
-		}
-		 placeManager.revealPlace(placeRequest);
+		 placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.timeTable).build());
 		
 	}
     

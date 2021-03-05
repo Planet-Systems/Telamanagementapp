@@ -80,8 +80,8 @@ public class TimeTableListGrid extends SuperListGrid {
 			
 			   
 			   if(timeTableDTO.getSchoolDTO() != null) {
-				   record.setAttribute(ACADEMIC_YEAR_ID, timeTableDTO.getSchoolDTO().getId());
-				   record.setAttribute(ACADEMIC_YEAR , timeTableDTO.getSchoolDTO().getName());			   
+				   record.setAttribute(SCHOOL_ID, timeTableDTO.getSchoolDTO().getId());
+				   record.setAttribute(SCHOOL , timeTableDTO.getSchoolDTO().getName());			   
 			   }
 
 			return record;
