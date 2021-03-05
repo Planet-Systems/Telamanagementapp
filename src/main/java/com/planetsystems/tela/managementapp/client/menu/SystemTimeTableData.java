@@ -1,22 +1,12 @@
-/**
- * 
- */
+
 package com.planetsystems.tela.managementapp.client.menu;
 
 import java.util.List;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord; 
 
-/**
- * @author Planet Developer 001
- * 
- */
-public class SystemAdministrationData { 
-	
-   public	static	final String ACADEMIC_YEAR = "AcademicYear";
-   public	static	final String LOCATION = "Location";
-   public	static	final String SCHOOLS = "Schools";
-   public	static	final String SUBJECTS = "Subjects";
+public class SystemTimeTableData { 
+   public static final String TIME_TABLE = "TimeTable";
   
 
 	private static ListGridRecord[] records;
@@ -39,10 +29,7 @@ public class SystemAdministrationData {
 
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] {
-				createRecord("", "application_form" , ACADEMIC_YEAR),
-				createRecord("", "application_form" , LOCATION),
-				createRecord("", "application_form" , SCHOOLS),
-				createRecord("", "application_form" , SUBJECTS),
+				createRecord("", "application_form" , TIME_TABLE)
 		};
 
 	}

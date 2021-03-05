@@ -34,11 +34,13 @@ public class LearnerEnrollmentWindow extends Window {
 		totalBoysField.setTitle("TotalBoys");
 		totalBoysField.setHint("TotalBoys");
 		totalBoysField.setShowHintInField(true);
+		totalBoysField.setKeyPressFilter("[0-9.]");
 
 		totalGirlsField = new TextItem();
 		totalGirlsField.setTitle("TotalGirls");
 		totalGirlsField.setHint("TotalGirls");
 		totalGirlsField.setShowHintInField(true);
+		totalGirlsField.setKeyPressFilter("[0-9.]");
 
 		learnerTotalField = new TextItem();
 		learnerTotalField.setTitle("Total");

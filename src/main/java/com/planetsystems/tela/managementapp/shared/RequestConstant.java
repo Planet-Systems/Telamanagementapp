@@ -1,12 +1,13 @@
 package com.planetsystems.tela.managementapp.shared;
 
 public class RequestConstant {
-	public static final String SYSTEM_CONFIGURATION = "System Configuration";
-	public static final String SYSTEM_ENROLLMENT = "System Enrollment";
+	public static final String SYSTEM_CONFIGURATION = "Configurations";
+	public static final String SYSTEM_ENROLLMENT = "Enrollments";
 	public static final String SYSTEM_SETTINGS = "Settings";
-	public static final String SYSTEM_USERS = "System Users";
+	public static final String SYSTEM_USERS = "Users";
+	public static final String SYSTEM_TABLES = "TimeTable";
 	
-	public static final String SYSTEM_ATTENDANCE = "System Attendance";
+	public static final String SYSTEM_ATTENDANCE = "Attendance";
 	
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";
@@ -92,6 +93,18 @@ public class RequestConstant {
 	public static final String UPDATE_LEARNER_ATTENDANCE = "UPDATE_LEARNER_ATTENDANCE";
 	public static final String DELETE_LEARNER_ATTENDANCE = "DELETE_LEARNER_ATTENDANCE";
 	public static final String GET_LEARNER_ATTENDANCE = "GET_LEARNER_ATTENDANCE";
+	
+	
+	public static final String GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR = "GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR";
+	public static final String GET_SCHOOLS_IN_DISTRICT = "GET_SCHOOLS_IN_DISTRICT";
+	
+	public static final String GET_SCHOOL_CLASSES_IN_SCHOOL = "GET_SCHOOL_CLASSES_IN_SCHOOL";
+	public static final String GET_STAFFS_IN_SCHOOL = "GET_STAFFS_IN_SCHOOL";
+	
+	//timetables
+	public static final String SAVE_TIME_TABLE = "SAVE_TIME_TABLE";
+	public static final String GET_TIME_TABLES = "GET_TIME_TABLES";
+	
 	
 	
 

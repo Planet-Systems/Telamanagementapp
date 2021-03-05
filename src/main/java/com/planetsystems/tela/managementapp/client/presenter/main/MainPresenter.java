@@ -20,6 +20,8 @@ import com.planetsystems.tela.managementapp.client.menu.SystemAttendanceData;
 import com.planetsystems.tela.managementapp.client.menu.SystemAttendanceDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemEnrollmentData;
 import com.planetsystems.tela.managementapp.client.menu.SystemEnrollmentDataSource;
+import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableData;
+import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.widget.MainStatusBar;
 import com.planetsystems.tela.managementapp.client.widget.Masthead;
@@ -27,6 +29,7 @@ import com.planetsystems.tela.managementapp.client.widget.NavigationPane;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
@@ -122,6 +125,37 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 			}
 
 		});
+		
+		
+		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TABLES,
+				SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords()));
+
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TABLES , new RecordClickHandler() {
+			
+			@Override
+			public void onRecordClick(RecordClickEvent event) {
+				onSystemTimeTableMenuClick(event);
+			}
+
+		});
+		
+		
+	}
+    
+
+	private void onSystemTimeTableMenuClick(RecordClickEvent event) {
+		Record record = event.getRecord();
+		String name = record.getAttributeAsString("name");
+
+		PlaceRequest placeRequest = null;
+	
+		switch (name) {
+		case SystemTimeTableData.TIME_TABLE :
+			SC.say("TimeTable");
+			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.timeTable).build();
+			break;
+		}
+		 placeManager.revealPlace(placeRequest);
 		
 	}
     
@@ -238,6 +272,15 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		}
 
 	}
+//    
+//	private void onSystemTimeTableMenuClick(RecordClickEvent event) {
+//		Record record = event.getRecord();
+//		String name = record.getAttributeAsString("name");
+//	SC.say("YYE");	
+//		PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.timeTable).build();
+//			placeManager.revealPlace(placeRequest);
+//	
+//	}
 
 	@Override
 	public void onHighlightActiveLink(HighlightActiveLinkEvent event) {	 

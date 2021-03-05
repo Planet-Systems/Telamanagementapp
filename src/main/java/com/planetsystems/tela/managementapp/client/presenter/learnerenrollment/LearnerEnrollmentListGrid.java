@@ -77,4 +77,8 @@ public class LearnerEnrollmentListGrid extends SuperListGrid  {
 		}
 		this.setData(records);
 	}
+	
+	public void addRecordToGrid(LearnerEnrollmentDTO dto) {
+		this.addData(addRowData(dto));
+	}
 }

@@ -20,6 +20,7 @@ import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
+import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 
 public class RequestResult implements Result  {
@@ -42,6 +43,7 @@ public class RequestResult implements Result  {
     private List<ClockInDTO> clockInDTOs;
     private List<ClockOutDTO> clockOutDTOs;
     private List<LearnerAttendanceDTO> learnerAttendanceDTOs;
+    private List<TimeTableDTO> timeTableDTOs;
     
 	/**
 	 * 
@@ -141,11 +143,6 @@ public class RequestResult implements Result  {
 	}
 
 	
-
-	
-	
-	
-
 	
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<LearnerEnrollmentDTO> learnerEnrollmentDTOs , LearnerEnrollmentDTO learnerEnrollmentDTO) {
@@ -159,6 +156,16 @@ public class RequestResult implements Result  {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.learnerAttendanceDTOs = learnerAttendanceDTOs;
+	}
+
+
+	
+	
+	
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TimeTableDTO> timeTableDTOs , TimeTableDTO tableDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.timeTableDTOs = timeTableDTOs;
 	}
 
 
@@ -271,6 +278,10 @@ public class RequestResult implements Result  {
 
 	public List<LearnerAttendanceDTO> getLearnerAttendanceDTOs() {
 		return learnerAttendanceDTOs;
+	}
+
+	public List<TimeTableDTO> getTimeTableDTOs() {
+		return timeTableDTOs;
 	}
 
 

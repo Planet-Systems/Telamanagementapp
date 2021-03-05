@@ -2,6 +2,10 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String TimeTables2 = "TimeTables2";
+
+	public static final String timeTable = "TimeTable";
+
 	public static final String learnerEnrollment = "LearnerEnrollment";
 
 	public static final String learnerAttendance = "LearnerAttendance";
@@ -73,81 +77,13 @@ public class NameTokens {
 	public static String getDashboard() {
 		return dashboard;
 	}
-	
-	
 
-//	public static String getSubjectcategory() {
-//		return subjectcategory;
-//	}
-//
-//	public static String getSchoolclasscategory() {
-//		return schoolclasscategory;
-//	}
-//
-//	public static String getRegion() {
-//		return region;
-//	}
-//
-//	public static String getAcademicyear() {
-//		return academicyear;
-//	}
-//
-//	public static String getDashboard() {
-//		return dashboard;
-//	}
-//
-//	public static String getAuthentication() {
-//		return authentication;
-//	}
-//
-//	public static String getLogin() {
-//		return login;
-//	}
-//
-//	public static String getSchoolStaff() {
-//		return schoolStaff;
-//	}
-//
-//	public static String getEnrollment() {
-//		return enrollment;
-//	}
-//
-//	public static String getStaffAttendance() {
-//		return staffAttendance;
-//	}
-//
-//	public static String getLearnerAttendance() {
-//		return learnerAttendance;
-//	}
-//
-//	public static String getLearnerEnrollment() {
-//		return learnerEnrollment;
-//	}
+	public static String getTimeTable() {
+		return timeTable;
+	}
 
-	//	public static String getAcademicyear() {
-	//		return academicyear;
-	//	}
-	//
-	//	public static String getDashboard() {
-	//		return dashboard;
-	//	}
-	//
-	//	public static String getRegion() {
-	//		return region;
-	//	}
-	//
-	//	public static String getSchoolcategory() {
-	//		return schoolclasscategory;
-	//	}
-	//
-	//	public static String getSchoolclass() {
-	//		return schoolclass;
-	//	}
-	//
-	//	public static String getSubjectcategory() {
-	//		return subjectcategory;
-	//	}
-
-	//public static String notification = "Notification";
+	public static String getTimeTables2() {
+		return TimeTables2;
+	}
 
 }

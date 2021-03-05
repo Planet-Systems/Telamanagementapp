@@ -11,6 +11,7 @@ import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolS
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.StaffEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.SubjectCategoryModule;
+import com.planetsystems.tela.managementapp.client.presenter.timetable.TimeTableModule;
 
 public class MainModule extends AbstractPresenterModule {
     @Override
@@ -26,6 +27,8 @@ public class MainModule extends AbstractPresenterModule {
           install(new StaffAttendanceModule());
           install(new LearnerAttendanceModule());
           install(new LearnerEnrollmentModule());
+          install(new TimeTableModule());
+          
     	bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
      
     }
