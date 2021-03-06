@@ -15,8 +15,12 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 	public static String ACADEMIC_TERM = "academicTerm";
 	public static String ACADEMIC_TERM_ID = "academicTermId";
 	
-	public static String TOTAL_MALE = "totalMale";
-	public static String TOTAL_FEMALE = "totalFemale";
+	public static String ACADEMIC_YEAR = "academicYear";
+	public static String ACADEMIC_YEAR_ID = "academicYearId";
+	
+	public static String TOTAL_MALE = "TotalMale";
+	public static String TOTAL_FEMALE = "TotalFemale";
+	public static String TOTAL = "Total";
 	
 	public static String STATUS = "status";
 	
@@ -44,20 +48,25 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 		idField.setHidden(true);
 
 		ListGridField schoolField = new ListGridField(SCHOOL, "School");
-		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "SchoolId");
+		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 		
-		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "AcademicTerm");
-		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "AcademicTermId");
+		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 		
-		ListGridField totalFemaleField = new ListGridField(TOTAL_FEMALE, "TotalFemale");
-		ListGridField totalMaleField = new ListGridField(TOTAL_MALE, "TotalMale");
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
+		academicYearIdField.setHidden(true);
+		
+		ListGridField totalFemaleField = new ListGridField(TOTAL_FEMALE, "Females");
+		ListGridField totalMaleField = new ListGridField(TOTAL_MALE, "Males");
+		ListGridField totalField = new ListGridField(TOTAL, "Total");
 		ListGridField statusField = new ListGridField(STATUS, "staus");
 		
 		
 
-		this.setFields(idField , academicTermIdField , schoolIdField , schoolField , academicTermField  ,totalFemaleField , totalMaleField , statusField);
+		this.setFields(idField , academicTermIdField , schoolIdField , schoolField , academicTermField  ,totalMaleField , totalFemaleField , totalField , statusField);
 
 	}
 
@@ -66,12 +75,21 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 		record.setAttribute(ID, staffEnrollmentDto.getId());
 		record.setAttribute(TOTAL_MALE, staffEnrollmentDto.getTotalMale());
 		record.setAttribute(TOTAL_FEMALE, staffEnrollmentDto.getTotalFemale());
+		long total = staffEnrollmentDto.getTotalMale() + staffEnrollmentDto.getTotalFemale();
+		record.setAttribute(TOTAL, String.valueOf(total));
+		
 		record.setAttribute(STATUS, staffEnrollmentDto.getStatus());
 		
 		
 		if(staffEnrollmentDto.getAcademicTermDTO() != null) {
 			record.setAttribute(ACADEMIC_TERM, staffEnrollmentDto.getAcademicTermDTO().getTerm());
 			record.setAttribute(ACADEMIC_TERM_ID, staffEnrollmentDto.getAcademicTermDTO().getId());	
+			
+			if(staffEnrollmentDto.getAcademicTermDTO().getAcademicYearDTO() != null) {
+				record.setAttribute(ACADEMIC_YEAR, staffEnrollmentDto.getAcademicTermDTO().getAcademicYearDTO().getName());
+				record.setAttribute(ACADEMIC_YEAR_ID, staffEnrollmentDto.getAcademicTermDTO().getAcademicYearDTO().getId());			
+			}
+			
 		}
 		
 

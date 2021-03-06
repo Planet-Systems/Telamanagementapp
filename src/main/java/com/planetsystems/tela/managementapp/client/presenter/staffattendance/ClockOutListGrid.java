@@ -27,6 +27,12 @@ public class ClockOutListGrid extends SuperListGrid {
 
 	public static String ACADEMIC_TERM = "academicTerm";
 	public static String ACADEMIC_TERM_ID = "academicTermId";
+	
+	public static String SCHOOL="school";
+	public static String SCHOOL_ID="schoolId";
+
+	public static String ACADEMIC_YEAR = "academicYear";
+	public static String ACADEMIC_YEAR_ID = "academicYearId";
 
 	/*
 	 * private String comment; private ClockInDTO clockInDTO;
@@ -39,26 +45,34 @@ public class ClockOutListGrid extends SuperListGrid {
 		idField.setHidden(true);
 
 		ListGridField schoolStaffField = new ListGridField(SCHOOL_STAFF, "Staff");
-		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "StaffId");
+		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "Staff Id");
 		schoolStaffIdField.setHidden(true);
 
-		ListGridField academicField = new ListGridField(ACADEMIC_TERM, "AcademicTerm");
-		ListGridField academicIdField = new ListGridField(ACADEMIC_TERM_ID, "AcademicTermId");
-		academicIdField.setHidden(true);
+		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
+		academicTermIdField.setHidden(true);
 
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
+		academicYearIdField.setHidden(true);
+		
+		ListGridField schoolField = new ListGridField(SCHOOL, "School");
+		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "SchoolId");
+		schoolIdField.setHidden(true);
+		
 		ListGridField latitudeField = new ListGridField(LATITUDE, "latitude");
-		ListGridField longitudeField = new ListGridField(LONGTITUDE, "logitude");
+		ListGridField longitudeField = new ListGridField(LONGTITUDE, "longitude");
 		ListGridField statusField = new ListGridField(STATUS, "status");
 		ListGridField commentField = new ListGridField(COMMENT, "comment");
 		
-		ListGridField clockInIdField = new ListGridField(CLOCKED_IN_ID, "clockInId");
+		ListGridField clockInIdField = new ListGridField(CLOCKED_IN_ID, "clock In Id");
 		clockInIdField.setHidden(true);
 		
-		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME, "clockedInTime");
-		ListGridField clockOutTimeField = new ListGridField(CLOCKED_OUT_TIME, "clockedOutTime");
-		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE, "clockedInDate");
+		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME, "clocked In Time");
+		ListGridField clockOutTimeField = new ListGridField(CLOCKED_OUT_TIME, "clocked Out Time");
+		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE, "clocked In Date");
 
-		this.setFields(idField, schoolStaffIdField, academicIdField,clockInIdField , schoolStaffField, academicField, commentField , clockInDateField,clockInTimeField , clockOutTimeField ,statusField,
+		this.setFields(idField, schoolStaffIdField,schoolIdField, academicTermIdField,academicYearIdField,clockInIdField ,academicYearField , academicTermField,schoolField, schoolStaffField , clockInDateField,clockInTimeField , clockOutTimeField ,commentField ,statusField,
 				latitudeField, longitudeField);
 
 	}
@@ -81,6 +95,11 @@ public class ClockOutListGrid extends SuperListGrid {
 			if(clockOutDTO.getClockInDTO().getAcademicTermDTO() != null) {
 				record.setAttribute(ACADEMIC_TERM, clockOutDTO.getClockInDTO().getAcademicTermDTO().getTerm());
 				record.setAttribute(ACADEMIC_TERM_ID, clockOutDTO.getClockInDTO().getAcademicTermDTO().getId());
+				
+				if(clockOutDTO.getClockInDTO().getAcademicTermDTO().getAcademicYearDTO() != null) {
+					record.setAttribute(ACADEMIC_YEAR, clockOutDTO.getClockInDTO().getAcademicTermDTO().getAcademicYearDTO().getName());
+					record.setAttribute(ACADEMIC_YEAR_ID, clockOutDTO.getClockInDTO().getAcademicTermDTO().getAcademicYearDTO().getId());
+				}
 			}
 			
 			if(clockOutDTO.getClockInDTO().getSchoolStaffDTO().getGeneralUserDetailDTO() != null) {
@@ -88,6 +107,11 @@ public class ClockOutListGrid extends SuperListGrid {
 						+ clockOutDTO.getClockInDTO().getSchoolStaffDTO().getGeneralUserDetailDTO().getLastName();
 				record.setAttribute(SCHOOL_STAFF, fullname);
 				record.setAttribute(SCHOOL_STAFF_ID, clockOutDTO.getClockInDTO().getSchoolStaffDTO().getId());
+				
+				if(clockOutDTO.getClockInDTO().getSchoolStaffDTO().getSchoolDTO() != null) {
+					record.setAttribute(SCHOOL, clockOutDTO.getClockInDTO().getSchoolStaffDTO().getSchoolDTO().getName());
+					record.setAttribute(SCHOOL_ID, clockOutDTO.getClockInDTO().getSchoolStaffDTO().getSchoolDTO().getId());
+				}
 			}
 
 		}

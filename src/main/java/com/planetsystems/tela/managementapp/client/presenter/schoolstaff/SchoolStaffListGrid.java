@@ -64,14 +64,14 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "SchoolId");
 		schoolIdField.setHidden(true);
 		
-		ListGridField firstNameField = new ListGridField(FIRSTNAME, "FirstName");
-		ListGridField lastNameField = new ListGridField(LASTNAME, "LastName");
-		ListGridField phoneNumberField = new ListGridField(PHONE_NUMBER, "PhoneNumber");
+		ListGridField firstNameField = new ListGridField(FIRSTNAME, "First Name");
+		ListGridField lastNameField = new ListGridField(LASTNAME, "Last Name");
+		ListGridField phoneNumberField = new ListGridField(PHONE_NUMBER, "Phone Number");
 		ListGridField emailField = new ListGridField(EMAIL, "Email");
-		ListGridField dobField = new ListGridField(DOB, "DOB");
+		ListGridField dobField = new ListGridField(DOB, "D.O.B");
 		ListGridField nationalIdField = new ListGridField(NATIONAL_ID, "NationalId");
 		ListGridField genderField = new ListGridField(GENDER, "Gender");
-		ListGridField nameAbrevField = new ListGridField(NAME_ABREV, "NameAbbrev");
+		ListGridField nameAbrevField = new ListGridField(NAME_ABREV, "Name Abbreviation");
 		   
 		     	
 		

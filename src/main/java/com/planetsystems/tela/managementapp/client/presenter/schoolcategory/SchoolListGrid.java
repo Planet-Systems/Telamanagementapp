@@ -53,8 +53,8 @@ public class SchoolListGrid extends SuperListGrid {
 
 		ListGridField codeField = new ListGridField(CODE, "Code");
 		ListGridField nameField = new ListGridField(NAME, "Name");
-		ListGridField deviceNumberField = new ListGridField(DEVICE_NUMBER, "DeviceNumber");
-		ListGridField attendanceTrackedField = new ListGridField(ATTENDANCETRACKED, "AttendanceTracked"); 
+		ListGridField deviceNumberField = new ListGridField(DEVICE_NUMBER, "Device Number");
+		ListGridField attendanceTrackedField = new ListGridField(ATTENDANCETRACKED, "Attendance Tracked"); 
 		ListGridField locationField = new ListGridField(LOCATION, "Location");
 		
 		ListGridField latitudeField = new ListGridField(LATITUDE, "Latitude");
@@ -62,13 +62,13 @@ public class SchoolListGrid extends SuperListGrid {
 		latitudeField.setHidden(true);
 		longitudeField.setHidden(true);
 		
-		ListGridField categoryField = new ListGridField(CATEGORY, "SchoolCategory");
-		ListGridField categoryIdField = new ListGridField(CATEGORY_ID, "SchoolCategoryId");
+		ListGridField categoryField = new ListGridField(CATEGORY, "School Category");
+		ListGridField categoryIdField = new ListGridField(CATEGORY_ID, "School Category Id");
 		categoryIdField.setHidden(true);
 		
 		
 		ListGridField districtField = new ListGridField(DISTRICT, "District");
-		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "DistrictId");
+		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
 		districtIdField.setHidden(true);
 		
 	

@@ -23,6 +23,15 @@ public class ClockInListGrid extends SuperListGrid {
 	public static String ACADEMIC_TERM = "academicTerm";
 	public static String ACADEMIC_TERM_ID = "academicTermId";
 	
+	public static String ACADEMIC_YEAR = "academicYear";
+	public static String ACADEMIC_YEAR_ID = "academicYearId";
+	
+	public static String SCHOOL="school";
+	public static String SCHOOL_ID="schoolId";
+	
+
+	
+	
 	
 	
 	
@@ -47,26 +56,35 @@ private AcademicTermDTO academicTerm;
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
 
-		ListGridField schoolField = new ListGridField(SCHOOL_STAFF, "School");
-		ListGridField schoolIdField = new ListGridField(SCHOOL_STAFF_ID, "SchoolId");
+		ListGridField schoolStaffField = new ListGridField(SCHOOL_STAFF, "School");
+		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "School Id");
+		schoolStaffIdField.setHidden(true);
+		
+		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
+		academicTermIdField.setHidden(true);
+		
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
+		academicYearIdField.setHidden(true);
+		
+		ListGridField schoolField = new ListGridField(SCHOOL, "School");
+		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 		
-		ListGridField academicField = new ListGridField(ACADEMIC_TERM, "AcademicTerm");
-		ListGridField academicIdField = new ListGridField(ACADEMIC_TERM_ID, "AcademicTermId");
-		academicIdField.setHidden(true);
 		
-		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE , "clockInDate");
-		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME , "clockInTime");
+		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE , "clock In Date");
+		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME , "clock In Time");
 	
 		ListGridField latitudeField = new ListGridField(LATITUDE, "latitude");
-		ListGridField longitudeField = new ListGridField(LONGTITUDE, "logitude");
+		ListGridField longitudeField = new ListGridField(LONGTITUDE, "longitude");
 		ListGridField statusField = new ListGridField(STATUS, "status");
 		ListGridField commentField = new ListGridField(COMMENT, "comment");
 
 			
 		
 
-		this.setFields(idField , schoolIdField , academicIdField , schoolField , academicField , clockInDateField , clockInTimeField , commentField , statusField , latitudeField , longitudeField);
+		this.setFields(idField , schoolIdField,schoolStaffIdField , academicTermIdField,academicYearIdField,academicYearField , academicTermField , schoolField  ,schoolStaffField , clockInDateField , clockInTimeField , commentField , statusField , latitudeField , longitudeField);
 
 	}
 
@@ -84,6 +102,11 @@ private AcademicTermDTO academicTerm;
 		if(clockInDTO.getAcademicTermDTO() != null) {
 			record.setAttribute(ACADEMIC_TERM, clockInDTO.getAcademicTermDTO().getTerm());
 			record.setAttribute(ACADEMIC_TERM_ID, clockInDTO.getAcademicTermDTO().getId());	
+			
+			if(clockInDTO.getAcademicTermDTO().getAcademicYearDTO() != null) {
+				record.setAttribute(ACADEMIC_YEAR, clockInDTO.getAcademicTermDTO().getAcademicYearDTO().getName());
+				record.setAttribute(ACADEMIC_YEAR_ID, clockInDTO.getAcademicTermDTO().getAcademicYearDTO().getId());	
+			}
 		}
 		
 

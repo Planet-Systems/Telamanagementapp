@@ -1,10 +1,10 @@
 package com.planetsystems.tela.managementapp.shared;
 
 public class RequestConstant {
-	public static final String SYSTEM_CONFIGURATION = "Configurations";
-	public static final String SYSTEM_ENROLLMENT = "Enrollments";
-	public static final String SYSTEM_SETTINGS = "Settings";
-	public static final String SYSTEM_USERS = "Users";
+	public static final String SYSTEM_CONFIGURATION = "System Configuration";
+	public static final String SYSTEM_ENROLLMENT = "Enrollment";
+	public static final String SYSTEM_SETTINGS = "Setting";
+	public static final String SYSTEM_USERS = "User";
 	public static final String SYSTEM_TABLES = "TimeTable";
 	
 	public static final String SYSTEM_ATTENDANCE = "Attendance";

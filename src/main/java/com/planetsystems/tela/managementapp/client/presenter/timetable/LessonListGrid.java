@@ -47,15 +47,15 @@ public class LessonListGrid extends SuperListGrid {
 		classIdField.setHidden(true);
 		
 		ListGridField subjectField = new ListGridField(SUBJECT , "Subject");
-		ListGridField subjectIdField = new ListGridField(SUBJECT_ID , "SubjectId");
+		ListGridField subjectIdField = new ListGridField(SUBJECT_ID , "Subject Id");
 		subjectIdField.setHidden(true);
 		
 		
-		ListGridField startTimeField = new ListGridField(START_TIME , "StartTime");
-		ListGridField endTimeField = new ListGridField(END_TIME , "EndTime");
+		ListGridField startTimeField = new ListGridField(START_TIME , "Start Time");
+		ListGridField endTimeField = new ListGridField(END_TIME , "End Time");
 		
 		ListGridField staffField = new ListGridField(STAFF , "Staff");
-		ListGridField staffIdField = new ListGridField(STAFF_ID , "StaffId");
+		ListGridField staffIdField = new ListGridField(STAFF_ID , "Staff Id");
 		staffIdField.setHidden(true);
 		
 		this.setFields(dayField , classField , subjectField , startTimeField , endTimeField , staffField);

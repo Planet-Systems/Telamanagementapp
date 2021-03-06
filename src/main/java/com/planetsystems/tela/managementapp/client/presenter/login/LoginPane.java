@@ -24,18 +24,19 @@ public class LoginPane extends VLayout {
 	public LoginPane() {
 		super();
 		
-		  Img desLogo = new Img("/webapp/images/des_logo.jpg");
+		  Img desLogo = new Img("des_logo.jpg");
 			desLogo.setHeight(130);
 			desLogo.setWidth(130);
 			desLogo.setTooltip("DES LOGO");
 			desLogo.setLayoutAlign(Alignment.CENTER);
 			//desLogo.setAltText("Des Logo");
 			
-			Img telaLogo = new Img("/images/telalog.png");
+			Img telaLogo = new Img("telalog.png");
 			telaLogo.setHeight(50);
 			telaLogo.setWidth(400);
 			telaLogo.setTooltip("TELA LOGO");
 			telaLogo.setLayoutAlign(Alignment.CENTER);
+			telaLogo.setBackgroundColor("blue");
 			//telaLogo.setAltText("Tela log");
 
 			VLayout imgLayout = new VLayout();
@@ -43,7 +44,7 @@ public class LoginPane extends VLayout {
 			imgLayout.setWidth100();
 			imgLayout.setAutoHeight();
 			imgLayout.setMembersMargin(5);
-			imgLayout.addMembers(desLogo , telaLogo);
+			imgLayout.addMembers(desLogo);
 			
 			
 			Label loginLabel = new Label("Login");

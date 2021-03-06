@@ -49,7 +49,7 @@ public class TimeTableListGrid extends SuperListGrid {
 			
 		    
 			ListGridField schoolField = new ListGridField(SCHOOL, "School");
-			ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "SchoolId");
+			ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 			schoolIdField.setHidden(true);
 			
 			ListGridField academicTermField = new ListGridField(ACADEMIC_TERM , "Academic Term");
