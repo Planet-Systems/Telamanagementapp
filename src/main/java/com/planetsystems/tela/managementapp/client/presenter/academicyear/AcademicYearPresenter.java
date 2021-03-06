@@ -39,7 +39,10 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
@@ -55,6 +58,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		public AcademicYearPane getAcademicYearPane();
 
 		public AcademicTermPane getAcademicTermPane();
+		FilterAcademicTermsPane getFilterAcademicTermsPane();
 
 	}
 
@@ -87,10 +91,11 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
 	}
 
+	   FilterAcademicTermsPane filterAcademicTermsPane;
 	@Override
 	protected void onBind() {
 		super.onBind();
-
+		filterAcademicTermsPane = new FilterAcademicTermsPane();
 		onTabSelected();
 		getAllAcademicYears();
 		getAllAcademicTerms();
@@ -115,17 +120,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_YEAR_TAB_TITLE)) {
-
+					  getView().getFilterAcademicTermsPane().setVisible(false);
 					MenuButton editAcademicYearButton = new MenuButton("Edit");
 					MenuButton deleteAcademicYearButton = new MenuButton("Delete");
-					MenuButton filterAcademicYearButton = new MenuButton("Filter");
+					//MenuButton filterAcademicYearButton = new MenuButton("Filter");
 					MenuButton newAcademicYear = new MenuButton("New");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newAcademicYear);
 					buttons.add(editAcademicYearButton);
 					buttons.add(deleteAcademicYearButton);
-					buttons.add(filterAcademicYearButton);
+				//	buttons.add(filterAcademicYearButton);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 
@@ -134,18 +139,21 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					editAcademicYear(editAcademicYearButton);
 
 				} else if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_TERM_TAB_TITLE)) {
-
+					getView().getFilterAcademicTermsPane().setVisible(true);
+					filterAcademicTermsByAcademicYear();
+              
+		
 					MenuButton newButton = new MenuButton("New");
 
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					MenuButton fiter = new MenuButton("Filter");
+				//	MenuButton fiter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					// buttons.add(delete);
-					buttons.add(fiter);
+					//buttons.add(fiter);
 					getView().getControlsPane().addMenuButtons(buttons);
 
 					addAcademicTerm(newButton);
@@ -441,6 +449,14 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 							getView().getAcademicYearPane().getListGrid()
 									.addRecordsToGrid(result.getAcademicYearDTOs());
+							
+							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+							for (AcademicYearDTO academicYearDTO : result.getAcademicYearDTOs()) {
+								valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
+							}
+							
+							getView().getFilterAcademicTermsPane().getAcademicYearCombo().setValueMap(valueMap);
 
 						} else {
 							SC.warn("ERROR", "Service Down");
@@ -449,6 +465,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					}
 				});
 	}
+	
+	
 
 	private void clearAcademicYearWindowFields(AcademicYearWindow window) {
 		window.getYearCode().clearValue();
@@ -485,9 +503,11 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
 							}
 							window.getYearComboBox().setValueMap(valueMap);
+							getView().getFilterAcademicTermsPane().getAcademicYearCombo().setValueMap(valueMap);
 
 							if (defaultValue != null) {
 								window.getYearComboBox().setValue(defaultValue);
+								getView().getFilterAcademicTermsPane().getAcademicYearCombo().setValue(valueMap);
 							}
 
 						} else {
@@ -814,6 +834,55 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 					}
 				});
+	}
+	
+	
+	public void filterAcademicTermsByAcademicYear() {
+		getView().getFilterAcademicTermsPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				String id = getView().getFilterAcademicTermsPane().getAcademicYearCombo().getValueAsString();
+		
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			
+					map.put(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, id);	
+
+				
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				
+				SC.showPrompt("", "", new SwizimaLoader());
+
+				dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, map),
+						new AsyncCallback<RequestResult>() {
+							public void onFailure(Throwable caught) {
+								System.out.println(caught.getMessage());
+								SC.warn("ERROR", caught.getMessage());
+								GWT.log("ERROR " + caught.getMessage());
+								SC.clearPrompt();
+							}
+
+							public void onSuccess(RequestResult result) {
+
+								SC.clearPrompt();
+
+								SessionManager.getInstance().manageSession(result, placeManager);
+
+								if (result != null) {
+
+									getView().getAcademicTermPane().getListGrid()
+											.addRecordsToGrid(result.getAcademicTermDTOs());
+
+								} else {
+									// SC.warn("ERROR", "Unknown error");
+									SC.warn("ERROR", "Service Down");
+								}
+
+							}
+						});
+			}
+		});
+		
 	}
 
 }

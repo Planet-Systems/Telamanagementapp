@@ -12,7 +12,7 @@ import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class AcademicTermWindow extends Window {
+public class AcademicTermWindow extends Window { 
 
 	private TextField termCodeField;
 	private TextField termNameField;
@@ -74,12 +74,19 @@ public class AcademicTermWindow extends Window {
 		layout.addMember(form);
 		layout.addMember(buttonLayout);
 
+		/*
+		 * layout.setMargin(10); this.addItem(layout); this.setWidth("40%");
+		 * this.setHeight("60%"); this.setAutoCenter(true);
+		 * this.setTitle("Academic Term"); this.setIsModal(true);
+		 * this.setShowModalMask(true);
+		 */
+		
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
 		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("Academic Term");
+		this.setTitle("Timetable Lesson");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);
@@ -124,6 +131,7 @@ public class AcademicTermWindow extends Window {
 	}
 
 
+	
 	
 	
 

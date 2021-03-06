@@ -31,7 +31,7 @@ public class SchoolStaffWindow extends Window {
 		private IButton cancelButton;
 	
 	public SchoolStaffWindow() {
-		
+		super();
 		firstNameField = new TextItem();
 		firstNameField.setTitle("FirstName");
 		firstNameField.setHint("FirstName");
@@ -122,14 +122,20 @@ public class SchoolStaffWindow extends Window {
 		
 		
 		
+		/*
+		 * this.setWidth("60%"); this.setHeight("60%"); this.setAutoCenter(true);
+		 * this.setTitle("SchoolStaff"); this.setIsModal(true);
+		 * this.setShowModalMask(true); this.addMember(layout);
+		 */
+		
+		layout.setMargin(10);
+		this.addItem(layout);
 		this.setWidth("60%");
 		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("SchoolStaff");
+		this.setTitle("Timetable Lesson");
 		this.setIsModal(true);
-		//this.setShowModalMask(true);
-		
-		this.addMember(layout);
+		this.setShowModalMask(true);
 		
 		closeWindow(this);
 		

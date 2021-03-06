@@ -39,6 +39,8 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -55,6 +57,9 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 		RegionPane getRegionPane();
 
 		DistrictPane getDistrictPane();
+		
+		FilterDistrictsPane getFilterDistrictsPane();
+		
 	}
 
 	@ContentSlot
@@ -109,6 +114,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(RegionView.REGION_TAB_TITLE)) {
+					getView().getFilterDistrictsPane().setVisible(false);
 
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
@@ -127,7 +133,8 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					editRegion(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(RegionView.DISTRICT_TAB_TITLE)) {
-
+					getView().getFilterDistrictsPane().setVisible(true);
+                     filterDistrictsByRegion();
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -443,6 +450,13 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 						if (result.getSystemFeedbackDTO().isResponse()) {
 							// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 							getView().getRegionPane().getListGrid().addRecordsToGrid(result.getRegionDtos());
+							
+							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+							for (RegionDto regionDto : result.getRegionDtos()) {
+								valueMap.put(regionDto.getId(), regionDto.getName());
+							}
+							getView().getFilterDistrictsPane().getRegionCombo().setValueMap(valueMap);
 
 						} else {
 							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
@@ -828,7 +842,61 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 			}
 		});
-
 	}
+	
+	
+	public void filterDistrictsByRegion() {
+		getView().getFilterDistrictsPane().getRegionCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				String id = getView().getFilterDistrictsPane().getRegionCombo().getValueAsString();
+		
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			
+					map.put(RequestConstant.GET_DISTRICTS_IN_REGION, id);	
+
+				
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				
+				SC.showPrompt("", "", new SwizimaLoader());
+
+				dispatcher.execute(new RequestAction(RequestConstant.GET_DISTRICTS_IN_REGION, map),
+						new AsyncCallback<RequestResult>() {
+							public void onFailure(Throwable caught) {
+								System.out.println(caught.getMessage());
+								SC.warn("ERROR", caught.getMessage());
+								GWT.log("ERROR " + caught.getMessage());
+								SC.clearPrompt();
+							}
+
+							public void onSuccess(RequestResult result) {
+
+								SC.clearPrompt();
+
+								SessionManager.getInstance().manageSession(result, placeManager);
+
+								if (result != null) {
+
+									getView().getDistrictPane().getListGrid()
+											.addRecordsToGrid(result.getDistrictDTOs());
+
+								} else {
+									// SC.warn("ERROR", "Unknown error");
+									SC.warn("ERROR", "Service Down");
+								}
+
+							}
+						});
+			}
+		});
+		
+	}
+
+	
+	
+	
+	
+	
 
 }

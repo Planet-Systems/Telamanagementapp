@@ -56,8 +56,10 @@ public class SchoolCategoryPresenter
 		SchCategoryPane getSchoolCategoryPane();
 
 		SchoolPane getSchoolPane();
+		FilterSchoolsPane getFilterSchoolsPane();
 
 		SchoolClassPane getSchoolClassPane();
+		FilterSchoolClassPane getFilterSchoolClassPane();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -117,7 +119,8 @@ public class SchoolCategoryPresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CATEGORY_TAB_TITLE)) {
-
+                      getView().getFilterSchoolsPane().setVisible(false);
+                      getView().getFilterSchoolClassPane().setVisible(false);
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -136,7 +139,11 @@ public class SchoolCategoryPresenter
 					editSchoolCategory(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_TAB_TITLE)) {
-
+					loadFilterSchoolDistrictCombo();
+					filterSchools();
+					
+					getView().getFilterSchoolsPane().setVisible(true);
+                    getView().getFilterSchoolClassPane().setVisible(false);
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -155,6 +162,12 @@ public class SchoolCategoryPresenter
 					editSchool(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CLASSES_TAB_TITLE)) {
+					getView().getFilterSchoolsPane().setVisible(false);
+                    getView().getFilterSchoolClassPane().setVisible(true);
+                    loadFilterSchoolClassAcademicTermCombo();
+                    loadFilterSchoolClassSchoolCombo();
+                    filterSchoolClasses();
+					
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -432,6 +445,8 @@ public class SchoolCategoryPresenter
 		});
 
 	}
+	
+	
 
 	private void getAllSchoolCategories() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -464,6 +479,14 @@ public class SchoolCategoryPresenter
 
 									getView().getSchoolCategoryPane().getListGrid()
 											.addRecordsToGrid(result.getSchoolCategoryDTOs());
+									
+									LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+									for (SchoolCategoryDTO schoolCategoryDTO : result.getSchoolCategoryDTOs()) {
+										valueMap.put(schoolCategoryDTO.getId(), schoolCategoryDTO.getName());
+									}
+									
+									getView().getFilterSchoolsPane().getCategoryCombo().setValueMap(valueMap);
 
 								} else {
 									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
@@ -494,6 +517,8 @@ public class SchoolCategoryPresenter
 			}
 		});
 	}
+	
+	
 
 	private void saveSchool(final SchoolWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
@@ -689,10 +714,10 @@ public class SchoolCategoryPresenter
 
 							}
 						});
-
 			}
 		});
 	}
+	
 
 	private void loadCategoryCombo(final SchoolWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -739,6 +764,8 @@ public class SchoolCategoryPresenter
 				});
 	}
 
+	
+	
 	private void loadDistrictCombo(final SchoolWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_DISTRICT, null);
@@ -781,6 +808,50 @@ public class SchoolCategoryPresenter
 			}
 		});
 	}
+	
+	
+	
+	private void loadFilterSchoolDistrictCombo() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_DISTRICT, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+		dispatchAsync.execute(new RequestAction(RequestConstant.GET_DISTRICT , map), new AsyncCallback<RequestResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+				SC.warn("ERROR", caught.getMessage());
+				GWT.log("ERROR " + caught.getMessage());
+				SC.clearPrompt();
+
+			}
+
+			@Override
+			public void onSuccess(RequestResult result) {
+
+				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
+				if (result != null) {
+
+					if (result.getSystemFeedbackDTO() != null) {
+						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+						for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
+							valueMap.put(districtDTO.getId(), districtDTO.getName());
+						}
+						getView().getFilterSchoolsPane().getDistrictCombo().setValueMap(valueMap);
+					}
+				} else {
+					SC.warn("ERROR", "Unknow error");
+				}
+
+			}
+		});
+	}
+
+	
+	
 
 	private void clearSchoolWindowFields(SchoolWindow window) {
 
@@ -1099,6 +1170,8 @@ public class SchoolCategoryPresenter
 		loadAcademicTermCombo(window, record.getAttribute(SchoolClassListGrid.ACADEMIC_TERM_ID));
 	}
 
+	
+	
 	private void loadSchoolCombo(final SchoolClassWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SCHOOL, null);
@@ -1141,6 +1214,58 @@ public class SchoolCategoryPresenter
 			}
 		});
 	}
+	
+	
+
+	private void loadFilterSchoolClassSchoolCombo() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_SCHOOL, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatchAsync.execute(new RequestAction(RequestConstant.GET_SCHOOL , map), new AsyncCallback<RequestResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+				SC.warn("ERROR", caught.getMessage());
+				GWT.log("ERROR " + caught.getMessage());
+				SC.clearPrompt();
+
+			}
+
+			@Override
+			public void onSuccess(RequestResult result) {
+
+				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
+				if (result != null) {
+
+					if (result.getSystemFeedbackDTO() != null) {
+						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+						for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
+							valueMap.put(schoolDTO.getId(), schoolDTO.getName());
+						}
+						
+						getView().getFilterSchoolClassPane().getSchoolCombo().setValueMap(valueMap);
+//						window.getSchool().setValueMap(valueMap);
+//						if (defaultValue != null) {
+//							window.getSchool().setValue(defaultValue);
+//						}
+					}
+				} else {
+					SC.warn("ERROR", "Unknow error");
+				}
+
+			}
+		});
+	}
+
+	
+	
+	
+	
 
 	private void loadAcademicTermCombo(final SchoolClassWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -1188,6 +1313,50 @@ public class SchoolCategoryPresenter
 				});
 	}
 
+	
+	
+	
+	private void loadFilterSchoolClassAcademicTermCombo() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_ACADEMIC_TERM, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatchAsync.execute(new RequestAction( RequestConstant.GET_ACADEMIC_TERM , map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+								for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
+									valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
+								}
+								getView().getFilterSchoolClassPane().getAcademicTermCombo().setValueMap(valueMap);
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+	}
+	
 	private void clearSchoolClassWindowFields(SchoolClassWindow window) {
 		window.getClassCode().clearValue();
 		window.getcName().clearValue();
@@ -1307,5 +1476,118 @@ public class SchoolCategoryPresenter
 				});
 
 	}
+	
+	////////////////////////////////////filter
 
+	private void filterSchools() {
+	  getView().getFilterSchoolsPane().getFilterButton().addClickHandler(new ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent event) {
+			String schoolCategoryId =   getView().getFilterSchoolsPane().getCategoryCombo().getValueAsString();
+			String districtId =   getView().getFilterSchoolsPane().getDistrictCombo().getValueAsString();
+		
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		    map.put(FilterSchoolsPane.DISTRICT_ID , districtId);
+		    map.put(FilterSchoolsPane.SCHOOL_CATEGORY_ID , schoolCategoryId);
+			map.put(RequestConstant.GET_SCHOOLS_IN_SCHOOL_CATEGORY_DISTRICT, map);
+			
+			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+			SC.showPrompt("", "", new SwizimaLoader());
+
+			dispatchAsync.execute(new RequestAction(RequestConstant.GET_SCHOOLS_IN_SCHOOL_CATEGORY_DISTRICT , map), new AsyncCallback<RequestResult>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					System.out.println(caught.getMessage());
+					SC.warn("ERROR", caught.getMessage());
+					GWT.log("ERROR " + caught.getMessage());
+					SC.clearPrompt();
+
+				}
+
+				@Override
+				public void onSuccess(RequestResult result) {
+
+					SC.clearPrompt();
+					SessionManager.getInstance().manageSession(result, placeManager);
+					if (result != null) {
+
+						if (result.getSystemFeedbackDTO() != null) {
+							if (result.getSystemFeedbackDTO().isResponse()) {
+								// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+								getView().getSchoolPane().getListGrid().addRecordsToGrid(result.getSchoolDTOs());
+							} else {
+								SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+							}
+						}
+					} else {
+						SC.warn("ERROR", "Service Down");
+						// SC.warn("ERROR", "Unknow error");
+					}
+
+				}
+			});
+		}
+	});	
+	}
+
+	
+	
+	private void filterSchoolClasses() {
+		  getView().getFilterSchoolClassPane().getFilterButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				String academicTermId =   getView().getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString();
+				String schoolId =   getView().getFilterSchoolClassPane().getSchoolCombo().getValueAsString();
+			
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			    map.put(FilterSchoolClassPane.ACADEMIC_TERM_ID , academicTermId);
+			    map.put(FilterSchoolClassPane.SCHOOL_ID , schoolId);
+				map.put(RequestConstant.GET_SCHOOL_CLASS_IN_SCHOOL_ACADEMIC, map);
+				
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				SC.showPrompt("", "", new SwizimaLoader());
+
+				dispatchAsync.execute(new RequestAction(RequestConstant.GET_SCHOOL_CLASS_IN_SCHOOL_ACADEMIC , map), new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+								if (result.getSystemFeedbackDTO().isResponse()) {
+									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									getView().getSchoolClassPane().getListGrid().addRecordsToGrid(result.getSchoolClassDTOs());
+								} else {
+									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+								}
+							}
+						} else {
+							SC.warn("ERROR", "Service Down");
+							// SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+			}
+		});	
+		}
+
+	
+	
+	
 }

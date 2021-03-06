@@ -50,6 +50,8 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -65,6 +67,7 @@ public class SubjectCategoryPresenter
 		SubCategoryPane getSubCategoryPane();
 
 		SubjectPane getSubjectPane();
+		FilterSubjectsPane getFilterSubjectsPane();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -121,7 +124,7 @@ public class SubjectCategoryPresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(SubjectCategoryView.SUB_CATEGORY_TAB_TITLE)) {
-
+                     getView().getFilterSubjectsPane().setVisible(false);
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -139,7 +142,10 @@ public class SubjectCategoryPresenter
 					editSubjectCategory(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(SubjectCategoryView.SUBJECT_TAB_TITLE)) {
-
+					getView().getFilterSubjectsPane().setVisible(true);
+					loadSubjectFilterCategoryCombo();
+					filterSubjectsSubjectCategory();
+					
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -519,6 +525,52 @@ public class SubjectCategoryPresenter
 				});
 	}
 
+	
+	
+	
+	private void loadSubjectFilterCategoryCombo() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_SUBJECT_CATEGORY, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_SUBJECT_CATEGORY , map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						SC.clearPrompt();
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+								for (SubjectCategoryDTO subjectCategoryDTO : result.getSubjectCategoryDTOs()) {
+									valueMap.put(subjectCategoryDTO.getId(), subjectCategoryDTO.getName());
+								}
+								getView().getFilterSubjectsPane().getCategoryCombo().setValueMap(valueMap);
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+	}
+
+	
+	
+	
 	public void clearSubjectWindowFields(SubjectWindow window) {
 		window.getSubjectCode().clearValue();
 		window.getSubjectName().clearValue();
@@ -804,6 +856,60 @@ public class SubjectCategoryPresenter
 		});
 
 	}
+	
+	//filter
+	private void filterSubjectsSubjectCategory() {
+		getView().getFilterSubjectsPane().getCategoryCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				String subjectCategoryId = getView().getFilterSubjectsPane().getCategoryCombo().getValueAsString();
+				
+				
+				map.put(RequestConstant.GET_SUBJECTS_SUBJECT_CATEGORY, subjectCategoryId);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				SC.showPrompt("", "", new SwizimaLoader());
 
+				dispatcher.execute(new RequestAction(RequestConstant.GET_SUBJECTS_SUBJECT_CATEGORY , map), new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+								if (result.getSystemFeedbackDTO().isResponse()) {
+									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									getView().getSubjectPane().getListGrid().addRecordsToGrid(result.getSubjectDTOs());
+
+								} else {
+									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+								}
+							}
+						} else {
+							SC.warn("ERROR", "Service Down");
+							// SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+
+				});
+			}
+		});
+
+	}
+	
 
 }

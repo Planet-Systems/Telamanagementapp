@@ -22,7 +22,7 @@ public class NameTokens {
 
 	public static final String subjectCategory = "SubjectCategories";
 
-	public static final String schoolClassCategory = "SchoolClassCategory";
+	public static final String schoolClassCategory = "SchoolClass";
 
 	public static final String region = "RegionDistricts";
 
@@ -82,8 +82,5 @@ public class NameTokens {
 		return timeTable;
 	}
 
-	public static String getTimeTables2() {
-		return TimeTables2;
-	}
 
 }

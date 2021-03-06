@@ -18,6 +18,7 @@ class SubjectCategoryView extends ViewImpl implements SubjectCategoryPresenter.M
 	private TabSet tabSet;
 	private SubCategoryPane subCategoryPane;
 	private SubjectPane subjectPane;
+	private FilterSubjectsPane filterSubjectsPane;
 	
 	public static final String SUB_CATEGORY_TAB_TITLE= "Subject Categories";
 	public static final String SUBJECT_TAB_TITLE= "Subjects";
@@ -28,6 +29,7 @@ class SubjectCategoryView extends ViewImpl implements SubjectCategoryPresenter.M
     	controlsPane = new ControlsPane();
     	subCategoryPane = new SubCategoryPane();
     	subjectPane = new SubjectPane();
+    	filterSubjectsPane = new FilterSubjectsPane();
     	tabSet = new TabSet();
     	
     	Tab subcategoryTab = new Tab();
@@ -43,6 +45,7 @@ class SubjectCategoryView extends ViewImpl implements SubjectCategoryPresenter.M
     	
     	
     	panel.addMember(controlsPane);
+    	panel.addMember(filterSubjectsPane);
     	panel.addMember(tabSet);
     	panel.setWidth100();
 		panel.setHeight("90%");
@@ -69,6 +72,10 @@ class SubjectCategoryView extends ViewImpl implements SubjectCategoryPresenter.M
 
 	public SubjectPane getSubjectPane() {
 		return subjectPane;
+	}
+
+	public FilterSubjectsPane getFilterSubjectsPane() {
+		return filterSubjectsPane;
 	}
 	
 	
