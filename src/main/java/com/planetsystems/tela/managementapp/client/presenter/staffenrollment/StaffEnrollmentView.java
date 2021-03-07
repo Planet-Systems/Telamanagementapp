@@ -16,6 +16,8 @@ class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.M
 	private VLayout panel;
 	private StaffEnrollmentPane staffEnrollmentPane;
 	private SchoolStaffPane schoolStaffPane  ;
+	private FilterStaffsPane filterStaffsPane;
+	private FilterStaffHeadCountPane filterStaffHeadCountPane;
 	private TabSet tabSet;
 	private ControlsPane controlsPane;
 	public static final String STAFF_ENROLLMENT="Head Count";
@@ -25,7 +27,11 @@ class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.M
     StaffEnrollmentView() {
     	panel = new VLayout();
     	schoolStaffPane = new  SchoolStaffPane();
+    	filterStaffsPane = new FilterStaffsPane();
+    	
     	staffEnrollmentPane = new StaffEnrollmentPane();
+    	filterStaffHeadCountPane = new FilterStaffHeadCountPane();
+    	
     	controlsPane = new ControlsPane();
     	tabSet = new TabSet();
     	
@@ -42,7 +48,14 @@ class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.M
     
     	controlsPane.addMember(new Label("Menus"));
     	
+     	VLayout filterLayout = new VLayout();
+    	filterLayout.addMembers(filterStaffsPane , filterStaffHeadCountPane);
+    	filterLayout.setWidth100();
+    	filterLayout.setHeight("10%");
+//    	filterLayout.setBorder("1px solid red");
+    	
     	panel.addMember(controlsPane);
+    	panel.addMember(filterLayout);
     	panel.addMember(tabSet);
     	panel.setWidth100();
 		panel.setHeight("90%");
@@ -75,6 +88,15 @@ class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.M
 		return controlsPane;
 	}
 
+	public FilterStaffsPane getFilterStaffsPane() {
+		return filterStaffsPane;
+	}
+
+	public FilterStaffHeadCountPane getFilterStaffHeadCountPane() {
+		return filterStaffHeadCountPane;
+	}
+
+	
 
 	
     

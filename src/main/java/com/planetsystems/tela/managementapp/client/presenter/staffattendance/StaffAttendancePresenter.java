@@ -56,8 +56,10 @@ public class StaffAttendancePresenter extends Presenter<StaffAttendancePresenter
 		public TabSet getTabSet();
 
 		public ClockOutPane getClockOutPane();
+		FilterClockOutPane getFilterClockOutPane();
 
 		public ClockInPane getClockInPane();
+		FilterClockInPane getFilterClockInPane();
 	}
 
 	@ContentSlot
@@ -98,7 +100,9 @@ public class StaffAttendancePresenter extends Presenter<StaffAttendancePresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKIN_TAB_TITLE)) {
-
+                     getView().getFilterClockInPane().setVisible(true);
+                     getView().getFilterClockOutPane().setVisible(false);
+                     
 					MenuButton clockInButton = new MenuButton("ClockIn");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -119,6 +123,9 @@ public class StaffAttendancePresenter extends Presenter<StaffAttendancePresenter
 		
 
 				} else if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKOUT_TAB_TITLE)) {
+					getView().getFilterClockInPane().setVisible(false);
+                    getView().getFilterClockOutPane().setVisible(true);
+					
 					getAllStaffClockOut();
 					//MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");

@@ -42,6 +42,7 @@ public class LearnerEnrollmentPresenter extends Presenter<LearnerEnrollmentPrese
     interface MyView extends View  {
     LearnerEnrollementPane	getLearnerEnrollementPane();
     ControlsPane getControlsPane();
+    FilterLearnerHeadCountPane getFilterLearnerHeadCountPane(); 
     }
     
     @SuppressWarnings("deprecation")

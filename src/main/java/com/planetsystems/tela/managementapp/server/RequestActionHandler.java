@@ -42,6 +42,7 @@ import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolClassPane;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolsPane;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffsPane;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -1674,7 +1675,40 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
+			}else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
+				String districtId = (String) action.getRequestBody().get(FilterStaffsPane.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(FilterStaffsPane.SCHOOL_ID);
+
+				Client client = ClientBuilder.newClient();
+//districts/{districtId}/schools/ff80818177f1b9680177f1c3329e000b/schoolstaffs
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK)
+						.path("districts")
+						.path(districtId)
+						.path("schools")
+						.path(schoolId)
+						.path("schoolstaffs")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
 			}
+			
 			///////////staff enrollment
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_ENROLLMENT) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 

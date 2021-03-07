@@ -68,6 +68,7 @@ public class RequestConstant {
 	public static final String UPDATE_SCHOOL_STAFF = "UPDATE_SCHOOL_STAFF";
 	public static final String DELETE_SCHOOL_STAFF = "DELETE_SCHOOL_STAFF";
 	public static final String GET_SCHOOL_STAFF = "GET_SCHOOL_STAFF";
+	public static final String GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL = "GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL";
 	
 
 	public static final String SAVE_LEARNER_ENROLLMENT = "SAVE_LEARNER_ENROLLMENT";

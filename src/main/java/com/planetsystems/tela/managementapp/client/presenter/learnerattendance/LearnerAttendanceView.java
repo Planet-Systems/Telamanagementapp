@@ -18,16 +18,20 @@ class LearnerAttendanceView extends ViewImpl implements LearnerAttendancePresent
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
 	private LearnerAttendancePane attendancePane;
+	private FilterLearnerAttendancePane filterLearnerAttendancePane;
+	
 	private ControlsPane controlsPane;
 
     @Inject
     LearnerAttendanceView() {
     	panel = new VLayout();
     	attendancePane = new LearnerAttendancePane();
+    	filterLearnerAttendancePane = new FilterLearnerAttendancePane();
     	controlsPane = new ControlsPane();
     
     	
     	panel.addMember(controlsPane);
+    	panel.addMember(filterLearnerAttendancePane);
     	panel.addMember(attendancePane);
     	panel.setWidth100();
 		panel.setHeight("90%");

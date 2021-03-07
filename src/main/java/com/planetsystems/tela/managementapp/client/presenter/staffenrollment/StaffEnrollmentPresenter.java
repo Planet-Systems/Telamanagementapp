@@ -54,6 +54,10 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
     	public StaffEnrollmentPane getStaffEnrollmentPane();
 
     	public SchoolStaffPane getSchoolStaffPane();
+    	
+    	 FilterStaffHeadCountPane getFilterStaffHeadCountPane();
+    	 
+    	 FilterStaffsPane getFilterStaffsPane();
     
     }
     @ContentSlot
@@ -99,6 +103,10 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.STAFF_ENROLLMENT)) {
+					getView().getFilterStaffHeadCountPane().setVisible(true);
+					getView().getFilterStaffsPane().setVisible(false);
+					
+					
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -116,6 +124,8 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 //					editRegion(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.TEACHER_LIST)){
+					getView().getFilterStaffHeadCountPane().setVisible(false);
+					getView().getFilterStaffsPane().setVisible(true);
 		
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
