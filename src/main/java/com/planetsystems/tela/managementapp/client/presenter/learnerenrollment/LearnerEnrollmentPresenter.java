@@ -21,6 +21,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffHeadCountWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
@@ -142,6 +143,7 @@ public class LearnerEnrollmentPresenter extends Presenter<LearnerEnrollmentPrese
 	        loadFilterLearnerHeadCountAcademicTermCombo(window);
 	        loadFilterLearnerHeadCountDistrictCombo(window);
 	        loadFilterLearnerHeadCountSchoolCombo(window);
+	        filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
 	   		window.show();
 	   		disableEnableFilterButton(window);
 	   		}		
@@ -627,6 +629,67 @@ private void loadFilterLearnerHeadCountDistrictCombo(final FilterLearnerHeadCoun
 			}
 
 			/////////////////////////////////////////END OF FILTER LEARNERS COMBOS
+			
+			
+			private void filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(final FilterLearnerHeadCountWindow window) {
+				window.getFilterButton().addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						String academicYearId = window.getFilterLearnerHeadCountPane().getAcademicYearCombo().getValueAsString();
+						String academicTermId = window.getFilterLearnerHeadCountPane().getAcademicTermCombo().getValueAsString();
+						String districtId = window.getFilterLearnerHeadCountPane().getDistrictCombo().getValueAsString();
+						String schoolId = window.getFilterLearnerHeadCountPane().getSchoolCombo().getValueAsString();
+						
+						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+						map.put(FilterLearnerHeadCountWindow.ACADEMIC_YEAR_ID, academicYearId);
+						map.put(FilterLearnerHeadCountWindow.ACADEMIC_TERM_ID, academicTermId);
+						map.put(FilterLearnerHeadCountWindow.DISTRICT_ID, districtId);
+						map.put(FilterLearnerHeadCountWindow.SCHOOL_ID, schoolId);
+						
+						map.put(RequestConstant.GET_LEARNER_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map);
+						map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+						SC.showPrompt("", "", new SwizimaLoader());
+
+						dispatcher.execute(new RequestAction(RequestConstant.GET_LEARNER_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL , map),
+								new AsyncCallback<RequestResult>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										System.out.println(caught.getMessage());
+										SC.warn("ERROR", caught.getMessage());
+										GWT.log("ERROR " + caught.getMessage());
+										SC.clearPrompt();
+
+									}
+
+									@Override
+									public void onSuccess(RequestResult result) {
+
+										SC.clearPrompt();
+										SessionManager.getInstance().manageSession(result, placeManager);
+										if (result != null) {
+				                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+											if ( feedbackDTO != null) {
+												window.close();
+												if (result.getSystemFeedbackDTO().isResponse()) {
+													// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+													getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid().addRecordsToGrid(result.getLearnerEnrollmentDTOs());
+												} else {
+													SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+												}
+											}
+										} else {
+											SC.warn("ERROR", "Unknow error");
+										}
+
+									}
+
+								});
+						
+					}
+				});
+			}
 
     
 }

@@ -15,7 +15,7 @@ public class FilterLearnerAttendancePane extends HLayout {
 	private ComboBox schoolCombo;
 	private ComboBox academicYearCombo;
 	private ComboBox academicTermCombo;
-	private DateItem clockinDateItem;
+	private DateItem attendanceDateItem;
 
 	
 	public static final String DISTRICT_ID = "DISTRICT_ID";
@@ -47,11 +47,11 @@ public class FilterLearnerAttendancePane extends HLayout {
 		academicTermCombo.setHint("Select A  Term");
 		academicTermCombo.setShowHintInField(true);
 		
-		clockinDateItem = new DateItem();
-		clockinDateItem.setTitle("Date");
+		attendanceDateItem = new DateItem();
+		attendanceDateItem.setTitle("Date");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo , clockinDateItem);
+		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo , attendanceDateItem);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(10);
@@ -82,9 +82,11 @@ public class FilterLearnerAttendancePane extends HLayout {
 		return academicTermCombo;
 	}
 
-	public DateItem getClockinDateItem() {
-		return clockinDateItem;
+	public DateItem getAttendanceDateItem() {
+		return attendanceDateItem;
 	}
+
+
 	
 	
 	

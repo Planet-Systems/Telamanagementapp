@@ -10,6 +10,12 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class FilterLearnerHeadCountWindow extends Window {
 	
+	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
+	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
+	public static final String DISTRICT_ID = "DISTRICT_ID";
+	public static final String SCHOOL_ID = "SCHOOL_ID";
+	
+	
 	private IButton filterButton;
 	private IButton cancelButton;
 	private FilterLearnerHeadCountPane filterLearnerHeadCountPane;

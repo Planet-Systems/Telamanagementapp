@@ -258,6 +258,7 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 	   		loadFilterStaffHeadCountSchoolCombo(window);
 	   		loadFilterStaffHeadCountAcademicYearCombo(window);
 	   		loadFilterStaffHeadCountAcademicTermCombo(window);
+	   		filterSchoolStaffEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
 	   		window.show();
 	   		disableEnableFilterButton(window);
 
@@ -1187,9 +1188,72 @@ private void saveSchoolStaff(final SchoolStaffWindow window) {
 								if (result != null) {
 		                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 									if ( feedbackDTO != null) {
+										window.close();
 										if (result.getSystemFeedbackDTO().isResponse()) {
 											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 											getView().getSchoolStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+										} else {
+											SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+										}
+									}
+								} else {
+									SC.warn("ERROR", "Unknow error");
+								}
+
+							}
+
+						});
+				
+			}
+		});
+	}
+
+	
+	
+	private void filterSchoolStaffEnrollmentByAcademicYearAcademicTermDistrictSchool(final FilterStaffHeadCountWindow window) {
+		window.getFilterButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				String academicYearId = window.getFilterStaffHeadCountPane().getAcademicYearCombo().getValueAsString();
+				String academicTermId = window.getFilterStaffHeadCountPane().getAcademicTermCombo().getValueAsString();
+				String districtId = window.getFilterStaffHeadCountPane().getDistrictCombo().getValueAsString();
+				String schoolId = window.getFilterStaffHeadCountPane().getSchoolCombo().getValueAsString();
+				
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(FilterStaffHeadCountWindow.ACADEMIC_YEAR_ID, academicYearId);
+				map.put(FilterStaffHeadCountWindow.ACADEMIC_TERM_ID, academicTermId);
+				map.put(FilterStaffHeadCountWindow.DISTRICT_ID, districtId);
+				map.put(FilterStaffHeadCountWindow.SCHOOL_ID, schoolId);
+				
+				map.put(RequestConstant.GET_SCHOOL_STAFF_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map);
+				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				SC.showPrompt("", "", new SwizimaLoader());
+
+				dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL , map),
+						new AsyncCallback<RequestResult>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								System.out.println(caught.getMessage());
+								SC.warn("ERROR", caught.getMessage());
+								GWT.log("ERROR " + caught.getMessage());
+								SC.clearPrompt();
+
+							}
+
+							@Override
+							public void onSuccess(RequestResult result) {
+
+								SC.clearPrompt();
+								SessionManager.getInstance().manageSession(result, placeManager);
+								if (result != null) {
+		                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+									if ( feedbackDTO != null) {
+										window.close();
+										if (result.getSystemFeedbackDTO().isResponse()) {
+											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+											getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid().addRecordsToGrid(result.getStaffEnrollmentDtos());
 										} else {
 											SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
 										}
