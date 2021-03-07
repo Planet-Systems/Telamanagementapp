@@ -27,6 +27,7 @@ import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.FilterAcademicTermWindow;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
@@ -39,9 +40,14 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.HoverEvent;
+import com.smartgwt.client.widgets.events.HoverHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
@@ -58,7 +64,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 		DistrictPane getDistrictPane();
 		
-		FilterDistrictsPane getFilterDistrictsPane();
+//		FilterDistrictsPane getFilterDistrictsPane();
 		
 	}
 
@@ -114,8 +120,6 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(RegionView.REGION_TAB_TITLE)) {
-					getView().getFilterDistrictsPane().setVisible(false);
-
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -125,7 +129,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					buttons.add(newButton);
 					buttons.add(edit);
 					buttons.add(delete);
-					buttons.add(fiter);
+				//	buttons.add(fiter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addRegion(newButton);
@@ -133,27 +137,114 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					editRegion(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(RegionView.DISTRICT_TAB_TITLE)) {
-					getView().getFilterDistrictsPane().setVisible(true);
-                     filterDistrictsByRegion();
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					MenuButton fiter = new MenuButton("Filter");
+					MenuButton filter = new MenuButton("Filter");
+					filter.setCanHover(true);
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					// buttons.add(delete);
-					buttons.add(fiter);
+					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addDistrict(newButton);
 					deleteDistrict(delete);
 					editDistrict(edit);
+					selectFilterOption(filter);
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
 					getView().getControlsPane().addMenuButtons(buttons);
+				}
+
+			}
+
+			
+		});
+	}
+	
+	private void selectFilterOption(final MenuButton filter) {
+	       final Menu menu = new Menu();
+	       MenuItem basic = new MenuItem("Base Filter");
+	       MenuItem advanced = new MenuItem("Advanced Filter");
+	       
+	       menu.setItems(basic , advanced);
+	      
+	       filter.addHoverHandler(new HoverHandler() {
+			@Override
+			public void onHover(HoverEvent event) {
+			 menu.showNextTo(filter, "bottom");
+			}
+		});
+
+	       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+			SC.say("Basic Search");
+			}
+		});
+	       
+	       advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+	   		
+	   		@Override
+	   		public void onClick(MenuItemClickEvent event) {
+//	   		SC.say("Advanced Search");
+	   		FilterDistrictWindow window = new FilterDistrictWindow();
+	   		loadFilterDistrictRegionCombo(window);
+	   		window.show();
+	        filterDistrictsByRegion(window);
+	   		}		
+	   	});
+	       
+		}
+
+	
+	private void loadFilterDistrictRegionCombo(final FilterDistrictWindow window) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_REGION, null);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_REGION, map), new AsyncCallback<RequestResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+				SC.warn("ERROR", caught.getMessage());
+				GWT.log("ERROR " + caught.getMessage());
+				SC.clearPrompt();
+
+			}
+
+			@Override
+			public void onSuccess(RequestResult result) {
+
+				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
+
+				if (result != null) {
+					
+					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+					if (feedbackDTO != null) {
+						if (result.getSystemFeedbackDTO().isResponse()) {
+							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+							for (RegionDto regionDto : result.getRegionDtos()) {
+								valueMap.put(regionDto.getId(), regionDto.getName());
+							}
+							window.getFilterDistrictsPane().getRegionCombo().setValueMap(valueMap);
+
+						} else {
+							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+						}
+					}
+				} else {
+					SC.warn("ERROR", "Service Down");
+					// SC.warn("ERROR", "Unknow error");
 				}
 
 			}
@@ -450,14 +541,6 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 						if (result.getSystemFeedbackDTO().isResponse()) {
 							// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 							getView().getRegionPane().getListGrid().addRecordsToGrid(result.getRegionDtos());
-							
-							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-							for (RegionDto regionDto : result.getRegionDtos()) {
-								valueMap.put(regionDto.getId(), regionDto.getName());
-							}
-							getView().getFilterDistrictsPane().getRegionCombo().setValueMap(valueMap);
-
 						} else {
 							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
 						}
@@ -845,12 +928,12 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 	}
 	
 	
-	public void filterDistrictsByRegion() {
-		getView().getFilterDistrictsPane().getRegionCombo().addChangedHandler(new ChangedHandler() {
+	public void filterDistrictsByRegion(final FilterDistrictWindow window) {
+		window.getFilterDistrictsPane().getRegionCombo().addChangedHandler(new ChangedHandler() {
 			
 			@Override
 			public void onChanged(ChangedEvent event) {
-				String id = getView().getFilterDistrictsPane().getRegionCombo().getValueAsString();
+				String id = window.getFilterDistrictsPane().getRegionCombo().getValueAsString();
 		
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			
@@ -875,7 +958,8 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 								SC.clearPrompt();
 
 								SessionManager.getInstance().manageSession(result, placeManager);
-
+                                window.close();
+                                
 								if (result != null) {
 
 									getView().getDistrictPane().getListGrid()

@@ -12,7 +12,6 @@ class LearnerEnrollmentView extends ViewImpl implements LearnerEnrollmentPresent
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
 	private LearnerEnrollementPane learnerEnrollementPane;
-	private FilterLearnerHeadCountPane filterLearnerHeadCountPane;
 	
 	private ControlsPane controlsPane;
 
@@ -20,13 +19,11 @@ class LearnerEnrollmentView extends ViewImpl implements LearnerEnrollmentPresent
     LearnerEnrollmentView() {
     	panel = new VLayout();
     	learnerEnrollementPane = new LearnerEnrollementPane();
-    	filterLearnerHeadCountPane = new FilterLearnerHeadCountPane();
     	
     	controlsPane = new ControlsPane();
     
     	
     	panel.addMember(controlsPane);
-    	panel.addMember(filterLearnerHeadCountPane);
     	panel.addMember(learnerEnrollementPane);
     	panel.setWidth100();
 		panel.setHeight("90%");
@@ -46,12 +43,5 @@ class LearnerEnrollmentView extends ViewImpl implements LearnerEnrollmentPresent
 	public LearnerEnrollementPane getLearnerEnrollementPane() {
 		return learnerEnrollementPane;
 	}
-
-	public FilterLearnerHeadCountPane getFilterLearnerHeadCountPane() {
-		return filterLearnerHeadCountPane;
-	}
-
-	
-	
 	
 }

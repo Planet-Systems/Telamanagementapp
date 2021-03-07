@@ -29,7 +29,7 @@ public class Masthead extends VLayout {
 	private Img menu;
 	
 
-	private static final String LOGO = "logo2.png";
+	private static final String LOGO = "telalogo.png";
 
 	public Masthead() {
 		super();
@@ -76,24 +76,17 @@ public class Masthead extends VLayout {
 		menu.setStyleName("menu-switcher");
 		// menu.setMargin(5);
 
-		Img logo = new Img();
-		logo = new Img(LOGO);
-		logo.setID("logoImage");
-		// logo.setMargin(5);
-		// logo.setAlign(Alignment.RIGHT);
-		logo.setHeight(50);
-		logo.setWidth("70%");
+		Img logo = new Img(LOGO, 120, 45);
+		logo.setMargin(5);
+	
 
 		// initialize the West layout container
 		HLayout westLayout = new HLayout();
-		// westLayout.setHeight(MASTHEAD_HEIGHT);
 		westLayout.setWidth(WEST_WIDTH);
 		westLayout.setHeight(MASTHEAD_HEIGHT);
-		// westLayout.setAutoWidth();
-		westLayout.addMember(menu);
-//		westLayout.addMember(logo);
-		// westLayout.addMember(name);
-		// westLayout.addMember(slogan);
+//		westLayout.addMember(menu);
+	    westLayout.addMember(logo);
+
 
 		VLayout eastLayout = new VLayout();
 		eastLayout.setAlign(Alignment.RIGHT);

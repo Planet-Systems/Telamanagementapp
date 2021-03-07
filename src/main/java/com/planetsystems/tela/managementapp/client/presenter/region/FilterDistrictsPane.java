@@ -23,6 +23,7 @@ public class FilterDistrictsPane extends HLayout {
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(10);
+		form.setColWidths("80" , "250");
 		
 		this.addMember(form);
 		this.setAutoHeight();

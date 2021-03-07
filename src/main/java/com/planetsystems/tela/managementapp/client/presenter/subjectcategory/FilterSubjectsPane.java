@@ -22,8 +22,8 @@ public class FilterSubjectsPane extends HLayout {
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(10);
-		form.setNumCols(4);
-		form.setColWidths("50" , "150" , "50" , "150");
+		form.setNumCols(2);
+		form.setColWidths("80" , "250");
 		
 		
 		this.addMember(form);

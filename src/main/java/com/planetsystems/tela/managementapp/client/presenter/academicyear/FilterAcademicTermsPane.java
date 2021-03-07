@@ -1,7 +1,5 @@
 package com.planetsystems.tela.managementapp.client.presenter.academicyear;
 
-import org.apache.bcel.generic.NEW;
-
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -23,6 +21,7 @@ public class FilterAcademicTermsPane extends HLayout {
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(10);
+		form.setColWidths("80" , "250");
 		
 		this.addMember(form);
 		this.setAutoHeight();

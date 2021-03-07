@@ -14,9 +14,7 @@ public class FilterLearnerHeadCountPane extends HLayout {
 	private ComboBox schoolCombo;
 	private ComboBox academicYearCombo;
 	private ComboBox academicTermCombo;
-	
-	private IButton filterButton;
-	
+		
 	public static final String DISTRICT_ID = "DISTRICT_ID";
 	public static final String SCHOOL_ID = "SCHOOL_ID";
 	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
@@ -52,53 +50,15 @@ public class FilterLearnerHeadCountPane extends HLayout {
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(10);
-		form.setNumCols(4);
-		form.setColWidths("50" , "150" , "50" , "150");
-		filterButton = new IButton("Filter");
-		filterButton.setLayoutAlign(VerticalAlignment.CENTER);
-		filterButton.disable();
-		disableEnableFilterButton(academicTermCombo , schoolCombo , filterButton);
+		form.setNumCols(2);
+		form.setColWidths("80" , "250");
 	
-		HLayout layout = new HLayout();
-		layout.setAutoHeight();
-		layout.setWidth100();
-		layout.addMembers(form , filterButton);
-		
-		
-		this.addMember(layout);
+		this.addMember(form);
 		this.setAutoHeight();
 		this.setWidth100();
 	
 	}
-	
-	
-	private void disableEnableFilterButton(final ComboBox academicTermCombo, final ComboBox schoolCombo,final IButton filterButton) {;
-	academicTermCombo.addChangedHandler(new ChangedHandler() {
 
-		@Override
-		public void onChanged(ChangedEvent event) {
-
-			if (academicTermCombo.getValueAsString() != null && schoolCombo.getValueAsString() != null) {
-                filterButton.setDisabled(false);
-			}else {
-				 filterButton.setDisabled(true);	
-			}
-		}
-	});
-
-	schoolCombo.addChangedHandler(new ChangedHandler() {
-
-		@Override
-		public void onChanged(ChangedEvent event) {
-			if (academicTermCombo.getValueAsString() != null && schoolCombo.getValueAsString() != null) {
-                filterButton.setDisabled(false);
-			}else {
-				filterButton.setDisabled(true);
-			}
-		}
-	});
-
-}
 	
 
 	public ComboBox getDistrictCombo() {
@@ -108,8 +68,18 @@ public class FilterLearnerHeadCountPane extends HLayout {
 	public ComboBox getSchoolCombo() {
 		return schoolCombo;
 	}
-	
-	
+
+
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
+	}
+
+
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
+	}
+
+
 	
 
 }

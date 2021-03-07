@@ -20,9 +20,7 @@ class StaffAttendanceView extends ViewImpl implements StaffAttendancePresenter.M
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
 	private ClockOutPane clockOutPane;
-	private FilterClockOutPane filterClockOutPane;
 	private ClockInPane clockInPane;
-	private FilterClockInPane filterClockInPane;
 	
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
@@ -34,9 +32,7 @@ class StaffAttendanceView extends ViewImpl implements StaffAttendancePresenter.M
     StaffAttendanceView() {
     	panel = new VLayout();
     	clockOutPane = new ClockOutPane();
-    	filterClockOutPane = new FilterClockOutPane();
     	clockInPane = new ClockInPane();
-    	filterClockInPane = new FilterClockInPane();
     	
     	controlsPane = new ControlsPane();
     	tabSet = new TabSet();
@@ -52,17 +48,9 @@ class StaffAttendanceView extends ViewImpl implements StaffAttendancePresenter.M
     	
     	tabSet.addTab(clockInTab);
     	tabSet.addTab(clockOutTab);
-    	
-    	
-    	VLayout filterLayout = new VLayout();
-    	filterLayout.addMembers(filterClockInPane , filterClockOutPane);
-    	filterLayout.setWidth100();
-    	filterLayout.setHeight("10%");
-//    	filterLayout.setBorder("1px solid red");
-    	
-    	
+
+
     	panel.addMember(controlsPane);
-    	panel.addMember(filterLayout);
     	panel.addMember(tabSet);
     	panel.setWidth100();
 		panel.setHeight("90%");
@@ -90,17 +78,6 @@ class StaffAttendanceView extends ViewImpl implements StaffAttendancePresenter.M
 	public ClockInPane getClockInPane() {
 		return clockInPane;
 	}
-
-	public FilterClockOutPane getFilterClockOutPane() {
-		return filterClockOutPane;
-	}
-
-	public FilterClockInPane getFilterClockInPane() {
-		return filterClockInPane;
-	}
-	
-	
-
 
     
 }

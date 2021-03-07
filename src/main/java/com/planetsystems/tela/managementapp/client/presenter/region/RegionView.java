@@ -15,7 +15,6 @@ class RegionView extends ViewImpl implements RegionPresenter.MyView {
 	private VLayout panel;
 	private RegionPane regionPane;
 	private DistrictPane districtPane;
-	private FilterDistrictsPane filterDistrictsPane;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
 	
@@ -28,7 +27,6 @@ class RegionView extends ViewImpl implements RegionPresenter.MyView {
     	regionPane = new RegionPane();
     	districtPane = new DistrictPane();
     	controlsPane = new ControlsPane();
-    	filterDistrictsPane = new FilterDistrictsPane();
     	tabSet = new TabSet();
     	
     	Tab regionTab = new Tab();
@@ -44,7 +42,6 @@ class RegionView extends ViewImpl implements RegionPresenter.MyView {
     
     	
     	panel.addMember(controlsPane);
-    	panel.addMember(filterDistrictsPane);
     	panel.addMember(tabSet);
     	panel.setWidth100();
 		panel.setHeight("90%");
@@ -72,13 +69,6 @@ class RegionView extends ViewImpl implements RegionPresenter.MyView {
 	public DistrictPane getDistrictPane() {
 		return districtPane;
 	}
-
-	public FilterDistrictsPane getFilterDistrictsPane() {
-		return filterDistrictsPane;
-	}
-    
-	
-	
-    
+ 
     
 }

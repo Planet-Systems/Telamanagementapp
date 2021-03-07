@@ -16,7 +16,6 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	private AcademicYearPane academicYearPane;
 	private AcademicTermPane academicTermPane;
 
-	private FilterAcademicTermsPane filterAcademicTermsPane;
 	private VLayout panel;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
@@ -30,8 +29,6 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
     	panel = new VLayout();
     	academicYearPane = new AcademicYearPane();
     	academicTermPane = new AcademicTermPane();
-	    filterAcademicTermsPane = new FilterAcademicTermsPane();
-	    filterAcademicTermsPane.setVisible(false);
     	controlsPane = new ControlsPane();
 		tabSet = new TabSet();
 	
@@ -52,7 +49,6 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 		tabSet.setPadding(0);
 
 		panel.addMember(controlsPane);
-		panel.addMember(filterAcademicTermsPane);
 		panel.addMember(tabSet);
 		panel.setWidth100();
 		panel.setHeight("90%");
@@ -84,11 +80,5 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 		return academicTermPane;
 	}
 
-	public FilterAcademicTermsPane getFilterAcademicTermsPane() {
-		return filterAcademicTermsPane;
-	}
-
-
-	
 	
 }

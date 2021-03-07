@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -21,11 +20,6 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.DistrictDTO;
-import com.planetsystems.tela.dto.RegionDto;
-import com.planetsystems.tela.dto.SchoolClassDTO;
-import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
@@ -33,15 +27,10 @@ import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEven
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.region.DistrictListGrid;
-import com.planetsystems.tela.managementapp.client.presenter.region.DistrictWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolClassListGrid;
-import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolClassWindow;
-import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
-import com.planetsystems.tela.managementapp.client.widget.TextField;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
@@ -50,9 +39,14 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.HoverEvent;
+import com.smartgwt.client.widgets.events.HoverHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
@@ -67,7 +61,6 @@ public class SubjectCategoryPresenter
 		SubCategoryPane getSubCategoryPane();
 
 		SubjectPane getSubjectPane();
-		FilterSubjectsPane getFilterSubjectsPane();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -124,7 +117,6 @@ public class SubjectCategoryPresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(SubjectCategoryView.SUB_CATEGORY_TAB_TITLE)) {
-                     getView().getFilterSubjectsPane().setVisible(false);
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -134,7 +126,7 @@ public class SubjectCategoryPresenter
 					buttons.add(newButton);
 					buttons.add(edit);
 					buttons.add(delete);
-					buttons.add(fiter);
+					//buttons.add(fiter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addSubjectCategory(newButton);
@@ -142,26 +134,25 @@ public class SubjectCategoryPresenter
 					editSubjectCategory(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(SubjectCategoryView.SUBJECT_TAB_TITLE)) {
-					getView().getFilterSubjectsPane().setVisible(true);
-					loadSubjectFilterCategoryCombo();
-					filterSubjectsSubjectCategory();
 					
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					MenuButton fiter = new MenuButton("Filter");
+					MenuButton filter = new MenuButton("Filter");
+					filter.setCanHover(true);
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					// buttons.add(delete);
-					buttons.add(fiter);
+					buttons.add(filter);
+					
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addSubject(newButton);
 					deleteSubject(delete);
 					editSubject(edit);
-
+					selectFilterSubjectOption(filter);
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
 					getView().getControlsPane().addMenuButtons(buttons);
@@ -170,6 +161,43 @@ public class SubjectCategoryPresenter
 			}
 		});
 	}
+	
+	
+	private void selectFilterSubjectOption(final MenuButton filter) {
+	       final Menu menu = new Menu();
+	       MenuItem basic = new MenuItem("Base Filter");
+	       MenuItem advanced = new MenuItem("Advanced Filter");
+	       
+	       menu.setItems(basic , advanced);
+	      
+	       filter.addHoverHandler(new HoverHandler() {
+			@Override
+			public void onHover(HoverEvent event) {
+			 menu.showNextTo(filter, "bottom");
+			}
+		});
+
+	       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+			SC.say("Basic Search");
+			}
+		});
+	       
+	       advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+	   		
+	   		@Override
+	   		public void onClick(MenuItemClickEvent event) {
+//	   		SC.say("Advanced Search");
+	   		FilterSubjectWindow window = new FilterSubjectWindow();
+	   		loadFilterSubjectCategoryCombo(window);
+	   		window.show();
+	        filterSubjectsSubjectCategory(window);
+	   		}		
+	   	});
+	       
+		}
 
 	//////////////////////////////////////////////////////////// SUBJECT
 	//////////////////////////////////////////////////////////// CATEGORY///////////////////////////////////////////////////////////
@@ -528,7 +556,7 @@ public class SubjectCategoryPresenter
 	
 	
 	
-	private void loadSubjectFilterCategoryCombo() {
+	private void loadFilterSubjectCategoryCombo(final FilterSubjectWindow window) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SUBJECT_CATEGORY, null);
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
@@ -558,7 +586,7 @@ public class SubjectCategoryPresenter
 								for (SubjectCategoryDTO subjectCategoryDTO : result.getSubjectCategoryDTOs()) {
 									valueMap.put(subjectCategoryDTO.getId(), subjectCategoryDTO.getName());
 								}
-								getView().getFilterSubjectsPane().getCategoryCombo().setValueMap(valueMap);
+								window.getFilterSubjectsPane().getCategoryCombo().setValueMap(valueMap);
 							}
 						} else {
 							SC.warn("ERROR", "Unknow error");
@@ -858,13 +886,13 @@ public class SubjectCategoryPresenter
 	}
 	
 	//filter
-	private void filterSubjectsSubjectCategory() {
-		getView().getFilterSubjectsPane().getCategoryCombo().addChangedHandler(new ChangedHandler() {
+	private void filterSubjectsSubjectCategory(final FilterSubjectWindow window) {
+		window.getFilterSubjectsPane().getCategoryCombo().addChangedHandler(new ChangedHandler() {
 			
 			@Override
 			public void onChanged(ChangedEvent event) {
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				String subjectCategoryId = getView().getFilterSubjectsPane().getCategoryCombo().getValueAsString();
+				String subjectCategoryId = window.getFilterSubjectsPane().getCategoryCombo().getValueAsString();
 				
 				
 				map.put(RequestConstant.GET_SUBJECTS_SUBJECT_CATEGORY, subjectCategoryId);
@@ -887,10 +915,12 @@ public class SubjectCategoryPresenter
 
 						SC.clearPrompt();
 						SessionManager.getInstance().manageSession(result, placeManager);
+						
 						if (result != null) {
-
+                       
 							if (result.getSystemFeedbackDTO() != null) {
-								if (result.getSystemFeedbackDTO().isResponse()) {
+					                 window.close();
+								 if (result.getSystemFeedbackDTO().isResponse()) {
 									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 									getView().getSubjectPane().getListGrid().addRecordsToGrid(result.getSubjectDTOs());
 

@@ -32,6 +32,10 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.HoverEvent;
+import com.smartgwt.client.widgets.events.HoverHandler;
+import com.smartgwt.client.widgets.events.HoverHiddenEvent;
+import com.smartgwt.client.widgets.events.HoverHiddenHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VStack;
@@ -342,11 +346,21 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 		MenuItemSeparator separator = new MenuItemSeparator();
 		menu.setItems(item1, item2, separator, item3);
-		getView().getMastHead().getUserProfile().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-
-			public void onClick(ClickEvent event) {
-				menu.showNextTo(getView().getMastHead().getUserProfile(), "bottom");
-
+//		getView().getMastHead().getUserProfile().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+//
+//			public void onClick(ClickEvent event) {
+//				menu.showNextTo(getView().getMastHead().getUserProfile(), "bottom");
+//
+//			}
+//		});
+		
+		//waiting acceptance
+		getView().getMastHead().getUserProfile().setCanHover(true);
+		getView().getMastHead().getUserProfile().addHoverHandler(new HoverHandler() {
+			
+			@Override
+			public void onHover(HoverEvent event) {
+				menu.showNextTo(getView().getMastHead().getUserProfile(), "bottom");	
 			}
 		});
 		

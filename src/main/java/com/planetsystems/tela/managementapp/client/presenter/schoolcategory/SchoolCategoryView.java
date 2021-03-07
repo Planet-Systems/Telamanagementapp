@@ -16,9 +16,7 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
 	private VLayout panel;
 	private SchCategoryPane schoolCategoryPane;
 	private SchoolPane schoolPane;
-	private FilterSchoolsPane filterSchoolsPane;
 	private SchoolClassPane schoolClassPane;
-	private FilterSchoolClassPane filterSchoolClassPane;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
 	
@@ -31,10 +29,8 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
     	panel = new VLayout();
     	schoolCategoryPane = new SchCategoryPane();
     	schoolPane = new SchoolPane();
-    	filterSchoolsPane = new FilterSchoolsPane();
     	
     	schoolClassPane = new SchoolClassPane();
-    	filterSchoolClassPane = new FilterSchoolClassPane();
     	
     	controlsPane = new ControlsPane();
     	tabSet = new TabSet();
@@ -55,14 +51,7 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
     	tabSet.addTab(tab2);
     	tabSet.addTab(tab3);
     	
-    	VLayout filterLayout = new VLayout();
-    	filterLayout.addMembers(filterSchoolsPane , filterSchoolClassPane);
-    	filterLayout.setWidth100();
-    	filterLayout.setHeight("10%");
-//    	filterLayout.setBorder("1px solid red");
-    	
     	panel.addMember(controlsPane);
-    	panel.addMember(filterLayout);
     	panel.addMember(tabSet);
     	panel.setWidth100();
 		panel.setHeight("90%");
@@ -95,18 +84,6 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
 		return schoolClassPane;
 	}
 
-	public FilterSchoolsPane getFilterSchoolsPane() {
-		return filterSchoolsPane;
-	}
-
-	public FilterSchoolClassPane getFilterSchoolClassPane() {
-		return filterSchoolClassPane;
-	}
-	
-
-	
-	
-	
 	
 	
 	
