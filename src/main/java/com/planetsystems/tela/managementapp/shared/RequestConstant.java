@@ -112,6 +112,9 @@ public class RequestConstant {
 	// timetables
 	public static final String SAVE_TIME_TABLE = "SAVE_TIME_TABLE";
 	public static final String GET_TIME_TABLES = "GET_TIME_TABLES";
+	
+	
+	public static final String MIGRATE_DATA = "MIGRATE_DATA";
 
 
 }

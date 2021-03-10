@@ -6,6 +6,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class DashboardPane extends VLayout{
  
 	private IButton refreshButton;
+	
 	public DashboardPane() {
 		super();
 		VLayout buttonLayout = new VLayout();
@@ -17,6 +18,10 @@ public class DashboardPane extends VLayout{
 		
 		this.setMembers(buttonLayout);
 		
+	}
+
+	public IButton getRefreshButton() {
+		return refreshButton;
 	}
 
 
