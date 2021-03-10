@@ -37,8 +37,8 @@ import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemResponseDTO;
+import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
-import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.FilterLearnerAttendanceWindow;
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.FilterLearnerHeadCountWindow;
@@ -2650,6 +2650,69 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.request(MediaType.APPLICATION_JSON)
 						.headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<TimeTableDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}///////////////////////////////////////////////////////////////////
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SYSTEM_USER) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserDTO dto = (SystemUserDTO) action.getRequestBody().get(RequestConstant.SAVE_SYSTEM_USER);
+
+				List<SystemUserDTO> list = new ArrayList<SystemUserDTO>();
+
+				Client client = ClientBuilder.newClient();
+				
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("systemusers")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+//				SystemResponseDTO<List<SystemUserDTO>> getResponseDTO = client.target(API_LINK).path("systemusers")
+//						.request(MediaType.APPLICATION_JSON)
+//						.headers(headers)
+//						.get(new GenericType<SystemResponseDTO<List<SystemUserDTO>>>() {
+//						});
+//
+//				list = getResponseDTO.getData();
+//				System.out.println("GET DTO " + getResponseDTO);
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ALL_SYSTEM_USERS) && action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SystemUserDTO> list = new ArrayList<SystemUserDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String)action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<List<SystemUserDTO>> responseDto = client.target(API_LINK).path("systemusers")
+						.request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemUserDTO>>>() {
 						});
 
 				list = responseDto.getData();

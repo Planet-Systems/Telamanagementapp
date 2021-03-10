@@ -70,7 +70,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 				if (userName == null || password == null) {
 					SC.say("Enter both username and password");
 				} else {
-					AuthenticationDTO dto = new AuthenticationDTO();
+					final AuthenticationDTO dto = new AuthenticationDTO();
 					dto.setPassword(password);
 					dto.setUserName(userName);
 		
@@ -102,6 +102,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 									
 											Cookies.setCookie(RequestConstant.AUTH_TOKEN , feedback.getToken());
 											Cookies.setCookie(RequestConstant.LOGED_IN , "true");
+											Cookies.setCookie(RequestConstant.USERNAME , dto.getUserName());
 
 											PlaceRequest placeRequest = new PlaceRequest.Builder()
 													.nameToken(NameTokens.academicYear).build();

@@ -1,6 +1,9 @@
 package com.planetsystems.tela.managementapp.client.presenter.main;
 
+import org.apache.http.cookie.ClientCookie;
+
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Cookies;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -22,6 +25,8 @@ import com.planetsystems.tela.managementapp.client.menu.SystemEnrollmentData;
 import com.planetsystems.tela.managementapp.client.menu.SystemEnrollmentDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableData;
 import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableDataSource;
+import com.planetsystems.tela.managementapp.client.menu.SystemUserData;
+import com.planetsystems.tela.managementapp.client.menu.SystemUserDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.widget.MainStatusBar;
 import com.planetsystems.tela.managementapp.client.widget.Masthead;
@@ -75,7 +80,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
     protected void onBind() {
     	super.onBind();
     	registerEvents();
-    	manageUserProfile("Wanfadger", "Admin");
+    	manageUserProfile(Cookies.getCookie(RequestConstant.USERNAME), "Admin");
      loadMenu();
     }
     
@@ -131,10 +136,10 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		});
 		
 		
-		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TABLES,
+		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
 				SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TABLES , new RecordClickHandler() {
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES , new RecordClickHandler() {
 			
 			@Override
 			public void onRecordClick(RecordClickEvent event) {
@@ -143,6 +148,25 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 		});
 		
+		
+		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
+				SystemUserDataSource.getInstance(SystemUserData.getNewRecords()));
+
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS , new RecordClickHandler() {
+			
+			@Override
+			public void onRecordClick(RecordClickEvent event) {
+				onSystemUserMenuClick(event);
+			}
+		});
+	
+	}
+    
+    
+	private void onSystemUserMenuClick(RecordClickEvent event) {
+		Record record = event.getRecord();
+		String name = record.getAttributeAsString("name");
+		 placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.SystemUser).build());
 		
 	}
     

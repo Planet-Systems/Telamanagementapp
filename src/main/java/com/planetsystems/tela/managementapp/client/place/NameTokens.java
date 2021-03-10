@@ -2,6 +2,8 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String SystemUser = "SystemUser";
+
 	public static final String TimeTables2 = "TimeTables2";
 
 	public static final String timeTable = "TimeTable";
@@ -82,5 +84,8 @@ public class NameTokens {
 		return timeTable;
 	}
 
+	public static String getSystemUser() {
+		return SystemUser;
+	}
 
 }

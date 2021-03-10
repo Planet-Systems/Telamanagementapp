@@ -4,8 +4,8 @@ public class RequestConstant {
 	public static final String SYSTEM_CONFIGURATION = "System Configuration";
 	public static final String SYSTEM_ENROLLMENT = "Enrollment";
 	public static final String SYSTEM_SETTINGS = "Setting";
-	public static final String SYSTEM_USERS = "User";
-	public static final String SYSTEM_TABLES = "TimeTable";
+	public static final String SYSTEM_USERS = "System Users";
+	public static final String SYSTEM_TIME_TABLES = "TimeTable";
 
 	public static final String SYSTEM_ATTENDANCE = "Attendance";
 
@@ -65,6 +65,8 @@ public class RequestConstant {
 	public static final String LOGIN_TOKEN = "LOGIN_TOKEN";// handler key
 	public static final String LOGED_IN = "LOGED_IN";// status
 	public static final String AUTH_TOKEN = "AUTH_TOKEN"; // token key
+	public static final String USERNAME = "USERNAME"; // Username
+	
 
 	public static final String SAVE_SCHOOL_STAFF = "SAVE_SCHOOL_STAFF";
 	public static final String UPDATE_SCHOOL_STAFF = "UPDATE_SCHOOL_STAFF";
@@ -112,6 +114,10 @@ public class RequestConstant {
 	// timetables
 	public static final String SAVE_TIME_TABLE = "SAVE_TIME_TABLE";
 	public static final String GET_TIME_TABLES = "GET_TIME_TABLES";
+	
+	//system users
+	public static final String SAVE_SYSTEM_USER = "SAVE_SYSTEM_USER";
+	public static final String GET_ALL_SYSTEM_USERS = "GET_ALL_SYSTEM_USERS";
 
 
 }

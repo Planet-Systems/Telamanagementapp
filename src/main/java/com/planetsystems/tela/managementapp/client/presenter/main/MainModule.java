@@ -11,6 +11,7 @@ import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolS
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.StaffEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.SubjectCategoryModule;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.SystemUserModule;
 import com.planetsystems.tela.managementapp.client.presenter.timetable.TimeTableModule;
 
 public class MainModule extends AbstractPresenterModule {
@@ -28,6 +29,7 @@ public class MainModule extends AbstractPresenterModule {
           install(new LearnerAttendanceModule());
           install(new LearnerEnrollmentModule());
           install(new TimeTableModule());
+          install(new SystemUserModule());
           
     	bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
      
