@@ -2579,7 +2579,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
-				
+
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
@@ -2590,6 +2590,36 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateData(headers);
+
+				feedback.setResponse(true);
+				feedback.setMessage("Data Migration successful");
+
+				return new RequestResult(feedback);
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA_ATTENDACE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				DataMigrationUtility.getInstance().migrateTeacherAttendance(headers);
+
+				feedback.setResponse(true);
+				feedback.setMessage("Data Migration successful");
+
+				return new RequestResult(feedback);
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA_TIMETABLES)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				DataMigrationUtility.getInstance().migrateTimeTables(headers);
 
 				feedback.setResponse(true);
 				feedback.setMessage("Data Migration successful");

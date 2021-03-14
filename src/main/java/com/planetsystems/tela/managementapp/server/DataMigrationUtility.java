@@ -218,20 +218,12 @@ public class DataMigrationUtility {
 					.request(MediaType.APPLICATION_JSON).headers(headers)
 					.post(Entity.entity(learnerEnrollment, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
 
-			List<ClockInDTO> clockins = client.target(getDataApILink()).path("clockins")
-					.request(MediaType.APPLICATION_JSON).headers(headers).get(new GenericType<List<ClockInDTO>>() {
-					});
-
-			SystemFeedbackDTO feedback13 = client.target(getApLink()).path("import").path("clockins")
-					.request(MediaType.APPLICATION_JSON).headers(headers)
-					.post(Entity.entity(clockins, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
-
 			List<LearnerAttendanceDTO> learnerAttendance = client.target(getDataApILink()).path("learnerAttendance")
 					.request(MediaType.APPLICATION_JSON).headers(headers)
 					.get(new GenericType<List<LearnerAttendanceDTO>>() {
 					});
 
-			SystemFeedbackDTO feedback14 = client.target(getApLink()).path("import").path("learnerAttendance")
+			SystemFeedbackDTO feedback13 = client.target(getApLink()).path("import").path("learnerAttendance")
 					.request(MediaType.APPLICATION_JSON).headers(headers)
 					.post(Entity.entity(learnerAttendance, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
 
@@ -249,10 +241,92 @@ public class DataMigrationUtility {
 			System.out.println("feedback11:: " + feedback11.getMessage());
 			System.out.println("feedback12:: " + feedback12.getMessage());
 			System.out.println("feedback13:: " + feedback13.getMessage());
-			System.out.println("feedback14:: " + feedback14.getMessage());
+
+			client.close();
+
+		} catch (
+
+		Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
+
+	public void migrateTeacherAttendance(MultivaluedMap<String, Object> headers) {
+		try {
+
+			Client client = ClientBuilder.newClient();
+
+			List<AcademicTermDTO> academicTerms = client.target(getDataApILink()).path("academicTerms")
+					.request(MediaType.APPLICATION_JSON).headers(headers).get(new GenericType<List<AcademicTermDTO>>() {
+					});
+
+			if (academicTerms != null) {
+
+				for (AcademicTermDTO dto : academicTerms) {
+
+					List<ClockInDTO> clockins = client.target(getDataApILink()).path("clockins").path(dto.getId())
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.get(new GenericType<List<ClockInDTO>>() {
+							});
+
+					if (clockins != null) {
+						if (!clockins.isEmpty()) {
+
+							SystemFeedbackDTO feedback14 = client.target(getApLink()).path("import").path("clockins")
+									.request(MediaType.APPLICATION_JSON).headers(headers)
+									.post(Entity.entity(clockins, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+							System.out.println("feedback14:: " + feedback14.getMessage());
+						}
+					}
+
+				}
+			}
+
+			client.close();
 
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
 	}
+
+	public void migrateTimeTables(MultivaluedMap<String, Object> headers) {
+		try {
+
+			Client client = ClientBuilder.newClient();
+
+			List<AcademicTermDTO> academicTerms = client.target(getDataApILink()).path("timetables")
+					.request(MediaType.APPLICATION_JSON).headers(headers).get(new GenericType<List<AcademicTermDTO>>() {
+					});
+
+			if (academicTerms != null) {
+
+				for (AcademicTermDTO dto : academicTerms) {
+
+					List<ClockInDTO> clockins = client.target(getDataApILink()).path("timetables").path(dto.getId())
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.get(new GenericType<List<ClockInDTO>>() {
+							});
+
+					if (clockins != null) {
+						if (!clockins.isEmpty()) {
+
+							SystemFeedbackDTO feedback14 = client.target(getApLink()).path("import").path("timetables")
+									.request(MediaType.APPLICATION_JSON).headers(headers)
+									.post(Entity.entity(clockins, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+							System.out.println("feedback14:: " + feedback14.getMessage());
+						}
+					}
+
+				}
+			}
+
+			client.close();
+
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
+
 }
