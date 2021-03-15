@@ -22,6 +22,7 @@ import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
+import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 
 public class RequestResult implements Result {
@@ -41,14 +42,14 @@ public class RequestResult implements Result {
 	private List<SchoolStaffDTO> schoolStaffDTOs;
 	private List<StaffEnrollmentDto> staffEnrollmentDtos;
 	private List<LearnerEnrollmentDTO> learnerEnrollmentDTOs;
- 
     private List<ClockInDTO> clockInDTOs;
     private List<ClockOutDTO> clockOutDTOs;
     private List<LearnerAttendanceDTO> learnerAttendanceDTOs;
     private List<TimeTableDTO> timeTableDTOs;
+    private List<TimeTableLessonDTO> tableLessonDTOs;
     private List<SystemUserDTO> systemUserDTOs;
     
- 
+
 	/**
 	 * 
 	 */
@@ -157,21 +158,31 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.learnerAttendanceDTOs = learnerAttendanceDTOs;
 	}
- 
+
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TimeTableDTO> timeTableDTOs , TimeTableDTO tableDTO) {
- 
+
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.timeTableDTOs = timeTableDTOs;
 	}
-	
-	
+
+
 
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserDTO> systemUserDTOs , SystemUserDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.systemUserDTOs = systemUserDTOs;
+	}
+
+
+
+
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TimeTableLessonDTO> tableLessonDTOs  ,TimeTableLessonDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.tableLessonDTOs = tableLessonDTOs;
 	}
 
 	public RequestResult() {
@@ -263,12 +274,20 @@ public class RequestResult implements Result {
 	public List<TimeTableDTO> getTimeTableDTOs() {
 		return timeTableDTOs;
 	}
-  
+
 	public List<SystemUserDTO> getSystemUserDTOs() {
 		return systemUserDTOs;
 	}
 
 
- 
+
+	public List<TimeTableLessonDTO> getTableLessonDTOs() {
+		return tableLessonDTOs;
+	}
+
+	@Override
+	public String toString() {
+		return "RequestResult [systemErrorDTO=" + systemErrorDTO + "FEEDDTO " + systemFeedbackDTO + " ]";
+	}
 
 }

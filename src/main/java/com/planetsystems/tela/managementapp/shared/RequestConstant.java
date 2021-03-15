@@ -6,6 +6,9 @@ public class RequestConstant {
 	public static final String SYSTEM_SETTINGS = "Setting";
 	public static final String SYSTEM_USERS = "System Users";
 	public static final String SYSTEM_TIME_TABLES = "TimeTable";
+	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
+	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
+
 
 	public static final String SYSTEM_ATTENDANCE = "Attendance";
 
@@ -108,10 +111,18 @@ public class RequestConstant {
 	// timetables
 	public static final String SAVE_TIME_TABLE = "SAVE_TIME_TABLE";
 	public static final String GET_TIME_TABLES = "GET_TIME_TABLES";
-	
+
+
 	//system users
 	public static final String SAVE_SYSTEM_USER = "SAVE_SYSTEM_USER";
 	public static final String GET_ALL_SYSTEM_USERS = "GET_ALL_SYSTEM_USERS";
+
+	//time table lessons
+	public static final String GET_TIME_TABLE_LESSONS_BY_TIME_TABLE = "GET_TIME_TABLE_LESSONS_BY_TIME_TABLE";
+	public static final String GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY = "GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY";
+
+
+
 
 	public static final String MIGRATE_DATA = "MIGRATE_DATA";
 	public static final String MIGRATE_DATA_ATTENDACE = "MIGRATE_DATA_ATTENDACE";

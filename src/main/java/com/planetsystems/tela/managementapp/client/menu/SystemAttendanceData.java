@@ -11,6 +11,8 @@ public class SystemAttendanceData {
 
 	public static final String STAFF = "Staff";
 	public static final String LEARNER = "Learner";
+	public	static	final String HEAD_TEACHER_SUPERVISION = "Head Teacher Supervision";
+	public	static	final String STAFF_DAILY_TASKS = "Staff Daily Task";
 
 	private static ListGridRecord[] records;
 
@@ -33,7 +35,9 @@ public class SystemAttendanceData {
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] {
 				createRecord("", "application_form", STAFF),
-				createRecord("", "application_form", LEARNER)
+				createRecord("", "application_form", LEARNER),
+				createRecord("", "application_form", STAFF_DAILY_TASKS),
+				createRecord("", "application_form", HEAD_TEACHER_SUPERVISION),		
 		};
 
 	}

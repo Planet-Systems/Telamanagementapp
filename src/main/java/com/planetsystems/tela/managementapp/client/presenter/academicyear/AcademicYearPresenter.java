@@ -44,6 +44,7 @@ import com.smartgwt.client.widgets.events.HoverHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -62,6 +63,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		public AcademicYearPane getAcademicYearPane();
 
 		public AcademicTermPane getAcademicTermPane();
+		
+		public VLayout getVlayout();
 
 	}
 
@@ -145,7 +148,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton filter = new MenuButton("Filter");
-					filter.setCanHover(true);
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -160,8 +162,19 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					selectFilterOption(filter);
 
 				} else {
+					MenuButton newButton = new MenuButton("New");
+
+					MenuButton edit = new MenuButton("Edit");
+					MenuButton delete = new MenuButton("Delete");
+					MenuButton filter = new MenuButton("Filter");
+
 					List<MenuButton> buttons = new ArrayList<>();
+					buttons.add(newButton);
+					buttons.add(edit);
+					// buttons.add(delete);
+					buttons.add(filter);
 					getView().getControlsPane().addMenuButtons(buttons);
+					
 				}
 
 			}
@@ -176,10 +189,11 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
        
        menu.setItems(basic , advanced);
       
-       filter.addHoverHandler(new HoverHandler() {
+      filter.addClickHandler(new ClickHandler() {
+		
 		@Override
-		public void onHover(HoverEvent event) {
-		 menu.showNextTo(filter, "bottom");
+		public void onClick(ClickEvent event) {
+			menu.showNextTo(filter, "bottom");
 		}
 	});
 
@@ -188,6 +202,10 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		@Override
 		public void onClick(MenuItemClickEvent event) {
 		SC.say("Basic Search");
+			//AcademicYearDashboardPane pane=new AcademicYearDashboardPane();
+		//getView().getVlayout().setMembers(pane);
+		
+		
 		}
 	});
        

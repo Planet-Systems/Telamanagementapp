@@ -2,6 +2,10 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String StaffDailyTask = "StaffDailyTask";
+
+	public static final String HeadTeacherSupervision = "HeadTeacherSupervision";
+
 	public static final String SystemUser = "SystemUser";
 
 	public static final String TimeTables2 = "TimeTables2";
@@ -86,6 +90,14 @@ public class NameTokens {
 
 	public static String getSystemUser() {
 		return SystemUser;
+	}
+
+	public static String getHeadTeacherSupervision() {
+		return HeadTeacherSupervision;
+	}
+
+	public static String getStaffDailyTask() {
+		return StaffDailyTask;
 	}
 
 }

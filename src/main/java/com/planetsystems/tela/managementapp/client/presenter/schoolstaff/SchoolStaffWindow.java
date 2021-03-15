@@ -1,7 +1,10 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolstaff;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.util.DateFormatStringFormatter;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -29,6 +32,7 @@ public class SchoolStaffWindow extends Window {
 	    
 	    private IButton saveButton;
 		private IButton cancelButton;
+		DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	
 	public SchoolStaffWindow() {
 		
@@ -56,6 +60,7 @@ public class SchoolStaffWindow extends Window {
 
 		dobItem = new DateItem();
 		dobItem.setTitle("DOB");
+		dobItem.setStartDate(dateFormat.parse("01/01/1996"));
 		
 		nationalIdField = new TextItem();
 		nationalIdField.setTitle("NationalId");
@@ -124,11 +129,11 @@ public class SchoolStaffWindow extends Window {
 		this.setWidth("60%");
 		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("SchoolStaff");
+		this.setTitle("Teacher");
 		this.setIsModal(true);
 		//this.setShowModalMask(true);
 		
-		this.addMember(layout);
+		this.addItem(layout);
 		
 		closeWindow(this);
 		

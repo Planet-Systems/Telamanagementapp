@@ -1,7 +1,11 @@
 package com.planetsystems.tela.managementapp.client.presenter.systemuser;
 
+import java.util.Date;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
@@ -31,6 +35,7 @@ public class SystemUserWindow extends Window {
 	private TextItem nameAbbrevField;
 	private RadioGroupItem enabledRadioGroupItem;
 
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	/*
 	 * private String userName; private String password; private boolean enabled =
 	 * true; private String configRole;
@@ -92,6 +97,7 @@ public class SystemUserWindow extends Window {
 
 		dobItem = new DateItem();
 		dobItem.setTitle("DOB");
+		dobItem.setStartDate(dateFormat.parse("01/01/1996"));
 
 		nationalIdField = new TextItem();
 		nationalIdField.setTitle("NationalId");

@@ -81,7 +81,6 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		MenuButton edit = new MenuButton("Edit");
 		MenuButton delete = new MenuButton("Delete");
 		MenuButton filter = new MenuButton("Filter");
-		filter.setCanHover(true);
 
 		List<MenuButton> buttons = new ArrayList<>();
 		buttons.add(newButton);

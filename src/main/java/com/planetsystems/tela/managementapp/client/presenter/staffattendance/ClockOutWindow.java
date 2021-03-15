@@ -73,7 +73,7 @@ public class ClockOutWindow extends Window {
 		layout.setMargin(10);
 		
 		
-		this.addMember(layout);
+		this.addItem(layout);
 		
 	
 		this.setWidth("40%");

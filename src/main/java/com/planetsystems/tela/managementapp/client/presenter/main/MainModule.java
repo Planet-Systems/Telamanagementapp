@@ -3,12 +3,14 @@ package com.planetsystems.tela.managementapp.client.presenter.main;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicYearModule;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardModule;
+import com.planetsystems.tela.managementapp.client.presenter.headteachersupervision.HeadTeacherSupervisionModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.LearnerEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolCategoryModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.StaffDailyTaskModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.StaffEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.SubjectCategoryModule;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.SystemUserModule;
@@ -30,6 +32,8 @@ public class MainModule extends AbstractPresenterModule {
           install(new LearnerEnrollmentModule());
           install(new TimeTableModule());
           install(new SystemUserModule());
+          install(new StaffDailyTaskModule());
+          install(new HeadTeacherSupervisionModule());
           
     	bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
      

@@ -63,7 +63,7 @@ public class TimeTableLessonWindow extends Window {
 
 		addRecordButton = new IButton("Add");
 
-		cancelButton = new IButton("Cancel");
+		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();

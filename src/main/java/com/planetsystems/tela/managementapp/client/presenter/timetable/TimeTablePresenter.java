@@ -11,6 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -36,6 +37,7 @@ import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -49,6 +51,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -61,6 +64,8 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		TimetablePane getTimetablePane();
 
 		TabSet getTimeTableTabset();
+
+		VLayout getBodyLayout();
 	}
 
 	@ContentSlot
@@ -106,18 +111,19 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				if (selectedTab.equalsIgnoreCase(TimeTableView.TIME_TABLE_TAB)) {
 
 					MenuButton newButton = new MenuButton("New");
-					MenuButton edit = new MenuButton("Edit");
+					MenuButton view = new MenuButton("View");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton fiter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
-					buttons.add(edit);
+					buttons.add(view);
 					buttons.add(delete);
 					buttons.add(fiter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addTimeTablePane(newButton);
+					viewTimeTable(view);
 
 				} else if (selectedTab.equalsIgnoreCase(TimeTableView.TIME_TABLE_LESSON_TAB)) {
 
@@ -131,6 +137,71 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		});
 	}
 
+	private void viewTimeTable(MenuButton view) {
+		view.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getTimetablePane().getTimeTableListGrid().anySelected()) {
+					ListGridRecord record = getView().getTimetablePane().getTimeTableListGrid().getSelectedRecord();
+					
+					ViewTimeTableLessonsPane viewTimeTableLessonsPane = new ViewTimeTableLessonsPane();
+					viewTimeTableLessonsPane.getSchool().setContents(record.getAttribute(TimeTableListGrid.SCHOOL));
+					viewTimeTableLessonsPane.getDistrict().setContents(record.getAttribute(TimeTableListGrid.DISTRICT));
+					
+					viewTimeTableLessonsPane.getAcademicTerm().setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_TERM));
+					viewTimeTableLessonsPane.getAcademicYear().setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_YEAR));
+					
+	               getView().getBodyLayout().setMembers(viewTimeTableLessonsPane);
+	               getTimeTableLessons(viewTimeTableLessonsPane , record.getAttribute(TimeTableListGrid.ID));
+				} else {
+					SC.warn("Selected TimeTable to view");
+				}
+
+			}
+
+		});
+
+	}
+
+	private void getTimeTableLessons(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , String timeTableId) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE, timeTableId);
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE, map), new AsyncCallback<RequestResult>() {
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+				SC.warn("ERROR", caught.getMessage());
+				GWT.log("ERROR " + caught.getMessage());
+				SC.clearPrompt();
+			}
+
+			public void onSuccess(RequestResult result) {
+				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
+
+				if (result != null) {
+
+					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+
+					if (feedbackDTO.isResponse()) {
+						viewTimeTableLessonsPane.getLessonListGrid().addRecordsToGrid(result.getTableLessonDTOs());
+					} else {
+						SC.warn("INFO", feedbackDTO.getMessage());
+					}
+
+				} else {
+					SC.warn("ERROR", "Unknow error");
+				}
+
+			}
+		});
+	}
+	
+	
 	private void addTimeTablePane(MenuButton newButton) {
 		newButton.addClickHandler(new ClickHandler() {
 
@@ -241,8 +312,12 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 
 					if (feedbackDTO.isResponse()) {
-						getView().getTimetablePane().getTimeTableListGrid().addRecordsToGrid(result.getTimeTableDTOs());
 						getView().getTimeTableTabset().removeTab(lessonTab);
+						getView().getTimeTableTabset().selectTab(0);
+						
+						getAllTimeTables();
+					} else {
+						SC.warn("INFO", feedbackDTO.getMessage());
 					}
 
 				} else {
@@ -733,34 +808,34 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 	public void activateAddLessonButton(final CreateTimeTablePane createTimeTablePane) {
 		final boolean[] flag = new boolean[1];
-		 flag[0] = true;
+		flag[0] = true;
 		createTimeTablePane.getAcademicTermComboBox().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (createTimeTablePane.getAcademicTermComboBox().getValueAsString() == null  || createTimeTablePane.getSchoolComboBox().getValueAsString() == null) {
+				if (createTimeTablePane.getAcademicTermComboBox().getValueAsString() == null
+						|| createTimeTablePane.getSchoolComboBox().getValueAsString() == null) {
 					createTimeTablePane.getAddLessonButton().disable();
-				}else {
+				} else {
 					createTimeTablePane.getAddLessonButton().enable();
 				}
-					flag[0] = false;
-			
+				flag[0] = false;
+
 			}
 		});
-
-	
 
 		createTimeTablePane.getSchoolComboBox().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (createTimeTablePane.getSchoolComboBox().getValueAsString() == null || createTimeTablePane.getAcademicTermComboBox().getValueAsString() == null) {
+				if (createTimeTablePane.getSchoolComboBox().getValueAsString() == null
+						|| createTimeTablePane.getAcademicTermComboBox().getValueAsString() == null) {
 					createTimeTablePane.getAddLessonButton().disable();
-				}else {
+				} else {
 					createTimeTablePane.getAddLessonButton().enable();
 				}
-					flag[0] = false;
-			
+				flag[0] = false;
+
 			}
 		});
 	}
