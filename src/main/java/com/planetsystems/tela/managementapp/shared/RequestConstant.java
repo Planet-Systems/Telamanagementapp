@@ -74,7 +74,6 @@ public class RequestConstant {
 	public static final String GET_SCHOOL_STAFF = "GET_SCHOOL_STAFF";
 	public static final String GET_STAFFS_IN_SCHOOL = "GET_STAFFS_IN_SCHOOL";
 	public static final String GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL = "GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL";
-	
 
 	public static final String SAVE_LEARNER_ENROLLMENT = "SAVE_LEARNER_ENROLLMENT";
 	public static final String UPDATE_LEARNER_ENROLLMENT = "UPDATE_LEARNER_ENROLLMENT";
@@ -87,7 +86,6 @@ public class RequestConstant {
 	public static final String DELETE_STAFF_ENROLLMENT = "DELETE_STAFF_ENROLLMENT";
 	public static final String GET_STAFF_ENROLLMENT = "GET_STAFF_ENROLLMENT";
 	public static final String GET_SCHOOL_STAFF_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL = "GET_SCHOOL_STAFF_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL";
-	
 
 	public static final String SAVE_CLOCK_IN = "SAVE_CLOCK_IN";
 	public static final String UPDATE_CLOCK_IN = "UPDATE_CLOCK_IN";
@@ -95,21 +93,17 @@ public class RequestConstant {
 	public static final String GET_CLOCK_IN = "GET_CLOCK_IN";
 	public static final String GET_CLOCKINS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL = "GET_CLOCKINS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL";
 
-
 	public static final String SAVE_CLOCK_OUT = "SAVE_CLOCK_OUT";
 	public static final String UPDATE_CLOCK_OUT = "UPDATE_CLOCK_OUT";
 	public static final String DELETE_CLOCK_OUT = "DELETE_CLOCK_OUT";
 	public static final String GET_CLOCK_OUT = "GET_CLOCK_OUT";
 	public static final String GET_CLOCK_OUTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL = "GET_CLOCK_OUTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL";
-	
-	
 
 	public static final String SAVE_LEARNER_ATTENDANCE = "SAVE_LEARNER_ATTENDANCE";
 	public static final String UPDATE_LEARNER_ATTENDANCE = "UPDATE_LEARNER_ATTENDANCE";
 	public static final String DELETE_LEARNER_ATTENDANCE = "DELETE_LEARNER_ATTENDANCE";
 	public static final String GET_LEARNER_ATTENDANCE = "GET_LEARNER_ATTENDANCE";
 	public static final String GET_LEARNER_ATTENDANCE_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL = "GET_LEARNER_ATTENDANCE_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL";
-
 
 	// timetables
 	public static final String SAVE_TIME_TABLE = "SAVE_TIME_TABLE";
@@ -119,5 +113,8 @@ public class RequestConstant {
 	public static final String SAVE_SYSTEM_USER = "SAVE_SYSTEM_USER";
 	public static final String GET_ALL_SYSTEM_USERS = "GET_ALL_SYSTEM_USERS";
 
+	public static final String MIGRATE_DATA = "MIGRATE_DATA";
+	public static final String MIGRATE_DATA_ATTENDACE = "MIGRATE_DATA_ATTENDACE";
+	public static final String MIGRATE_DATA_TIMETABLES = "MIGRATE_DATA_TIMETABLES";
 
 }

@@ -105,7 +105,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 											Cookies.setCookie(RequestConstant.USERNAME , dto.getUserName());
 
 											PlaceRequest placeRequest = new PlaceRequest.Builder()
-													.nameToken(NameTokens.academicYear).build();
+													.nameToken(NameTokens.dashboard).build();
 
 											placeManager.revealPlace(placeRequest);
 										} else {
