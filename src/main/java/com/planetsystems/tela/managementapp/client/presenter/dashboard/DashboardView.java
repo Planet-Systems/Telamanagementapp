@@ -43,6 +43,10 @@ class DashboardView extends ViewImpl implements DashboardPresenter.MyView {
     public Widget asWidget() {
 		return panel;
 	}
+
+	public DashboardPane getDashboardPane() {
+		return dashboardPane;
+	}
     
     
 }

@@ -100,9 +100,7 @@ public class StaffEnrollmentWindow extends Window {
 		layout.setMargin(10);
 		
 		
-		this.addMember(layout);
-		
-	
+		this.addItem(layout);
 		this.setWidth("40%");
 		this.setHeight("65%");
 		this.setAutoCenter(true);

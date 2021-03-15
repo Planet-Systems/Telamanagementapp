@@ -110,7 +110,6 @@ public class StaffAttendancePresenter
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton clockOut = new MenuButton("ClockOut");
 					MenuButton filter = new MenuButton("Filter");
-					filter.setCanHover(true);
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(clockInButton);
@@ -131,7 +130,6 @@ public class StaffAttendancePresenter
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton filter = new MenuButton("Filter");
-					filter.setCanHover(true);
 
 					List<MenuButton> buttons = new ArrayList<>();
 					/// buttons.add(newButton);
@@ -162,12 +160,13 @@ public class StaffAttendancePresenter
 	       
 	       menu.setItems(basic , advanced);
 	      
-	       filter.addHoverHandler(new HoverHandler() {
-			@Override
-			public void onHover(HoverEvent event) {
-			 menu.showNextTo(filter, "bottom");
-			}
-		});
+	       filter.addClickHandler(new ClickHandler() {
+	   		
+	   		@Override
+	   		public void onClick(ClickEvent event) {
+	   			menu.showNextTo(filter, "bottom");
+	   		}
+	   	});
 
 	       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			
@@ -236,13 +235,13 @@ public class StaffAttendancePresenter
 	       
 	       menu.setItems(basic , advanced);
 	      
-	       filter.addHoverHandler(new HoverHandler() {
-			@Override
-			public void onHover(HoverEvent event) {
-			 menu.showNextTo(filter, "bottom");
-			}
-		});
-
+	       filter.addClickHandler(new ClickHandler() {
+	   		
+	   		@Override
+	   		public void onClick(ClickEvent event) {
+	   			menu.showNextTo(filter, "bottom");
+	   		}
+	   	});
 	       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			
 			@Override

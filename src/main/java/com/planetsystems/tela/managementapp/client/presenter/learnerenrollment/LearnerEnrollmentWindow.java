@@ -79,8 +79,7 @@ public class LearnerEnrollmentWindow extends Window {
 		layout.setMembersMargin(10);
 		layout.setMargin(10);
 
-		this.addMember(layout);
-
+		this.addItem(layout);
 		this.setWidth("40%");
 		this.setHeight("50%");
 		this.setAutoCenter(true);

@@ -19,9 +19,15 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	private VLayout panel;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
+	private BodyPane bodyPane;
+
 	
 	public static final String ACADEMIC_YEAR_TAB_TITLE="Academic Year";
 	public static final String ACADEMIC_TERM_TAB_TITLE="Academic Term";
+	
+	private AcademicYearDashboardPane academicYearDashboardPane;
+	
+	VLayout vlayout;
    
  @Inject	
   AcademicYearView() {
@@ -29,7 +35,13 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
     	panel = new VLayout();
     	academicYearPane = new AcademicYearPane();
     	academicTermPane = new AcademicTermPane();
+    	academicYearDashboardPane = new AcademicYearDashboardPane();
     	controlsPane = new ControlsPane();
+    	vlayout=new VLayout();
+    	
+    	vlayout.setMembers(academicTermPane);
+    	
+    	bodyPane = new BodyPane();
 		tabSet = new TabSet();
 	
 
@@ -39,7 +51,7 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 
 		Tab academicTermTab = new Tab();
 		//tab2.setPane(assessmentPeriodPane);
-		academicTermTab.setPane(academicTermPane);
+		academicTermTab.setPane(vlayout);
 		academicTermTab.setTitle(ACADEMIC_TERM_TAB_TITLE);
 
 		tabSet.addTab(academicYearTab);
@@ -48,8 +60,10 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 		tabSet.setMargin(0);
 		tabSet.setPadding(0);
 
+		bodyPane.setMembers(new AcademicYearDashboardPane());
+		
 		panel.addMember(controlsPane);
-		panel.addMember(tabSet);
+		panel.addMembers(tabSet);//(tabSet);
 		panel.setWidth100();
 		panel.setHeight("90%");
 		Window.enableScrolling(false);
@@ -78,6 +92,10 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	
 	public AcademicTermPane getAcademicTermPane() {
 		return academicTermPane;
+	}
+
+	public VLayout getVlayout() {
+		return vlayout;
 	}
 
 	

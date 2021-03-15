@@ -81,7 +81,7 @@ public class ClockInWindow extends Window {
 		layout.setMargin(10);
 		
 		
-		this.addMember(layout);
+		this.addItem(layout);
 		
 	
 		this.setWidth("40%");

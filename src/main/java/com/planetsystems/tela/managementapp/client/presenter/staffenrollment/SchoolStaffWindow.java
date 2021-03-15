@@ -133,7 +133,7 @@ public class SchoolStaffWindow extends Window {
 		this.setWidth("60%");
 		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("Timetable Lesson");
+		this.setTitle("School Staff");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		

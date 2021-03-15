@@ -2,15 +2,9 @@ package com.planetsystems.tela.managementapp.client.presenter.timetable;
 
 import javax.inject.Inject;
 
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.planetsystems.tela.managementapp.client.presenter.region.DistrictPane;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -20,6 +14,8 @@ class TimeTableView extends ViewImpl implements TimeTablePresenter.MyView {
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
 	private TimetablePane timetablePane;
+	private VLayout bodyLayout;
+	private VLayout controlsTabsLayout;
 	private ControlsPane controlsPane;
 	private TabSet timeTableTabset;
 
@@ -31,6 +27,10 @@ class TimeTableView extends ViewImpl implements TimeTablePresenter.MyView {
     	panel = new VLayout();
     	timetablePane = new TimetablePane();
     	controlsPane = new ControlsPane();
+    	bodyLayout = new VLayout();
+    	bodyLayout.setHeight100();
+    	bodyLayout.setWidth100();
+    	controlsTabsLayout = new VLayout();
     	
     	Tab lessonTab = new Tab();
     	lessonTab.setTitle(TIME_TABLE_TAB);
@@ -38,9 +38,12 @@ class TimeTableView extends ViewImpl implements TimeTablePresenter.MyView {
     	
     	timeTableTabset =  new TabSet();
         timeTableTabset.addTab(lessonTab);
+        
+        controlsTabsLayout.addMembers(controlsPane , timeTableTabset);
     	
-    	panel.addMember(controlsPane);
-    	panel.addMember(timeTableTabset);
+        bodyLayout.setMembers(controlsTabsLayout);
+        
+    	panel.addMember(bodyLayout);
     	panel.setWidth100();
 		panel.setHeight("90%");
 		Window.enableScrolling(false);
@@ -65,6 +68,12 @@ class TimeTableView extends ViewImpl implements TimeTablePresenter.MyView {
 	public TabSet getTimeTableTabset() {
 		return timeTableTabset;
 	}
+
+
+	public VLayout getBodyLayout() {
+		return bodyLayout;
+	}
+	
 	
 	
 	

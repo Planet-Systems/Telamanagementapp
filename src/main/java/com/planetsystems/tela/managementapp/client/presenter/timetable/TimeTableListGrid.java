@@ -15,11 +15,17 @@ public class TimeTableListGrid extends SuperListGrid {
 	   public static final String SCHOOL = "school";
 	   public static final String SCHOOL_ID = "schoolId";
 	   
+	   public static final String DISTRICT = "district";
+	   public static final String DISTRICT_ID = "districtId";
+	   
+	   
 	   public static final String ACADEMIC_TERM = "academicTerm";
 	   public static final String ACADEMIC_TERM_ID = "academicTermId";
 	   
 	   public static final String ACADEMIC_YEAR = "academicYear";
 	   public static final String ACADEMIC_YEAR_ID = "academicYearId";
+	   
+	   
 	 
 	   
 	/*
@@ -44,7 +50,7 @@ public class TimeTableListGrid extends SuperListGrid {
 		
 		public TimeTableListGrid() {
 			
-			ListGridField idField = new ListGridField();
+			ListGridField idField = new ListGridField(ID , "Id");
 			idField.setHidden(true);
 			
 		    
@@ -52,20 +58,26 @@ public class TimeTableListGrid extends SuperListGrid {
 			ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 			schoolIdField.setHidden(true);
 			
+			ListGridField districtField = new ListGridField(DISTRICT, "District");
+			districtField.setHidden(true);
+			ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
+			districtIdField.setHidden(true);
+			
 			ListGridField academicTermField = new ListGridField(ACADEMIC_TERM , "Academic Term");
 			ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID , "Academic Term Id");
 			academicTermIdField.setHidden(true);
 			
 			ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR , "Academic Year");
 			ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID , "Academic Year Id");
-			academicTermIdField.setHidden(true);
+			academicYearIdField.setHidden(true);
 
 			
-			this.setFields(academicTermIdField , academicYearIdField , schoolIdField , academicYearField , academicTermField , schoolField);
+			this.setFields(idField,academicTermIdField , academicYearIdField , districtIdField , districtField , schoolIdField , academicYearField , academicTermField , schoolField);
 		}
 		
 		public ListGridRecord addRowData(TimeTableDTO timeTableDTO) {
 			  ListGridRecord record = new ListGridRecord();
+			  record.setAttribute(ID , timeTableDTO.getId());
 			  
 			   if(timeTableDTO.getAcademicTermDTO() != null) {
 				   record.setAttribute(ACADEMIC_TERM_ID , timeTableDTO.getAcademicTermDTO().getId());
@@ -81,7 +93,12 @@ public class TimeTableListGrid extends SuperListGrid {
 			   
 			   if(timeTableDTO.getSchoolDTO() != null) {
 				   record.setAttribute(SCHOOL_ID, timeTableDTO.getSchoolDTO().getId());
-				   record.setAttribute(SCHOOL , timeTableDTO.getSchoolDTO().getName());			   
+				   record.setAttribute(SCHOOL , timeTableDTO.getSchoolDTO().getName());		
+				   
+				   if(timeTableDTO.getSchoolDTO().getDistrictDTO() != null) {
+					   record.setAttribute(DISTRICT_ID, timeTableDTO.getSchoolDTO().getDistrictDTO().getId());
+					   record.setAttribute(DISTRICT , timeTableDTO.getSchoolDTO().getDistrictDTO().getName());	 
+				   }
 			   }
 
 			return record;
