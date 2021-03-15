@@ -264,14 +264,21 @@ public class DataMigrationUtility {
 
 				for (AcademicTermDTO dto : academicTerms) {
 
+					System.out.println("AcademicTermDTO:: "+dto.getTerm());
+					
 					List<ClockInDTO> clockins = client.target(getDataApILink()).path("clockins").path(dto.getId())
 							.request(MediaType.APPLICATION_JSON).headers(headers)
 							.get(new GenericType<List<ClockInDTO>>() {
 							});
+					
+					
+					
 
 					if (clockins != null) {
 						if (!clockins.isEmpty()) {
-
+							
+							System.out.println("clockins AcademicTermDTO:: "+clockins.size());
+							
 							SystemFeedbackDTO feedback14 = client.target(getApLink()).path("import").path("clockins")
 									.request(MediaType.APPLICATION_JSON).headers(headers)
 									.post(Entity.entity(clockins, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);

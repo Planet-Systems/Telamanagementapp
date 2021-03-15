@@ -61,6 +61,8 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		// TODO Auto-generated method stub
 		super.onBind();
 		migrateData();
+		migrateAttendanceData();
+		migrateTimeTablesData();
 	}
 
 	private void migrateData() {
@@ -119,5 +121,121 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		});
 
 	}
+	
+	private void migrateAttendanceData() {
+		getView().getDashboardPane().getImportAttendaceButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SC.ask("Confrim", "Are you sure you want to migrate Attendance data", new BooleanCallback() {
+
+					@Override
+					public void execute(Boolean value) {
+
+						if (value) {
+							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+							SC.showPrompt("", "", new SwizimaLoader());
+
+							dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_ATTENDACE, map),
+									new AsyncCallback<RequestResult>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											System.out.println(caught.getMessage());
+											SC.warn("ERROR", caught.getMessage());
+											GWT.log("ERROR " + caught.getMessage());
+											SC.clearPrompt();
+
+										}
+
+										@Override
+										public void onSuccess(RequestResult result) {
+
+											SC.clearPrompt();
+											SessionManager.getInstance().manageSession(result, placeManager);
+											if (result != null) {
+
+												if (result.getSystemFeedbackDTO() != null) {
+
+													SC.say(result.getSystemFeedbackDTO().getMessage());
+
+												}
+											} else {
+												SC.warn("ERROR", "Unknow error");
+											}
+
+										}
+									});
+						}
+
+					}
+				});
+
+			}
+		});
+
+	}
+	
+	private void migrateTimeTablesData() {
+		getView().getDashboardPane().getImportTimeTablesButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SC.ask("Confrim", "Are you sure you want to migrate Timetable data", new BooleanCallback() {
+
+					@Override
+					public void execute(Boolean value) {
+
+						if (value) {
+							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+							SC.showPrompt("", "", new SwizimaLoader());
+
+							dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_TIMETABLES, map),
+									new AsyncCallback<RequestResult>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											System.out.println(caught.getMessage());
+											SC.warn("ERROR", caught.getMessage());
+											GWT.log("ERROR " + caught.getMessage());
+											SC.clearPrompt();
+
+										}
+
+										@Override
+										public void onSuccess(RequestResult result) {
+
+											SC.clearPrompt();
+											SessionManager.getInstance().manageSession(result, placeManager);
+											if (result != null) {
+
+												if (result.getSystemFeedbackDTO() != null) {
+
+													SC.say(result.getSystemFeedbackDTO().getMessage());
+
+												}
+											} else {
+												SC.warn("ERROR", "Unknow error");
+											}
+
+										}
+									});
+						}
+
+					}
+				});
+
+			}
+		});
+
+	}
+
+
 
 }

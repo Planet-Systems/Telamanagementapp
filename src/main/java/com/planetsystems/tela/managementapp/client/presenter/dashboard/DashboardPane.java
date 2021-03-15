@@ -1,19 +1,32 @@
 package com.planetsystems.tela.managementapp.client.presenter.dashboard;
 
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class DashboardPane extends VLayout{
  
 	private IButton refreshButton;
+	private IButton importAttendaceButton;
+	private IButton importTimeTablesButton;
 	
 	public DashboardPane() {
 		super();
-		VLayout buttonLayout = new VLayout();
+		HLayout buttonLayout = new HLayout();
 		
 		refreshButton = new IButton();
-		refreshButton.setTitle("Refresh");
+		refreshButton.setTitle("Import Initial Data");
+		
+		importAttendaceButton=new IButton();
+		importAttendaceButton.setTitle("Import Attendace Data");
+		
+		importTimeTablesButton=new IButton();
+		importTimeTablesButton.setTitle("Import Timetable Data");
+		
 		buttonLayout.addMember(refreshButton);
+		buttonLayout.addMember(importAttendaceButton);
+		buttonLayout.addMember(importTimeTablesButton);
+		buttonLayout.setMembersMargin(5); 
 		
 		
 		this.setMembers(buttonLayout);
@@ -22,6 +35,14 @@ public class DashboardPane extends VLayout{
 
 	public IButton getRefreshButton() {
 		return refreshButton;
+	}
+
+	public IButton getImportAttendaceButton() {
+		return importAttendaceButton;
+	}
+
+	public IButton getImportTimeTablesButton() {
+		return importTimeTablesButton;
 	}
 
 
