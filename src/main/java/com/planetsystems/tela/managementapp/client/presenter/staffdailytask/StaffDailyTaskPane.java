@@ -20,7 +20,7 @@ public class StaffDailyTaskPane extends VLayout {
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
 	private ComboBox schoolStaffCombo;
-	private TextItem day;
+	private TextItem dayField;
 	private ComboBox academicTermCombo;
 	private ControlsPane controlsPane;
 	
@@ -114,7 +114,7 @@ public class StaffDailyTaskPane extends VLayout {
 		schoolStaffCombo.setHint("Staff");
 		schoolStaffCombo.setShowHintInField(true);
 		
-		TextItem dayField = new TextItem("Day");
+		dayField = new TextItem("Day");
 		dayField.setValue(dayFormat.format(new Date()));
 		dayField.disable();
 		
@@ -147,9 +147,6 @@ public class StaffDailyTaskPane extends VLayout {
 		return schoolStaffCombo;
 	}
 
-	public TextItem getDay() {
-		return day;
-	}
 
 	public ComboBox getAcademicTermCombo() {
 		return academicTermCombo;
@@ -171,6 +168,11 @@ public class StaffDailyTaskPane extends VLayout {
 		return lessonListGrid;
 	}
 
+	public TextItem getDayField() {
+		return dayField;
+	}
+
+	
 
 	
 	

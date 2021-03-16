@@ -107,14 +107,14 @@ private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(MenuBu
 		@Override
 		public void onClick(ClickEvent event) {
 
-//			if (checkIfNoFieldIsEmpty()) {
+			if (checkIfNoFieldIsEmpty()) {
 				SC.say("Hello uganda");
 				String academicYearId = getView().getStaffDailyTaskPane().getAcademicYearCombo().getValueAsString() ;
 				String academicTermId = getView().getStaffDailyTaskPane().getAcademicTermCombo().getValueAsString();
 				String districtId = getView().getStaffDailyTaskPane().getDistrictCombo().getValueAsString(); 
 				String schoolId = getView().getStaffDailyTaskPane().getSchoolCombo().getValueAsString(); 
 				String schoolStaffId = getView().getStaffDailyTaskPane().getAcademicYearCombo().getValueAsString();
-				String day = getView().getStaffDailyTaskPane().getDay().getValueAsString();  
+				String day = getView().getStaffDailyTaskPane().getDayField().getValueAsString();  
 				
 				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -125,7 +125,7 @@ private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(MenuBu
 				map.put(StaffDailyTaskPane.SCHOOL_STAFF_ID, schoolStaffId);
 				map.put(StaffDailyTaskPane.DAY, day);
 				
-				map.put(RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY, 
+				map.put(RequestConstant.LOGIN_TOKEN, 
 						SessionManager.getInstance().getLoginToken());
 
 				GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
@@ -158,9 +158,9 @@ private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(MenuBu
 
 							}
 						});
-//			}else {
-//				SC.say("Please Fill all the fields");
-//			}
+			}else {
+				SC.say("Please Fill all the fields");
+			}
 		}
 	});
 }
@@ -178,7 +178,7 @@ private boolean checkIfNoFieldIsEmpty() {
 	
 	if(getView().getStaffDailyTaskPane().getSchoolStaffCombo().getValueAsString() == null) flag = false;
 	
-	if(getView().getStaffDailyTaskPane().getDay().getValueAsString() == null) flag = false;
+	if(getView().getStaffDailyTaskPane().getDayField().getValueAsString() == null) flag = false;
 	
 	return flag;
 }
