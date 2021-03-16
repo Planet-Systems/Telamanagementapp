@@ -66,7 +66,6 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 			public void onClick(ClickEvent event) {
 				String userName = getView().getLoginPane().getUsername().getValueAsString();
 				String password = getView().getLoginPane().getPassword().getValueAsString();
-
 				if (userName == null || password == null) {
 					SC.say("Enter both username and password");
 				} else {

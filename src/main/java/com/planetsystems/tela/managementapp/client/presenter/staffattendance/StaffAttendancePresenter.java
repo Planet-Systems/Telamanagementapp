@@ -300,7 +300,7 @@ public class StaffAttendancePresenter
 	
 	
 	
-	///////////////////////////////////////
+	///////////////////////////////////////////
 	private void addClockIn(MenuButton clockInButton) {
 		clockInButton.addClickHandler(new ClickHandler() {
 

@@ -15,6 +15,8 @@ import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceTaskDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
@@ -48,6 +50,8 @@ public class RequestResult implements Result {
     private List<TimeTableDTO> timeTableDTOs;
     private List<TimeTableLessonDTO> tableLessonDTOs;
     private List<SystemUserDTO> systemUserDTOs;
+    private StaffDailyAttendanceDTO staffDailyAttendanceDTO;
+    private StaffDailyAttendanceTaskDTO staffDailyAttendanceTaskDTO;
     
 
 	/**
@@ -283,6 +287,17 @@ public class RequestResult implements Result {
 
 	public List<TimeTableLessonDTO> getTableLessonDTOs() {
 		return tableLessonDTOs;
+	}
+
+	
+	
+	
+	public StaffDailyAttendanceDTO getStaffDailyAttendanceDTO() {
+		return staffDailyAttendanceDTO;
+	}
+
+	public StaffDailyAttendanceTaskDTO getStaffDailyAttendanceTaskDTO() {
+		return staffDailyAttendanceTaskDTO;
 	}
 
 	@Override

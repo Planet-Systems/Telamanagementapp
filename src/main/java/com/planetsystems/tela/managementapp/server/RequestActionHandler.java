@@ -31,6 +31,7 @@ import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
@@ -82,6 +83,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				System.out.println("AUTH " + loginResponseDTO);
 
 				if (loginResponseDTO != null) {
+					System.out.println("LOGIN RESPONSE "+loginResponseDTO.getData());
 					feedback = loginResponseDTO.getData();
 				}
 
@@ -2624,6 +2626,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 ///academicyears/{year}/academicterms/{term}/districts/{district}/schools/{school}/" +
 	            //"schoolstaffs/{staffId}/day/{day}/timetablelessons"
+				
+				/*
+				 * http://localhost:8070/academicyears/1/academicterms/2c9180866ff5c74b01700ab38a410111/districts/8a0080826522e0f601652ef26af8001b/schools/8a008082648d961401648dadbf0f0003/schoolstaffs/2c91808377b47c7a0177b9674a350416/days/Tuesday/timetablelessons
+				 */
 
 				SystemResponseDTO<List<TimeTableLessonDTO>> responseDto = client.target(API_LINK)
 						.path("academicyears")
@@ -2636,7 +2642,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.path(schoolId)
 						.path("schoolstaffs")
 						.path(schoolStaffId)
-						.path("day")
+						.path("days")
 						.path(day)
 						.path("timetablelessons")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
@@ -2710,7 +2716,36 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA)
+			} 
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_ATTENDANCE_TASKS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				StaffDailyAttendanceDTO dto = (StaffDailyAttendanceDTO) action.getRequestBody().get(RequestConstant.SAVE_STAFF_DAILY_ATTENDANCE_TASKS);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("staffdailyattendances")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+			/////////////
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 

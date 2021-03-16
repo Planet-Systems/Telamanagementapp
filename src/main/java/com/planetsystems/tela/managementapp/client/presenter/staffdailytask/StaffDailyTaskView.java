@@ -20,6 +20,7 @@ class StaffDailyTaskView extends ViewImpl implements StaffDailyTaskPresenter.MyV
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
 	private StaffDailyTaskPane staffDailyTaskPane;
+	private ViewStaffDailyAttendanceTaskPane viewStaffDailyAttendanceTaskPane;
 
 	public final static String STAFF_DAILY_ATTENDANCE = "DAILY_ATTENDANCE Tasks";
 	public final static String ADD_STAFF_DAILY_ATTENDANCE_TASK = "ADD_STAFF_DAILY_ATTENDANCE_TASK";
@@ -30,6 +31,7 @@ class StaffDailyTaskView extends ViewImpl implements StaffDailyTaskPresenter.MyV
     StaffDailyTaskView() {
     	panel = new VLayout(); 	
     	staffDailyTaskPane = new StaffDailyTaskPane();
+    	viewStaffDailyAttendanceTaskPane = new ViewStaffDailyAttendanceTaskPane();
     	
         panel.addMember(staffDailyTaskPane);
     	panel.setWidth100();
