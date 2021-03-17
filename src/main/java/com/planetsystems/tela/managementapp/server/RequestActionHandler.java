@@ -48,11 +48,13 @@ import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.Filt
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolsPane;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockInWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockOutWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.StaffDailyTaskPane;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.CreateStaffDailyTaskPane;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.StaffDailyAttendancePane;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffHeadCountWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffsPane;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 
 public class RequestActionHandler implements ActionHandler<RequestAction, RequestResult> {
@@ -165,7 +167,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_ACADEMIC_YEAR);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				List<AcademicYearDTO> list = new ArrayList<AcademicYearDTO>();
@@ -294,7 +296,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_ACADEMIC_TERM)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_ACADEMIC_TERM);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				List<AcademicTermDTO> list = new ArrayList<AcademicTermDTO>();
@@ -350,7 +352,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR)) {
-				String id = (String) action.getRequestBody().get(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
 				// academicyears/ff80818177f1b9680177f1bea7330000/academicterms
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<AcademicTermDTO> list = new ArrayList<AcademicTermDTO>();
@@ -450,7 +452,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_REGION)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_REGION);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 				System.out.println("DTO " + id);
 				List<RegionDto> list = new ArrayList<RegionDto>();
 
@@ -582,7 +584,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_DISTRICT)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_DISTRICT);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
 
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
 
@@ -640,7 +642,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_DISTRICTS_IN_REGION)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
-				String id = (String) action.getRequestBody().get(RequestConstant.GET_DISTRICTS_IN_REGION);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -743,7 +745,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SCHOOL_CATEGORY);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CATEGORY_ID);
 				System.out.println("DTO " + id);
 				List<SchoolCategoryDTO> list = new ArrayList<SchoolCategoryDTO>();
 
@@ -878,7 +880,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SCHOOL);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 
 				List<SchoolDTO> list = new ArrayList<SchoolDTO>();
 
@@ -937,7 +939,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOLS_IN_DISTRICT)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.GET_SCHOOLS_IN_DISTRICT);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
 				List<SchoolDTO> list = new ArrayList<SchoolDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -965,8 +967,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOLS_IN_SCHOOL_CATEGORY_DISTRICT)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String districtId = (String) action.getRequestBody().get(FilterSchoolsPane.DISTRICT_ID);
-				String schoolCategoryId = (String) action.getRequestBody().get(FilterSchoolsPane.SCHOOL_CATEGORY_ID);
+				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolCategoryId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CATEGORY_ID);
 				List<SchoolDTO> list = new ArrayList<SchoolDTO>();
 
 				Client client = ClientBuilder.newClient();
@@ -1069,7 +1071,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SCHOOL_CLASS);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CLASS_ID);
 
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
 
@@ -1130,7 +1132,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
-				String id = (String) action.getRequestBody().get(RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 
 				Client client = ClientBuilder.newClient();
 
@@ -1157,8 +1159,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
-				String schoolId = (String) action.getRequestBody().get(FilterSchoolClassPane.SCHOOL_ID);
-				String academicTermId = (String) action.getRequestBody().get(FilterSchoolClassPane.ACADEMIC_TERM_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
 
 				Client client = ClientBuilder.newClient();
 
@@ -1265,7 +1267,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SUBJECT_CATEGORY);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SUBJECT_CATEGORY_ID);
 
 				List<SubjectCategoryDTO> list = new ArrayList<SubjectCategoryDTO>();
 
@@ -1398,7 +1400,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SUBJECT);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SUBJECT_ID);
 
 				List<SubjectDTO> list = new ArrayList<SubjectDTO>();
 
@@ -1457,7 +1459,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SubjectDTO> list = new ArrayList<SubjectDTO>();
-				String id = (String) action.getRequestBody().get(RequestConstant.GET_SUBJECTS_SUBJECT_CATEGORY);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SUBJECT_CATEGORY_ID);
 
 				Client client = ClientBuilder.newClient();
 
@@ -1558,7 +1560,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_SCHOOL_STAFF);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
 
 				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
 
@@ -1617,7 +1619,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
-				String id = (String) action.getRequestBody().get(RequestConstant.GET_STAFFS_IN_SCHOOL);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 
 				Client client = ClientBuilder.newClient();
 				// schools/ff80818177f1b9680177f1c3329e000b/schoolstaffs
@@ -1643,8 +1645,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
-				String districtId = (String) action.getRequestBody().get(FilterStaffsPane.DISTRICT_ID);
-				String schoolId = (String) action.getRequestBody().get(FilterStaffsPane.SCHOOL_ID);
+				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 
 				Client client = ClientBuilder.newClient();
 				// districts/{districtId}/schools/ff80818177f1b9680177f1c3329e000b/schoolstaffs
@@ -1748,7 +1750,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_STAFF_ENROLLMENT);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.STAFF_ENROLLMENT_ID);
 
 				List<StaffEnrollmentDto> list = new ArrayList<StaffEnrollmentDto>();
 
@@ -1809,11 +1811,11 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffEnrollmentDto> list = new ArrayList<StaffEnrollmentDto>();
 				String academicYearId = (String) action.getRequestBody()
-						.get(FilterStaffHeadCountWindow.ACADEMIC_YEAR_ID);
+						.get(RequestDelimeters.ACADEMIC_YEAR_ID);
 				String academicTermId = (String) action.getRequestBody()
-						.get(FilterStaffHeadCountWindow.ACADEMIC_TERM_ID);
-				String districtId = (String) action.getRequestBody().get(FilterStaffHeadCountWindow.DISTRICT_ID);
-				String schoolId = (String) action.getRequestBody().get(FilterStaffHeadCountWindow.SCHOOL_ID);
+						.get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 
 				Client client = ClientBuilder.newClient();
 
@@ -1919,7 +1921,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_LEARNER_ENROLLMENT);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.LEARNER_ENROLLMENT_ID);
 
 				List<LearnerEnrollmentDTO> list = new ArrayList<LearnerEnrollmentDTO>();
 
@@ -1982,11 +1984,11 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<LearnerEnrollmentDTO> list = new ArrayList<LearnerEnrollmentDTO>();
 				String academicYearId = (String) action.getRequestBody()
-						.get(FilterLearnerHeadCountWindow.ACADEMIC_YEAR_ID);
+						.get(RequestDelimeters.ACADEMIC_YEAR_ID);
 				String academicTermId = (String) action.getRequestBody()
-						.get(FilterLearnerHeadCountWindow.ACADEMIC_TERM_ID);
-				String districtId = (String) action.getRequestBody().get(FilterLearnerHeadCountWindow.DISTRICT_ID);
-				String schooolId = (String) action.getRequestBody().get(FilterLearnerHeadCountWindow.SCHOOL_ID);
+						.get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schooolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2088,7 +2090,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_CLOCK_IN);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_IN_ID);
 
 				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
 
@@ -2148,11 +2150,11 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
-				String academicYearId = (String) action.getRequestBody().get(FilterClockInWindow.ACADEMIC_YEAR_ID);
-				String academicTermId = (String) action.getRequestBody().get(FilterClockInWindow.ACADEMIC_TERM_ID);
-				String districtId = (String) action.getRequestBody().get(FilterClockInWindow.DISTRICT_ID);
-				String schoolId = (String) action.getRequestBody().get(FilterClockInWindow.SCHOOL_ID);
-				String date = (String) action.getRequestBody().get(FilterClockInWindow.CLOCKIN_DATE);
+				String academicYearId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String date = (String) action.getRequestBody().get(RequestDelimeters.CLOCKIN_DATE);
 				/// academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}/clockins
 				Client client = ClientBuilder.newClient();
 
@@ -2202,20 +2204,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				}
 
 				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
-				// SystemResponseDTO<List<ClockInDTO>> responseDto =
-				// client.target(API_LINK).path("clockins")
-				// .request(MediaType.APPLICATION_JSON)
-				// .headers(headers)
-				// .get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
-				// });
-
-				// list = responseDto.getData();
-
+			
 				System.out.println("RESPONSE " + feedback);
 				System.out.println("RES DATA " + feedback.getMessage());
-				// feedback.setResponse(feedback.isResponse());
-				// feedback.setMessage(responseDto.getMessage());
-
+			
 				client.close();
 				return new RequestResult(feedback, list, null);
 
@@ -2259,7 +2251,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_CLOCK_OUT);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_OUT_ID);
 
 				List<ClockOutDTO> list = new ArrayList<ClockOutDTO>();
 
@@ -2319,11 +2311,11 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<ClockOutDTO> list = new ArrayList<ClockOutDTO>();
-				String academicYearId = (String) action.getRequestBody().get(FilterClockOutWindow.ACADEMIC_YEAR_ID);
-				String academicTermId = (String) action.getRequestBody().get(FilterClockOutWindow.ACADEMIC_TERM_ID);
-				String districtId = (String) action.getRequestBody().get(FilterClockOutWindow.DISTRICT_ID);
-				String schoolId = (String) action.getRequestBody().get(FilterClockOutWindow.SCHOOL_ID);
-				String date = (String) action.getRequestBody().get(FilterClockOutWindow.CLOCK_OUT_DATE);
+				String academicYearId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String date = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_OUT_DATE);
 				/// academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}/clockins
 				Client client = ClientBuilder.newClient();
 
@@ -2430,7 +2422,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestConstant.DELETE_LEARNER_ATTENDANCE);
+				String id = (String) action.getRequestBody().get(RequestDelimeters.LEARNER_ATTENDANCE_ID);
 
 				List<LearnerAttendanceDTO> list = new ArrayList<LearnerAttendanceDTO>();
 
@@ -2491,12 +2483,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<LearnerAttendanceDTO> list = new ArrayList<LearnerAttendanceDTO>();
 				String academicYearId = (String) action.getRequestBody()
-						.get(FilterLearnerAttendanceWindow.ACADEMIC_YEAR_ID);
+						.get(RequestDelimeters.ACADEMIC_YEAR_ID);
 				String academicTermId = (String) action.getRequestBody()
-						.get(FilterLearnerAttendanceWindow.ACADEMIC_TERM_ID);
-				String districtId = (String) action.getRequestBody().get(FilterLearnerAttendanceWindow.DISTRICT_ID);
-				String schoolId = (String) action.getRequestBody().get(FilterLearnerAttendanceWindow.SCHOOL_ID);
-				String date = (String) action.getRequestBody().get(FilterLearnerAttendanceWindow.ATTENDANCE_DATE);
+						.get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String date = (String) action.getRequestBody().get(RequestDelimeters.ATTENDANCE_DATE);
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -2581,7 +2573,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<TimeTableLessonDTO> list = new ArrayList<TimeTableLessonDTO>();
 				String timeTableId = (String) action.getRequestBody()
-						.get(RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE);
+						.get(RequestDelimeters.TIME_TABLE_ID);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2612,21 +2604,18 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<TimeTableLessonDTO> list = new ArrayList<TimeTableLessonDTO>();
 
-				String academicYearId = (String) action.getRequestBody().get(StaffDailyTaskPane.ACADEMIC_YEAR_ID);
-				String academicTermId = (String) action.getRequestBody().get(StaffDailyTaskPane.ACADEMIC_TERM_ID);
-				String districtId =(String) action.getRequestBody().get(StaffDailyTaskPane.DISTRICT_ID);
-				String schoolId = (String) action.getRequestBody().get(StaffDailyTaskPane.SCHOOL_ID);
-				String schoolStaffId = (String) action.getRequestBody().get(StaffDailyTaskPane.SCHOOL_STAFF_ID);
-				String day = (String) action.getRequestBody().get(StaffDailyTaskPane.DAY);
+				String academicYearId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String districtId =(String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
+				String day = (String) action.getRequestBody().get(RequestDelimeters.DAY);
 
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-///academicyears/{year}/academicterms/{term}/districts/{district}/schools/{school}/" +
-	            //"schoolstaffs/{staffId}/day/{day}/timetablelessons"
-				
 				/*
 				 * http://localhost:8070/academicyears/1/academicterms/2c9180866ff5c74b01700ab38a410111/districts/8a0080826522e0f601652ef26af8001b/schools/8a008082648d961401648dadbf0f0003/schoolstaffs/2c91808377b47c7a0177b9674a350416/days/Tuesday/timetablelessons
 				 */
@@ -2743,7 +2732,56 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
+			}else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_ATTENDANCE_ACADEMIC_YEAR_TERM_DUSTRICT_SCHOOL_DATE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffDailyAttendanceDTO> list = new ArrayList<StaffDailyAttendanceDTO>();
+
+				String academicYearId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String districtId =(String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String attendanceDate = (String) action.getRequestBody().get(RequestDelimeters.ATTENDANCE_DATE);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				/*
+				 * http://localhost:8070/academicyears/1/academicterms/2c9180866ff5c74b01700ab38a410111/districts/8a0080826522e0f601652ef26af8001b
+				 * /schools/8a008082648d961401648dadbf0f0003/staffdailyattendances?attendanceDate=17/03/2021
+				 */
+
+				SystemResponseDTO<List<StaffDailyAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("academicyears")
+						.path(academicYearId)
+						.path("academicterms")
+						.path(academicTermId)
+						.path("districts")
+						.path(districtId)
+						.path("schools")
+						.path(schoolId)
+						.queryParam("attendanceDate", attendanceDate)
+						.path("staffdailyattendances")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceDTO>>>() {
+						});
+
+				if(responseDto.getData() != null)
+				list = responseDto.getData();
+
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
 			}
+
 			/////////////
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {

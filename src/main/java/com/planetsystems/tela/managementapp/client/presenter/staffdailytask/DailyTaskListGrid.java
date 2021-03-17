@@ -40,7 +40,7 @@ public class DailyTaskListGrid extends SuperListGrid {
 	
 	public DailyTaskListGrid() {
 		super();
-		ListGridField idField = new ListGridField();
+		ListGridField idField = new ListGridField(ID , "Id");
 		idField.setHidden(true);
 
 		ListGridField dayField = new ListGridField(DAY, "Day");

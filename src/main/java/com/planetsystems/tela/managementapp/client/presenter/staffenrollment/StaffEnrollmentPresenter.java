@@ -30,6 +30,7 @@ import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
@@ -38,6 +39,7 @@ import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -74,6 +76,8 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
     
 	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
+	
+	private ComboUtil comboUtil;
 
     @NameToken(NameTokens.enrollment)
     @ProxyCodeSplit
@@ -86,6 +90,7 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
             MyView view, 
             MyProxy proxy) {
         super(eventBus, view, proxy, MainPresenter.SLOT_Main);
+        this.comboUtil = new ComboUtil();
         
     }
     
@@ -122,9 +127,6 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 					addStaffEnrollment(newButton);
 					selectFilterStaffEnrollmentOption(filter);
 
-//					deleteRegion(delete);
-//					editRegion(edit);
-
 				} else if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.TEACHER_LIST)){
 		
 					MenuButton newButton = new MenuButton("New");
@@ -149,9 +151,6 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 
 			}
 
-		
-
-			
 		});
 	}
     
@@ -419,136 +418,19 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 	/////////////////////////////////////////COMBOS
 	
 	private void loadAcademicTermCombo(final StaffEnrollmentWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ACADEMIC_TERM, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction( RequestConstant.GET_ACADEMIC_TERM , map),
-				new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
-									valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
-								}
-								window.getAcademicTermComboBox().setValueMap(valueMap);
-
-								if (defaultValue != null) {
-									window.getAcademicTermComboBox().setValue(defaultValue);
-								}
-
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+		comboUtil.loadAcademicTermCombo(window.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
 	}
 
 	
 	private void loadSchoolCombo(final StaffEnrollmentWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL , map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
-
-			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-
-					if (result.getSystemFeedbackDTO() != null) {
-						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-						for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-							valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-						}
-						window.getSchoolComboBox().setValueMap(valueMap);
-						if (defaultValue != null) {
-							window.getSchoolComboBox().setValue(defaultValue);
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
-			}
-		});
+		comboUtil.loadSchoolCombo(window.getSchoolComboBox() , dispatcher, placeManager, defaultValue);
 	}
 
 	///////////////////////////////////////////////////FILTER SCHOOL STAFF COMBOS(2)
 	
 	//loads district combo in filterstaff pane
 		private void loadFilterStaffDistrictCombo(final FilterStaffWindow window) {
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestConstant.GET_DISTRICT, null);
-			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-			SC.showPrompt("", "", new SwizimaLoader());
-
-			dispatcher.execute(new RequestAction(RequestConstant.GET_DISTRICT , map), new AsyncCallback<RequestResult>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					System.out.println(caught.getMessage());
-					SC.warn("ERROR", caught.getMessage());
-					GWT.log("ERROR " + caught.getMessage());
-					SC.clearPrompt();
-
-				}
-
-				@Override
-				public void onSuccess(RequestResult result) {
-
-					SC.clearPrompt();
-					SessionManager.getInstance().manageSession(result, placeManager);
-					if (result != null) {
-
-						if (result.getSystemFeedbackDTO() != null) {
-							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-							for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-								valueMap.put(districtDTO.getId(), districtDTO.getName());
-							}
-							window.getFilterStaffsPane().getDistrictCombo().setValueMap(valueMap);	
-						}
-					} else {
-						SC.warn("ERROR", "Unknow error");
-					}
-
-				}
-			});
+			comboUtil.loadDistrictCombo(window.getFilterStaffsPane().getDistrictCombo() , dispatcher, placeManager, null);
 		}
 		
 	
@@ -559,44 +441,8 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 			
 			@Override
 			public void onChanged(ChangedEvent event) {
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				String districtId = window.getFilterStaffsPane().getDistrictCombo().getValueAsString();
-				map.put(RequestConstant.GET_SCHOOLS_IN_DISTRICT, districtId);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
-
-				dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOLS_IN_DISTRICT , map), new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-									valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-								}
-								window.getFilterStaffsPane().getSchoolCombo().setValueMap(valueMap);	
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+				comboUtil.loadSchoolComboByDistrict(window.getFilterStaffsPane().getDistrictCombo() , 
+						window.getFilterStaffsPane().getSchoolCombo(), dispatcher, placeManager , null);
 			}
 		});
 		
@@ -616,44 +462,9 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 			
 			@Override
 			public void onChanged(ChangedEvent event) {
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				String districtId = window.getFilterStaffHeadCountPane().getDistrictCombo().getValueAsString();
-				map.put(RequestConstant.GET_SCHOOLS_IN_DISTRICT, districtId);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
-
-				dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOLS_IN_DISTRICT , map), new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-									valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-								}
-								window.getFilterStaffHeadCountPane().getSchoolCombo().setValueMap(valueMap);	
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});		
+				
+				comboUtil.loadSchoolComboByDistrict(window.getFilterStaffHeadCountPane().getDistrictCombo() , 
+						window.getFilterStaffHeadCountPane().getSchoolCombo() , dispatcher, placeManager , null);
 			}
 		});
 		
@@ -663,85 +474,13 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 
    //loads district combo in filterstaff head count pane	
 	private void loadFilterStaffHeadCountDistrictCombo(final FilterStaffHeadCountWindow window) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_DISTRICT, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_DISTRICT , map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
-
-			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-
-					if (result.getSystemFeedbackDTO() != null) {
-						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-						for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-							valueMap.put(districtDTO.getId(), districtDTO.getName());
-						}
-						window.getFilterStaffHeadCountPane().getDistrictCombo().setValueMap(valueMap);	
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
-			}
-		});
+		comboUtil.loadDistrictCombo(window.getFilterStaffHeadCountPane().getDistrictCombo() , dispatcher, placeManager, null);
 	}
 
 	
 	//loads academic year combo in filter staff head count pane	
 		private void loadFilterStaffHeadCountAcademicYearCombo(final FilterStaffHeadCountWindow window) {
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestConstant.GET_ACADEMIC_YEAR, null);
-			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-			SC.showPrompt("", "", new SwizimaLoader());
-
-			dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR , map), new AsyncCallback<RequestResult>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					System.out.println(caught.getMessage());
-					SC.warn("ERROR", caught.getMessage());
-					GWT.log("ERROR " + caught.getMessage());
-					SC.clearPrompt();
-
-				}
-
-				@Override
-				public void onSuccess(RequestResult result) {
-
-					SC.clearPrompt();
-					SessionManager.getInstance().manageSession(result, placeManager);
-					if (result != null) {
-
-						if (result.getSystemFeedbackDTO() != null) {
-							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-							for (AcademicYearDTO academicYearDTO : result.getAcademicYearDTOs()) {
-								valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
-							}
-							window.getFilterStaffHeadCountPane().getAcademicYearCombo().setValueMap(valueMap);	
-						}
-					} else {
-						SC.warn("ERROR", "Unknow error");
-					}
-
-				}
-			});
+			comboUtil.loadAcademicYearCombo(window.getFilterStaffHeadCountPane().getAcademicYearCombo(), dispatcher, placeManager , null);
 		}
 
 		
@@ -751,44 +490,7 @@ public class StaffEnrollmentPresenter extends Presenter<StaffEnrollmentPresenter
 						
 						@Override
 						public void onChanged(ChangedEvent event) {
-							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							String academicYearId = window.getFilterStaffHeadCountPane().getAcademicYearCombo().getValueAsString();
-							map.put(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR , academicYearId);
-							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-							SC.showPrompt("", "", new SwizimaLoader());
-
-							dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR , map), new AsyncCallback<RequestResult>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-
-								}
-
-								@Override
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									if (result != null) {
-
-										if (result.getSystemFeedbackDTO() != null) {
-											LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-											for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
-												valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
-											}
-											window.getFilterStaffHeadCountPane().getAcademicTermCombo().setValueMap(valueMap);	
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-							});
+							comboUtil.loadAcademicTermComboByAcademicYear(window.getFilterStaffHeadCountPane().getAcademicYearCombo() , window.getFilterStaffHeadCountPane().getAcademicTermCombo() , dispatcher, placeManager, null);
 						}
 					});
 					
@@ -852,9 +554,6 @@ window.getTotalMaleField().addChangedHandler(new ChangedHandler() {
 	  	
 	
 	}
-
-
-
 
 
 
@@ -1067,46 +766,7 @@ private void saveSchoolStaff(final SchoolStaffWindow window) {
 	
 	
 	private void loadSchoolCombo(final SchoolStaffWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL , map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
-
-			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-
-					if (result.getSystemFeedbackDTO() != null) {
-						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-						for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-							valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-						}
-						window.getSchoolComboBox().setValueMap(valueMap);
-						if (defaultValue != null) {
-							window.getSchoolComboBox().setValue(defaultValue);
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
-			}
-		});
+		comboUtil.loadSchoolCombo(window.getSchoolComboBox() , dispatcher , placeManager , defaultValue);
 	}
 
 	private void getAllSchoolStaff() {
@@ -1161,10 +821,10 @@ private void saveSchoolStaff(final SchoolStaffWindow window) {
 				String districtId = window.getFilterStaffsPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterStaffsPane().getSchoolCombo().getValueAsString();
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(FilterStaffsPane.DISTRICT_ID, districtId);
-				map.put(FilterStaffsPane.SCHOOL_ID, schoolId);
+				map.put(RequestDelimeters.DISTRICT_ID, districtId);
+				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				
-				map.put(RequestConstant.GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL, map);
+//				map.put(RequestConstant.GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL, map);
 				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 				SC.showPrompt("", "", new SwizimaLoader());
 
@@ -1221,10 +881,10 @@ private void saveSchoolStaff(final SchoolStaffWindow window) {
 				String schoolId = window.getFilterStaffHeadCountPane().getSchoolCombo().getValueAsString();
 				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(FilterStaffHeadCountWindow.ACADEMIC_YEAR_ID, academicYearId);
-				map.put(FilterStaffHeadCountWindow.ACADEMIC_TERM_ID, academicTermId);
-				map.put(FilterStaffHeadCountWindow.DISTRICT_ID, districtId);
-				map.put(FilterStaffHeadCountWindow.SCHOOL_ID, schoolId);
+				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
+				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
+				map.put(RequestDelimeters.DISTRICT_ID, districtId);
+				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				
 				map.put(RequestConstant.GET_SCHOOL_STAFF_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map);
 				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());

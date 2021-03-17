@@ -50,7 +50,7 @@ public class RequestResult implements Result {
     private List<TimeTableDTO> timeTableDTOs;
     private List<TimeTableLessonDTO> tableLessonDTOs;
     private List<SystemUserDTO> systemUserDTOs;
-    private StaffDailyAttendanceDTO staffDailyAttendanceDTO;
+    private List<StaffDailyAttendanceDTO> staffDailyAttendanceDTOs;
     private StaffDailyAttendanceTaskDTO staffDailyAttendanceTaskDTO;
     
 
@@ -172,7 +172,6 @@ public class RequestResult implements Result {
 
 
 
-
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserDTO> systemUserDTOs , SystemUserDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
@@ -187,6 +186,16 @@ public class RequestResult implements Result {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.tableLessonDTOs = tableLessonDTOs;
+	}
+
+	
+	
+	
+	
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<StaffDailyAttendanceDTO> staffDailyAttendanceDTOs , StaffDailyAttendanceDTO dailyAttendanceDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.staffDailyAttendanceDTOs = staffDailyAttendanceDTOs;
 	}
 
 	public RequestResult() {
@@ -290,14 +299,17 @@ public class RequestResult implements Result {
 	}
 
 	
-	
-	
-	public StaffDailyAttendanceDTO getStaffDailyAttendanceDTO() {
-		return staffDailyAttendanceDTO;
-	}
+
 
 	public StaffDailyAttendanceTaskDTO getStaffDailyAttendanceTaskDTO() {
 		return staffDailyAttendanceTaskDTO;
+	}
+
+	
+	
+	
+	public List<StaffDailyAttendanceDTO> getStaffDailyAttendanceDTOs() {
+		return staffDailyAttendanceDTOs;
 	}
 
 	@Override
