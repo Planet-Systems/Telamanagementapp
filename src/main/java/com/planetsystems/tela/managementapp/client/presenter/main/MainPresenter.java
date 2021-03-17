@@ -196,7 +196,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		case SystemAttendanceData.HEAD_TEACHER_SUPERVISION:
 			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.HeadTeacherSupervision).build();
 			break;
-		case SystemAttendanceData.STAFF_DAILY_TASKS:
+		case NameTokens.StaffDailyTask:
 			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.StaffDailyTask).build();
 			break;	
 		}

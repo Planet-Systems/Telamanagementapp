@@ -2586,16 +2586,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-///timetables/{id}/timetablelessons
+				/// timetables/{id}/timetablelessons
 
 				SystemResponseDTO<List<TimeTableLessonDTO>> responseDto = client.target(API_LINK).path("timetables")
 						.path(timeTableId).path("timetablelessons").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<TimeTableLessonDTO>>>() {
 						});
 
-				if(responseDto.getData() != null)
-				list = responseDto.getData();
-
+				if (responseDto.getData() != null)
+					list = responseDto.getData();
 
 				System.out.println("RESPONSE " + responseDto);
 				System.out.println("RES DATA " + responseDto.getData());
@@ -2604,15 +2603,19 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
-			}
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY)
+			} else if (action.getRequest().equalsIgnoreCase(
+					RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				
+				System.out.println("GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY: ");
+				 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<TimeTableLessonDTO> list = new ArrayList<TimeTableLessonDTO>();
 
 				String academicYearId = (String) action.getRequestBody().get(StaffDailyTaskPane.ACADEMIC_YEAR_ID);
 				String academicTermId = (String) action.getRequestBody().get(StaffDailyTaskPane.ACADEMIC_TERM_ID);
-				String districtId =(String) action.getRequestBody().get(StaffDailyTaskPane.DISTRICT_ID);
+				String districtId = (String) action.getRequestBody().get(StaffDailyTaskPane.DISTRICT_ID);
 				String schoolId = (String) action.getRequestBody().get(StaffDailyTaskPane.SCHOOL_ID);
 				String schoolStaffId = (String) action.getRequestBody().get(StaffDailyTaskPane.SCHOOL_STAFF_ID);
 				String day = (String) action.getRequestBody().get(StaffDailyTaskPane.DAY);
@@ -2622,33 +2625,21 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-///academicyears/{year}/academicterms/{term}/districts/{district}/schools/{school}/" +
-	            //"schoolstaffs/{staffId}/day/{day}/timetablelessons"
 
-				SystemResponseDTO<List<TimeTableLessonDTO>> responseDto = client.target(API_LINK)
-						.path("academicyears")
-						.path(academicYearId)
-						.path("academicterms")
-						.path(academicTermId)
-						.path("districts")
-						.path(districtId)
-						.path("schools")
-						.path(schoolId)
-						.path("schoolstaffs")
-						.path(schoolStaffId)
-						.path("day")
-						.path(day)
-						.path("timetablelessons")
-						.request(MediaType.APPLICATION_JSON).headers(headers)
-						.get(new GenericType<SystemResponseDTO<List<TimeTableLessonDTO>>>() {
+				SystemResponseDTO<List<TimeTableLessonDTO>> responseDto = client.target(API_LINK).path("academicyears")
+						.path(academicYearId).path("academicterms").path(academicTermId).path("districts")
+						.path(districtId).path("schools").path(schoolId).path("schoolstaffs").path(schoolStaffId)
+						.path("day").path(day).path("timetablelessons").request(MediaType.APPLICATION_JSON)
+						.headers(headers).get(new GenericType<SystemResponseDTO<List<TimeTableLessonDTO>>>() {
 						});
 
-				if(responseDto.getData() != null)
-				list = responseDto.getData();
+				if (responseDto.getData() != null) list = responseDto.getData();
 
-
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				 if(list!=null) {
+					 
+					 System.out.println("list: "+list.size());
+				 }
+				
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 

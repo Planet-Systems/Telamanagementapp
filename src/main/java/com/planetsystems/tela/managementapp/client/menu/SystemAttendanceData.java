@@ -5,6 +5,7 @@ package com.planetsystems.tela.managementapp.client.menu;
 
 import java.util.List;
 
+import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class SystemAttendanceData {
@@ -36,7 +37,7 @@ public class SystemAttendanceData {
 		return new ListGridRecord[] {
 				createRecord("", "application_form", STAFF),
 				createRecord("", "application_form", LEARNER),
-				createRecord("", "application_form", STAFF_DAILY_TASKS),
+				createRecord("", "application_form", NameTokens.StaffDailyTask),
 				createRecord("", "application_form", HEAD_TEACHER_SUPERVISION),		
 		};
 

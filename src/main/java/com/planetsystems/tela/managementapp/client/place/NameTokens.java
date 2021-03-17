@@ -2,7 +2,7 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
-	public static final String StaffDailyTask = "StaffDailyTask";
+	public static final String StaffDailyTask = "Staff Daily Task";
 
 	public static final String HeadTeacherSupervision = "HeadTeacherSupervision";
 
