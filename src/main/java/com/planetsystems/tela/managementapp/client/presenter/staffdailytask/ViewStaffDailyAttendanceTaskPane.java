@@ -16,13 +16,13 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class StaffDailyTaskPane extends VLayout {
-	private ComboBox schoolCombo;
-	private ComboBox districtCombo;
-	private ComboBox academicYearCombo;
+public class ViewStaffDailyAttendanceTaskPane extends VLayout {
+	private TextItem schoolField;
+	private TextItem districtField;
+	private TextItem academicYearField;
 	private ComboBox schoolStaffCombo;
 	private TextItem dayField;
-	private ComboBox academicTermCombo;
+	private TextItem academicTermField;
 	private IButton loadLessonButton;
 	private IButton saveButton;
 
@@ -38,7 +38,7 @@ public class StaffDailyTaskPane extends VLayout {
 
 	private LessonListGrid lessonListGrid;
 
-	public StaffDailyTaskPane() {
+	public ViewStaffDailyAttendanceTaskPane() {
 		super();
 		Label header = new Label();
 		lessonListGrid = new LessonListGrid();
@@ -52,8 +52,8 @@ public class StaffDailyTaskPane extends VLayout {
 
 		header.setStyleName("crm-ContextArea-Header-Label");
 		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("Create Staff Daily Tasks");
-		header.setPadding(10);
+		header.setContents("View Staff Daily Attendance Tasks");
+		header.setPadding(5);
 		header.setAutoHeight();
 		header.setAutoWidth();
 		header.setWrap(false);
@@ -87,43 +87,45 @@ public class StaffDailyTaskPane extends VLayout {
 
 		DynamicForm form = new DynamicForm();
 		form.setWrapItemTitles(false);
-		form.setMargin(10);
-		form.setColWidths("150", "250");
-		form.setCellPadding(10);
+		form.setMargin(2);
+		form.setColWidths("80", "150");
+		form.setCellPadding(5);
 		form.setNumCols(4);
 
-		academicYearCombo = new ComboBox();
-		academicYearCombo.setTitle("AcademicYear");
-		academicYearCombo.setHint("Year");
-		academicYearCombo.setShowHintInField(true);
+		academicYearField = new TextItem();
+		academicYearField.setTitle("AcademicYear");
+		academicYearField.setHint("Year");
+		academicYearField.setShowHintInField(true);
+		academicYearField.disable();
 
-		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("AcademicTerm");
-		academicTermCombo.setShowHintInField(true);
+		academicTermField = new TextItem();
+		academicTermField.setTitle("AcademicTerm");
+		academicTermField.setHint("AcademicTerm");
+		academicTermField.setShowHintInField(true);
+		academicTermField.disable();
 
-		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
-		districtCombo.setHint("District");
-		districtCombo.setShowHintInField(true);
+		districtField = new TextItem();
+		districtField.setTitle("District");
+		districtField.setHint("District");
+		districtField.setShowHintInField(true);
+		districtField.disable();
 
-		schoolCombo = new ComboBox();
-		schoolCombo.setTitle("School");
-		schoolCombo.setHint("School");
-		schoolCombo.setShowHintInField(true);
+		schoolField = new TextItem();
+		schoolField.setTitle("School");
+		schoolField.setHint("School");
+		schoolField.disable();
+		schoolField.setShowHintInField(true);
 
 		schoolStaffCombo = new ComboBox();
 		schoolStaffCombo.setTitle("Staff");
 		schoolStaffCombo.setHint("Staff");
 		schoolStaffCombo.setShowHintInField(true);
- 
 
 		dayField = new TextItem("Day");
 		dayField.setValue(dayFormat.format(new Date()));
 		dayField.disable();
-		
-  
-		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField, schoolStaffCombo);
+
+		form.setFields(academicYearField, districtField, academicTermField, schoolField, dayField, schoolStaffCombo);
 
 		saveButton = new IButton("Save");
 		saveButton.setLayoutAlign(Alignment.CENTER);
@@ -140,16 +142,16 @@ public class StaffDailyTaskPane extends VLayout {
 
 	}
 
-	public ComboBox getSchoolCombo() {
-		return schoolCombo;
+	public TextItem getSchoolField() {
+		return schoolField;
 	}
 
-	public ComboBox getDistrictCombo() {
-		return districtCombo;
+	public TextItem getDistrictField() {
+		return districtField;
 	}
 
-	public ComboBox getAcademicYearCombo() {
-		return academicYearCombo;
+	public TextItem getAcademicYearField() {
+		return academicYearField;
 	}
 
 	public ComboBox getSchoolStaffCombo() {
@@ -160,8 +162,8 @@ public class StaffDailyTaskPane extends VLayout {
 		return dayField;
 	}
 
-	public ComboBox getAcademicTermCombo() {
-		return academicTermCombo;
+	public TextItem getAcademicTermField() {
+		return academicTermField;
 	}
 
 	public IButton getLoadLessonButton() {
@@ -184,6 +186,9 @@ public class StaffDailyTaskPane extends VLayout {
 		return lessonListGrid;
 	}
 
+	
+	
+	
 	
 
 

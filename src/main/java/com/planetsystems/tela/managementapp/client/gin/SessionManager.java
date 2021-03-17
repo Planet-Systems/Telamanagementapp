@@ -15,11 +15,6 @@ import com.smartgwt.client.widgets.Dialog;
 public class SessionManager {
 
 	private static SessionManager instance = new SessionManager();
-	
-	//private String defaultOrganisation;
-	
-	//private DispatchAsync dispatcher;
-	
     
 	private SessionManager() {
 
@@ -77,27 +72,6 @@ public class SessionManager {
 		}
 	}
 
-//	public void manageServerResonse(final RequestResult result) {
-//
-//		if (result != null) {
-//
-//			if (result.getSystemFeedbackDTO() != null) {
-//				if (result.getSystemFeedbackDTO().getStatusCode() != null) {
-//					if (result.getSystemFeedbackDTO().getStatusCode().equalsIgnoreCase("8082")) {
-//						SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
-//					} else {
-//						SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
-//					}
-//				}
-//			}
-//		}
-//	}
-
-//	public void redirectToLoginPage(final PlaceManager placeManager) {
-//		Cookies.removeCookie(RequestConstant.LOGIN_TOKEN);
-//		Cookies.removeCookie(RequestConstant.LOGED_IN);
-//		placeManager.revealDefaultPlace();
-//	}
 
 	public String getLoginToken() {
 		return "Bearer " + Cookies.getCookie(RequestConstant.AUTH_TOKEN);
@@ -110,22 +84,4 @@ public class SessionManager {
 				.nameToken(NameTokens.login).build());
 	}
 
-//	public String getDefaultOrganisation() {
-//		return defaultOrganisation;
-//	}
-
-//	public void setDefaultOrganisation(String defaultOrganisation) {
-//		this.defaultOrganisation = defaultOrganisation;
-//	}
-
-//	public DispatchAsync getDispatcher() {
-//		return dispatcher;
-//	}
-//
-//	public void setDispatcher(DispatchAsync dispatcher) {
-//		this.dispatcher = dispatcher;
-//	}
-
-	
-	
 }
