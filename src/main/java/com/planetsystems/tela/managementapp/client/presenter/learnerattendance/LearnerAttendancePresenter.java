@@ -68,7 +68,7 @@ public class LearnerAttendancePresenter
 	public static final Type<RevealContentHandler<?>> SLOT_LearnerAttendance = new Type<RevealContentHandler<?>>();
 
 	@Inject
-	private PlaceManager placeManager;
+	private PlaceManager placeManager; 
 
 	@Inject
 	private DispatchAsync dispatcher;

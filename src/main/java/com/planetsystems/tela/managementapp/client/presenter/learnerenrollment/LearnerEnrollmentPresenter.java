@@ -60,7 +60,7 @@ public class LearnerEnrollmentPresenter extends Presenter<LearnerEnrollmentPrese
     public static final Type<RevealContentHandler<?>> SLOT_LearnerEnrollment = new Type<RevealContentHandler<?>>();
 
     @Inject
-    private DispatchAsync dispatcher;
+    private DispatchAsync dispatcher; 
     
     @Inject
     private PlaceManager placeManager;

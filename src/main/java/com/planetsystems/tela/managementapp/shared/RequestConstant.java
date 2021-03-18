@@ -116,6 +116,23 @@ public class RequestConstant {
 	//system users
 	public static final String SAVE_SYSTEM_USER = "SAVE_SYSTEM_USER";
 	public static final String GET_ALL_SYSTEM_USERS = "GET_ALL_SYSTEM_USERS";
+	
+	public static final String SAVE_SystemMENU = "SAVE_SystemMENU";
+	public static final String DELETE_SystemMENU = "DELETE_SystemMENU";
+	public static final String GET_SystemMENU = "GET_SystemMENU";
+	
+	
+	public static final String SAVE_USER_GROUP = "SAVE_USER_GROUP";
+	public static final String UPDATE_USER_GROUP = "UPDATE_USER_GROUP";
+	public static final String DELETE_USER_GROUP = "DELETE_USER_GROUP"; 
+	
+	public static final String SAVE_USER_GROUP_SystemMENU = "SAVE_USER_GROUP_SystemMENU";
+	public static final String GET_USER_GROUP_SystemMENU = "GET_USER_GROUP_SystemMENU";
+	
+	public static final String GET_LOGEDIN_USER_SystemMENU = "GET_LOGEDIN_USER_SystemMENU";
+	
+	public static final String GET_USER_GROUP="GET_USER_GROUP";
+	
 
 	//time table lessons
 	public static final String GET_TIME_TABLE_LESSONS_BY_TIME_TABLE = "GET_TIME_TABLE_LESSONS_BY_TIME_TABLE";
@@ -128,5 +145,8 @@ public class RequestConstant {
 	public static final String MIGRATE_DATA = "MIGRATE_DATA";
 	public static final String MIGRATE_DATA_ATTENDACE = "MIGRATE_DATA_ATTENDACE";
 	public static final String MIGRATE_DATA_TIMETABLES = "MIGRATE_DATA_TIMETABLES";
+	
+	
+	
 
 }

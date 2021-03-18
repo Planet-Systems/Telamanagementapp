@@ -37,8 +37,12 @@ import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
+import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemResponseDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
+import com.planetsystems.tela.dto.SystemUserGroupDTO;
+import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
+import com.planetsystems.tela.dto.SystemUserProfileDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
@@ -2657,7 +2661,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				SystemUserDTO dto = (SystemUserDTO) action.getRequestBody().get(RequestConstant.SAVE_SYSTEM_USER);
+				List<SystemUserProfileDTO> list = new ArrayList<SystemUserProfileDTO>();
+
+				SystemUserProfileDTO dto = (SystemUserProfileDTO) action.getRequestBody()
+						.get(RequestConstant.SAVE_SYSTEM_USER);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2665,23 +2672,35 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("systemusers")
-						.request(MediaType.APPLICATION_JSON).headers(headers)
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
+						.path("systemUserprofiles").request(MediaType.APPLICATION_JSON).headers(headers)
 						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
 
 				if (postResponseDTO != null) {
+
 					feedback = postResponseDTO.getData();
+
+					SystemResponseDTO<List<SystemUserProfileDTO>> responseDto = client.target(API_LINK)
+							.path("systemUserprofiles").request(MediaType.APPLICATION_JSON).headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<SystemUserProfileDTO>>>() {
+							});
+
+					if (responseDto != null) {
+						list = responseDto.getData();
+					}
+
 				}
 
 				client.close();
-				return new RequestResult(feedback);
+				return new RequestResult(feedback, list, null);
 
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ALL_SYSTEM_USERS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				List<SystemUserDTO> list = new ArrayList<SystemUserDTO>();
+
+				List<SystemUserProfileDTO> list = new ArrayList<SystemUserProfileDTO>();
 
 				Client client = ClientBuilder.newClient();
 
@@ -2689,15 +2708,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<List<SystemUserDTO>> responseDto = client.target(API_LINK).path("systemusers")
-						.request(MediaType.APPLICATION_JSON).headers(headers)
-						.get(new GenericType<SystemResponseDTO<List<SystemUserDTO>>>() {
+				SystemResponseDTO<List<SystemUserProfileDTO>> responseDto = client.target(API_LINK)
+						.path("systemUserprofiles").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemUserProfileDTO>>>() {
 						});
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2748,7 +2767,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				feedback.setMessage("Data Migration successful");
 
 				return new RequestResult(feedback);
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA_ATTENDACE)
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA_ATTENDACE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
@@ -2779,6 +2800,376 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				return new RequestResult(feedback);
 
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SystemMENU)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				System.out.println("Entry SAVE_SystemMENU: ");
+
+				@SuppressWarnings("unchecked")
+				List<SystemMenuDTO> list = (List<SystemMenuDTO>) action.getRequestBody()
+						.get(RequestConstant.SAVE_SystemMENU);
+
+				List<SystemMenuDTO> responselist = new ArrayList<SystemMenuDTO>();
+
+				if (list != null) {
+
+					Client client = ClientBuilder.newClient();
+
+					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					headers.add(HttpHeaders.AUTHORIZATION, token);
+
+					SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("systemMenu")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(list, MediaType.APPLICATION_JSON),
+									new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+									});
+
+					if (responseDTO != null) {
+						SystemResponseDTO<List<SystemMenuDTO>> responseData = client.target(API_LINK).path("active")
+								.path("systemMenu").request(MediaType.APPLICATION_JSON).headers(headers)
+								.get(new GenericType<SystemResponseDTO<List<SystemMenuDTO>>>() {
+								});
+
+						if (responseData != null) {
+							responselist = responseData.getData();
+						}
+
+						feedback = responseDTO.getData();
+
+					}
+
+					client.close();
+				}
+
+				return new RequestResult(feedback, responselist, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_SystemMENU)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				System.out.println("Entry DELETE_SystemMENU: ");
+
+				@SuppressWarnings("unchecked")
+				List<SystemMenuDTO> list = (List<SystemMenuDTO>) action.getRequestBody()
+						.get(RequestConstant.DELETE_SystemMENU);
+
+				List<SystemMenuDTO> responselist = new ArrayList<SystemMenuDTO>();
+
+				if (list != null) {
+
+					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					headers.add(HttpHeaders.AUTHORIZATION, token);
+
+					Client client = ClientBuilder.newClient();
+
+					SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("delete")
+							.path("systemMenu").request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(list, MediaType.APPLICATION_JSON),
+									new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+									});
+
+					if (responseDTO != null) {
+
+						feedback = responseDTO.getData();
+
+						SystemResponseDTO<List<SystemMenuDTO>> responseData = client.target(API_LINK).path("active")
+								.path("systemMenu").request(MediaType.APPLICATION_JSON).headers(headers)
+								.get(new GenericType<SystemResponseDTO<List<SystemMenuDTO>>>() {
+								});
+
+						if (responseData != null) {
+							responselist = responseData.getData();
+						}
+
+					}
+
+					client.close();
+				}
+
+				return new RequestResult(feedback, responselist, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SystemMENU)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				List<SystemMenuDTO> list = new ArrayList<SystemMenuDTO>();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<List<SystemMenuDTO>> data = client.target(API_LINK).path("active").path("systemMenu")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemMenuDTO>>>() {
+						});
+
+				if (data != null) {
+					list = data.getData();
+				}
+
+				client.close();
+
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_USER_GROUP_SystemMENU)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				System.out.println("Entry SAVE_USER_GROUP_SystemMENU: ");
+
+				SystemUserGroupDTO userGroup = (SystemUserGroupDTO) action.getRequestBody()
+						.get(RequestConstant.GET_USER_GROUP);
+
+				@SuppressWarnings("unchecked")
+				List<SystemUserGroupSystemMenuDTO> list = (List<SystemUserGroupSystemMenuDTO>) action.getRequestBody()
+						.get(RequestConstant.SAVE_USER_GROUP_SystemMENU);
+
+				List<SystemUserGroupSystemMenuDTO> responselist = new ArrayList<SystemUserGroupSystemMenuDTO>();
+
+				if (list != null) {
+
+					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					headers.add(HttpHeaders.AUTHORIZATION, token);
+
+					Client client = ClientBuilder.newClient();
+
+					SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK)
+							.path("systemUserGroupSystemMenus").request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(list, MediaType.APPLICATION_JSON),
+									new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+									});
+
+					if (responseDTO != null) {
+
+						feedback = responseDTO.getData();
+
+						SystemResponseDTO<List<SystemUserGroupSystemMenuDTO>> responseData = client.target(API_LINK)
+								.path("active").path("systemUserGroupSystemMenu").path("userGroup")
+								.path(userGroup.getId()).request(MediaType.APPLICATION_JSON).headers(headers)
+								.get(new GenericType<SystemResponseDTO<List<SystemUserGroupSystemMenuDTO>>>() {
+								});
+
+						if (responseData != null) {
+							responselist = responseData.getData();
+						}
+					}
+
+					client.close();
+				}
+
+				return new RequestResult(feedback, responselist, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_USER_GROUP_SystemMENU)) {
+
+				System.out.println("GET_USER_GROUP_SystemMENU");
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<SystemUserGroupSystemMenuDTO> list = new ArrayList<SystemUserGroupSystemMenuDTO>();
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserGroupDTO userGroup = (SystemUserGroupDTO) action.getRequestBody()
+						.get(RequestConstant.GET_USER_GROUP_SystemMENU);
+
+				System.out.println("GET_USER_GROUP_SystemMENU: " + userGroup.getId());
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<List<SystemUserGroupSystemMenuDTO>> data = client.target(API_LINK).path("active")
+						.path("systemUserGroupSystemMenu").path("userGroup").path(userGroup.getId())
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemUserGroupSystemMenuDTO>>>() {
+						});
+
+				if (data != null) {
+					list = data.getData();
+				}
+
+				client.close();
+
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LOGEDIN_USER_SystemMENU)) {
+
+				System.out.println("GET_LOGEDIN_USER_SystemMENU");
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<SystemUserGroupSystemMenuDTO> list = new ArrayList<SystemUserGroupSystemMenuDTO>();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<List<SystemUserGroupSystemMenuDTO>> data = client.target(API_LINK).path("logedinUser")
+						.path("systemUserGroupSystemMenus").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemUserGroupSystemMenuDTO>>>() {
+						});
+
+				if (data != null) {
+					if (data.getData() != null) {
+						list = data.getData();
+						System.out.println("GET_LOGEDIN_USER_SystemMENU list " + list.size());
+					} else {
+						System.out.println("GET_LOGEDIN_USER_SystemMENU getData is null");
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_USER_GROUP)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserGroupDTO dto = (SystemUserGroupDTO) action.getRequestBody()
+						.get(RequestConstant.SAVE_USER_GROUP);
+
+				List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("systemusergroups")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				SystemResponseDTO<List<SystemUserGroupDTO>> getResponseDTO = client.target(API_LINK)
+						.path("systemusergroups").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemUserGroupDTO>>>() {
+						});
+
+				list = getResponseDTO.getData();
+				// System.out.println("GET DTO " + getResponseDTO);
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_USER_GROUP)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserGroupDTO dto = (SystemUserGroupDTO) action.getRequestBody()
+						.get(RequestConstant.UPDATE_USER_GROUP);
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
+						.path("systemusergroups").path(dto.getId()).request(MediaType.APPLICATION_JSON).headers(headers)
+						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+					SystemResponseDTO<List<SystemUserGroupDTO>> getResponseDTO = client.target(API_LINK)
+							.path("systemusergroups").request(MediaType.APPLICATION_JSON).headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<SystemUserGroupDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					// System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_USER_GROUP)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserGroupDTO dto = (SystemUserGroupDTO) action.getRequestBody()
+						.get(RequestConstant.DELETE_USER_GROUP);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
+						.path("systemusergroups").path(dto.getId()).request(MediaType.APPLICATION_JSON).headers(headers)
+						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+
+					SystemResponseDTO<List<SystemUserGroupDTO>> getResponseDTO = client.target(API_LINK)
+							.path("systemusergroups").request(MediaType.APPLICATION_JSON).headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<SystemUserGroupDTO>>>() {
+							});
+
+					list = getResponseDTO.getData();
+					// System.out.println("GET DTO " + getResponseDTO);
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_USER_GROUP)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SystemUserGroupDTO>> responseDto = client.target(API_LINK)
+						.path("systemusergroups").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemUserGroupDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
 		} catch (ForbiddenException exception) {

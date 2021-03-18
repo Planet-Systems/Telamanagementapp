@@ -5,22 +5,12 @@ package com.planetsystems.tela.managementapp.client.menu;
 
 import java.util.List;
 
+import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.smartgwt.client.widgets.grid.ListGridRecord; 
 
 
 public class SystemEnrollmentData { 
-
-	  // public	static	final String STAFF = "Staff";
-   public	static	final String STAFF_ENROLLMENT = "Staff";
-   //public	static	final String LEARNER_ENROLLMENT = "learnerEnrollment";
-//   public static final String STAFF_ATTENDANCE = "ataffAttendance";
-  // public	static	final String STAFF_CLOCK_IN = "clockIn";
-  // public	static	final String STAFF_CLOCK_OUT = "clockOut";
-//   public	static	final String STAFF_ATTENDANCE = "Staff Attendance";
-   public	static	final String LEARNER_ENROLLMENT = "Learner";
-   
-  
-  
+ 
 
 	private static ListGridRecord[] records;
 
@@ -42,8 +32,8 @@ public class SystemEnrollmentData {
 
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] {
-				createRecord("", "application_form" , STAFF_ENROLLMENT),
-				createRecord("", "application_form" , LEARNER_ENROLLMENT),
+				createRecord("", "application_form" , NameTokens.schoolStaff),
+				createRecord("", "application_form" , NameTokens.learnerEnrollment),
 
 		};
 

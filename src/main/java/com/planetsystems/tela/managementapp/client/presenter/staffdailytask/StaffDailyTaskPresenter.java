@@ -68,7 +68,7 @@ public class StaffDailyTaskPresenter
 	private DispatchAsync dispatcher;
 
 	@Inject
-	private PlaceManager placeManager;
+	private PlaceManager placeManager; 
 
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());

@@ -1,40 +1,32 @@
 package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
+ 
 
-	public static final String StaffDailyTask = "Staff Daily Task";
-
-	public static final String HeadTeacherSupervision = "HeadTeacherSupervision";
-
-	public static final String SystemUser = "SystemUser";
-
-	public static final String TimeTables2 = "TimeTables2";
-
-	public static final String timeTable = "TimeTable";
-
-	public static final String learnerEnrollment = "LearnerEnrollment";
-
-	public static final String learnerAttendance = "LearnerAttendance";
-
-	public static final String staffAttendance = "StaffAttendance";
-
-	public static final String enrollment = "Enrollment";
-
-	public static final String schoolStaff = "SchoolStaff";
-
-	public static final String login = "Login";
-
+	public static final String login = "Login"; 
 	public static final String authentication = "Authentication";
-
-	public static final String subjectCategory = "SubjectCategories";
-
-	public static final String schoolClassCategory = "SchoolClass";
-
-	public static final String region = "RegionDistricts";
-
-	public static final String academicYear = "AcademicYears";
+ 
 
 	public static final String dashboard = "Dashboard";
+	public static final String assessmentperiod = "Assessment Periods";
+	public static final String locations = "Locations";
+	public static final String schoolClassCategory = "Schools";
+	public static final String subjectCategory = "Subjects";
+	
+	
+	public static final String schoolStaff = "Staff Enrollement";
+	public static final String learnerEnrollment = "Learner Enrollment";
+	
+	
+	public static final String staffAttendance = "Staff Attendance";
+	public static final String learnerAttendance = "Learner Attendance";
+	public static final String StaffDailyTask = "Staff Daily Lessons"; 
+	public static final String HeadTeacherSupervision = "Head Teacher Supervision";
+	 
+	public static final String timeTable = "TimeTables";
+	
+	public static final String SystemUser = "System Users";
+ 
 
 	public static String getLearnerenrollment() {
 		return learnerEnrollment;
@@ -47,11 +39,7 @@ public class NameTokens {
 	public static String getStaffattendance() {
 		return staffAttendance;
 	}
-
-	public static String getEnrollment() {
-		return enrollment;
-	}
-
+ 
 	public static String getSchoolstaff() {
 		return schoolStaff;
 	}
@@ -73,11 +61,11 @@ public class NameTokens {
 	}
 
 	public static String getRegion() {
-		return region;
+		return locations;
 	}
 
 	public static String getAcademicyear() {
-		return academicYear;
+		return assessmentperiod;
 	}
 
 	public static String getDashboard() {

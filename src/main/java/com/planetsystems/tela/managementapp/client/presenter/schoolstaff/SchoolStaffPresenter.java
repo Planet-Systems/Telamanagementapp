@@ -54,7 +54,7 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
-    @NameToken(NameTokens.schoolStaff)
+    @NameToken(NameTokens.schoolStaff) 
     @ProxyCodeSplit
     interface MyProxy extends ProxyPlace<SchoolStaffPresenter> {
     }

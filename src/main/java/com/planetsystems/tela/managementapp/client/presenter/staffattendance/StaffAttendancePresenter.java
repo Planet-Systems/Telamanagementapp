@@ -70,7 +70,7 @@ public class StaffAttendancePresenter
 	public static final Type<RevealContentHandler<?>> SLOT_attendance = new Type<RevealContentHandler<?>>();
 
 	@Inject
-	private PlaceManager placeManager;
+	private PlaceManager placeManager; 
 
 	@Inject
 	private DispatchAsync dispatcher;
