@@ -27,7 +27,7 @@ import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
-import com.planetsystems.tela.managementapp.client.presenter.academicyear.FilterAcademicTermWindow;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
@@ -35,13 +35,12 @@ import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HoverEvent;
-import com.smartgwt.client.widgets.events.HoverHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -64,8 +63,6 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 		DistrictPane getDistrictPane();
 		
-//		FilterDistrictsPane getFilterDistrictsPane();
-		
 	}
 
 	@ContentSlot
@@ -77,7 +74,6 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
-	//private String token = Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 
 	@Inject
 	PlaceManager placeManager;
@@ -89,10 +85,13 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	private EventBus eventBus;
 
+	private ComboUtil comboUtil;
+	
 	@Inject
 	RegionPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
 		this.eventBus = eventBus;
+		comboUtil = new ComboUtil();
 	}
 
 	@Override
@@ -123,13 +122,11 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					MenuButton fiter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					buttons.add(delete);
-				//	buttons.add(fiter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addRegion(newButton);
@@ -145,7 +142,6 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
-					// buttons.add(delete);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
@@ -192,9 +188,8 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 	   		
 	   		@Override
 	   		public void onClick(MenuItemClickEvent event) {
-//	   		SC.say("Advanced Search");
 	   		FilterDistrictWindow window = new FilterDistrictWindow();
-	   		loadFilterDistrictRegionCombo(window);
+	   		loadFilterRegionCombo(window);
 	   		window.show();
 	        filterDistrictsByRegion(window);
 	   		}		
@@ -203,52 +198,56 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 		}
 
 	
-	private void loadFilterDistrictRegionCombo(final FilterDistrictWindow window) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_REGION, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_REGION, map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
-
-			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-
-				if (result != null) {
-					
-					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-					if (feedbackDTO != null) {
-						if (result.getSystemFeedbackDTO().isResponse()) {
-							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-							for (RegionDto regionDto : result.getRegionDtos()) {
-								valueMap.put(regionDto.getId(), regionDto.getName());
-							}
-							window.getFilterDistrictsPane().getRegionCombo().setValueMap(valueMap);
-
-						} else {
-							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Service Down");
-					// SC.warn("ERROR", "Unknow error");
-				}
-
-			}
-		});
+	//filter region combo
+	private void loadFilterRegionCombo(final FilterDistrictWindow window) {
+		
+		comboUtil.loadRegionCombo(window.getFilterDistrictsPane().getRegionCombo() , dispatcher , placeManager , null);
+		
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//		map.put(RequestConstant.GET_REGION, null);
+//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+//		SC.showPrompt("", "", new SwizimaLoader());
+//
+//		dispatcher.execute(new RequestAction(RequestConstant.GET_REGION, map), new AsyncCallback<RequestResult>() {
+//
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				System.out.println(caught.getMessage());
+//				SC.warn("ERROR", caught.getMessage());
+//				GWT.log("ERROR " + caught.getMessage());
+//				SC.clearPrompt();
+//
+//			}
+//
+//			@Override
+//			public void onSuccess(RequestResult result) {
+//
+//				SC.clearPrompt();
+//				SessionManager.getInstance().manageSession(result, placeManager);
+//
+//				if (result != null) {
+//					
+//					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+//					if (feedbackDTO != null) {
+//						if (result.getSystemFeedbackDTO().isResponse()) {
+//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+//
+//							for (RegionDto regionDto : result.getRegionDtos()) {
+//								valueMap.put(regionDto.getId(), regionDto.getName());
+//							}
+//							window.getFilterDistrictsPane().getRegionCombo().setValueMap(valueMap);
+//
+//						} else {
+//							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+//						}
+//					}
+//				} else {
+//					SC.warn("ERROR", "Service Down");
+//					// SC.warn("ERROR", "Unknow error");
+//				}
+//
+//			}
+//		});
 	}
 
 //////////////////////////////////////////////////////////////////////////REGION///////////////////////////////////////////////////////////////////
@@ -766,48 +765,52 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 		}
 	}
 
+	//District window
 	public void loadRegionCombo(final DistrictWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_REGION, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_REGION, map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-			}
-
-			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-
-				if (result != null) {
-
-					if (result.getSystemFeedbackDTO() != null) {
-						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-						for (RegionDto regionDto : result.getRegionDtos()) {
-							valueMap.put(regionDto.getId(), regionDto.getName());
-						}
-						window.getRegion().setValueMap(valueMap);
-
-						if (defaultValue != null) {
-							window.getRegion().setValue(defaultValue);
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
-			}
-		});
+		
+		comboUtil.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
+		
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//		map.put(RequestConstant.GET_REGION, null);
+//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+//		SC.showPrompt("", "", new SwizimaLoader());
+//
+//		dispatcher.execute(new RequestAction(RequestConstant.GET_REGION, map), new AsyncCallback<RequestResult>() {
+//
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				System.out.println(caught.getMessage());
+//				SC.warn("ERROR", caught.getMessage());
+//				GWT.log("ERROR " + caught.getMessage());
+//				SC.clearPrompt();
+//			}
+//
+//			@Override
+//			public void onSuccess(RequestResult result) {
+//
+//				SC.clearPrompt();
+//				SessionManager.getInstance().manageSession(result, placeManager);
+//
+//				if (result != null) {
+//
+//					if (result.getSystemFeedbackDTO() != null) {
+//						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+//
+//						for (RegionDto regionDto : result.getRegionDtos()) {
+//							valueMap.put(regionDto.getId(), regionDto.getName());
+//						}
+//						window.getRegion().setValueMap(valueMap);
+//
+//						if (defaultValue != null) {
+//							window.getRegion().setValue(defaultValue);
+//						}
+//					}
+//				} else {
+//					SC.warn("ERROR", "Unknow error");
+//				}
+//
+//			}
+//		});
 	}
 
 	private void clearDistrictWindowFields(DistrictWindow window) {
@@ -833,7 +836,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 								// "+record.getAttributeAsString("name"));
 
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_DISTRICT, record.getAttributeAsString("id"));
+								map.put(RequestDelimeters.DISTRICT_ID, record.getAttributeAsString("id"));
 								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 								GWT.log("DELETE " + map);
 
@@ -937,7 +940,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 		
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			
-					map.put(RequestConstant.GET_DISTRICTS_IN_REGION, id);	
+					map.put(RequestDelimeters.REGION_ID, id);	
 
 				
 				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());

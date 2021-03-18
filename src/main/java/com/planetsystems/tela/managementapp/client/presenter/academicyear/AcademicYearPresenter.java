@@ -27,6 +27,7 @@ import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
@@ -34,6 +35,7 @@ import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -63,13 +65,13 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		public AcademicYearPane getAcademicYearPane();
 
 		public AcademicTermPane getAcademicTermPane();
-		
+
 		public VLayout getVlayout();
 
 	}
 
-//	DateTimeFormat dateFormat = DateTimeFormat.getFormat("dd/MM/yyyy");
-	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateTimeFormat = DateTimeFormat
+			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	private DispatchAsync dispatcher;
@@ -88,11 +90,14 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	private EventBus eventBus;
 
+	private ComboUtil comboUtil;
+
 	@Inject
 	AcademicYearPresenter(EventBus eventBus, MyView view, MyProxy proxy, final DispatchAsync dispatcher) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
 		this.eventBus = eventBus;
 		this.dispatcher = dispatcher;
+		this.comboUtil = new ComboUtil();
 
 		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
 	}
@@ -126,14 +131,12 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_YEAR_TAB_TITLE)) {
 					MenuButton editAcademicYearButton = new MenuButton("Edit");
 					MenuButton deleteAcademicYearButton = new MenuButton("Delete");
-					//MenuButton filterAcademicYearButton = new MenuButton("Filter");
 					MenuButton newAcademicYear = new MenuButton("New");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newAcademicYear);
 					buttons.add(editAcademicYearButton);
 					buttons.add(deleteAcademicYearButton);
-				//	buttons.add(filterAcademicYearButton);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 
@@ -142,7 +145,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					editAcademicYear(editAcademicYearButton);
 
 				} else if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_TERM_TAB_TITLE)) {
-		
+
 					MenuButton newButton = new MenuButton("New");
 
 					MenuButton edit = new MenuButton("Edit");
@@ -152,7 +155,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
-					// buttons.add(delete);
 					buttons.add(filter);
 					getView().getControlsPane().addMenuButtons(buttons);
 
@@ -171,105 +173,61 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
-					// buttons.add(delete);
 					buttons.add(filter);
 					getView().getControlsPane().addMenuButtons(buttons);
-					
+
 				}
 
 			}
 
 		});
 	}
-	
+
 	private void selectFilterOption(final MenuButton filter) {
-       final Menu menu = new Menu();
-       MenuItem basic = new MenuItem("Base Filter");
-       MenuItem advanced = new MenuItem("Advanced Filter");
-       
-       menu.setItems(basic , advanced);
-      
-      filter.addClickHandler(new ClickHandler() {
-		
-		@Override
-		public void onClick(ClickEvent event) {
-			menu.showNextTo(filter, "bottom");
-		}
-	});
+		final Menu menu = new Menu();
+		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem advanced = new MenuItem("Advanced Filter");
 
-       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-		
-		@Override
-		public void onClick(MenuItemClickEvent event) {
-		SC.say("Basic Search");
-			//AcademicYearDashboardPane pane=new AcademicYearDashboardPane();
-		//getView().getVlayout().setMembers(pane);
-		
-		
-		}
-	});
-       
-       advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-   		
-   		@Override
-   		public void onClick(MenuItemClickEvent event) {
+		menu.setItems(basic, advanced);
+
+		filter.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				menu.showNextTo(filter, "bottom");
+			}
+		});
+
+		basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				SC.say("Basic Search");
+
+			}
+		});
+
+		advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
 //   		SC.say("Advanced Search");
-   		FilterAcademicTermWindow window = new FilterAcademicTermWindow();
-   		loadFilterAcademicTermYearCombo(window);
-   		window.show();
-        filterAcademicTermsByAcademicYear(window);
-   		}
+				FilterAcademicTermWindow window = new FilterAcademicTermWindow();
+				loadFilterAcademicYearCombo(window);
+				window.show();
+				filterAcademicTermsByAcademicYear(window);
+			}
 
-		
-   	});
-       
-	}
-
-	
-	private void loadFilterAcademicTermYearCombo(final FilterAcademicTermWindow window) {
-		
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ACADEMIC_YEAR, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-
-		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
-		GWT.log("YEAR TOKEN " + map.get(RequestConstant.LOGIN_TOKEN));
-
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR, map),
-				new AsyncCallback<RequestResult>() {
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-					}
-
-					public void onSuccess(RequestResult result) {
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-
-						GWT.log("PRESENTER LIST " + result.getAcademicYearDTOs());
-						if (result != null) {
-							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-							for (AcademicYearDTO academicYearDTO : result.getAcademicYearDTOs()) {
-								valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
-							}
-							
-							window.getFilterAcademicTermsPane().getAcademicYearCombo().setValueMap(valueMap);
-
-						} else {
-							SC.warn("ERROR", "Service Down");
-						}
-
-					}
-				});
+		});
 
 	}
-	
-	
+
+	// filter window
+	private void loadFilterAcademicYearCombo(final FilterAcademicTermWindow window) {
+		comboUtil.loadAcademicYearCombo(window.getFilterAcademicTermsPane().getAcademicYearCombo(), dispatcher,
+				placeManager, null);
+	}
+
 ///////////////////////////////////////////////////////ACADEMIC YEAR/////////////////////////////////////////////////////////	
 
 	private void addAcademicYear(MenuButton button) {
@@ -290,8 +248,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onClick(ClickEvent event) {
 				AcademicYearDTO dto = new AcademicYearDTO();
-				
-				if(checkIfNoAcademicYearWindowFieldIsEmpty(window)) {
+
+				if (checkIfNoAcademicYearWindowFieldIsEmpty(window)) {
 					dto.setName(window.getYearName().getValueAsString());
 					dto.setCode(window.getYearCode().getValueAsString());
 					dto.setStartDate(dateFormat.format(window.getStartDate().getValueAsDate()));
@@ -336,34 +294,33 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 								}
 							});
-				}else {
+				} else {
 					SC.say("Fill all fields");
 				}
-				
+
 			}
 
 		});
 	}
 
-	
 	private boolean checkIfNoAcademicYearWindowFieldIsEmpty(AcademicYearWindow window) {
-	  boolean flag = true;
-	
-	  if(window.getYearName().getValueAsString() == null)
-		  flag = false;
-	  
-	  if(window.getYearCode().getValueAsString() == null)
-		  flag = false;
-	  
-	  if(window.getStartDate().getValueAsDate() == null)
-		  flag = false;
-	  
-	  if(window.getEndDate().getValueAsDate() == null)
-		  flag = false;
-	 
+		boolean flag = true;
+
+		if (window.getYearName().getValueAsString() == null)
+			flag = false;
+
+		if (window.getYearCode().getValueAsString() == null)
+			flag = false;
+
+		if (window.getStartDate().getValueAsDate() == null)
+			flag = false;
+
+		if (window.getEndDate().getValueAsDate() == null)
+			flag = false;
+
 		return flag;
 	}
-	
+
 	private void editAcademicYear(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -469,7 +426,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 								String id = record.getAttributeAsString(AcademicYearListGrid.ID);
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_ACADEMIC_YEAR, id);
+								map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
 								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 								GWT.log("DELETE " + map);
 
@@ -557,8 +514,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					}
 				});
 	}
-	
-	
 
 	private void clearAcademicYearWindowFields(AcademicYearWindow window) {
 		window.getYearCode().clearValue();
@@ -567,45 +522,9 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		window.getEndDate().clearValue();
 	}
 
+	// add academic term window
 	public void loadAcademicYearCombo(final AcademicTermWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ACADEMIC_YEAR, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR, map),
-				new AsyncCallback<RequestResult>() {
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-					}
-
-					public void onSuccess(RequestResult result) {
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-
-						if (result != null) {
-
-							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-							for (AcademicYearDTO academicYearDTO : result.getAcademicYearDTOs()) {
-								valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
-							}
-							window.getYearComboBox().setValueMap(valueMap);
-
-							if (defaultValue != null) {
-								window.getYearComboBox().setValue(defaultValue);
-							}
-
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+		comboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, defaultValue);
 	}
 
 	///////////////////////////////////////////////////////////// ACADEMIC
@@ -629,8 +548,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
-				if(checkIfNoAcademicTermWindowFieldIsEmpty(window)){
+
+				if (checkIfNoAcademicTermWindowFieldIsEmpty(window)) {
 					AcademicTermDTO academicTermDTO = new AcademicTermDTO();
 					academicTermDTO.setCode(window.getTermCodeField().getValueAsString());
 					academicTermDTO.setStartDate(dateFormat.format(window.getStartDateItem().getValueAsDate()));
@@ -684,7 +603,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								}
 
 							});
-				}else {
+				} else {
 					SC.warn("Please fill all fields");
 				}
 
@@ -694,17 +613,22 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	protected boolean checkIfNoAcademicTermWindowFieldIsEmpty(AcademicTermWindow window) {
 		boolean flag = true;
-	
-		if(window.getTermCodeField().getValueAsString() == null) flag = false;
-		
-		if(window.getTermNameField().getValueAsString() == null) flag = false;
-		
-		if(window.getStartDateItem().getValueAsDate() == null) flag = false;
-		
-		if(window.getEndDateItem().getValueAsDate() == null) flag = false;
-		
-		if(window.getYearComboBox().getValueAsString() == null) flag = false;
-		
+
+		if (window.getTermCodeField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getTermNameField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getStartDateItem().getValueAsDate() == null)
+			flag = false;
+
+		if (window.getEndDateItem().getValueAsDate() == null)
+			flag = false;
+
+		if (window.getYearComboBox().getValueAsString() == null)
+			flag = false;
+
 		return flag;
 	}
 
@@ -822,7 +746,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								// "+record.getAttributeAsString("name"));
 
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_ACADEMIC_TERM, record.getAttributeAsString("id"));
+								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
 								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 								GWT.log("DELETE " + map);
 
@@ -894,7 +818,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_ACADEMIC_TERM, null);
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		
+
 		SC.showPrompt("", "", new SwizimaLoader());
 
 		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERM, map),
@@ -925,22 +849,20 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					}
 				});
 	}
-	
-	
-	public void filterAcademicTermsByAcademicYear(final FilterAcademicTermWindow window ) {
+
+	public void filterAcademicTermsByAcademicYear(final FilterAcademicTermWindow window) {
 		window.getFilterAcademicTermsPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String id = window.getFilterAcademicTermsPane().getAcademicYearCombo().getValueAsString();
-		
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			
-					map.put(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, id);	
 
-				
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
+
 				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				
+
 				SC.showPrompt("", "", new SwizimaLoader());
 
 				dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, map),
@@ -973,7 +895,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 						});
 			}
 		});
-		
+
 	}
 
 }

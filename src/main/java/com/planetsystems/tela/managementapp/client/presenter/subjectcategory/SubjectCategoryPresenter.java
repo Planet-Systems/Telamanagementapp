@@ -26,6 +26,7 @@ import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolClassListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
@@ -34,6 +35,7 @@ import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -75,8 +77,6 @@ public class SubjectCategoryPresenter
 	
 	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
-	
-	//private String token = Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 
 	@NameToken(NameTokens.subjectCategory)
 	@ProxyCodeSplit
@@ -84,11 +84,12 @@ public class SubjectCategoryPresenter
 	}
 
 	private EventBus eventBus;
-
+    private ComboUtil comboUtil;
 	@Inject
 	SubjectCategoryPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
 		this.eventBus = eventBus;
+		this.comboUtil = new ComboUtil();
 
 	}
 
@@ -395,7 +396,7 @@ public class SubjectCategoryPresenter
 								// "+record.getAttributeAsString("name"));
 
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_SUBJECT_CATEGORY, record.getAttributeAsString("id"));
+								map.put(RequestDelimeters.SUBJECT_CATEGORY_ID, record.getAttributeAsString("id"));
 								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 								// map.put(RequestConstant.LOGIN_TOKEN, loginToken);
 								GWT.log("DELETE " + map);
@@ -511,89 +512,14 @@ public class SubjectCategoryPresenter
 	}
 
 	private void loadSubjectCategoryCombo(final SubjectWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SUBJECT_CATEGORY, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SUBJECT_CATEGORY , map),
-				new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						SC.clearPrompt();
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (SubjectCategoryDTO subjectCategoryDTO : result.getSubjectCategoryDTOs()) {
-									valueMap.put(subjectCategoryDTO.getId(), subjectCategoryDTO.getName());
-								}
-								window.getSubjectCategory().setValueMap(valueMap);
-								if (defaultValue != null) {
-									window.getSubjectCategory().setValue(defaultValue);
-								}
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+		comboUtil.loadSubjectCategoryCombo(window.getSubjectCategory() , dispatcher , placeManager , defaultValue);
 	}
 
 	
 	
 	
 	private void loadFilterSubjectCategoryCombo(final FilterSubjectWindow window) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SUBJECT_CATEGORY, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SUBJECT_CATEGORY , map),
-				new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						SC.clearPrompt();
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (SubjectCategoryDTO subjectCategoryDTO : result.getSubjectCategoryDTOs()) {
-									valueMap.put(subjectCategoryDTO.getId(), subjectCategoryDTO.getName());
-								}
-								window.getFilterSubjectsPane().getCategoryCombo().setValueMap(valueMap);
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+		comboUtil.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo() , dispatcher, placeManager, null);
 	}
 
 	
@@ -789,7 +715,7 @@ public class SubjectCategoryPresenter
 								// "+record.getAttributeAsString("name"));
 
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_SUBJECT, record.getAttributeAsString("id"));
+								map.put(RequestDelimeters.SUBJECT_ID, record.getAttributeAsString("id"));
 								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 								// map.put(RequestConstant.LOGIN_TOKEN, loginToken);
 								GWT.log("DELETE " + map);
@@ -895,7 +821,7 @@ public class SubjectCategoryPresenter
 				String subjectCategoryId = window.getFilterSubjectsPane().getCategoryCombo().getValueAsString();
 				
 				
-				map.put(RequestConstant.GET_SUBJECTS_SUBJECT_CATEGORY, subjectCategoryId);
+				map.put(RequestDelimeters.SUBJECT_CATEGORY_ID, subjectCategoryId);
 				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 				SC.showPrompt("", "", new SwizimaLoader());
 

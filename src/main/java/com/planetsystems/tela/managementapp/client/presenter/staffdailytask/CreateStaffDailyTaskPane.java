@@ -16,7 +16,7 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class StaffDailyTaskPane extends VLayout {
+public class CreateStaffDailyTaskPane extends VLayout {
 	private ComboBox schoolCombo;
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
@@ -25,6 +25,7 @@ public class StaffDailyTaskPane extends VLayout {
 	private ComboBox academicTermCombo;
 	private IButton loadLessonButton;
 	private IButton saveButton;
+	private IButton closeTabButton;
 
 	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
 	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
@@ -38,7 +39,7 @@ public class StaffDailyTaskPane extends VLayout {
 
 	private LessonListGrid lessonListGrid;
 
-	public StaffDailyTaskPane() {
+	public CreateStaffDailyTaskPane() {
 		super();
 		Label header = new Label();
 		lessonListGrid = new LessonListGrid();
@@ -89,7 +90,7 @@ public class StaffDailyTaskPane extends VLayout {
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setColWidths("150", "250");
-		form.setCellPadding(10);
+		form.setCellPadding(5);
 		form.setNumCols(4);
 
 		academicYearCombo = new ComboBox();
@@ -130,12 +131,25 @@ public class StaffDailyTaskPane extends VLayout {
 		saveButton.setPadding(10);
 		saveButton.disable();
 
+		
+		closeTabButton = new IButton("Close");
+		
+		HLayout buttonLayout = new HLayout();
+		buttonLayout.setMembers(closeTabButton, saveButton);
+		buttonLayout.setAutoHeight();
+		buttonLayout.setAutoWidth();
+		buttonLayout.setMargin(5);
+		buttonLayout.setMembersMargin(4);
+		
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
+		
+
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(form);
 		layout.addMember(loadLessonButton);
 		layout.addMember(lessonListGrid);
-		layout.addMember(saveButton);
+		layout.addMember(buttonLayout);
 		this.addMember(layout);
 
 	}
@@ -182,6 +196,10 @@ public class StaffDailyTaskPane extends VLayout {
 
 	public LessonListGrid getLessonListGrid() {
 		return lessonListGrid;
+	}
+
+	public IButton getCloseTabButton() {
+		return closeTabButton;
 	}
 
 	
