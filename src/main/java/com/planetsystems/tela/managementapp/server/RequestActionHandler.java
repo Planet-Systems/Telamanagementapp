@@ -195,7 +195,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 							});
 
 					list = getResponseDTO.getData();
-					System.out.println("GET DTO " + getResponseDTO);
+					//System.out.println("GET DTO " + getResponseDTO);
 				}
 
 				client.close();
@@ -220,8 +220,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				//System.out.println("RESPONSE " + responseDto);
+				//System.out.println("RES DATA " + responseDto.getData());
+				
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 

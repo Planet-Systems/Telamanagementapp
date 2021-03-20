@@ -84,8 +84,8 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 	protected void onBind() {
 		super.onBind();
 		manageUserProfile(Cookies.getCookie(RequestConstant.USERNAME), "");
-		loadMenu();
-		//loadSystemUserMenu();
+		//loadMenu();
+		loadSystemUserMenu();
 	}
 
 	@Override
