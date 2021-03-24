@@ -4,10 +4,8 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
-import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
@@ -26,24 +24,16 @@ public class ViewStaffDailyAttendanceTaskPane extends VLayout {
 	private IButton loadLessonButton;
 	private IButton saveButton;
 
-	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
-	public static final String DISTRICT_ID = "DISTRICT_ID";
-	public static final String SCHOOL_ID = "SCHOOL_ID";
-	public static final String SCHOOL_STAFF_ID = "SCHOOL_STAFF_ID";
-	public static final String DAY = "DAY";
+	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
-	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
-	DateTimeFormat yearFormat = DateTimeFormat.getFormat(DatePattern.YEAR.getPattern());
-
-	private LessonListGrid lessonListGrid;
+	private DailyTaskListGrid dailyTaskListGrid;
 	private IButton closeTabButton;
 
 	public ViewStaffDailyAttendanceTaskPane() {
 		super();
 		Label header = new Label();
-		lessonListGrid = new LessonListGrid();
-		lessonListGrid.setSelectionType(SelectionStyle.SIMPLE);
+		dailyTaskListGrid = new DailyTaskListGrid();
+		dailyTaskListGrid.setSelectionType(SelectionStyle.NONE);
 
 		loadLessonButton = new IButton("Load Lesson");
 		loadLessonButton.setLayoutAlign(Alignment.RIGHT);
@@ -146,8 +136,8 @@ public class ViewStaffDailyAttendanceTaskPane extends VLayout {
 		VLayout layout = new VLayout();
 		//layout.addMember(header);
 		layout.addMember(form);
-		//layout.addMember(loadLessonButton);
-		layout.addMember(lessonListGrid);
+		// layout.addMember(loadLessonButton);
+		layout.addMember(dailyTaskListGrid);
 		layout.addMember(buttonLayout);
 		this.addMember(layout);
 
@@ -188,16 +178,9 @@ public class ViewStaffDailyAttendanceTaskPane extends VLayout {
 		return saveButton;
 	}
 
-	public DateTimeFormat getDayFormat() {
-		return dayFormat;
-	}
 
-	public DateTimeFormat getYearFormat() {
-		return yearFormat;
-	}
-
-	public LessonListGrid getLessonListGrid() {
-		return lessonListGrid;
+	public DailyTaskListGrid getDailyTaskListGrid() {
+		return dailyTaskListGrid;
 	}
 
 	public IButton getCloseTabButton() {

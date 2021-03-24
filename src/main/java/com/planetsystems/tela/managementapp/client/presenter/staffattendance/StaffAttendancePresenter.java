@@ -98,7 +98,7 @@ public class StaffAttendancePresenter
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllStaffClockIn();
+		
 	}
 
 	private void onTabSelected() {
@@ -121,6 +121,7 @@ public class StaffAttendancePresenter
 
 					getView().getControlsPane().addMenuButtons(buttons);
 
+					getAllStaffClockIn();
 					addClockIn(clockInButton);
 					clockOut(clockOut);
 					selectFilterOption(filter);	
@@ -304,8 +305,11 @@ public class StaffAttendancePresenter
 
 				ClockInWindow window = new ClockInWindow();
 				window.show();
-
+               
+				loadAcademicYearCombo(window, null);
 				loadAcademicTermCombo(window, null);
+				loadDistrictCombo(window , null);
+				loadSchoolCombo(window , null);
 				loadSchoolStaffCombo(window, null);
 
 				saveClockin(window);
@@ -332,7 +336,10 @@ public class StaffAttendancePresenter
 					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
 							window.getAcademicTermComboBox().getValueAsString());
 					dto.setAcademicTermDTO(academicTermDTO);
-
+                     
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolComboBox().getValueAsString());
+					dto.setSchoolDTO(schoolDTO);
+					
 					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO();
 					schoolStaffDTO.setId(window.getSchoolStaffComboBox().getValueAsString());
 					dto.setSchoolStaffDTO(schoolStaffDTO);
@@ -397,7 +404,16 @@ public class StaffAttendancePresenter
 	private boolean checkIfNoClockInWindowFieldIsEmpty(ClockInWindow window) {
 		boolean flag = true;
 
+		if (window.getAcademicYearComboBox().getValueAsString() == null)
+			flag = false;
+		
 		if (window.getAcademicTermComboBox().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getDistrictComboBox().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getSchoolComboBox().getValueAsString() == null)
 			flag = false;
 
 		if (window.getSchoolStaffComboBox().getValueAsString() == null)
@@ -422,14 +438,43 @@ public class StaffAttendancePresenter
 		window.getLongitudeField().clearValue();
 	}
 
-	private void loadAcademicTermCombo(final ClockInWindow window, final String defaultValue) {
-		comboUtil.loadAcademicTermCombo(window.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
+	
+	private void loadAcademicYearCombo(final ClockInWindow window, final String defaultValue) {
+		comboUtil.loadAcademicYearCombo(window.getAcademicYearComboBox(), dispatcher, placeManager, defaultValue);
 	}
 	
+	private void loadAcademicTermCombo(final ClockInWindow window, final String defaultValue) {
+		window.getAcademicYearComboBox().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				comboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearComboBox(), window.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
+			}
+		});
+	}
 	
+	private void loadDistrictCombo(final ClockInWindow window, final String defaultValue) {
+		comboUtil.loadDistrictCombo(window.getDistrictComboBox(), dispatcher, placeManager, defaultValue);
+	}
+
+	private void loadSchoolCombo(final ClockInWindow window, final String defaultValue) {
+		window.getDistrictComboBox().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				comboUtil.loadSchoolComboByDistrict(window.getDistrictComboBox() , window.getSchoolComboBox(), dispatcher, placeManager, defaultValue);
+			}
+		});
+	}
 
 	private void loadSchoolStaffCombo(final ClockInWindow window, final String defaultValue) {
-		comboUtil.loadSchoolStaffCombo(window.getSchoolStaffComboBox() , dispatcher, placeManager, defaultValue);
+		window.getSchoolComboBox().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				comboUtil.loadSchoolStaffComboBySchool(window.getSchoolComboBox(), window.getSchoolStaffComboBox(), dispatcher, placeManager, defaultValue);
+			}
+		});
 	}
 
 	private void getAllStaffClockIn() {

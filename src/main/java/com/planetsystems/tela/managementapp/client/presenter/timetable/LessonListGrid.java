@@ -12,7 +12,7 @@ public class LessonListGrid extends SuperListGrid {
 
 	public static final String ID = "id";
 
-	public static final String DAY = "day";
+	public static final String LESSON_DATE = "lessonDate";
 
 	public static final String CLASS = "class";
 	public static final String CLASS_ID = "classId";
@@ -26,19 +26,14 @@ public class LessonListGrid extends SuperListGrid {
 	public static final String START_TIME = "startTime";
 	public static final String END_TIME = "endTime";
 
-//   private String day;
-//   private SchoolClassDTO schoolClassDTO;
-//   private SubjectDTO subjectDTO;
-//   private String startTime;
-//   private String endTime;
-//   private SchoolStaffDTO schoolStaffDTO
+
 
 	public LessonListGrid() {
 
 		ListGridField idField = new ListGridField();
 		idField.setHidden(true);
 
-		ListGridField dayField = new ListGridField(DAY, "Day");
+		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "Lesson Date");
 
 		ListGridField classField = new ListGridField(CLASS, "Class");
 		ListGridField classIdField = new ListGridField(CLASS_ID, "ClassId");
@@ -55,20 +50,20 @@ public class LessonListGrid extends SuperListGrid {
 		ListGridField staffIdField = new ListGridField(STAFF_ID, "Staff Id");
 		staffIdField.setHidden(true);
 
-		this.setFields(dayField, classField, subjectField, startTimeField, endTimeField, staffField);
+		this.setFields(lessonDateField, classField, subjectField, startTimeField, endTimeField, staffField);
 	}
 
 	public ListGridRecord addRowData(TimeTableLessonDTO timeTableLessonDTO) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, timeTableLessonDTO.getId());
-		record.setAttribute(LessonListGrid.DAY, timeTableLessonDTO.getDay());
+		record.setAttribute(LESSON_DATE, timeTableLessonDTO.getLessonDate());
 
-		record.setAttribute(LessonListGrid.START_TIME, timeTableLessonDTO.getStartTime());
-		record.setAttribute(LessonListGrid.END_TIME, timeTableLessonDTO.getEndTime());
+		record.setAttribute(START_TIME, timeTableLessonDTO.getStartTime());
+		record.setAttribute(END_TIME, timeTableLessonDTO.getEndTime());
 
 		if (timeTableLessonDTO.getSchoolClassDTO() != null) {
-			record.setAttribute(LessonListGrid.CLASS_ID, timeTableLessonDTO.getSchoolClassDTO().getId());
-			record.setAttribute(LessonListGrid.CLASS, timeTableLessonDTO.getSchoolClassDTO().getName());
+			record.setAttribute(CLASS_ID, timeTableLessonDTO.getSchoolClassDTO().getId());
+			record.setAttribute(CLASS, timeTableLessonDTO.getSchoolClassDTO().getName());
 		}
 
 		if (timeTableLessonDTO.getSchoolStaffDTO() != null) {

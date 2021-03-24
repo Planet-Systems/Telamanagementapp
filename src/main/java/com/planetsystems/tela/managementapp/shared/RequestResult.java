@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.shared;
 import java.util.List;
 
 import com.gwtplatform.dispatch.rpc.shared.Result;
+import com.planetsystems.tela.dto.AbsentDTO;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
@@ -16,13 +17,16 @@ import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
+import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
@@ -51,8 +55,11 @@ public class RequestResult implements Result {
     private List<TimeTableLessonDTO> tableLessonDTOs;
     private List<SystemUserDTO> systemUserDTOs;
     private List<StaffDailyAttendanceDTO> staffDailyAttendanceDTOs;
-    private StaffDailyAttendanceTaskDTO staffDailyAttendanceTaskDTO;
-    
+    private List<StaffDailyAttendanceTaskDTO> staffDailyAttendanceTaskDTOs;
+    private List<StaffDailyAttendanceSupervisionDTO> staffDailyAttendanceSupervisionDTOs;
+    private List<StaffDailyAttendanceTaskSupervisionDTO> staffDailyAttendanceTaskSupervisionDTOs;
+    private List<TimeAttendanceSupervisionDTO> timeAttendanceSupervisionDTOs;
+
 
 	/**
 	 * 
@@ -177,10 +184,7 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.systemUserDTOs = systemUserDTOs;
 	}
-
-
-
-
+	
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TimeTableLessonDTO> tableLessonDTOs  ,TimeTableLessonDTO dto) {
 		super();
@@ -188,14 +192,44 @@ public class RequestResult implements Result {
 		this.tableLessonDTOs = tableLessonDTOs;
 	}
 
-	
-	
-	
+
 	
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<StaffDailyAttendanceDTO> staffDailyAttendanceDTOs , StaffDailyAttendanceDTO dailyAttendanceDTO) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.staffDailyAttendanceDTOs = staffDailyAttendanceDTOs;
+	}
+	
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<StaffDailyAttendanceSupervisionDTO> staffDailyAttendanceSupervisionDTOs , StaffDailyAttendanceSupervisionDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.staffDailyAttendanceSupervisionDTOs = staffDailyAttendanceSupervisionDTOs;
+	}
+		
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<StaffDailyAttendanceTaskSupervisionDTO> staffDailyAttendanceTaskSupervisionDTOs , StaffDailyAttendanceTaskSupervisionDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.staffDailyAttendanceTaskSupervisionDTOs = staffDailyAttendanceTaskSupervisionDTOs;
+	}
+
+	
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<StaffDailyAttendanceTaskDTO> staffDailyAttendanceTaskDTOs , StaffDailyAttendanceTaskDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.staffDailyAttendanceTaskDTOs = staffDailyAttendanceTaskDTOs;
+	}
+	
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<TimeAttendanceSupervisionDTO> timeAttendanceSupervisionDTOs , TimeAttendanceSupervisionDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.timeAttendanceSupervisionDTOs = timeAttendanceSupervisionDTOs;
 	}
 
 	public RequestResult() {
@@ -298,18 +332,35 @@ public class RequestResult implements Result {
 		return tableLessonDTOs;
 	}
 
+
 	
+	public List<StaffDailyAttendanceDTO> getStaffDailyAttendanceDTOs() {
+		return staffDailyAttendanceDTOs;
+	}
+	
+	
+ 
+	
+	
+	public List<StaffDailyAttendanceTaskDTO> getStaffDailyAttendanceTaskDTOs() {
+		return staffDailyAttendanceTaskDTOs;
+	}
 
-
-	public StaffDailyAttendanceTaskDTO getStaffDailyAttendanceTaskDTO() {
-		return staffDailyAttendanceTaskDTO;
+	public List<StaffDailyAttendanceSupervisionDTO> getStaffDailyAttendanceSupervisionDTOs() {
+		return staffDailyAttendanceSupervisionDTOs;
 	}
 
 	
 	
+	public List<StaffDailyAttendanceTaskSupervisionDTO> getStaffDailyAttendanceTaskSupervisionDTOs() {
+		return staffDailyAttendanceTaskSupervisionDTOs;
+	}
 	
-	public List<StaffDailyAttendanceDTO> getStaffDailyAttendanceDTOs() {
-		return staffDailyAttendanceDTOs;
+	
+
+
+	public List<TimeAttendanceSupervisionDTO> getTimeAttendanceSupervisionDTOs() {
+		return timeAttendanceSupervisionDTOs;
 	}
 
 	@Override

@@ -56,8 +56,8 @@ private AcademicTermDTO academicTerm;
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
 
-		ListGridField schoolStaffField = new ListGridField(SCHOOL_STAFF, "School");
-		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "School Id");
+		ListGridField schoolStaffField = new ListGridField(SCHOOL_STAFF, "Staff");
+		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "Staff Id");
 		schoolStaffIdField.setHidden(true);
 		
 		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
@@ -114,6 +114,11 @@ private AcademicTermDTO academicTerm;
 			String fullname = clockInDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getFirstName()+" "+clockInDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getLastName();
 			record.setAttribute(SCHOOL_STAFF, fullname);
 			record.setAttribute(SCHOOL_STAFF_ID, clockInDTO.getSchoolStaffDTO().getId());
+		}
+		
+		if (clockInDTO.getSchoolDTO() != null) {
+			record.setAttribute(SCHOOL, clockInDTO.getSchoolDTO().getName());
+			record.setAttribute(SCHOOL_ID, clockInDTO.getSchoolDTO().getId());
 		}
 		
 		return record;

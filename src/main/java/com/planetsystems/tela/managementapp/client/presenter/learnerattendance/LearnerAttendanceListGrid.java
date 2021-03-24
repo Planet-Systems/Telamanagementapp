@@ -2,15 +2,16 @@ package com.planetsystems.tela.managementapp.client.presenter.learnerattendance;
 
 import java.util.List;
 
-import org.apache.bcel.generic.I2F;
-
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
-import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.listgridutil.LearnerAttendanceDatasource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class LearnerAttendanceListGrid extends SuperListGrid {
+	
+	private LearnerAttendanceDatasource datasource;
+	
 	public static String ID = "id";
     
 	public static String SCHOOL_CLASS = "schoolClass";
@@ -37,31 +38,12 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 	public static String BOYS_ABSENT = "boysAbsent";
 	public static String TOTAL_ABSENT = "totalAbsent";
 	public static String COMMENT = "comment";
-	
-	
-	
-
-    /*
-     *  private SchoolClassDTO schoolClassDTO;
-
-    private AcademicTermDTO academicTermDTO;
-
-    private SchoolStaffDTO schoolStaffDTO;
-
-    private String attendanceDate;
-    private long girlsPresent;
-    private long boysPresent;
-    private long boysAbsent;
-    private long girlsAbsent;
-    private String comment;
-     */
-    
-   
-
 		
 
 	public LearnerAttendanceListGrid() { 
 		super();
+		
+		datasource = LearnerAttendanceDatasource.getInstance();
 		
 		ListGridField idField = new ListGridField(ID , "Id");
 		idField.setHidden(true);
@@ -100,7 +82,7 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 	    
 		   
 		     	
-		
+		this.setDataSource(datasource);
 
 		this.setFields(idField , schoolClassIdField , academicTermIdField  , schoolStaffIdField , academicTermField , schoolClassField , schoolStaffField , attendanceDateField ,boysPresentField , girlsPresentField ,totalPresentField, boysAbsentField ,girlsAbsentField , totalAbsentField  , commentField  );
 
@@ -172,5 +154,6 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		datasource.setTestData(records);
 	}
 }

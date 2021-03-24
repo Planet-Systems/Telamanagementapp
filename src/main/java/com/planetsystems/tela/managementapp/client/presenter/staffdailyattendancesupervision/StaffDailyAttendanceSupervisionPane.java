@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailytask;
+package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision;
 
 import java.util.Date;
 
@@ -16,36 +16,35 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class CreateStaffDailyTaskPane extends VLayout {
+public class StaffDailyAttendanceSupervisionPane extends VLayout {
 	private ComboBox schoolCombo;
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
-	private ComboBox schoolStaffCombo;
+//	private ComboBox schoolStaffCombo;
 	private TextItem dayField;
 	private ComboBox academicTermCombo;
-	private IButton loadLessonButton;
-	private IButton saveButton;
-	private IButton closeTabButton;
+	private IButton loadSuperVisionButton;
+//	private IButton saveButton;
 
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
-	private LessonListGrid lessonListGrid;
+	private StaffDailyAttendanceSupervisionListGrid staffDailyAttendanceSupervisionListGrid;
 
-	public CreateStaffDailyTaskPane() {
+	public StaffDailyAttendanceSupervisionPane() {
 		super();
 		Label header = new Label();
-		lessonListGrid = new LessonListGrid();
-		lessonListGrid.setSelectionType(SelectionStyle.SIMPLE);
+		staffDailyAttendanceSupervisionListGrid = new StaffDailyAttendanceSupervisionListGrid();
+
 		
-		loadLessonButton = new IButton("Load Lesson");
-		loadLessonButton.setLayoutAlign(Alignment.RIGHT);
-		loadLessonButton.setPadding(10);
-		loadLessonButton.disable();
+		loadSuperVisionButton = new IButton("Load Supervisions");
+		loadSuperVisionButton.setLayoutAlign(Alignment.RIGHT);
+		loadSuperVisionButton.setPadding(10);
+		loadSuperVisionButton.disable();
 
 
 		header.setStyleName("crm-ContextArea-Header-Label");
 		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("Create Staff Daily Tasks");
+		header.setContents("School Staff Daily Task Attendance Supervision");
 		header.setPadding(10);
 		header.setAutoHeight();
 		header.setAutoWidth();
@@ -104,42 +103,29 @@ public class CreateStaffDailyTaskPane extends VLayout {
 		schoolCombo.setTitle("School");
 		schoolCombo.setHint("School");
 		schoolCombo.setShowHintInField(true);
-
-		schoolStaffCombo = new ComboBox();
-		schoolStaffCombo.setTitle("Staff");
-		schoolStaffCombo.setHint("Staff");
-		schoolStaffCombo.setShowHintInField(true);
+//
+//		schoolStaffCombo = new ComboBox();
+//		schoolStaffCombo.setTitle("Staff");
+//		schoolStaffCombo.setHint("Staff");
+//		schoolStaffCombo.setShowHintInField(true);
 
 		dayField = new TextItem("Day");
 		dayField.setValue(dayFormat.format(new Date()));
 		dayField.disable();
 
-		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField, schoolStaffCombo);
+		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField);
 
-		saveButton = new IButton("Save");
-		saveButton.setLayoutAlign(Alignment.CENTER);
-		saveButton.setPadding(10);
-		saveButton.disable();
-
-		
-		closeTabButton = new IButton("Close");
-		
-		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(closeTabButton, saveButton);
-		buttonLayout.setAutoHeight();
-		buttonLayout.setAutoWidth();
-		buttonLayout.setMargin(5);
-		buttonLayout.setMembersMargin(4);
-		
-		buttonLayout.setLayoutAlign(Alignment.CENTER);
-		
+//		saveButton = new IButton("Save");
+//		saveButton.setLayoutAlign(Alignment.CENTER);
+//		saveButton.setPadding(10);
+//		saveButton.disable();
 
 		VLayout layout = new VLayout();
 		//layout.addMember(header);
 		layout.addMember(form);
-		layout.addMember(loadLessonButton);
-		layout.addMember(lessonListGrid);
-		layout.addMember(buttonLayout);
+		layout.addMember(loadSuperVisionButton);
+		layout.addMember(staffDailyAttendanceSupervisionListGrid);
+//		layout.addMember(saveButton);
 		this.addMember(layout);
 
 	}
@@ -156,9 +142,9 @@ public class CreateStaffDailyTaskPane extends VLayout {
 		return academicYearCombo;
 	}
 
-	public ComboBox getSchoolStaffCombo() {
-		return schoolStaffCombo;
-	}
+//	public ComboBox getSchoolStaffCombo() {
+//		return schoolStaffCombo;
+//	}
 
 	public TextItem getDayField() {
 		return dayField;
@@ -168,23 +154,15 @@ public class CreateStaffDailyTaskPane extends VLayout {
 		return academicTermCombo;
 	}
 
-	public IButton getLoadLessonButton() {
-		return loadLessonButton;
-	}
-
-	public IButton getSaveButton() {
-		return saveButton;
-	}
-
-	public LessonListGrid getLessonListGrid() {
-		return lessonListGrid;
-	}
-
-	public IButton getCloseTabButton() {
-		return closeTabButton;
-	}
-
 	
 
+
+	public IButton getLoadSuperVisionButton() {
+		return loadSuperVisionButton;
+	}
+
+	public StaffDailyAttendanceSupervisionListGrid getStaffDailyAttendanceSupervisionListGrid() {
+		return staffDailyAttendanceSupervisionListGrid;
+	}
 
 }

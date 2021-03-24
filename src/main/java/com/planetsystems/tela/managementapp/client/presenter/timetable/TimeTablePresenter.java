@@ -11,7 +11,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -24,8 +23,6 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.AcademicYearDTO;
-import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
@@ -38,7 +35,6 @@ import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionPane;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
@@ -54,7 +50,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -63,12 +58,8 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, TimeTablePresenter.MyProxy> {
 	interface MyView extends View {
 		ControlsPane getControlsPane();
-
 		TimetablePane getTimetablePane();
-
-		TabSet getTimeTableTabset();
-
-		VLayout getBodyLayout();
+		TabSet getTabSet();
 	}
 
 	@ContentSlot
@@ -103,19 +94,20 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllTimeTables();
 	}
 
 	private void onTabSelected() {
-		getView().getTimeTableTabset().addTabSelectedHandler(new TabSelectedHandler() {
+		getView().getTabSet().addTabSelectedHandler(new TabSelectedHandler() {
 
 			@Override
 			public void onTabSelected(TabSelectedEvent event) {
 
 				String selectedTab = event.getTab().getTitle();
 
-				if (selectedTab.equalsIgnoreCase(TimeTableView.TIME_TABLE_TAB)) {
-
+				if (selectedTab.equalsIgnoreCase(TimeTableView.TIME_TABLES_TAB)) {
+					// close second tab
+					getView().getTabSet().removeTab(1);
+					
 					MenuButton newButton = new MenuButton("New");
 					MenuButton view = new MenuButton("View");
 					MenuButton delete = new MenuButton("Delete");
@@ -130,10 +122,10 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					getView().getControlsPane().addMenuButtons(buttons);
 					addTimeTablePane(newButton);
 					viewTimeTable(view);
+					
+					getAllTimeTables();
 
-				} else if (selectedTab.equalsIgnoreCase(TimeTableView.TIME_TABLE_LESSON_TAB)) {
-
-				} else {
+				}  else {
 					List<MenuButton> buttons = new ArrayList<>();
 					getView().getControlsPane().addMenuButtons(buttons);
 				}
@@ -149,7 +141,12 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().getTimetablePane().getTimeTableListGrid().anySelected()) {
+					Tab tab = new Tab();
+					tab.setTitle("Time Table Lessons");
+					getView().getTabSet().removeTab(1);//remove before putting
 					ListGridRecord record = getView().getTimetablePane().getTimeTableListGrid().getSelectedRecord();
+					
+					
 					
 					ViewTimeTableLessonsPane viewTimeTableLessonsPane = new ViewTimeTableLessonsPane();
 					viewTimeTableLessonsPane.getSchool().setContents(record.getAttribute(TimeTableListGrid.SCHOOL));
@@ -158,8 +155,22 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					viewTimeTableLessonsPane.getAcademicTerm().setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_TERM));
 					viewTimeTableLessonsPane.getAcademicYear().setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_YEAR));
 					
-	               getView().getBodyLayout().setMembers(viewTimeTableLessonsPane);
+					
+					tab.setPane(viewTimeTableLessonsPane);
+					
+					getView().getTabSet().addTab(tab);
+					getView().getTabSet().selectTab(tab);
+	    
 	               getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane , record.getAttribute(TimeTableListGrid.ID));
+	               
+	               viewTimeTableLessonsPane.getCloseTabButton().addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						getView().getTabSet().removeTab(1);
+					}
+				});
+	               
 				} else {
 					SC.warn("Selected TimeTable to view");
 				}
@@ -224,8 +235,8 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				createLessonTab.setPane(createTimeTablePane);
 				activateAddLessonButton(createTimeTablePane);
 
-				getView().getTimeTableTabset().addTab(createLessonTab);
-				getView().getTimeTableTabset().selectTab(createLessonTab);
+				getView().getTabSet().addTab(createLessonTab);
+				getView().getTabSet().selectTab(createLessonTab);
 
 				displayTimeTableLessonWindow(createTimeTablePane);
 
@@ -233,7 +244,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 					@Override
 					public void onClick(ClickEvent event) {
-						getView().getTimeTableTabset().removeTab(createLessonTab);
+						getView().getTabSet().removeTab(createLessonTab);
 					}
 				});
 
@@ -241,49 +252,56 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 					@Override
 					public void onClick(ClickEvent event) {
-						TimeTableDTO timeTableDTO = new TimeTableDTO();
-						timeTableDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+						
+						if(createTimeTablePane.getLessonListGrid().anySelected()) {
 
-						String schoolId = createTimeTablePane.getSchoolComboBox().getValueAsString();
-						SchoolDTO schoolDTO = new SchoolDTO(schoolId);
-						timeTableDTO.setSchoolDTO(schoolDTO);
+							TimeTableDTO timeTableDTO = new TimeTableDTO();
+							timeTableDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-						String academicId = createTimeTablePane.getAcademicTermComboBox().getValueAsString();
-						AcademicTermDTO academicTermDTO = new AcademicTermDTO(academicId);
-						timeTableDTO.setAcademicTermDTO(academicTermDTO);
+							String schoolId = createTimeTablePane.getSchoolComboBox().getValueAsString();
+							SchoolDTO schoolDTO = new SchoolDTO(schoolId);
+							timeTableDTO.setSchoolDTO(schoolDTO);
 
-						ListGridRecord[] records = createTimeTablePane.getLessonListGrid().getRecords(); // new
-																											// ListGridRecord[list.size()];
-						List<TimeTableLessonDTO> tableLessonDTOs = new ArrayList<TimeTableLessonDTO>();
+							String academicId = createTimeTablePane.getAcademicTermComboBox().getValueAsString();
+							AcademicTermDTO academicTermDTO = new AcademicTermDTO(academicId);
+							timeTableDTO.setAcademicTermDTO(academicTermDTO);
 
-						for (int i = 0; i < records.length; i++) {
-							ListGridRecord record = records[i];
-							TimeTableLessonDTO lessonDTO = new TimeTableLessonDTO();
-							lessonDTO.setDay(record.getAttribute(LessonListGrid.DAY));
-							lessonDTO.setStartTime(record.getAttribute(LessonListGrid.START_TIME));
-							lessonDTO.setEndTime(record.getAttribute(LessonListGrid.END_TIME));
+							ListGridRecord[] records = createTimeTablePane.getLessonListGrid().getSelectedRecords(); // new
+																												// ListGridRecord[list.size()];
+							List<TimeTableLessonDTO> tableLessonDTOs = new ArrayList<TimeTableLessonDTO>();
 
-							SchoolClassDTO schoolClassDTO = new SchoolClassDTO(
-									record.getAttribute(LessonListGrid.CLASS_ID));
-							lessonDTO.setSchoolClassDTO(schoolClassDTO);
+							for (int i = 0; i < records.length; i++) {
+								ListGridRecord record = records[i];
+								TimeTableLessonDTO lessonDTO = new TimeTableLessonDTO();
+								lessonDTO.setLessonDate(record.getAttribute(LessonListGrid.LESSON_DATE));
+								lessonDTO.setStartTime(record.getAttribute(LessonListGrid.START_TIME));
+								lessonDTO.setEndTime(record.getAttribute(LessonListGrid.END_TIME));
 
-							SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(
-									record.getAttribute(LessonListGrid.STAFF_ID));
-							lessonDTO.setSchoolStaffDTO(schoolStaffDTO);
+								SchoolClassDTO schoolClassDTO = new SchoolClassDTO(
+										record.getAttribute(LessonListGrid.CLASS_ID));
+								lessonDTO.setSchoolClassDTO(schoolClassDTO);
 
-							SubjectDTO subjectDTO = new SubjectDTO(record.getAttribute(LessonListGrid.SUBJECT_ID));
-							lessonDTO.setSubjectDTO(subjectDTO);
+								SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(
+										record.getAttribute(LessonListGrid.STAFF_ID));
+								lessonDTO.setSchoolStaffDTO(schoolStaffDTO);
 
-							// (record.getAttribute(LessonListGrid.DAY));
-							tableLessonDTOs.add(lessonDTO);
-							GWT.log("RECORD " + record);
+								SubjectDTO subjectDTO = new SubjectDTO(record.getAttribute(LessonListGrid.SUBJECT_ID));
+								lessonDTO.setSubjectDTO(subjectDTO);
+
+								// (record.getAttribute(LessonListGrid.DAY));
+								tableLessonDTOs.add(lessonDTO);
+								GWT.log("RECORD " + record);
+							}
+
+							timeTableDTO.setTimeTableLessonDTOS(tableLessonDTOs);
+
+							GWT.log("RECORD " + timeTableDTO);
+
+							saveTimeTable(timeTableDTO, null);
+							
+						}else {
+							SC.say("Please Select lessons To Comfirm");
 						}
-
-						timeTableDTO.setTimeTableLessonDTOS(tableLessonDTOs);
-
-						GWT.log("RECORD " + timeTableDTO);
-
-						saveTimeTable(timeTableDTO, createLessonTab, null);
 
 					}
 
@@ -294,7 +312,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		});
 	}
 
-	private void saveTimeTable(final TimeTableDTO timeTableDTO, final Tab lessonTab, final String defaultValue) {
+	private void saveTimeTable(final TimeTableDTO timeTableDTO, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.SAVE_TIME_TABLE, timeTableDTO);
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
@@ -318,8 +336,8 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 
 					if (feedbackDTO.isResponse()) {
-						getView().getTimeTableTabset().removeTab(lessonTab);
-						getView().getTimeTableTabset().selectTab(0);
+						getView().getTabSet().removeTab(1);
+						getView().getTabSet().selectTab(0);
 						
 						getAllTimeTables();
 					} else {
@@ -366,7 +384,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				TimeTableLessonDTO dto = new TimeTableLessonDTO();
 				// dto.setId(id);
 				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-				dto.setDay(window.getDayCombo().getValueAsString());
+				dto.setLessonDate(dateFormat.format(window.getLessonDateItem().getValueAsDate()));
 				dto.setEndTime(window.getEndTime().getEnteredValue());
 				dto.setStartTime(window.getStartTime().getEnteredValue());
 //				   dto.setStatus(status);
@@ -419,7 +437,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			flag = false;
 		if (window.getStaffCombo().getValueAsString() == null)
 			flag = false;
-		if (window.getDayCombo().getValueAsString() == null)
+		if (window.getLessonDateItem().getValueAsDate() == null)
 			flag = false;
 		if (window.getStartTime().getEnteredValue() == null)
 			flag = false;
@@ -435,9 +453,10 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		window.getStaffCombo().clearValue();
 		window.getStartTime().clearValue();
 		window.getEndTime().clearValue();
-		window.getDayCombo().clearValue();
+		window.getLessonDateItem().clearValue();
 	}
 
+	@Deprecated
 	private void loadDayCombo(TimeTableLessonWindow window) {
 		Map<String, String> daysMap = new HashMap<String, String>();
 		daysMap.put("Monday", "Monday");
@@ -446,7 +465,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		daysMap.put("Thursday", "Thursday");
 		daysMap.put("Friday", "Friday");
 
-		window.getDayCombo().setValueMap(daysMap);
+		//window.getDayCombo().setValueMap(daysMap);
 	}
 
 	private void loadDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {

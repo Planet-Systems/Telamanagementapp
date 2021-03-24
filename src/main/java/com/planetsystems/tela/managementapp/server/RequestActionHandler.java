@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.server;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.ForbiddenException;
@@ -32,6 +33,9 @@ import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceTaskDTO;
+import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
@@ -39,6 +43,7 @@ import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemResponseDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
+import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
@@ -48,6 +53,7 @@ import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.Filt
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolsPane;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockInWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockOutWindow;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision.StaffDailyAttendanceSupervisionListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.CreateStaffDailyTaskPane;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.StaffDailyAttendancePane;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffHeadCountWindow;
@@ -1670,6 +1676,42 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ABSENT_SCHOOL_STAFF_BY_TERM_SCHOOL_DATE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String absentDate = (String) action.getRequestBody().get(RequestDelimeters.ABSENT_DATE);
+
+				Client client = ClientBuilder.newClient();
+				// /academicterms/{academicTermId}/schools/{schoolId}/absents
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK)
+						.path("academicterms")
+						.path(academicTermId)
+						.path("schools")
+						.path(schoolId)
+						.path("absents")
+						.queryParam("absentDate", absentDate)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
 
 			/////////// staff enrollment
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_ENROLLMENT)
@@ -2179,6 +2221,42 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 			}
+			else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.GET_CLOCK_IN_By_ACADEMIC_TERM_SCHOOL_DATE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String date = (String) action.getRequestBody().get(RequestDelimeters.CLOCKIN_DATE);
+				/// /academicterms/{academicTermId}/schools/{schoolId}/clockins"
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK)
+						.path("academicterms")
+						.path(academicTermId)
+						.path("schools")
+						.path(schoolId)
+						.path("clockins")
+						.queryParam("clockInDate", date)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
 			///////////// CLOCKOUT
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_CLOCK_OUT)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
@@ -2326,6 +2404,43 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("academicyears")
 						.path(academicYearId).path("academicterms").path(academicTermId).path("districts")
 						.path(districtId).path("schools").path(schoolId).path("clockouts").queryParam("date", date)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<ClockOutDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+
+			else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.GET_CLOCK_OUT_BY_TERM_SCHOOL_DATE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<ClockOutDTO> list = new ArrayList<ClockOutDTO>();
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String date = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_OUT_DATE);
+				/// /academicterms/{academicTermId}/schools/{schoolId}/clockouts
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK)
+						.path("academicterms")
+						.path(academicTermId)
+						.path("schools")
+						.path(schoolId)
+						.path("clockouts")
+						.queryParam("clockOutDate", date)
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<ClockOutDTO>>>() {
 						});
@@ -2599,7 +2714,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 			}
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY)
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<TimeTableLessonDTO> list = new ArrayList<TimeTableLessonDTO>();
@@ -2609,7 +2724,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String districtId =(String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
-				String day = (String) action.getRequestBody().get(RequestDelimeters.DAY);
+				String attendanceDate = (String) action.getRequestBody().get(RequestDelimeters.ATTENDANCE_DATE);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2631,9 +2746,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.path(schoolId)
 						.path("schoolstaffs")
 						.path(schoolStaffId)
-						.path("days")
-						.path(day)
 						.path("timetablelessons")
+						.queryParam("lessonDate" , attendanceDate)
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<TimeTableLessonDTO>>>() {
 						});
@@ -2763,8 +2877,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.path(districtId)
 						.path("schools")
 						.path(schoolId)
-						.queryParam("attendanceDate", attendanceDate)
 						.path("staffdailyattendances")
+						.queryParam("attendanceDate", attendanceDate)
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceDTO>>>() {
 						});
@@ -2782,7 +2896,225 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			}
 
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SCHOOL_STAFF_DATE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffDailyAttendanceTaskDTO> list = new ArrayList<StaffDailyAttendanceTaskDTO>();
+
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
+				String attendanceDate = (String) action.getRequestBody().get(RequestDelimeters.ATTENDANCE_DATE);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				/*
+				 * /schools/{school}/schoolstaffs/{staff}/staffdailyattendances
+				 */
+
+				SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>> responseDto = client.target(API_LINK)
+						.path("schools")
+						.path(schoolId)
+						.path("schoolstaffs")
+						.path(schoolStaffId)
+						.path("staffdailyattendances")
+						.queryParam("attendanceDate", attendanceDate)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>>>() {
+						});
+
+				if(responseDto.getData() != null)
+				list = responseDto.getData();
+
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASKS_FOR_STAFF_DATE_DAILY_ATTENDANCE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffDailyAttendanceTaskDTO> list = new ArrayList<StaffDailyAttendanceTaskDTO>();
+
+				String staffDailyAttendanceId = (String) action.getRequestBody().get(RequestDelimeters.STAFF_DAILY_ATTENDANCE_LESSON_ID);
+				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
+				String attendanceDate = (String) action.getRequestBody().get(RequestDelimeters.ATTENDANCE_DATE);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				/*
+				 * /staffdailyattendances/{staffDailyAttendanceId}/schoolstaffs/{staff}/staffdailyattendancestasks
+				 */
+
+				SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>> responseDto = client.target(API_LINK)
+						.path("staffdailyattendances")
+						.path(staffDailyAttendanceId)
+						.path("schoolstaffs")
+						.path(schoolStaffId)
+						.path("staffdailyattendancestasks")
+						.queryParam("attendanceDate", attendanceDate)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>>>() {
+						});
+
+				if(responseDto.getData() != null)
+				list = responseDto.getData();
+
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+
 			/////////////
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_TASK_SUPERVISIONS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				StaffDailyAttendanceSupervisionDTO dto = (StaffDailyAttendanceSupervisionDTO) action.getRequestBody().get(RequestConstant.SAVE_STAFF_DAILY_TASK_SUPERVISIONS);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("staffDailyAttendanceSupervisions")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_IN_SCHOOL_DATE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffDailyAttendanceSupervisionDTO> list = new ArrayList<StaffDailyAttendanceSupervisionDTO>();
+
+		
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String supervisionDate = (String) action.getRequestBody().get(RequestDelimeters.SUPERVISION_DATE);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+//http://localhost:8070/staffDailyAttendanceSupervisions/schools/8a008082648d961401648dadbf0f0003?supervisionDate=18/03/2021
+				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
+						.path("staffDailyAttendanceSupervisions")
+						.path("schools")
+						.path(schoolId)
+						.queryParam("supervisionDate", supervisionDate)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>>>() {
+						});
+
+				if(responseDto.getData() != null)
+				list = responseDto.getData();
+
+
+				System.out.println("SUP RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_FOR_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffDailyAttendanceTaskSupervisionDTO> list = new ArrayList<StaffDailyAttendanceTaskSupervisionDTO>();
+
+				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
+				String supervisionDate = (String) action.getRequestBody().get(RequestDelimeters.SUPERVISION_DATE);
+				String supervisionId = (String) action.getRequestBody().get(RequestDelimeters.STAFF_DAILY_ATTENDANCE_SUPERVISION_ID);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+//http://localhost:8070/staffDailyAttendanceSupervisions/{}/schoolstaffs/8a008082648d961401648dadbf0f0003/staffDailyAttendancetaskSupervisions?supervisionDate=18/03/2021
+				SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> responseDto = client.target(API_LINK)
+						.path("staffDailyAttendanceSupervisions")
+						.path(supervisionId)
+						.path("schoolstaffs")
+						.path(schoolStaffId)
+						.path("staffDailyAttendancetaskSupervisions")
+						.queryParam("supervisionDate", supervisionDate)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>>>() {
+						});
+
+				if(responseDto.getData() != null)
+				list = responseDto.getData();
+
+
+				System.out.println("SUP RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				TimeAttendanceSupervisionDTO dto = (TimeAttendanceSupervisionDTO) action.getRequestBody().get(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
+						.path("timeAttendanceSupervisions")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+				
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+				
+				System.out.println("Handler Time  "+dto);
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();

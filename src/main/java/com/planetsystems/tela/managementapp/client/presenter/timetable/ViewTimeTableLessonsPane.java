@@ -6,6 +6,7 @@ import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
@@ -20,6 +21,7 @@ public class ViewTimeTableLessonsPane extends VLayout {
 	private  Label academicYear;
     private Label academicTerm;
     private ControlsPane controlsPane;
+	private IButton closeTabButton;
 	
 	public ViewTimeTableLessonsPane() {
 		super();
@@ -111,11 +113,23 @@ public class ViewTimeTableLessonsPane extends VLayout {
 	    MenuButton edit = new MenuButton("edit");
 	    controlsPane.addMenuButtons(Arrays.asList(edit));
 	    
-		this.addMember(header);
+	    closeTabButton = new IButton("Close");
+	    
+	    HLayout buttonLayout = new HLayout();
+		buttonLayout.setMembers(closeTabButton);
+		buttonLayout.setAutoHeight();
+		buttonLayout.setAutoWidth();
+		buttonLayout.setMargin(5);
+		buttonLayout.setMembersMargin(4);
+		
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
+	    
+	//	this.addMember(header);
 		this.addMember(schoolDistrictLayout);
 		this.addMember(yearTermLayout);
 		this.addMember(controlsPane);
 		this.addMember(lessonListGrid);
+		this.addMember(buttonLayout);
 		
 	}
 
@@ -139,6 +153,11 @@ public class ViewTimeTableLessonsPane extends VLayout {
 		return academicTerm;
 	}
 
+	public IButton getCloseTabButton() {
+		return closeTabButton;
+	}
+
+	
 	
 	
 	

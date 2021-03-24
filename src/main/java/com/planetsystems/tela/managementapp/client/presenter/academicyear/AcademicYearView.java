@@ -19,7 +19,6 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	private VLayout panel;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
-	private BodyPane bodyPane;
 
 	
 	public static final String ACADEMIC_YEAR_TAB_TITLE="Academic Year";
@@ -40,8 +39,7 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
     	vlayout=new VLayout();
     	
     	vlayout.setMembers(academicTermPane);
-    	
-    	bodyPane = new BodyPane();
+
 		tabSet = new TabSet();
 	
 
@@ -59,8 +57,6 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 
 		tabSet.setMargin(0);
 		tabSet.setPadding(0);
-
-		bodyPane.setMembers(new AcademicYearDashboardPane());
 		
 		panel.addMember(controlsPane);
 		panel.addMembers(tabSet);//(tabSet);

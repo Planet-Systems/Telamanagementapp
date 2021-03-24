@@ -1,7 +1,5 @@
 package com.planetsystems.tela.managementapp.client.presenter.main;
 
-import org.apache.http.cookie.ClientCookie;
-
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
 import com.google.inject.Inject;
@@ -36,11 +34,8 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.HoverEvent;
 import com.smartgwt.client.widgets.events.HoverHandler;
-import com.smartgwt.client.widgets.events.HoverHiddenEvent;
-import com.smartgwt.client.widgets.events.HoverHiddenHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VStack;
@@ -182,51 +177,47 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 		Record record = event.getRecord();
 		String name = record.getAttributeAsString("name");
-
-		PlaceRequest placeRequest = null;
 		
 		switch (name) {
 		case SystemAttendanceData.LEARNER :
-			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerAttendance).build();
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.learnerAttendance).build());
 			break;
 			
 		case SystemAttendanceData.STAFF:
-			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.staffAttendance).build();
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.staffAttendance).build());
 			break;
-		case SystemAttendanceData.HEAD_TEACHER_SUPERVISION:
-			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.HeadTeacherSupervision).build();
+		case SystemAttendanceData.STAFF_DAILY_ATTENDANCE_SUPERVISION:
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.StaffDailyAttendanceSuperVision).build());
 			break;
 		case SystemAttendanceData.STAFF_DAILY_TASKS:
-			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.StaffDailyTask).build();
-			break;	
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.StaffDailyTask).build());
+			break;
+		case SystemAttendanceData.STAFF_DAILY_TIME_ATTENDANCE:
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.TimeAttendanceSupervision).build());
+			break;
 		}
-		placeManager.revealPlace(placeRequest);
+		;
 	}
     
 	private void onSystemConfigurationMenuClick(RecordClickEvent event) {
 		Record record = event.getRecord();
 		String name = record.getAttributeAsString("name");
-
-		PlaceRequest placeRequest = null;
 		
 		switch (name) {
 		case SystemAdministrationData.ACADEMIC_YEAR:
-			placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.academicYear).build();
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.academicYear).build());
 			break;
 		case SystemAdministrationData.LOCATION:
-		    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.region).build();
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.region).build());
 		    break;
 		case SystemAdministrationData.SCHOOLS:
-		    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.schoolClassCategory).build();
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.schoolClassCategory).build());
 	
 		    break;
 		case SystemAdministrationData.SUBJECTS:
-		    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.subjectCategory).build();
+			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.subjectCategory).build());
 		    break;
 		}
-		
-		placeManager.revealPlace(placeRequest);
-		
 	}
     
     private void onSystemEnrollmentMenuClick(RecordClickEvent event) {
@@ -247,65 +238,6 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		placeManager.revealPlace(placeRequest);
 	}
 
-    /*
-     * to be removed after agreeing
-     */
-    @Deprecated
-    private class NavigationPaneClickHandler implements RecordClickHandler {
-		public void onRecordClick(RecordClickEvent event) {
-
-			Record record = event.getRecord();
-			String name = record.getAttributeAsString("name");
-			
-
-			PlaceRequest placeRequest = null;
-			switch(name) {
-//			case SystemAdministrationData.ACADEMIC_YEAR:
-//				placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.academicyear).build();
-//				break;
-//			case SystemAdministrationData.LOCATION:
-//			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.region).build();
-//			    break;
-//			case SystemAdministrationData.SCHOOLS:
-//			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.schoolclasscategory).build();
-//		
-//			    break;
-//			case SystemAdministrationData.SUBJECTS:
-//			    placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.subjectcategory).build();
-//			    break;
-
-//			case SystemEnrollmentData.STAFF_ENROLLMENT :
-//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.enrollment).build();
-//				break;
-//				
-//			case SystemEnrollmentData.LEARNER_ENROLLMENT :
-//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerEnrollment).build();
-//				break;	
-				
-//			case SystemAttendanceData.LEARNER :
-//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerAttendance).build();
-//				break;
-//				
-//			case SystemAttendanceData.STAFF:
-//				 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.staffAttendance).build();
-//				break;
-		
-			}
-
-			placeManager.revealPlace(placeRequest);
-
-		}
-
-	}
-//    
-//	private void onSystemTimeTableMenuClick(RecordClickEvent event) {
-//		Record record = event.getRecord();
-//		String name = record.getAttributeAsString("name");
-//	SC.say("YYE");	
-//		PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.timeTable).build();
-//			placeManager.revealPlace(placeRequest);
-//	
-//	}
 
 	@Override
 	public void onHighlightActiveLink(HighlightActiveLinkEvent event) {	 

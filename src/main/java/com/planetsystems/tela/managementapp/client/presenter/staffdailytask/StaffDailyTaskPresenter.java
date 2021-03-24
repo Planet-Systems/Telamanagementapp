@@ -128,12 +128,26 @@ public class StaffDailyTaskPresenter
 					comboUtil.loadDistrictCombo(getView().getStaffDailyAttendancePane().getDistrictCombo(), dispatcher,
 							placeManager , null);
 
-					comboUtil.loadSchoolComboByDistrict(getView().getStaffDailyAttendancePane().getDistrictCombo(),
-							getView().getStaffDailyAttendancePane().getSchoolCombo(), dispatcher, placeManager , null);
-
-					comboUtil.loadAcademicTermComboByAcademicYear(
-							getView().getStaffDailyAttendancePane().getAcademicYearCombo(),
-							getView().getStaffDailyAttendancePane().getAcademicTermCombo(), dispatcher, placeManager , null);
+					getView().getStaffDailyAttendancePane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
+						
+						@Override
+						public void onChanged(ChangedEvent event) {
+							comboUtil.loadSchoolComboByDistrict(getView().getStaffDailyAttendancePane().getDistrictCombo(),
+									getView().getStaffDailyAttendancePane().getSchoolCombo(), dispatcher, placeManager , null);	
+						}
+					});
+					
+				
+					getView().getStaffDailyAttendancePane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+						
+						@Override
+						public void onChanged(ChangedEvent event) {
+							comboUtil.loadAcademicTermComboByAcademicYear(
+									getView().getStaffDailyAttendancePane().getAcademicYearCombo(),
+									getView().getStaffDailyAttendancePane().getAcademicTermCombo(), dispatcher, placeManager , null);
+						}
+					});
+					
 
 					disableEnableStaffDailyAttendancePaneLoadLessonButton();
 					getStaffDailyAttendances();
@@ -246,7 +260,8 @@ public class StaffDailyTaskPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 
-				CreateStaffDailyTaskPane createStaffDailyTaskPane = new CreateStaffDailyTaskPane();
+				final CreateStaffDailyTaskPane createStaffDailyTaskPane = new CreateStaffDailyTaskPane();
+			
 
 				Tab tab = new Tab();
 				tab.setTitle(StaffDailyTaskView.ADD_STAFF_DAILY_ATTENDANCE_TASK);
@@ -262,16 +277,37 @@ public class StaffDailyTaskPresenter
 
 				comboUtil.loadDistrictCombo(createStaffDailyTaskPane.getDistrictCombo(), dispatcher, placeManager , null);
 
-				comboUtil.loadSchoolComboByDistrict(createStaffDailyTaskPane.getDistrictCombo(),
-						createStaffDailyTaskPane.getSchoolCombo(), dispatcher, placeManager , null);
+				createStaffDailyTaskPane.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+					
+					@Override
+					public void onChanged(ChangedEvent event) {
+						comboUtil.loadSchoolComboByDistrict(createStaffDailyTaskPane.getDistrictCombo(),
+								createStaffDailyTaskPane.getSchoolCombo(), dispatcher, placeManager , null);
+					}
+				});
+				
+				createStaffDailyTaskPane.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+					
+					@Override
+					public void onChanged(ChangedEvent event) {
+						comboUtil.loadAcademicTermComboByAcademicYear(createStaffDailyTaskPane.getAcademicYearCombo(),
+								createStaffDailyTaskPane.getAcademicTermCombo(), dispatcher, placeManager , null);	
+					}
+				});
+				
+				
+				createStaffDailyTaskPane.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+					
+					@Override
+					public void onChanged(ChangedEvent event) {
+						comboUtil.loadSchoolStaffComboBySchool(createStaffDailyTaskPane.getSchoolCombo(),
+								createStaffDailyTaskPane.getSchoolStaffCombo(), dispatcher, placeManager , null);
+					}
+				});
+				
+				
 
-				comboUtil.loadAcademicTermComboByAcademicYear(createStaffDailyTaskPane.getAcademicYearCombo(),
-						createStaffDailyTaskPane.getAcademicTermCombo(), dispatcher, placeManager , null);
-
-				comboUtil.loadSchoolStaffComboBySchool(createStaffDailyTaskPane.getSchoolCombo(),
-						createStaffDailyTaskPane.getSchoolStaffCombo(), dispatcher, placeManager , null);
-
-				getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(createStaffDailyTaskPane);
+				getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDate(createStaffDailyTaskPane);
 				saveStaffDailyAttendanceTask(createStaffDailyTaskPane);
 
 				closeCreateStaffDailyTaskTab(createStaffDailyTaskPane);
@@ -295,7 +331,7 @@ public class StaffDailyTaskPresenter
 
 	///////////////////////////
 
-	private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(
+	private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDate(
 			final CreateStaffDailyTaskPane createStaffDailyTaskPane) {
 		createStaffDailyTaskPane.getLoadLessonButton().addClickHandler(new ClickHandler() {
 
@@ -308,7 +344,7 @@ public class StaffDailyTaskPresenter
 					String districtId = createStaffDailyTaskPane.getDistrictCombo().getValueAsString();
 					String schoolId = createStaffDailyTaskPane.getSchoolCombo().getValueAsString();
 					String schoolStaffId = createStaffDailyTaskPane.getSchoolStaffCombo().getValueAsString();
-					String day = createStaffDailyTaskPane.getDayField().getValueAsString();
+				
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
@@ -316,7 +352,7 @@ public class StaffDailyTaskPresenter
 					map.put(RequestDelimeters.DISTRICT_ID, districtId);
 					map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 					map.put(RequestDelimeters.SCHOOL_STAFF_ID, schoolStaffId);
-					map.put(RequestDelimeters.DAY, day);
+					map.put(RequestDelimeters.ATTENDANCE_DATE, dateFormat.format(new Date()));
 
 					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
@@ -325,7 +361,7 @@ public class StaffDailyTaskPresenter
 					SC.showPrompt("", "", new SwizimaLoader());
 
 					dispatcher.execute(new RequestAction(
-							RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY,
+							RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE,
 							map), new AsyncCallback<RequestResult>() {
 								public void onFailure(Throwable caught) {
 									System.out.println(caught.getMessage());
@@ -338,8 +374,9 @@ public class StaffDailyTaskPresenter
 									SC.clearPrompt();
 									SessionManager.getInstance().manageSession(result, placeManager);
 
-									GWT.log("PRESENTER LIST " + result.getTableLessonDTOs());
+									
 									if (result != null) {
+										GWT.log("PRESENTER LIST " + result.getTableLessonDTOs());
 
 										createStaffDailyTaskPane.getLessonListGrid()
 												.addRecordsToGrid(result.getTableLessonDTOs());
@@ -362,55 +399,7 @@ public class StaffDailyTaskPresenter
 		});
 	}
 	
-	////////////////
-	private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(final ViewStaffDailyAttendanceTaskPane viewStaffDailyAttendanceTaskPane ,
-			final String academicYearId ,final String academicTermId ,final String districtId ,final String schoolId ,final String schoolStaffId
-			) {
-
-					String day = viewStaffDailyAttendanceTaskPane.getDayField().getValueAsString();
-
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-					map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-					map.put(RequestDelimeters.DISTRICT_ID, districtId);
-					map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-					map.put(RequestDelimeters.SCHOOL_STAFF_ID, schoolStaffId);
-					map.put(RequestDelimeters.DAY, day);
-
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-
-					GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
-					GWT.log("YEAR TOKEN " + map.get(RequestConstant.LOGIN_TOKEN));
-					SC.showPrompt("", "", new SwizimaLoader());
-
-					dispatcher.execute(new RequestAction(
-							RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY,
-							map), new AsyncCallback<RequestResult>() {
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-								}
-
-								public void onSuccess(RequestResult result) {
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-
-									GWT.log("PRESENTER LIST " + result.getTableLessonDTOs());
-									if (result != null) {
-
-										viewStaffDailyAttendanceTaskPane.getLessonListGrid()
-												.addRecordsToGrid(result.getTableLessonDTOs());
-
-									} else {
-										SC.warn("ERROR", "Service Down");
-									}
-
-								}
-							});
-
-	}
+	
 
 	private boolean checkIfNoFieldCreateStaffDailyTaskPaneFieldIsEmpty(
 			final CreateStaffDailyTaskPane createStaffDailyTaskPane) {
@@ -521,7 +510,7 @@ public class StaffDailyTaskPresenter
 						taskDTO.setAttendanceStatus("present");
 						taskDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 						taskDTO.setUpdatedDateTime(dateTimeFormat.format(new Date()));
-						taskDTO.setDay(dayItem.getValueAsString());
+						taskDTO.setDailyAttendanceDate(dateFormat.format(new Date()));
 						taskDTO.setEndTime(record.getAttributeAsString(LessonListGrid.END_TIME));
 						taskDTO.setStartTime(record.getAttributeAsString(LessonListGrid.START_TIME));
 						taskDTO.setSchoolClassDTO(
@@ -618,18 +607,64 @@ public class StaffDailyTaskPresenter
 					getView().getTabSet().addTab(tab);
 					getView().getTabSet().selectTab(tab);
 
-					getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(viewStaffDailyAttendanceTaskPane , academicYearId , academicTermId , districtId , schoolId , schoolStaffId);
-				
+					getStaffDailyAttendanceTasksByStaffDateStaffDailyAttendance(viewStaffDailyAttendanceTaskPane , record);
+			
 				closeViewStaffDailyAttendanceTaskTab(viewStaffDailyAttendanceTaskPane);
 				}else {
 					SC.say("Please select attendance");
 				}
 			
 			}
-
 		});
 	}
+	
+	
+	private void getStaffDailyAttendanceTasksByStaffDateStaffDailyAttendance(
+			final ViewStaffDailyAttendanceTaskPane viewStaffDailyAttendanceTaskPane, final ListGridRecord record) {
 
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestDelimeters.SCHOOL_STAFF_ID, record.getAttribute(StaffDailyAttendanceListGrid.SCHOOL_STAFF_ID));
+		map.put(RequestDelimeters.STAFF_DAILY_ATTENDANCE_LESSON_ID, record.getAttribute(StaffDailyAttendanceListGrid.ID) );
+		map.put(RequestDelimeters.ATTENDANCE_DATE, dateFormat.format(new Date()));
+
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
+		GWT.log("YEAR TOKEN " + map.get(RequestConstant.LOGIN_TOKEN));
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(
+				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASKS_FOR_STAFF_DATE_DAILY_ATTENDANCE,
+				map), new AsyncCallback<RequestResult>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+					}
+
+					public void onSuccess(RequestResult result) {
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+
+					
+						if (result != null) {
+							GWT.log("PRESENTER LIST " + result.getTableLessonDTOs());
+							viewStaffDailyAttendanceTaskPane.getDailyTaskListGrid()
+									.addRecordsToGrid(result.getStaffDailyAttendanceTaskDTOs());
+
+						} else {
+							SC.warn("ERROR", "Service Down");
+						}
+
+					}
+				});
+		
+	}
+
+	
+	
+	
 	private void closeViewStaffDailyAttendanceTaskTab(
 			ViewStaffDailyAttendanceTaskPane viewStaffDailyAttendanceTaskPane) {
 		viewStaffDailyAttendanceTaskPane.getCloseTabButton().addClickHandler(new ClickHandler() {

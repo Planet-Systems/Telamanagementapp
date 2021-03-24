@@ -1,13 +1,12 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailytask;
+package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision;
 
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.DailyTaskListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.SelectionAppearance;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
@@ -16,31 +15,31 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class CreateStaffDailyTaskPane extends VLayout {
+public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 	private ComboBox schoolCombo;
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
 	private ComboBox schoolStaffCombo;
 	private TextItem dayField;
 	private ComboBox academicTermCombo;
-	private IButton loadLessonButton;
-	private IButton saveButton;
+	private IButton loadTasksButton;
+	private IButton commentButton;
 	private IButton closeTabButton;
 
+
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
+	private DailyTaskListGrid dailyAttendanceTaskListGrid;
 
-	private LessonListGrid lessonListGrid;
-
-	public CreateStaffDailyTaskPane() {
+	public CreateStaffDailyAttendanceTaskSupervisionPane() {
 		super();
 		Label header = new Label();
-		lessonListGrid = new LessonListGrid();
-		lessonListGrid.setSelectionType(SelectionStyle.SIMPLE);
+		dailyAttendanceTaskListGrid = new DailyTaskListGrid();
+		dailyAttendanceTaskListGrid.setSelectionType(SelectionStyle.SIMPLE);
 		
-		loadLessonButton = new IButton("Load Lesson");
-		loadLessonButton.setLayoutAlign(Alignment.RIGHT);
-		loadLessonButton.setPadding(10);
-		loadLessonButton.disable();
+		loadTasksButton = new IButton("Load Tasks");
+		loadTasksButton.setLayoutAlign(Alignment.RIGHT);
+		loadTasksButton.setPadding(10);
+		loadTasksButton.disable();
 
 
 		header.setStyleName("crm-ContextArea-Header-Label");
@@ -116,16 +115,16 @@ public class CreateStaffDailyTaskPane extends VLayout {
 
 		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField, schoolStaffCombo);
 
-		saveButton = new IButton("Save");
-		saveButton.setLayoutAlign(Alignment.CENTER);
-		saveButton.setPadding(10);
-		saveButton.disable();
+		commentButton = new IButton("Comment");
+		commentButton.setLayoutAlign(Alignment.CENTER);
+		commentButton.setPadding(10);
+     	commentButton.disable();
 
 		
 		closeTabButton = new IButton("Close");
 		
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(closeTabButton, saveButton);
+		buttonLayout.setMembers(closeTabButton, commentButton);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
@@ -137,8 +136,8 @@ public class CreateStaffDailyTaskPane extends VLayout {
 		VLayout layout = new VLayout();
 		//layout.addMember(header);
 		layout.addMember(form);
-		layout.addMember(loadLessonButton);
-		layout.addMember(lessonListGrid);
+		layout.addMember(loadTasksButton);
+		layout.addMember(dailyAttendanceTaskListGrid);
 		layout.addMember(buttonLayout);
 		this.addMember(layout);
 
@@ -168,16 +167,20 @@ public class CreateStaffDailyTaskPane extends VLayout {
 		return academicTermCombo;
 	}
 
-	public IButton getLoadLessonButton() {
-		return loadLessonButton;
+	
+	
+	public IButton getLoadTasksButton() {
+		return loadTasksButton;
 	}
 
-	public IButton getSaveButton() {
-		return saveButton;
+	
+
+	public IButton getCommentButton() {
+		return commentButton;
 	}
 
-	public LessonListGrid getLessonListGrid() {
-		return lessonListGrid;
+	public DailyTaskListGrid getDailyAttendanceTaskListGrid() {
+		return dailyAttendanceTaskListGrid;
 	}
 
 	public IButton getCloseTabButton() {

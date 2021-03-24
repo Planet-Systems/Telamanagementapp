@@ -32,8 +32,7 @@ public class StaffDailyAttendancePane extends VLayout {
 	public static final String SCHOOL_ID = "SCHOOL_ID";
 	public static final String ATTENDANCE_DATE = "ATTENDANCE_DATE";
 
-	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
-	DateTimeFormat yearFormat = DateTimeFormat.getFormat(DatePattern.YEAR.getPattern());
+	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
 	private StaffDailyAttendanceListGrid staffDailyAttendanceListGrid;
 
@@ -79,7 +78,7 @@ public class StaffDailyAttendancePane extends VLayout {
 		schoolLabel.setAutoWidth();
 		schoolLabel.setPadding(2);
 
-		Label dayLabel = new Label("Day: ");
+		Label dayLabel = new Label("Date: ");
 		dayLabel.setAutoHeight();
 		dayLabel.setAutoWidth();
 		dayLabel.setPadding(2);
@@ -168,15 +167,6 @@ public class StaffDailyAttendancePane extends VLayout {
 		return loadAttendanceButton;
 	}
 
-
-
-	public DateTimeFormat getDayFormat() {
-		return dayFormat;
-	}
-
-	public DateTimeFormat getYearFormat() {
-		return yearFormat;
-	}
 
 	public StaffDailyAttendanceListGrid getStaffDailyAttendanceListGrid() {
 		return staffDailyAttendanceListGrid;

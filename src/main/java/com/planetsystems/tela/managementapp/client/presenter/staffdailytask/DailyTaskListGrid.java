@@ -11,8 +11,8 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class DailyTaskListGrid extends SuperListGrid {
 	public static final String ID = "id";
-
-	public static final String DAY = "day";
+     
+	public static final String STAFF_DAILY_ATTENDANCE_ID = "staffDailyAttendanceId";
 
 	public static final String CLASS = "class";
 	public static final String CLASS_ID = "classId";
@@ -24,16 +24,17 @@ public class DailyTaskListGrid extends SuperListGrid {
 	public static final String END_TIME = "endTime";
 	
 	public static final String ATTENDANCE_STATUS = "attendanceStatus";
+	public static final String ATTENDANCE_DATE = "attendanceDate";
 	
 	/*
-	 *     private SchoolClassDTO schoolClassDTO;
+	 *      private AcademicTermDTO academicTermDTO;
 
-    private SubjectDTO subjectDTO;
+    private SchoolStaffDTO schoolStaffDTO;
 
-    private String startTime;
-    private String endTime;
-    private String attendanceStatus;
-    private String day;
+    private String comment;
+
+    private String dailyAttendanceDate;
+
 
     private StaffDailyAttendanceDTO staffDailyAttendanceDTO; // not set
 	 */
@@ -42,9 +43,12 @@ public class DailyTaskListGrid extends SuperListGrid {
 		super();
 		ListGridField idField = new ListGridField(ID , "Id");
 		idField.setHidden(true);
+		
+		ListGridField staffDailyAttendanceIdField = new ListGridField(STAFF_DAILY_ATTENDANCE_ID , "Id");
+		staffDailyAttendanceIdField.setHidden(true);
 
-		ListGridField dayField = new ListGridField(DAY, "Day");
-		dayField.setHidden(true);
+		ListGridField attendanceDateField = new ListGridField(ATTENDANCE_DATE, "AttendanceDate");
+		attendanceDateField.setHidden(true);
 
 		ListGridField classField = new ListGridField(CLASS, "Class");
 		ListGridField classIdField = new ListGridField(CLASS_ID, "ClassId");
@@ -60,26 +64,31 @@ public class DailyTaskListGrid extends SuperListGrid {
 		ListGridField attendanceStatusField = new ListGridField(ATTENDANCE_STATUS, "AttendanceStatus");
 	
 
-		this.setFields(dayField, classField, subjectField, startTimeField, endTimeField, attendanceStatusField);
+		this.setFields(staffDailyAttendanceIdField , attendanceDateField, classField, subjectField, startTimeField, endTimeField, attendanceStatusField);
 	}
 
 	public ListGridRecord addRowData(StaffDailyAttendanceTaskDTO staffDailyAttendanceTaskDTO) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, staffDailyAttendanceTaskDTO.getId());
-		record.setAttribute(LessonListGrid.DAY, staffDailyAttendanceTaskDTO.getDay());
+		record.setAttribute(ATTENDANCE_DATE , staffDailyAttendanceTaskDTO.getDailyAttendanceDate());
+		record.setAttribute(ATTENDANCE_STATUS , staffDailyAttendanceTaskDTO.getAttendanceStatus());
 
-		record.setAttribute(LessonListGrid.START_TIME, staffDailyAttendanceTaskDTO.getStartTime());
-		record.setAttribute(LessonListGrid.END_TIME, staffDailyAttendanceTaskDTO.getEndTime());
+		record.setAttribute(START_TIME, staffDailyAttendanceTaskDTO.getStartTime());
+		record.setAttribute(END_TIME, staffDailyAttendanceTaskDTO.getEndTime());
 
 		if (staffDailyAttendanceTaskDTO.getSchoolClassDTO() != null) {
-			record.setAttribute(LessonListGrid.CLASS_ID, staffDailyAttendanceTaskDTO.getSchoolClassDTO().getId());
-			record.setAttribute(LessonListGrid.CLASS, staffDailyAttendanceTaskDTO.getSchoolClassDTO().getName());
+			record.setAttribute(CLASS_ID, staffDailyAttendanceTaskDTO.getSchoolClassDTO().getId());
+			record.setAttribute(CLASS, staffDailyAttendanceTaskDTO.getSchoolClassDTO().getName());
 		}
 
 
 		if (staffDailyAttendanceTaskDTO.getSubjectDTO() != null) {
-			record.setAttribute(LessonListGrid.SUBJECT_ID, staffDailyAttendanceTaskDTO.getSubjectDTO().getId());
-			record.setAttribute(LessonListGrid.SUBJECT, staffDailyAttendanceTaskDTO.getSubjectDTO().getName());
+			record.setAttribute(SUBJECT_ID, staffDailyAttendanceTaskDTO.getSubjectDTO().getId());
+			record.setAttribute(SUBJECT, staffDailyAttendanceTaskDTO.getSubjectDTO().getName());
+		}
+		
+		if (staffDailyAttendanceTaskDTO.getStaffDailyAttendanceDTO() != null) {
+			record.setAttribute(STAFF_DAILY_ATTENDANCE_ID , staffDailyAttendanceTaskDTO.getStaffDailyAttendanceDTO().getId());
 		}
 
 		return record;

@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.academicyear;
 import java.util.List;
 
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.gridutil.AcademicYearDatasource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -17,9 +18,12 @@ public class AcademicYearListGrid extends SuperListGrid {
 	public static String START_DATE = "startDate";
 	
 
+	private AcademicYearDatasource datasource;
 		
 	public AcademicYearListGrid() { 
 		super();
+		
+		datasource = AcademicYearDatasource.getInstance();
 		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
@@ -32,7 +36,7 @@ public class AcademicYearListGrid extends SuperListGrid {
 		//ListGridField activationStatusField= new ListGridField(ACTIVATION_STATUS, "Activation status");
 		
 		
-
+        this.setDataSource(datasource);
 		this.setFields(idField, codeField , nameField  ,startDateField , endDateField ,statusField);
 
 	}
@@ -60,5 +64,6 @@ public class AcademicYearListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		datasource.setTestData(records);
 	}
 }

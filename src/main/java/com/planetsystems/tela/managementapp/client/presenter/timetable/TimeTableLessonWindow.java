@@ -1,5 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.timetable;
 
+import java.util.Date;
+
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
@@ -7,6 +9,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.TimeItem;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -20,7 +23,8 @@ public class TimeTableLessonWindow extends Window {
 	private TimeItem endTime;
 
 	private ComboBox staffCombo;
-	private ComboBox dayCombo;
+//	private ComboBox dayCombo;
+	private DateItem lessonDateItem;
 
 	private IButton addRecordButton;
 
@@ -56,10 +60,14 @@ public class TimeTableLessonWindow extends Window {
 		staffCombo.setHint("Teacher");
 		staffCombo.setShowHintInField(true);
 		
-		dayCombo = new ComboBox();
-		dayCombo.setTitle("Day");
-		dayCombo.setHint("Day");
-		dayCombo.setShowHintInField(true);
+//		dayCombo = new ComboBox();
+//		dayCombo.setTitle("Day");
+//		dayCombo.setHint("Day");
+//		dayCombo.setShowHintInField(true);
+		
+		lessonDateItem = new DateItem();
+		lessonDateItem.setTitle("Date");
+		lessonDateItem.setStartDate(new Date());
 
 		addRecordButton = new IButton("Add");
 
@@ -67,7 +75,7 @@ public class TimeTableLessonWindow extends Window {
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(schoolClassCombo , subjectCombo , staffCombo , dayCombo , startTime , endTime);
+		form.setFields(schoolClassCombo , subjectCombo , staffCombo , lessonDateItem  , startTime , endTime);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setColWidths("150","250");
@@ -125,13 +133,13 @@ public class TimeTableLessonWindow extends Window {
 		return endTime;
 	}
 
-	public ComboBox getDayCombo() {
-		return dayCombo;
+
+	
+	public DateItem getLessonDateItem() {
+		return lessonDateItem;
 	}
 
 
-	
-	
 	public IButton getAddRecordButton() {
 		return addRecordButton;
 	}

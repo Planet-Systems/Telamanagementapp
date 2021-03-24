@@ -2,6 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.timetable;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -64,7 +65,7 @@ public class CreateTimeTablePane extends VLayout {
 		filterForm.setFields(academicYearComboBox , academicTermComboBox , districtComboBox , schoolComboBox);
 		
 		lessonListGrid = new LessonListGrid();
-
+		lessonListGrid.setSelectionType(SelectionStyle.MULTIPLE);
 		
 		saveButton = new IButton("Save");
         saveButton.disable();

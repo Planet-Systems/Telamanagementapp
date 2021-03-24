@@ -57,8 +57,9 @@ public class ComboUtil {
 						SC.clearPrompt();
 						SessionManager.getInstance().manageSession(result, placeManager);
 
-						GWT.log("PRESENTER LIST " + result.getAcademicYearDTOs());
+						
 						if (result != null) {
+							GWT.log("PRESENTER LIST " + result.getAcademicYearDTOs());
 							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 							for (AcademicYearDTO academicYearDTO : result.getAcademicYearDTOs()) {
@@ -84,10 +85,7 @@ public class ComboUtil {
 	//ACADEMIC TERM COMBO
 	public void loadAcademicTermComboByAcademicYear(final ComboBox academicYearCombo, final ComboBox academicTermCombo,
 			final DispatchAsync dispatcher, final PlaceManager placeManager , final String defaultValue) {
-		academicYearCombo.addChangedHandler(new ChangedHandler() {
 
-			@Override
-			public void onChanged(ChangedEvent event) {
 				String academicYearId = academicYearCombo.getValueAsString();
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
@@ -126,8 +124,6 @@ public class ComboUtil {
 
 							}
 						});
-			}
-		});
 
 	}
 	
@@ -334,11 +330,6 @@ public class ComboUtil {
 	
 	public void loadSchoolComboByDistrict(final ComboBox districtCombo, final ComboBox schoolCombo,
 			final DispatchAsync dispatcher, final PlaceManager placeManager , final String defaultValue) {
-
-		districtCombo.addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
 				String districtId = districtCombo.getValueAsString();
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
@@ -379,8 +370,6 @@ public class ComboUtil {
 
 							}
 						});
-			}
-		});
 
 	}
 
@@ -391,10 +380,7 @@ public class ComboUtil {
 	////////////////////SCHOOL STAFF COMBOS
 	public void loadSchoolStaffComboBySchool(final ComboBox schoolCombo, final ComboBox schoolStaffCombo,
 			final DispatchAsync dispatcher, final PlaceManager placeManager , final String defaultValue) {
-		schoolCombo.addChangedHandler(new ChangedHandler() {
 
-			@Override
-			public void onChanged(ChangedEvent event) {
 				String schoolId = schoolCombo.getValueAsString();
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
@@ -437,9 +423,6 @@ public class ComboUtil {
 							}
 						});
 
-			}
-		});
-	
 	}
 	
 	
@@ -637,7 +620,10 @@ public void loadSchoolClassCombo(final ComboBox schoolClassCombo, final Dispatch
 							schoolClassCombo.setValue(defaultValue);
 						}
 					}
-				} else {
+				} else {//
+//					}
+//					});
+			//	
 					SC.warn("ERROR", "Unknow error");
 				}
 
