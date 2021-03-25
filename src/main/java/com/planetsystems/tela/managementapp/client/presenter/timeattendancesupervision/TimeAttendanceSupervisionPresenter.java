@@ -28,6 +28,8 @@ import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.ClockInListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
@@ -71,8 +73,6 @@ public class TimeAttendanceSupervisionPresenter
 	@Inject
 	private DispatchAsync dispatcher;
 
-	private ComboUtil comboUtil;
-
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 
@@ -90,7 +90,6 @@ public class TimeAttendanceSupervisionPresenter
 	@Inject
 	TimeAttendanceSupervisionPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
-		comboUtil = new ComboUtil();
 	}
 
 	@Override
@@ -182,7 +181,7 @@ public class TimeAttendanceSupervisionPresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadSchoolComboByDistrict(
+				ComboUtil.loadSchoolComboByDistrict(
 						clockInPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(),
 						clockInPane.getFilterYearTermDistrictSchoolDate().getSchoolCombo(), dispatcher, placeManager,
 						defaultValue);
@@ -191,7 +190,7 @@ public class TimeAttendanceSupervisionPresenter
 	}
 
 	private void loadDistrictCombo(ClockInPane clockInPane, String defaultValue) {
-		comboUtil.loadDistrictCombo(clockInPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(), dispatcher,
+		ComboUtil.loadDistrictCombo(clockInPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(), dispatcher,
 				placeManager, defaultValue);
 	}
 
@@ -201,7 +200,7 @@ public class TimeAttendanceSupervisionPresenter
 
 					@Override
 					public void onChanged(ChangedEvent event) {
-						comboUtil.loadAcademicTermComboByAcademicYear(
+						ComboUtil.loadAcademicTermComboByAcademicYear(
 								clockInPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
 								clockInPane.getFilterYearTermDistrictSchoolDate().getAcademicTermCombo(), dispatcher,
 								placeManager, defaultValue);
@@ -210,7 +209,7 @@ public class TimeAttendanceSupervisionPresenter
 	}
 
 	private void loadAcademicYearCombo(ClockInPane clockInPane, String defaultValue) {
-		comboUtil.loadAcademicYearCombo(clockInPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
+		ComboUtil.loadAcademicYearCombo(clockInPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
 				dispatcher, placeManager, defaultValue);
 
 	}
@@ -221,7 +220,7 @@ public class TimeAttendanceSupervisionPresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadSchoolComboByDistrict(
+				ComboUtil.loadSchoolComboByDistrict(
 						clockOutPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(),
 						clockOutPane.getFilterYearTermDistrictSchoolDate().getSchoolCombo(), dispatcher, placeManager,
 						defaultValue);
@@ -230,7 +229,7 @@ public class TimeAttendanceSupervisionPresenter
 	}
 
 	private void loadDistrictCombo(ClockOutPane clockOutPane, String defaultValue) {
-		comboUtil.loadDistrictCombo(clockOutPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(), dispatcher,
+		ComboUtil.loadDistrictCombo(clockOutPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(), dispatcher,
 				placeManager, defaultValue);
 
 	}
@@ -241,7 +240,7 @@ public class TimeAttendanceSupervisionPresenter
 
 					@Override
 					public void onChanged(ChangedEvent event) {
-						comboUtil.loadAcademicTermComboByAcademicYear(
+						ComboUtil.loadAcademicTermComboByAcademicYear(
 								clockOutPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
 								clockOutPane.getFilterYearTermDistrictSchoolDate().getAcademicTermCombo(), dispatcher,
 								placeManager, defaultValue);
@@ -250,7 +249,7 @@ public class TimeAttendanceSupervisionPresenter
 	}
 
 	private void loadAcademicYearCombo(ClockOutPane clockOutPane, String defaultValue) {
-		comboUtil.loadAcademicYearCombo(clockOutPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
+		ComboUtil.loadAcademicYearCombo(clockOutPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
 				dispatcher, placeManager, defaultValue);
 	}
 
@@ -265,50 +264,21 @@ public class TimeAttendanceSupervisionPresenter
 				map.put(RequestDelimeters.SCHOOL_ID,
 						clockInPane.getFilterYearTermDistrictSchoolDate().getSchoolCombo().getValueAsString());
 				map.put(RequestDelimeters.CLOCKIN_DATE, dateFormat.format(new Date()));
+				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_IN_By_ACADEMIC_TERM_SCHOOL_DATE);
 
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				dispatcher.execute(new RequestAction(RequestConstant.GET_CLOCK_IN_By_ACADEMIC_TERM_SCHOOL_DATE, map),
-						new AsyncCallback<RequestResult>() {
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						if (result.getClockInDTOs().isEmpty()) {
+							clockInPane.getSuperviseButton().disable();
+						} else {
+							clockInPane.getSuperviseButton().enable();
+						}
+						clockInPane.getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
 
-							@Override
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
-
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if (feedbackDTO != null) {
-										if (feedbackDTO.isResponse()) {
-											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-											if (result.getClockInDTOs().isEmpty()) {
-												clockInPane.getSuperviseButton().disable();												
-											}else {
-												clockInPane.getSuperviseButton().enable();
-											}
-											clockInPane.getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
-										} else {
-											SC.warn("Not Successful \n ERROR:",
-													result.getSystemFeedbackDTO().getMessage());
-										}
-									}
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
+					}
+				});
 
 			}
 		});
@@ -321,7 +291,7 @@ public class TimeAttendanceSupervisionPresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadSchoolComboByDistrict(absentPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(),
+				ComboUtil.loadSchoolComboByDistrict(absentPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(),
 						absentPane.getFilterYearTermDistrictSchoolDate().getSchoolCombo(), dispatcher, placeManager,
 						defaultValue);
 			}
@@ -329,7 +299,7 @@ public class TimeAttendanceSupervisionPresenter
 	}
 
 	private void loadDistrictCombo(AbsentPane absentPane, String defaultValue) {
-		comboUtil.loadDistrictCombo(absentPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(), dispatcher,
+		ComboUtil.loadDistrictCombo(absentPane.getFilterYearTermDistrictSchoolDate().getDistrictCombo(), dispatcher,
 				placeManager, defaultValue);
 	}
 
@@ -338,7 +308,7 @@ public class TimeAttendanceSupervisionPresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadAcademicTermComboByAcademicYear(
+				ComboUtil.loadAcademicTermComboByAcademicYear(
 						absentPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
 						absentPane.getFilterYearTermDistrictSchoolDate().getAcademicTermCombo(), dispatcher,
 						placeManager, defaultValue);
@@ -347,7 +317,7 @@ public class TimeAttendanceSupervisionPresenter
 	}
 
 	private void loadAcademicYearCombo(AbsentPane absentPane, String defaultValue) {
-		comboUtil.loadAcademicYearCombo(absentPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
+		ComboUtil.loadAcademicYearCombo(absentPane.getFilterYearTermDistrictSchoolDate().getAcademicYearCombo(),
 				dispatcher, placeManager, defaultValue);
 	}
 
@@ -362,52 +332,22 @@ public class TimeAttendanceSupervisionPresenter
 				map.put(RequestDelimeters.SCHOOL_ID,
 						clockOutPane.getFilterYearTermDistrictSchoolDate().getSchoolCombo().getValueAsString());
 				map.put(RequestDelimeters.CLOCK_OUT_DATE, dateFormat.format(new Date()));
+				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUT_BY_TERM_SCHOOL_DATE);
 
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				dispatcher.execute(new RequestAction(RequestConstant.GET_CLOCK_OUT_BY_TERM_SCHOOL_DATE, map),
-						new AsyncCallback<RequestResult>() {
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						if (result.getClockOutDTOs().isEmpty()) {
+							clockOutPane.getSuperviseButton().disable();
+						} else {
+							clockOutPane.getSuperviseButton().enable();
+						}
 
-							@Override
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
+						clockOutPane.getClockOutListGrid().addRecordsToGrid(result.getClockOutDTOs());
+					}
+				});
 
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if (feedbackDTO != null) {
-										if (feedbackDTO.isResponse()) {
-											if(result.getClockOutDTOs().isEmpty()) {
-												clockOutPane.getSuperviseButton().disable();
-											}else {
-												clockOutPane.getSuperviseButton().enable();
-											}
-											
-											
-											clockOutPane.getClockOutListGrid()
-													.addRecordsToGrid(result.getClockOutDTOs());
-										} else {
-											SC.warn("Not Successful \n ERROR:",
-													result.getSystemFeedbackDTO().getMessage());
-										}
-									}
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
 			}
 		});
 
@@ -424,51 +364,21 @@ public class TimeAttendanceSupervisionPresenter
 				map.put(RequestDelimeters.SCHOOL_ID,
 						absentPane.getFilterYearTermDistrictSchoolDate().getSchoolCombo().getValueAsString());
 				map.put(RequestDelimeters.ABSENT_DATE, dateFormat.format(new Date()));
+				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_ABSENT_SCHOOL_STAFF_BY_TERM_SCHOOL_DATE);
 
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				dispatcher.execute(new RequestAction(RequestConstant.GET_ABSENT_SCHOOL_STAFF_BY_TERM_SCHOOL_DATE, map),
-						new AsyncCallback<RequestResult>() {
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						if (result.getSchoolStaffDTOs().isEmpty()) {
+							absentPane.getSuperviseButton().disable();
+						} else {
+							absentPane.getSuperviseButton().enable();
+						}
 
-							@Override
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
-
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if (feedbackDTO != null) {
-										if (feedbackDTO.isResponse()) {
-											if(result.getSchoolStaffDTOs().isEmpty()) {
-												absentPane.getSuperviseButton().disable();
-											}else {
-												absentPane.getSuperviseButton().enable();
-											}
-											
-											absentPane.getAbsentListGrid()
-													.addRecordsToGrid(result.getSchoolStaffDTOs());
-										} else {
-											SC.warn("Not Successful \n ERROR:",
-													result.getSystemFeedbackDTO().getMessage());
-										}
-									}
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
+						absentPane.getAbsentListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+					}
+				});
 			}
 		});
 
@@ -584,13 +494,13 @@ public class TimeAttendanceSupervisionPresenter
 
 	////////////////// SUPER VISING
 	private void superviseStaff(final ClockInPane clockInPane) {
-	  
+
 		clockInPane.getSuperviseButton().addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
-				if(clockInPane.getClockInListGrid().anySelected()) {
-					ListGridRecord record = clockInPane.getClockInListGrid().getSelectedRecord(); 
+				if (clockInPane.getClockInListGrid().anySelected()) {
+					ListGridRecord record = clockInPane.getClockInListGrid().getSelectedRecord();
 					TimeAttendanceSupervisionDTO timeAttendanceSupervisionDTO = new TimeAttendanceSupervisionDTO();
 					timeAttendanceSupervisionDTO.setAttendanceStatus("present");
 					timeAttendanceSupervisionDTO.setComment("NO COMMENT");
@@ -598,144 +508,50 @@ public class TimeAttendanceSupervisionPresenter
 					timeAttendanceSupervisionDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 					timeAttendanceSupervisionDTO.setSupervisionDate(dateFormat.format(new Date()));
 					timeAttendanceSupervisionDTO.setSupervisionTime(timeFormat.format(new Date()));
-					
-					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(record.getAttribute(ClockInListGrid.SCHOOL_STAFF_ID));
+
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(
+							record.getAttribute(ClockInListGrid.SCHOOL_STAFF_ID));
 					timeAttendanceSupervisionDTO.setSchoolStaffDTO(schoolStaffDTO);
-					
+
 					SchoolDTO schoolDTO = new SchoolDTO(record.getAttribute(ClockInListGrid.SCHOOL_ID));
 					timeAttendanceSupervisionDTO.setSchoolDTO(schoolDTO);
 
-				    //timeAttendanceSupervisionDTO.setSupervisor(supervisor);
+					// timeAttendanceSupervisionDTO.setSupervisor(supervisor);
 //					supervisionDTO.setSupervisor(supervisor); extracted from server token
-					
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION , timeAttendanceSupervisionDTO);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION , map),
-							new AsyncCallback<RequestResult>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-
-								}
-
-								@Override
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									if (result != null) {
-										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-										if (feedbackDTO != null) {
-											if (feedbackDTO.isResponse()) {
-												SC.say(feedbackDTO.getMessage());
-											} else {
-												SC.warn("Not Successful \n ERROR:",
-														result.getSystemFeedbackDTO().getMessage());
-											}
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
-				}else {
-					SC.say("Please Select Staff to superise");
-				}
-			}
-		});
-		
-	}
-	
-	private void superviseStaff(final ClockOutPane clockOutPane) {
-		  
-		clockOutPane.getSuperviseButton().addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				if(clockOutPane.getClockOutListGrid().anySelected()) {
-					ListGridRecord record = clockOutPane.getClockOutListGrid().getSelectedRecord(); 
-					TimeAttendanceSupervisionDTO timeAttendanceSupervisionDTO = new TimeAttendanceSupervisionDTO();
-					timeAttendanceSupervisionDTO.setAttendanceStatus("present");
-					timeAttendanceSupervisionDTO.setComment("NO COMMENT");
-//					timeAttendanceSupervisionDTO.setId(id);
-					timeAttendanceSupervisionDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
-					timeAttendanceSupervisionDTO.setSupervisionDate(dateFormat.format(new Date()));
-					timeAttendanceSupervisionDTO.setSupervisionTime(timeFormat.format(new Date()));
-					
-					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(record.getAttribute(ClockInListGrid.SCHOOL_STAFF_ID));
-					timeAttendanceSupervisionDTO.setSchoolStaffDTO(schoolStaffDTO);
-					
-					SchoolDTO schoolDTO = new SchoolDTO(record.getAttribute(ClockInListGrid.SCHOOL_ID));
-					timeAttendanceSupervisionDTO.setSchoolDTO(schoolDTO);
-
-				    //timeAttendanceSupervisionDTO.setSupervisor(supervisor);
-//					supervisionDTO.setSupervisor(supervisor); extracted from server token
-					
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION, timeAttendanceSupervisionDTO);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION);
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION , map),
-							new AsyncCallback<RequestResult>() {
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+							if (feedbackDTO.isResponse()) {
+								SC.say(feedbackDTO.getMessage());
+							} else {
+								SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+							}
+						}
+					});
 
-								}
-
-								@Override
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									if (result != null) {
-										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-										if (feedbackDTO != null) {
-											if (feedbackDTO.isResponse()) {
-												SC.say(feedbackDTO.getMessage());
-											} else {
-												SC.warn("Not Successful \n ERROR:",
-														result.getSystemFeedbackDTO().getMessage());
-											}
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
-				}else {
+				} else {
 					SC.say("Please Select Staff to superise");
 				}
 			}
 		});
-		
+
 	}
-	
-	
-	private void superviseStaff(final AbsentPane absentPane) {
-		  
-		absentPane.getSuperviseButton().addClickHandler(new ClickHandler() {
-			
+
+	private void superviseStaff(final ClockOutPane clockOutPane) {
+
+		clockOutPane.getSuperviseButton().addClickHandler(new ClickHandler() {
+
 			@Override
 			public void onClick(ClickEvent event) {
-				if(absentPane.getAbsentListGrid().anySelected()) {
-					ListGridRecord record = absentPane.getAbsentListGrid().getSelectedRecord(); 
+				if (clockOutPane.getClockOutListGrid().anySelected()) {
+					ListGridRecord record = clockOutPane.getClockOutListGrid().getSelectedRecord();
 					TimeAttendanceSupervisionDTO timeAttendanceSupervisionDTO = new TimeAttendanceSupervisionDTO();
 					timeAttendanceSupervisionDTO.setAttendanceStatus("present");
 					timeAttendanceSupervisionDTO.setComment("NO COMMENT");
@@ -743,24 +559,71 @@ public class TimeAttendanceSupervisionPresenter
 					timeAttendanceSupervisionDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 					timeAttendanceSupervisionDTO.setSupervisionDate(dateFormat.format(new Date()));
 					timeAttendanceSupervisionDTO.setSupervisionTime(timeFormat.format(new Date()));
-					
-					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(record.getAttribute(AbsentListGrid.SCHOOL_STAFF_ID));
+
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(
+							record.getAttribute(ClockInListGrid.SCHOOL_STAFF_ID));
 					timeAttendanceSupervisionDTO.setSchoolStaffDTO(schoolStaffDTO);
-					
+
+					SchoolDTO schoolDTO = new SchoolDTO(record.getAttribute(ClockInListGrid.SCHOOL_ID));
+					timeAttendanceSupervisionDTO.setSchoolDTO(schoolDTO);
+
+					// timeAttendanceSupervisionDTO.setSupervisor(supervisor);
+//					supervisionDTO.setSupervisor(supervisor); extracted from server token
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION, timeAttendanceSupervisionDTO);
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION);
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+							if (feedbackDTO.isResponse()) {
+								SC.say(feedbackDTO.getMessage());
+							} else {
+								SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
+							}
+						}
+					});
+				} else {
+					SC.say("Please Select Staff to superise");
+				}
+			}
+		});
+
+	}
+
+	private void superviseStaff(final AbsentPane absentPane) {
+
+		absentPane.getSuperviseButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (absentPane.getAbsentListGrid().anySelected()) {
+					ListGridRecord record = absentPane.getAbsentListGrid().getSelectedRecord();
+					TimeAttendanceSupervisionDTO timeAttendanceSupervisionDTO = new TimeAttendanceSupervisionDTO();
+					timeAttendanceSupervisionDTO.setAttendanceStatus("present");
+					timeAttendanceSupervisionDTO.setComment("NO COMMENT");
+//					timeAttendanceSupervisionDTO.setId(id);
+					timeAttendanceSupervisionDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					timeAttendanceSupervisionDTO.setSupervisionDate(dateFormat.format(new Date()));
+					timeAttendanceSupervisionDTO.setSupervisionTime(timeFormat.format(new Date()));
+
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(
+							record.getAttribute(AbsentListGrid.SCHOOL_STAFF_ID));
+					timeAttendanceSupervisionDTO.setSchoolStaffDTO(schoolStaffDTO);
+
 					SchoolDTO schoolDTO = new SchoolDTO(record.getAttribute(AbsentListGrid.SCHOOL_ID));
 					timeAttendanceSupervisionDTO.setSchoolDTO(schoolDTO);
-				
-					
-					
-				    //timeAttendanceSupervisionDTO.setSupervisor(supervisor);
+
+					// timeAttendanceSupervisionDTO.setSupervisor(supervisor);
 //					supervisionDTO.setSupervisor(supervisor); extracted from server token
-					
+
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION, timeAttendanceSupervisionDTO);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 					SC.showPrompt("", "", new SwizimaLoader());
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION , map),
+					dispatcher.execute(new RequestAction(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION, map),
 							new AsyncCallback<RequestResult>() {
 
 								@Override
@@ -794,14 +657,12 @@ public class TimeAttendanceSupervisionPresenter
 								}
 
 							});
-				}else {
+				} else {
 					SC.say("Please Select Staff to superise");
 				}
 			}
 		});
-		
+
 	}
-	
-	
 
 }

@@ -10,7 +10,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -28,19 +27,17 @@ import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
-import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -58,7 +55,9 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, TimeTablePresenter.MyProxy> {
 	interface MyView extends View {
 		ControlsPane getControlsPane();
+
 		TimetablePane getTimetablePane();
+
 		TabSet getTabSet();
 	}
 
@@ -76,8 +75,6 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	DateTimeFormat timeFormat = DateTimeFormat.getFormat(DatePattern.HOUR_MINUTE_SECONDS.getPattern());
 
-	private ComboUtil comboUtil;
-	
 	@NameToken(NameTokens.timeTable)
 	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<TimeTablePresenter> {
@@ -86,8 +83,6 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	@Inject
 	TimeTablePresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
-		this.comboUtil = new ComboUtil();
-
 	}
 
 	@Override
@@ -107,7 +102,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				if (selectedTab.equalsIgnoreCase(TimeTableView.TIME_TABLES_TAB)) {
 					// close second tab
 					getView().getTabSet().removeTab(1);
-					
+
 					MenuButton newButton = new MenuButton("New");
 					MenuButton view = new MenuButton("View");
 					MenuButton delete = new MenuButton("Delete");
@@ -122,10 +117,10 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					getView().getControlsPane().addMenuButtons(buttons);
 					addTimeTablePane(newButton);
 					viewTimeTable(view);
-					
+
 					getAllTimeTables();
 
-				}  else {
+				} else {
 					List<MenuButton> buttons = new ArrayList<>();
 					getView().getControlsPane().addMenuButtons(buttons);
 				}
@@ -143,34 +138,33 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				if (getView().getTimetablePane().getTimeTableListGrid().anySelected()) {
 					Tab tab = new Tab();
 					tab.setTitle("Time Table Lessons");
-					getView().getTabSet().removeTab(1);//remove before putting
+					getView().getTabSet().removeTab(1);// remove before putting
 					ListGridRecord record = getView().getTimetablePane().getTimeTableListGrid().getSelectedRecord();
-					
-					
-					
+
 					ViewTimeTableLessonsPane viewTimeTableLessonsPane = new ViewTimeTableLessonsPane();
 					viewTimeTableLessonsPane.getSchool().setContents(record.getAttribute(TimeTableListGrid.SCHOOL));
 					viewTimeTableLessonsPane.getDistrict().setContents(record.getAttribute(TimeTableListGrid.DISTRICT));
-					
-					viewTimeTableLessonsPane.getAcademicTerm().setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_TERM));
-					viewTimeTableLessonsPane.getAcademicYear().setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_YEAR));
-					
-					
+
+					viewTimeTableLessonsPane.getAcademicTerm()
+							.setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_TERM));
+					viewTimeTableLessonsPane.getAcademicYear()
+							.setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_YEAR));
+
 					tab.setPane(viewTimeTableLessonsPane);
-					
+
 					getView().getTabSet().addTab(tab);
 					getView().getTabSet().selectTab(tab);
-	    
-	               getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane , record.getAttribute(TimeTableListGrid.ID));
-	               
-	               viewTimeTableLessonsPane.getCloseTabButton().addClickHandler(new ClickHandler() {
-					
-					@Override
-					public void onClick(ClickEvent event) {
-						getView().getTabSet().removeTab(1);
-					}
-				});
-	               
+
+					getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, record.getAttribute(TimeTableListGrid.ID));
+
+					viewTimeTableLessonsPane.getCloseTabButton().addClickHandler(new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent event) {
+							getView().getTabSet().removeTab(1);
+						}
+					});
+
 				} else {
 					SC.warn("Selected TimeTable to view");
 				}
@@ -181,44 +175,22 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 	}
 
-	private void getTimeTableLessonsByTimeTable(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , String timeTableId) {
+	private void getTimeTableLessonsByTimeTable(final ViewTimeTableLessonsPane viewTimeTableLessonsPane,
+			String timeTableId) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.TIME_TABLE_ID, timeTableId);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE);
 
-		SC.showPrompt("", "", new SwizimaLoader());
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE, map), new AsyncCallback<RequestResult>() {
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-			}
-
-			public void onSuccess(RequestResult result) {
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-
-				if (result != null) {
-
-					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-
-					if (feedbackDTO.isResponse()) {
-						viewTimeTableLessonsPane.getLessonListGrid().addRecordsToGrid(result.getTableLessonDTOs());
-					} else {
-						SC.warn("INFO", feedbackDTO.getMessage());
-					}
-
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				viewTimeTableLessonsPane.getLessonListGrid().addRecordsToGrid(result.getTableLessonDTOs());
 			}
 		});
+
 	}
-	
-	
+
 	private void addTimeTablePane(MenuButton newButton) {
 		newButton.addClickHandler(new ClickHandler() {
 
@@ -252,8 +224,8 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 					@Override
 					public void onClick(ClickEvent event) {
-						
-						if(createTimeTablePane.getLessonListGrid().anySelected()) {
+
+						if (createTimeTablePane.getLessonListGrid().anySelected()) {
 
 							TimeTableDTO timeTableDTO = new TimeTableDTO();
 							timeTableDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
@@ -267,7 +239,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 							timeTableDTO.setAcademicTermDTO(academicTermDTO);
 
 							ListGridRecord[] records = createTimeTablePane.getLessonListGrid().getSelectedRecords(); // new
-																												// ListGridRecord[list.size()];
+							// ListGridRecord[list.size()];
 							List<TimeTableLessonDTO> tableLessonDTOs = new ArrayList<TimeTableLessonDTO>();
 
 							for (int i = 0; i < records.length; i++) {
@@ -298,8 +270,8 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 							GWT.log("RECORD " + timeTableDTO);
 
 							saveTimeTable(timeTableDTO, null);
-							
-						}else {
+
+						} else {
 							SC.say("Please Select lessons To Comfirm");
 						}
 
@@ -315,42 +287,16 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	private void saveTimeTable(final TimeTableDTO timeTableDTO, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.SAVE_TIME_TABLE, timeTableDTO);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.SAVE_TIME_TABLE, map), new AsyncCallback<RequestResult>() {
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-			}
-
-			public void onSuccess(RequestResult result) {
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-
-				if (result != null) {
-
-					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-
-					if (feedbackDTO.isResponse()) {
-						getView().getTabSet().removeTab(1);
-						getView().getTabSet().selectTab(0);
-						
-						getAllTimeTables();
-					} else {
-						SC.warn("INFO", feedbackDTO.getMessage());
-					}
-
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
+		map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_TABLE);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getTabSet().removeTab(1);
+				getView().getTabSet().selectTab(0);
+				getAllTimeTables();
 			}
 		});
-
 	}
 
 	private void displayTimeTableLessonWindow(final CreateTimeTablePane createTimeTablePane) {
@@ -361,17 +307,14 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				TimeTableLessonWindow window = new TimeTableLessonWindow();
 				loadDayCombo(window);
 
-				
-				loadClassesInSchoolCombo(window, createTimeTablePane.getSchoolComboBox() , null);
-				loadStaffsInSchoolCombo(window, createTimeTablePane.getSchoolComboBox() , null);
+				loadClassesInSchoolCombo(window, createTimeTablePane.getSchoolComboBox(), null);
+				loadStaffsInSchoolCombo(window, createTimeTablePane.getSchoolComboBox(), null);
 				loadSubjectsCombo(window, null);
 				window.show();
 				addLessonRecord(window, createTimeTablePane);
 
 			}
 
-
-		
 		});
 
 	}
@@ -465,11 +408,11 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		daysMap.put("Thursday", "Thursday");
 		daysMap.put("Friday", "Friday");
 
-		//window.getDayCombo().setValueMap(daysMap);
+		// window.getDayCombo().setValueMap(daysMap);
 	}
 
 	private void loadDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
-		comboUtil.loadDistrictCombo(createTimeTablePane.getDistrictComboBox() , dispatcher, placeManager, defaultValue);
+		ComboUtil.loadDistrictCombo(createTimeTablePane.getDistrictComboBox(), dispatcher, placeManager, defaultValue);
 	}
 
 	private void loadSchoolsInDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
@@ -478,15 +421,17 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				
-				comboUtil.loadSchoolComboByDistrict(createTimeTablePane.getDistrictComboBox(), createTimeTablePane.getSchoolComboBox() , dispatcher, placeManager, defaultValue);
+
+				ComboUtil.loadSchoolComboByDistrict(createTimeTablePane.getDistrictComboBox(),
+						createTimeTablePane.getSchoolComboBox(), dispatcher, placeManager, defaultValue);
 			}
 		});
 
 	}
 
 	public void loadAcademicYearCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
-		comboUtil.loadAcademicYearCombo(createTimeTablePane.getAcademicYearComboBox() , dispatcher, placeManager, defaultValue);
+		ComboUtil.loadAcademicYearCombo(createTimeTablePane.getAcademicYearComboBox(), dispatcher, placeManager,
+				defaultValue);
 	}
 
 	private void loadAcademicTermsInAcademicYearCombo(final CreateTimeTablePane createTimeTablePane,
@@ -495,70 +440,42 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadAcademicTermComboByAcademicYear(createTimeTablePane.getAcademicYearComboBox(), createTimeTablePane.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
+				ComboUtil.loadAcademicTermComboByAcademicYear(createTimeTablePane.getAcademicYearComboBox(),
+						createTimeTablePane.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
 			}
 		});
 
 	}
-	
 
 	private void loadClassesInSchoolCombo(final TimeTableLessonWindow window, final ComboBox schoolComboBox,
 			final String defaultValue) {
-	comboUtil.loadSchoolClassesComboBySchool(schoolComboBox, window.getSchoolClassCombo(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadSchoolClassesComboBySchool(schoolComboBox, window.getSchoolClassCombo(), dispatcher, placeManager,
+				defaultValue);
 	}
 
-	private void loadStaffsInSchoolCombo(TimeTableLessonWindow window, ComboBox schoolComboBox, 
+	private void loadStaffsInSchoolCombo(TimeTableLessonWindow window, ComboBox schoolComboBox,
 			final String defaultValue) {
 
-		comboUtil.loadSchoolStaffComboBySchool(schoolComboBox , window.getStaffCombo(), dispatcher, placeManager , defaultValue);
+		ComboUtil.loadSchoolStaffComboBySchool(schoolComboBox, window.getStaffCombo(), dispatcher, placeManager,
+				defaultValue);
 	}
 
 	private void loadSubjectsCombo(final TimeTableLessonWindow window, final String defaultValue) {
-		comboUtil.loadSubjectCombo(window.getSubjectCombo() , dispatcher, placeManager, defaultValue);
+		ComboUtil.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
 	}
 
 	private void getAllTimeTables() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_TIME_TABLES, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLES);
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_TIME_TABLES, map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-					if (feedbackDTO != null) {
-						if (feedbackDTO.isResponse()) {
-							// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getView().getTimetablePane().getTimeTableListGrid()
-									.addRecordsToGrid(result.getTimeTableDTOs());
-
-						} else {
-							SC.warn("Not Successful \n ERROR:", feedbackDTO.getMessage());
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Service Down");
-					// SC.warn("ERROR", "Unknow error");
-				}
-
+			public void onNetworkResult(RequestResult result) {
+				getView().getTimetablePane().getTimeTableListGrid().addRecordsToGrid(result.getTimeTableDTOs());
 			}
-
 		});
 	}
 

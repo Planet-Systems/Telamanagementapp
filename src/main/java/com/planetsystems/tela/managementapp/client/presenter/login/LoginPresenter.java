@@ -72,10 +72,6 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 					final AuthenticationDTO dto = new AuthenticationDTO();
 					dto.setPassword(password);
 					dto.setUserName(userName);
-		
-					// map.put(RequestConstant.LOGIN_TOKEN, loginToken);
-
-					//SC.say("DTO", dto.getPassword()+" "+dto.getUserName());
 					
 					SC.showPrompt("", "", new SwizimaLoader());
 

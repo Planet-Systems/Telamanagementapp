@@ -9,7 +9,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -22,16 +21,14 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
-import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
@@ -154,44 +151,16 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				  if(checkIfNoSystemUserWindowFieldIsEmpty(window)) {
 					  LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 						map.put(RequestConstant.SAVE_SYSTEM_USER, dto);
-						map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-						SC.showPrompt("", "", new SwizimaLoader());
-
-						dispatcher.execute(new RequestAction(RequestConstant.SAVE_SYSTEM_USER, map),
-								new AsyncCallback<RequestResult>() {
-
-									public void onFailure(Throwable caught) {
-
-										SC.clearPrompt();
-										System.out.println(caught.getMessage());
-										SC.say("ERROR", caught.getMessage());
-									}
-
-									public void onSuccess(RequestResult result) {
-										SC.clearPrompt();
-										
-										clearSystemUserWindowFields(window);
-
-										SessionManager.getInstance().manageSession(result, placeManager);
-										
-										if (result != null) {
-											SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-											if (feedback.isResponse()) {
-												getAllSystemUsers();
-											} else {
-												SC.warn("INFO", feedback.getMessage());
-											}
-
-											getView().getSystemUserPane().getSystemUserListGrid().addRecordsToGrid(result.getSystemUserDTOs());
-
-										} else {
-											SC.warn("ERROR", "Unknow error");
-										}
-
-									}
-
-								});
+						map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_SYSTEM_USER);
+						
+						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+							
+							@Override
+							public void onNetworkResult(RequestResult result) {
+								clearSystemUserWindowFields(window);
+								getAllSystemUsers();
+							}
+						});
 				  }else {
 					  SC.say("Please Fill all fields");	
 				  }
@@ -260,44 +229,15 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	private void getAllSystemUsers() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_ALL_SYSTEM_USERS, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ALL_SYSTEM_USERS , map),
-				new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-							if ( feedbackDTO != null) {
-								if (result.getSystemFeedbackDTO().isResponse()) {
-									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-									getView().getSystemUserPane().getSystemUserListGrid().addRecordsToGrid(result.getSystemUserDTOs());
-								} else {
-									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-								}
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-
-				});
-
+		map.put(NetworkDataUtil.ACTION ,RequestConstant.GET_ALL_SYSTEM_USERS);
+		
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getSystemUserPane().getSystemUserListGrid().addRecordsToGrid(result.getSystemUserDTOs());
+			}
+		});
 	}
 	
 	

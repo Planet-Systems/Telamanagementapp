@@ -3,8 +3,10 @@ package com.planetsystems.tela.managementapp.client.presenter.academicyear;
 import java.util.List;
 
 import com.planetsystems.tela.dto.AcademicYearDTO;
-import com.planetsystems.tela.managementapp.client.presenter.academicyear.gridutil.AcademicYearDatasource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceDateField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -65,5 +67,42 @@ public class AcademicYearListGrid extends SuperListGrid {
 		}
 		this.setData(records);
 		datasource.setTestData(records);
+	}
+	
+	
+	public static class AcademicYearDatasource extends DataSource {
+
+		 private static AcademicYearDatasource instance = null;  
+		  
+		    public static AcademicYearDatasource getInstance() {  
+		        if (instance == null) {  
+		            instance = new AcademicYearDatasource("AcademicYearDatasource");  
+		        }  
+		        return instance;  
+		    }
+
+			public AcademicYearDatasource(String id) {
+				setID(id);
+
+				DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+				idField.setHidden(true);
+				idField.setPrimaryKey(true);
+
+				DataSourceTextField codeField = new DataSourceTextField(CODE, "Code");
+				DataSourceTextField nameField = new DataSourceTextField(NAME, "Academic year");
+				DataSourceTextField statusField= new DataSourceTextField(STATUS, "Status");
+				DataSourceDateField startDateField = new DataSourceDateField(START_DATE, "Start date");
+				DataSourceDateField endDateField= new DataSourceDateField(END_DATE, "End date");
+				//ListGridField activationStatusField= new ListGridField(ACTIVATION_STATUS, "Activation status");
+				
+				
+
+				this.setFields(idField, codeField , nameField  ,startDateField , endDateField ,statusField);
+
+							
+				setClientOnly(true);
+			} 
+
+		
 	}
 }

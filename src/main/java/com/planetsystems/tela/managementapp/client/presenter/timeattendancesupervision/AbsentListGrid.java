@@ -6,7 +6,11 @@ import com.google.gwt.core.client.GWT;
 import com.planetsystems.tela.dto.AbsentDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceDateField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -27,8 +31,12 @@ public class AbsentListGrid extends SuperListGrid {
     public static String NAME_ABBREV = "nameAbbrev";
 	
 
+    SchoolStaffDataSource dataSource;
+    
     public AbsentListGrid() { 
 		super();
+		
+		dataSource = SchoolStaffDataSource.getInstance();
 		
 		ListGridField idField = new ListGridField(SCHOOL_STAFF_ID, "Id");
 		idField.setHidden(true);
@@ -49,11 +57,9 @@ public class AbsentListGrid extends SuperListGrid {
 		ListGridField genderField = new ListGridField(GENDER, "Gender");
 		ListGridField nameAbrevField = new ListGridField(NAME_ABBREV, "Name Abbreviation");
 		   
-		     	
-		
-
 		this.setFields(idField , schoolIdField ,staffCodeField,  firstNameField , lastNameField ,genderField , phoneNumberField , emailField ,nationalIdField , dobField , nameAbrevField  ,schoolField,registeredField);
 
+		this.setDataSource(dataSource);
 	}
 
 	public ListGridRecord addRowData(SchoolStaffDTO schoolStaffDTO) {
@@ -91,5 +97,49 @@ public class AbsentListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
+	
+	
+	public static class SchoolStaffDataSource extends DataSource {
+
+		private static SchoolStaffDataSource instance = null;
+
+		public static SchoolStaffDataSource getInstance() {
+			if (instance == null) {
+				instance = new SchoolStaffDataSource("SchoolStaffDataSource");
+			}
+			return instance;
+		}
+
+		public SchoolStaffDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(SCHOOL_STAFF_ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField staffCodeField = new DataSourceTextField(STAFF_CODE, "Pin Code");
+			DataSourceTextField registeredField = new DataSourceTextField(REGISTERED, "Registerd");
+			
+			DataSourceTextField schoolField = new DataSourceTextField(SCHOOL, "School");
+			DataSourceTextField schoolIdField = new DataSourceTextField(SCHOOL_ID, "School Id");
+			schoolIdField.setHidden(true);
+			
+			DataSourceTextField firstNameField = new DataSourceTextField(FIRSTNAME, "First Name");
+			DataSourceTextField lastNameField = new DataSourceTextField(LASTNAME, "Last Name");
+			DataSourceTextField phoneNumberField = new DataSourceTextField(PHONE_NUMBER, "Phone Number");
+			DataSourceTextField emailField = new DataSourceTextField(EMAIL, "Email");
+			DataSourceDateField dobField = new DataSourceDateField(DOB, "D.O.B");
+			DataSourceTextField nationalIdField = new DataSourceTextField(NATIONAL_ID, "N.I.N");
+			DataSourceTextField genderField = new DataSourceTextField(GENDER, "Gender");
+			DataSourceTextField nameAbrevField = new DataSourceTextField(NAME_ABBREV, "Name Abbreviation");
+			   
+			this.setFields(idField , schoolIdField ,staffCodeField,  firstNameField , lastNameField ,genderField , phoneNumberField , emailField ,nationalIdField , dobField , nameAbrevField  ,schoolField,registeredField);
+
+			setClientOnly(true);
+
+		}
+	}
+	
 }

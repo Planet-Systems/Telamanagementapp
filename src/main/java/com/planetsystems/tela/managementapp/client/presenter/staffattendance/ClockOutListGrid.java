@@ -4,7 +4,11 @@ import java.util.List;
 
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceDateField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -38,9 +42,13 @@ public class ClockOutListGrid extends SuperListGrid {
 	 * private String comment; private ClockInDTO clockInDTO;
 	 */
 
+	private ClockOutDataSource dataSource;
+	
 	public ClockOutListGrid() {
 		super();
 
+		dataSource = ClockOutDataSource.getInstance();
+		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
 
@@ -75,6 +83,7 @@ public class ClockOutListGrid extends SuperListGrid {
 		this.setFields(idField, schoolStaffIdField,schoolIdField, academicTermIdField,academicYearIdField,clockInIdField ,academicYearField , academicTermField,schoolField, schoolStaffField , clockInDateField,clockInTimeField , clockOutTimeField ,commentField ,statusField,
 				latitudeField, longitudeField);
 
+		this.setDataSource(dataSource);
 	}
 
 	public ListGridRecord addRowData(ClockOutDTO clockOutDTO) {
@@ -127,5 +136,66 @@ public class ClockOutListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
+	
+	
+	
+	
+	public static class ClockOutDataSource extends DataSource {
+
+		private static ClockOutDataSource instance = null;
+
+		public static ClockOutDataSource getInstance() {
+			if (instance == null) {
+				instance = new ClockOutDataSource("ClockOutDataSource");
+			}
+			return instance;
+		}
+
+		public ClockOutDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField schoolStaffField = new DataSourceTextField(SCHOOL_STAFF, "Staff");
+			DataSourceTextField schoolStaffIdField = new DataSourceTextField(SCHOOL_STAFF_ID, "Staff Id");
+			schoolStaffIdField.setHidden(true);
+
+			DataSourceTextField academicTermField = new DataSourceTextField(ACADEMIC_TERM, "Academic Term");
+			DataSourceTextField academicTermIdField = new DataSourceTextField(ACADEMIC_TERM_ID, "Academic Term Id");
+			academicTermIdField.setHidden(true);
+
+			DataSourceTextField academicYearField = new DataSourceTextField(ACADEMIC_YEAR, "Academic Year");
+			DataSourceTextField academicYearIdField = new DataSourceTextField(ACADEMIC_YEAR_ID, "Academic Year Id");
+			academicYearIdField.setHidden(true);
+			
+			DataSourceTextField schoolField = new DataSourceTextField(SCHOOL, "School");
+			DataSourceTextField schoolIdField = new DataSourceTextField(SCHOOL_ID, "SchoolId");
+			schoolIdField.setHidden(true);
+			
+			DataSourceTextField latitudeField = new DataSourceTextField(LATITUDE, "latitude");
+			DataSourceTextField longitudeField = new DataSourceTextField(LONGTITUDE, "longitude");
+			DataSourceTextField statusField = new DataSourceTextField(STATUS, "status");
+			DataSourceTextField commentField = new DataSourceTextField(COMMENT, "comment");
+			
+			DataSourceTextField clockInIdField = new DataSourceTextField(CLOCKED_IN_ID, "clock In Id");
+			clockInIdField.setHidden(true);
+			
+			DataSourceTextField clockInTimeField = new DataSourceTextField(CLOCKED_IN_TIME, "clocked In Time");
+			DataSourceTextField clockOutTimeField = new DataSourceTextField(CLOCKED_OUT_TIME, "clocked Out Time");
+			DataSourceDateField clockInDateField = new DataSourceDateField(CLOCKED_IN_DATE, "clocked In Date");
+
+			this.setFields(idField, schoolStaffIdField,schoolIdField, academicTermIdField,academicYearIdField,clockInIdField ,academicYearField , academicTermField,schoolField, schoolStaffField , clockInDateField,clockInTimeField , clockOutTimeField ,commentField ,statusField,
+					latitudeField, longitudeField);
+
+			setClientOnly(true);
+
+		}
+	}
+	
+	
+	
 }

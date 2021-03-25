@@ -3,7 +3,11 @@ package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 import java.util.List;
 
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceIntegerField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -39,10 +43,13 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
     private String status;
  */
 
-		
+
+	StaffEnrollmentDataSource dataSource;
 
 	public StaffEnrollmentListGrid() { 
 		super();
+		
+		dataSource = StaffEnrollmentDataSource.getInstance();
 		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
@@ -68,6 +75,7 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 
 		this.setFields(idField , academicTermIdField , schoolIdField , schoolField , academicTermField  ,totalMaleField , totalFemaleField , totalField , statusField);
 
+		this.setDataSource(dataSource);
 	}
 
 	public ListGridRecord addRowData(StaffEnrollmentDto staffEnrollmentDto) {
@@ -109,5 +117,55 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
+	
+	
+	
+	
+	public static class StaffEnrollmentDataSource extends DataSource {
+
+		private static StaffEnrollmentDataSource instance = null;
+
+		public static StaffEnrollmentDataSource getInstance() {
+			if (instance == null) {
+				instance = new StaffEnrollmentDataSource("StaffEnrollmentDataSource");
+			}
+			return instance;
+		}
+
+		public StaffEnrollmentDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField schoolField = new DataSourceTextField(SCHOOL, "School");
+			DataSourceTextField schoolIdField = new DataSourceTextField(SCHOOL_ID, "School Id");
+			schoolIdField.setHidden(true);
+			
+			DataSourceTextField academicTermField = new DataSourceTextField(ACADEMIC_TERM, "Academic Term");
+			DataSourceTextField academicTermIdField = new DataSourceTextField(ACADEMIC_TERM_ID, "Academic Term Id");
+			academicTermIdField.setHidden(true);
+			
+			DataSourceTextField academicYearField = new DataSourceTextField(ACADEMIC_YEAR, "Academic Year");
+			DataSourceTextField academicYearIdField = new DataSourceTextField(ACADEMIC_YEAR_ID, "Academic Year Id");
+			academicYearIdField.setHidden(true);
+			
+			DataSourceIntegerField totalFemaleField = new DataSourceIntegerField(TOTAL_FEMALE, "Females");
+			DataSourceIntegerField totalMaleField = new DataSourceIntegerField(TOTAL_MALE, "Males");
+			DataSourceIntegerField totalField = new DataSourceIntegerField(TOTAL, "Total");
+			DataSourceTextField statusField = new 			DataSourceTextField(STATUS, "staus");
+			
+			
+
+			this.setFields(idField , academicTermIdField , schoolIdField , schoolField , academicTermField  ,totalMaleField , totalFemaleField , totalField , statusField);
+
+			setClientOnly(true);
+
+		}
+	}
+	
+	
 }

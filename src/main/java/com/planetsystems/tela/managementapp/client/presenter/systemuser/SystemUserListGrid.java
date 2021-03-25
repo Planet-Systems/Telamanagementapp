@@ -3,7 +3,11 @@ package com.planetsystems.tela.managementapp.client.presenter.systemuser;
 import java.util.List;
 
 import com.planetsystems.tela.dto.SystemUserDTO;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceDateField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -38,8 +42,11 @@ public class SystemUserListGrid extends SuperListGrid {
  */
 		
 
+    SystemUserDataSource dataSource;
 	public SystemUserListGrid() { 
 		super();
+		
+		dataSource = SystemUserDataSource.getInstance();
 		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
@@ -67,6 +74,7 @@ public class SystemUserListGrid extends SuperListGrid {
 
 		this.setFields(idField , usernameField , firstNameField , lastNameField , emailField , phoneNumberField , nationalIdField , dobField , genderField , enabledField , nameAbbrevField , configRoleField);
 
+		this.setDataSource(dataSource);
 	}
 
 	public ListGridRecord addRowData(SystemUserDTO systemUserDTO) {
@@ -100,5 +108,55 @@ public class SystemUserListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
+	
+	
+	public static class SystemUserDataSource extends DataSource {
+
+		private static SystemUserDataSource instance = null;
+
+		public static SystemUserDataSource getInstance() {
+			if (instance == null) {
+				instance = new SystemUserDataSource("SystemUserDataSource");
+			}
+			return instance;
+		}
+
+		public SystemUserDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField usernameField = new DataSourceTextField(USERNAME, "Username");
+			DataSourceTextField firstNameField = new DataSourceTextField(FIRST_NAME, "First Name");
+			DataSourceTextField lastNameField = new DataSourceTextField(LAST_NAME, "Last Name");
+			
+			DataSourceTextField enabledField = new DataSourceTextField(ENABLED, "Enabled");
+			
+			DataSourceTextField configRoleField = new DataSourceTextField(CONFIG_ROLE, "Role");
+			
+			DataSourceTextField phoneNumberField = new DataSourceTextField(PHONE_NUMBER, "Phone Number");
+			
+			DataSourceTextField emailField = new DataSourceTextField(EMAIL, "Email");
+			
+			DataSourceDateField dobField = new DataSourceDateField(DOB, "D.O.B");
+			
+			DataSourceTextField nationalIdField = new DataSourceTextField(NATIONAL_ID, "NationalId");
+
+			DataSourceTextField genderField = new DataSourceTextField(GENDER, "Gender");
+			
+			DataSourceTextField nameAbbrevField = new DataSourceTextField(NAME_ABBREV, "Name Abbreviation");
+			
+
+			this.setFields(idField , usernameField , firstNameField , lastNameField , emailField , phoneNumberField , nationalIdField , dobField , genderField , enabledField , nameAbbrevField , configRoleField);
+
+			setClientOnly(true);
+
+		}
+	}
+	
+	
 }

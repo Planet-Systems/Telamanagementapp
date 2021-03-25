@@ -2,8 +2,12 @@ package com.planetsystems.tela.managementapp.client.presenter.schoolcategory;
 
 import java.util.List;
 
+import com.google.gwt.user.client.ui.Tree;
 import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -17,6 +21,7 @@ public class SchoolClassListGrid extends SuperListGrid {
 	public static String ACADEMIC_TERM = "Academic Term";
 	public static String ACADEMIC_TERM_ID = "Academic Term ID";
 	
+	private SchoolClassDataSource dataSource;
 //	private String code;
 //    private String name;
 
@@ -25,6 +30,8 @@ public class SchoolClassListGrid extends SuperListGrid {
 	public SchoolClassListGrid() { 
 		super();
 		
+		dataSource = SchoolClassDataSource.getInstance();
+		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
 
@@ -32,14 +39,15 @@ public class SchoolClassListGrid extends SuperListGrid {
 		ListGridField nameField = new ListGridField(NAME, "Name");
 		ListGridField schoolField = new ListGridField(SCHOOL, "School");
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
+		schoolIdField.setHidden(true);
 		
 		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM , "Academic Term");
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term id");
 		academicTermIdField.setHidden(true);
 		
 
-		this.setFields(idField , academicTermIdField , codeField , nameField , academicTermField , schoolField);
-
+		this.setFields(idField , academicTermIdField , schoolIdField , codeField , nameField , academicTermField , schoolField);
+        this.setDataSource(dataSource);
 	}
 
 	public ListGridRecord addRowData(SchoolClassDTO schoolClassDTO) {
@@ -69,5 +77,44 @@ public class SchoolClassListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
+	
+	
+	public static class SchoolClassDataSource extends DataSource {
+
+		private static SchoolClassDataSource instance = null;
+
+		public static SchoolClassDataSource getInstance() {
+			if (instance == null) {
+				instance = new SchoolClassDataSource("SchoolClassDataSource");
+			}
+			return instance;
+		}
+
+		public SchoolClassDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField codeField = new DataSourceTextField(CODE, "Code");
+			DataSourceTextField nameField = new DataSourceTextField(NAME, "Name");
+			DataSourceTextField schoolField = new DataSourceTextField(SCHOOL, "School");
+			DataSourceTextField schoolIdField = new DataSourceTextField(SCHOOL_ID, "School Id");
+			schoolIdField.setHidden(true);
+			
+			DataSourceTextField academicTermField = new DataSourceTextField(ACADEMIC_TERM , "Academic Term");
+			DataSourceTextField academicTermIdField = new DataSourceTextField(ACADEMIC_TERM_ID, "Academic Term id");
+			academicTermIdField.setHidden(true);
+			
+
+			this.setFields(idField , academicTermIdField , schoolIdField , codeField , nameField , academicTermField , schoolField);
+			setClientOnly(true);
+
+		}
+	}
+
+	
 }

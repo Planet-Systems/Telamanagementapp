@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -21,31 +20,24 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
-import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
-import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.FilterLearnerHeadCountWindow;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
-import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HoverEvent;
-import com.smartgwt.client.widgets.events.HoverHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -81,8 +73,6 @@ public class StaffAttendancePresenter
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
-	private ComboUtil comboUtil;
-	
 	@NameToken(NameTokens.staffAttendance)
 	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<StaffAttendancePresenter> {
@@ -91,14 +81,13 @@ public class StaffAttendancePresenter
 	@Inject
 	StaffAttendancePresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
-		this.comboUtil = new ComboUtil();
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		
+
 	}
 
 	private void onTabSelected() {
@@ -124,7 +113,7 @@ public class StaffAttendancePresenter
 					getAllStaffClockIn();
 					addClockIn(clockInButton);
 					clockOut(clockOut);
-					selectFilterOption(filter);	
+					selectFilterOption(filter);
 
 				} else if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKOUT_TAB_TITLE)) {
 					getAllStaffClockOut();
@@ -135,7 +124,7 @@ public class StaffAttendancePresenter
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
-					selectFilterClockOutOption(filter);	
+					selectFilterClockOutOption(filter);
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -147,155 +136,148 @@ public class StaffAttendancePresenter
 		});
 	}
 
-	
-	
-	
 	private void selectFilterOption(final MenuButton filter) {
-	       final Menu menu = new Menu();
-	       MenuItem basic = new MenuItem("Base Filter");
-	       MenuItem advanced = new MenuItem("Advanced Filter");
-	       
-	       menu.setItems(basic , advanced);
-	      
-	       filter.addClickHandler(new ClickHandler() {
-	   		
-	   		@Override
-	   		public void onClick(ClickEvent event) {
-	   			menu.showNextTo(filter, "bottom");
-	   		}
-	   	});
+		final Menu menu = new Menu();
+		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem advanced = new MenuItem("Advanced Filter");
 
-	       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			
+		menu.setItems(basic, advanced);
+
+		filter.addClickHandler(new ClickHandler() {
+
 			@Override
-			public void onClick(MenuItemClickEvent event) {
-			SC.say("Basic Search");
+			public void onClick(ClickEvent event) {
+				menu.showNextTo(filter, "bottom");
 			}
 		});
-	       
-	       advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	   		
-	   		@Override
-	   		public void onClick(MenuItemClickEvent event) {
+
+		basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				getView().getClockInPane().getClockInListGrid().setShowFilterEditor(true);
+			}
+		});
+
+		advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
 //	   		SC.say("Advanced Search");
-	   		FilterClockInWindow window = new FilterClockInWindow();
-	   		loadFilterClockInAcademicYearCombo(window);
-			loadFilterClockInAcademicTermCombo(window);
-			loadFilterClockInDistrictCombo(window);
-			loadFilterClockInSchoolCombo(window);
-	   		window.show();
-	   		filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
-	   		disableEnableFilterButton(window);
-	   		}		
-	   	});
-	       
-		}
-
-
-	
-	
-	
-	private void disableEnableFilterButton(final FilterClockInWindow window) {;
-	window.getFilterClockInPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-		@Override
-		public void onChanged(ChangedEvent event) {
-
-			if (window.getFilterClockInPane().getAcademicTermCombo().getValueAsString() != null && window.getFilterClockInPane().getSchoolCombo().getValueAsString() != null) {
-				window.getFilterButton().setDisabled(false);
-			}else {
-				window.getFilterButton().setDisabled(true);	
-			}
-		}
-	});
-
-	window.getFilterClockInPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-		@Override
-		public void onChanged(ChangedEvent event) {
-			if (window.getFilterClockInPane().getAcademicTermCombo().getValueAsString() != null && window.getFilterClockInPane().getSchoolCombo().getValueAsString() != null) {
-                window.getFilterButton().setDisabled(false);
-			}else {
-				window.getFilterButton().setDisabled(true);
-			}
-		}
-	});
-
-}
-	
-	
-	
-	private void selectFilterClockOutOption(final MenuButton filter) {
-	       final Menu menu = new Menu();
-	       MenuItem basic = new MenuItem("Base Filter");
-	       MenuItem advanced = new MenuItem("Advanced Filter");
-	       
-	       menu.setItems(basic , advanced);
-	      
-	       filter.addClickHandler(new ClickHandler() {
-	   		
-	   		@Override
-	   		public void onClick(ClickEvent event) {
-	   			menu.showNextTo(filter, "bottom");
-	   		}
-	   	});
-	       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-			SC.say("Basic Search");
+				FilterClockInWindow window = new FilterClockInWindow();
+				loadFilterClockInAcademicYearCombo(window);
+				loadFilterClockInAcademicTermCombo(window);
+				loadFilterClockInDistrictCombo(window);
+				loadFilterClockInSchoolCombo(window);
+				window.show();
+				filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
+				disableEnableFilterButton(window);
 			}
 		});
-	       
-	       advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	   		
-	   		@Override
-	   		public void onClick(MenuItemClickEvent event) {
-	   		FilterClockOutWindow window = new FilterClockOutWindow();
-	   		loadFilterClockOutAcademicYearCombo(window);
-			loadFilterClockOutAcademicTermCombo(window);
-			loadFilterClockOutDistrictCombo(window);
-			loadFilterClockOutSchoolCombo(window);
-	   		window.show();
-	   		filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
-	   		disableEnableFilterButton(window);
-	   		}		
-	   	});
-	       
-		}
-	
-	
-	private void disableEnableFilterButton(final FilterClockOutWindow window) {;
-	window.getFilterClockOutPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
 
-		@Override
-		public void onChanged(ChangedEvent event) {
+	}
 
-			if (window.getFilterClockOutPane().getAcademicTermCombo().getValueAsString() != null && window.getFilterClockOutPane().getSchoolCombo().getValueAsString() != null) {
-				window.getFilterButton().setDisabled(false);
-			}else {
-				 window.getFilterButton().setDisabled(true);	
+	private void disableEnableFilterButton(final FilterClockInWindow window) {
+		;
+		window.getFilterClockInPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+
+				if (window.getFilterClockInPane().getAcademicTermCombo().getValueAsString() != null
+						&& window.getFilterClockInPane().getSchoolCombo().getValueAsString() != null) {
+					window.getFilterButton().setDisabled(false);
+				} else {
+					window.getFilterButton().setDisabled(true);
+				}
 			}
-		}
-	});
+		});
 
-	window.getFilterClockOutPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
+		window.getFilterClockInPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
 
-		@Override
-		public void onChanged(ChangedEvent event) {
-			if (window.getFilterClockOutPane().getAcademicTermCombo().getValueAsString() != null && window.getFilterClockOutPane().getSchoolCombo().getValueAsString() != null) {
-				window.getFilterButton().setDisabled(false);
-			}else {
-				window.getFilterButton().setDisabled(true);
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (window.getFilterClockInPane().getAcademicTermCombo().getValueAsString() != null
+						&& window.getFilterClockInPane().getSchoolCombo().getValueAsString() != null) {
+					window.getFilterButton().setDisabled(false);
+				} else {
+					window.getFilterButton().setDisabled(true);
+				}
 			}
-		}
-	});
+		});
 
-}
+	}
 
-	
-	
-	
+	private void selectFilterClockOutOption(final MenuButton filter) {
+		final Menu menu = new Menu();
+		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem advanced = new MenuItem("Advanced Filter");
+
+		menu.setItems(basic, advanced);
+
+		filter.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				menu.showNextTo(filter, "bottom");
+			}
+		});
+		basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				getView().getClockOutPane().getClockOutListGrid().setShowFilterEditor(true);
+			}
+		});
+
+		advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				FilterClockOutWindow window = new FilterClockOutWindow();
+				loadFilterClockOutAcademicYearCombo(window);
+				loadFilterClockOutAcademicTermCombo(window);
+				loadFilterClockOutDistrictCombo(window);
+				loadFilterClockOutSchoolCombo(window);
+				window.show();
+				filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
+				disableEnableFilterButton(window);
+			}
+		});
+
+	}
+
+	private void disableEnableFilterButton(final FilterClockOutWindow window) {
+		;
+		window.getFilterClockOutPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+
+				if (window.getFilterClockOutPane().getAcademicTermCombo().getValueAsString() != null
+						&& window.getFilterClockOutPane().getSchoolCombo().getValueAsString() != null) {
+					window.getFilterButton().setDisabled(false);
+				} else {
+					window.getFilterButton().setDisabled(true);
+				}
+			}
+		});
+
+		window.getFilterClockOutPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (window.getFilterClockOutPane().getAcademicTermCombo().getValueAsString() != null
+						&& window.getFilterClockOutPane().getSchoolCombo().getValueAsString() != null) {
+					window.getFilterButton().setDisabled(false);
+				} else {
+					window.getFilterButton().setDisabled(true);
+				}
+			}
+		});
+
+	}
+
 	///////////////////////////////////////////
 	private void addClockIn(MenuButton clockInButton) {
 		clockInButton.addClickHandler(new ClickHandler() {
@@ -305,11 +287,11 @@ public class StaffAttendancePresenter
 
 				ClockInWindow window = new ClockInWindow();
 				window.show();
-               
+
 				loadAcademicYearCombo(window, null);
 				loadAcademicTermCombo(window, null);
-				loadDistrictCombo(window , null);
-				loadSchoolCombo(window , null);
+				loadDistrictCombo(window, null);
+				loadSchoolCombo(window, null);
 				loadSchoolStaffCombo(window, null);
 
 				saveClockin(window);
@@ -336,10 +318,10 @@ public class StaffAttendancePresenter
 					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
 							window.getAcademicTermComboBox().getValueAsString());
 					dto.setAcademicTermDTO(academicTermDTO);
-                     
+
 					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolComboBox().getValueAsString());
 					dto.setSchoolDTO(schoolDTO);
-					
+
 					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO();
 					schoolStaffDTO.setId(window.getSchoolStaffComboBox().getValueAsString());
 					dto.setSchoolStaffDTO(schoolStaffDTO);
@@ -350,46 +332,17 @@ public class StaffAttendancePresenter
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_CLOCK_IN, dto);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
-
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_CLOCK_IN, map),
-							new AsyncCallback<RequestResult>() {
-
-								public void onFailure(Throwable caught) {
-
-									SC.clearPrompt();
-									System.out.println(caught.getMessage());
-									SC.say("ERROR", caught.getMessage());
-								}
-
-								public void onSuccess(RequestResult result) {
-									SC.clearPrompt();
-
-									clearClockInWindowFields(window);
-									window.close();
-
-									SessionManager.getInstance().manageSession(result, placeManager);
-
-									if (result != null) {
-										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-										if (feedback.isResponse()) {
-											SC.say("SUCCESS", feedback.getMessage());
-										} else {
-											SC.warn("INFO", feedback.getMessage());
-										}
-
-										getView().getClockInPane().getClockInListGrid()
-												.addRecordsToGrid(result.getClockInDTOs());
-
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_CLOCK_IN);
+					
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+						
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							clearClockInWindowFields(window);
+							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+							getAllStaffClockIn();
+						}
+					});
 
 				} else {
 					SC.say("Please fill all the fields");
@@ -406,13 +359,13 @@ public class StaffAttendancePresenter
 
 		if (window.getAcademicYearComboBox().getValueAsString() == null)
 			flag = false;
-		
+
 		if (window.getAcademicTermComboBox().getValueAsString() == null)
 			flag = false;
-		
+
 		if (window.getDistrictComboBox().getValueAsString() == null)
 			flag = false;
-		
+
 		if (window.getSchoolComboBox().getValueAsString() == null)
 			flag = false;
 
@@ -438,41 +391,43 @@ public class StaffAttendancePresenter
 		window.getLongitudeField().clearValue();
 	}
 
-	
 	private void loadAcademicYearCombo(final ClockInWindow window, final String defaultValue) {
-		comboUtil.loadAcademicYearCombo(window.getAcademicYearComboBox(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadAcademicYearCombo(window.getAcademicYearComboBox(), dispatcher, placeManager, defaultValue);
 	}
-	
+
 	private void loadAcademicTermCombo(final ClockInWindow window, final String defaultValue) {
 		window.getAcademicYearComboBox().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearComboBox(), window.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearComboBox(),
+						window.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
 			}
 		});
 	}
-	
+
 	private void loadDistrictCombo(final ClockInWindow window, final String defaultValue) {
-		comboUtil.loadDistrictCombo(window.getDistrictComboBox(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadDistrictCombo(window.getDistrictComboBox(), dispatcher, placeManager, defaultValue);
 	}
 
 	private void loadSchoolCombo(final ClockInWindow window, final String defaultValue) {
 		window.getDistrictComboBox().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadSchoolComboByDistrict(window.getDistrictComboBox() , window.getSchoolComboBox(), dispatcher, placeManager, defaultValue);
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictComboBox(), window.getSchoolComboBox(),
+						dispatcher, placeManager, defaultValue);
 			}
 		});
 	}
 
 	private void loadSchoolStaffCombo(final ClockInWindow window, final String defaultValue) {
 		window.getSchoolComboBox().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadSchoolStaffComboBySchool(window.getSchoolComboBox(), window.getSchoolStaffComboBox(), dispatcher, placeManager, defaultValue);
+				ComboUtil.loadSchoolStaffComboBySchool(window.getSchoolComboBox(), window.getSchoolStaffComboBox(),
+						dispatcher, placeManager, defaultValue);
 			}
 		});
 	}
@@ -480,41 +435,14 @@ public class StaffAttendancePresenter
 	private void getAllStaffClockIn() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_CLOCK_IN, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_IN);
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_CLOCK_IN, map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-					if (feedbackDTO != null) {
-						if (feedbackDTO.isResponse()) {
-							// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
-						} else {
-							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
+			public void onNetworkResult(RequestResult result) {
+				getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
 			}
-
 		});
 
 	}
@@ -545,45 +473,17 @@ public class StaffAttendancePresenter
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_CLOCK_OUT, dto);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_CLOCK_OUT);
+					
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+						
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+							getAllStaffClockIn();
+						}
+					});
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_CLOCK_OUT, map),
-							new AsyncCallback<RequestResult>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-
-								}
-
-								@Override
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									if (result != null) {
-										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-										if (feedbackDTO != null) {
-											if (feedbackDTO.isResponse()) {
-												SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-//          									getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
-												getAllStaffClockIn();
-											} else {
-												SC.warn("Not Successful \n ERROR:",
-														result.getSystemFeedbackDTO().getMessage());
-											}
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
 
 				} else {
 					SC.say("Please Select A record to clockout");
@@ -596,42 +496,14 @@ public class StaffAttendancePresenter
 	private void getAllStaffClockOut() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_CLOCK_OUT, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUT);
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_CLOCK_OUT, map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-					if (feedbackDTO != null) {
-						if (feedbackDTO.isResponse()) {
-							// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getView().getClockOutPane().getClockOutListGrid()
-									.addRecordsToGrid(result.getClockOutDTOs());
-						} else {
-							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
+			public void onNetworkResult(RequestResult result) {
+				getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(result.getClockOutDTOs());
 			}
-
 		});
 
 	}
@@ -644,7 +516,8 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadSchoolComboByDistrict(window.getFilterClockInPane().getDistrictCombo(), window.getFilterClockInPane().getSchoolCombo(), dispatcher, placeManager, null);
+				ComboUtil.loadSchoolComboByDistrict(window.getFilterClockInPane().getDistrictCombo(),
+						window.getFilterClockInPane().getSchoolCombo(), dispatcher, placeManager, null);
 			}
 		});
 
@@ -652,12 +525,13 @@ public class StaffAttendancePresenter
 
 //loads district combo in filter learner head count pane	
 	private void loadFilterClockInDistrictCombo(final FilterClockInWindow window) {
-		comboUtil.loadDistrictCombo(window.getFilterClockInPane().getDistrictCombo(), dispatcher, placeManager, null);
+		ComboUtil.loadDistrictCombo(window.getFilterClockInPane().getDistrictCombo(), dispatcher, placeManager, null);
 	}
 
 //loads academic year combo in filter learner head count pane	
 	private void loadFilterClockInAcademicYearCombo(final FilterClockInWindow window) {
-		comboUtil.loadAcademicYearCombo(window.getFilterClockInPane().getAcademicYearCombo(), dispatcher, placeManager, null);
+		ComboUtil.loadAcademicYearCombo(window.getFilterClockInPane().getAcademicYearCombo(), dispatcher, placeManager,
+				null);
 	}
 
 //loads academic year combo in filter learner head count pane	
@@ -666,8 +540,9 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				
-				comboUtil.loadAcademicTermComboByAcademicYear(window.getFilterClockInPane().getAcademicYearCombo(), window.getFilterClockInPane().getAcademicTermCombo(), dispatcher, placeManager, null);
+
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getFilterClockInPane().getAcademicYearCombo(),
+						window.getFilterClockInPane().getAcademicTermCombo(), dispatcher, placeManager, null);
 			}
 		});
 
@@ -683,7 +558,8 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				comboUtil.loadSchoolComboByDistrict(window.getFilterClockOutPane().getDistrictCombo(), window.getFilterClockOutPane().getSchoolCombo() , dispatcher, placeManager, null);
+				ComboUtil.loadSchoolComboByDistrict(window.getFilterClockOutPane().getDistrictCombo(),
+						window.getFilterClockOutPane().getSchoolCombo(), dispatcher, placeManager, null);
 			}
 		});
 
@@ -691,12 +567,13 @@ public class StaffAttendancePresenter
 
 //loads district combo in filter learner head count pane	
 	private void loadFilterClockOutDistrictCombo(final FilterClockOutWindow window) {
-		comboUtil.loadDistrictCombo(window.getFilterClockOutPane().getDistrictCombo(), dispatcher, placeManager, null);
+		ComboUtil.loadDistrictCombo(window.getFilterClockOutPane().getDistrictCombo(), dispatcher, placeManager, null);
 	}
 
 //loads academic year combo in filter learner head count pane	
 	private void loadFilterClockOutAcademicYearCombo(final FilterClockOutWindow window) {
-		comboUtil.loadAcademicYearCombo(window.getFilterClockOutPane().getAcademicYearCombo() , dispatcher, placeManager, null);
+		ComboUtil.loadAcademicYearCombo(window.getFilterClockOutPane().getAcademicYearCombo(), dispatcher, placeManager,
+				null);
 	}
 
 //loads academic year combo in filter learner head count pane	
@@ -705,20 +582,20 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				
-				comboUtil.loadAcademicTermComboByAcademicYear(window.getFilterClockOutPane().getAcademicYearCombo() , window.getFilterClockOutPane().getAcademicTermCombo(), dispatcher, placeManager, null);
+
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getFilterClockOutPane().getAcademicYearCombo(),
+						window.getFilterClockOutPane().getAcademicTermCombo(), dispatcher, placeManager, null);
 			}
 		});
 
 	}
 
 /////////////////////////////////////////END OF FILTER CLOCKOUT COMBOS
-	
-	
-	//filter
+
+	// filter
 	private void filterClockInsByAcademicYearAcademicTermDistrictSchool(final FilterClockInWindow window) {
 		window.getFilterButton().addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				String academicYearId = window.getFilterClockInPane().getAcademicYearCombo().getValueAsString();
@@ -726,62 +603,31 @@ public class StaffAttendancePresenter
 				String districtId = window.getFilterClockInPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterClockInPane().getSchoolCombo().getValueAsString();
 				String date = dateFormat.format(window.getFilterClockInPane().getClockinDateItem().getValueAsDate());
-				
+
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				map.put(RequestDelimeters.CLOCKIN_DATE, date);
-				
-				map.put(RequestConstant.GET_CLOCKINS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				map.put(NetworkDataUtil.ACTION,
+						RequestConstant.GET_CLOCKINS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
 
-				dispatcher.execute(new RequestAction(RequestConstant.GET_CLOCKINS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL , map),
-						new AsyncCallback<RequestResult>() {
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
+					}
+				});
 
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-		                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if ( feedbackDTO != null) {
-										window.close();
-										if (result.getSystemFeedbackDTO().isResponse()) {
-											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-											getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
-										} else {
-											SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-										}
-									}
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
-				
 			}
 		});
 	}
 
-	
 	private void filterClockOutsByAcademicYearAcademicTermDistrictSchool(final FilterClockOutWindow window) {
 		window.getFilterButton().addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				String academicYearId = window.getFilterClockOutPane().getAcademicYearCombo().getValueAsString();
@@ -789,57 +635,24 @@ public class StaffAttendancePresenter
 				String districtId = window.getFilterClockOutPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterClockOutPane().getSchoolCombo().getValueAsString();
 				String date = dateFormat.format(window.getFilterClockOutPane().getClockinDateItem().getValueAsDate());
-				
+
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				map.put(RequestDelimeters.CLOCK_OUT_DATE, date);
-				
-//				map.put(RequestConstant.GET_CLOCK_OUTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				map.put(NetworkDataUtil.ACTION,
+						RequestConstant.GET_CLOCK_OUTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				dispatcher.execute(new RequestAction(RequestConstant.GET_CLOCK_OUTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL , map),
-						new AsyncCallback<RequestResult>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
-
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-		                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if ( feedbackDTO != null) {
-										window.close();
-										if (result.getSystemFeedbackDTO().isResponse()) {
-											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-											getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(result.getClockOutDTOs());
-										} else {
-											SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-										}
-									}
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
-				
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(result.getClockOutDTOs());
+					}
+				});
 			}
 		});
 	}
-
 
 }

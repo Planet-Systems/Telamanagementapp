@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -32,9 +34,13 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
     private String dailyAttendanceDate;
 
 	 */
+	StaffDailyAttendanceDataSource dataSource;
 	
 	public StaffDailyAttendanceListGrid() {
 		super();
+		
+		dataSource = StaffDailyAttendanceDataSource.getInstance();
+		
 		ListGridField idField = new ListGridField(ID , "ID");
 		idField.setHidden(true);
 
@@ -54,7 +60,7 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 		ListGridField attendanceDateField = new ListGridField(ATTENDANCE_DATE, "Attendance Date");
 
 	
-
+        this.setDataSource(dataSource);
 		this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , attendanceDateField);
 	}
 
@@ -97,10 +103,55 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
 
 	public void addRecordToGrid(StaffDailyAttendanceDTO dto) {
 		this.addData(addRowData(dto));
 	}
+	
+	
+	
+	public static class StaffDailyAttendanceDataSource extends DataSource {
+
+		private static StaffDailyAttendanceDataSource instance = null;
+
+		public static StaffDailyAttendanceDataSource getInstance() {
+			if (instance == null) {
+				instance = new StaffDailyAttendanceDataSource("StaffDailyAttendanceDataSource");
+			}
+			return instance;
+		}
+
+		public StaffDailyAttendanceDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField academicYearField = new DataSourceTextField(ACADEMIC_YEAR, "Academic Year");
+			DataSourceTextField academicYearIdField = new DataSourceTextField(ACADEMIC_YEAR_ID, "Academic Year Id");
+			academicYearIdField.setHidden(true);
+			
+			DataSourceTextField academicTermField = new DataSourceTextField(ACADEMIC_TERM, "Academic Term");
+			DataSourceTextField academicTermIdField = new DataSourceTextField(ACADEMIC_TERM_ID, "Academic Term Id");
+			academicTermIdField.setHidden(true);
+
+			DataSourceTextField schoolStaffField = new DataSourceTextField(SCHOOL_STAFF, "School Staff");
+			DataSourceTextField schoolStaffIdField = new DataSourceTextField(SCHOOL_STAFF_ID, "School Staff Id");
+			schoolStaffIdField.setHidden(true);
+
+			DataSourceTextField attendanceDateField = new DataSourceTextField(ATTENDANCE_DATE, "Attendance Date");
+
+		
+
+			this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , attendanceDateField);
+
+			setClientOnly(true);
+
+		}
+	}
+	
 	
 }

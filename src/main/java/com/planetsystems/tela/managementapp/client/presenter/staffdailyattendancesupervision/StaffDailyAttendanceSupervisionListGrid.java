@@ -3,8 +3,11 @@ package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendan
 import java.util.List;
 
 import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -21,7 +24,7 @@ public class StaffDailyAttendanceSupervisionListGrid extends SuperListGrid {
 	
 	public static final String COMMENT = "COMMENT";
 	
-	
+	StaffDailyAttendanceSupervisionDataSource dataSource;
 	/*
 	 *   private SystemUser supervisor;
 
@@ -40,6 +43,8 @@ public class StaffDailyAttendanceSupervisionListGrid extends SuperListGrid {
 
 	public StaffDailyAttendanceSupervisionListGrid() {
 
+		dataSource = StaffDailyAttendanceSupervisionDataSource.getInstance();
+		
 		ListGridField idField = new ListGridField();
 		idField.setHidden(true);
 
@@ -56,7 +61,9 @@ public class StaffDailyAttendanceSupervisionListGrid extends SuperListGrid {
 		ListGridField supervisiordIdField = new ListGridField(SUPERVISIOR_ID, "Supervisior Id");
 		supervisiordIdField.setHidden(true);
 
+		this.setDataSource(dataSource);
 		this.setFields(idField, staffIdField ,supervisiordIdField , supervisiorField,  staffField, supervisionDateField, supervisionTimeField, commentField);
+	
 	}
 
 	public ListGridRecord addRowData(StaffDailyAttendanceSupervisionDTO supervisionDTO) {
@@ -92,10 +99,52 @@ public class StaffDailyAttendanceSupervisionListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
 
 	public void addRecordToGrid(StaffDailyAttendanceSupervisionDTO dto) {
 		this.addData(addRowData(dto));
 	}
+	
+	
+	public static class StaffDailyAttendanceSupervisionDataSource extends DataSource {
+
+		private static StaffDailyAttendanceSupervisionDataSource instance = null;
+
+		public static StaffDailyAttendanceSupervisionDataSource getInstance() {
+			if (instance == null) {
+				instance = new StaffDailyAttendanceSupervisionDataSource("StaffDailyAttendanceSupervisionDataSource");
+			}
+			return instance;
+		}
+
+		public StaffDailyAttendanceSupervisionDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField supervisionDateField = new DataSourceTextField(SUPERVISION_DATE, "Supervision Date");
+			DataSourceTextField supervisionTimeField = new DataSourceTextField(SUPERVISION_TIME, "Supervision Time");
+			DataSourceTextField commentField = new DataSourceTextField(COMMENT , "Comment");
+
+
+			DataSourceTextField staffField = new DataSourceTextField(SCHOOL_STAFF, "Staff");
+			DataSourceTextField staffIdField = new DataSourceTextField(SCHOOL_STAFF_ID, "Staff Id");
+			staffIdField.setHidden(true);
+			
+			DataSourceTextField supervisiorField = new DataSourceTextField(SUPERVISIOR, "Supervisior");
+			DataSourceTextField supervisiordIdField = new DataSourceTextField(SUPERVISIOR_ID, "Supervisior Id");
+			supervisiordIdField.setHidden(true);
+
+			this.setFields(idField, staffIdField ,supervisiordIdField , supervisiorField,  staffField, supervisionDateField, supervisionTimeField, commentField);
+		
+			setClientOnly(true);
+
+		}
+	}
+	
+	
 	
 }

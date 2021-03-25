@@ -3,7 +3,12 @@ package com.planetsystems.tela.managementapp.client.presenter.learnerenrollment;
 import java.util.List;
 
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicYearListGrid.AcademicYearDatasource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceDateField;
+import com.smartgwt.client.data.fields.DataSourceIntegerField;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -27,7 +32,7 @@ public class LearnerEnrollmentListGrid extends SuperListGrid  {
 	public static String ACADEMIC_YEAR = "academicYear";
 	public static String ACADEMIC_YEAR_ID = "academicYearId";
 	
-	
+	private LearnerEnrollmentDatasource datasource;
 	
 	
 /*
@@ -42,6 +47,8 @@ public class LearnerEnrollmentListGrid extends SuperListGrid  {
 
 	public LearnerEnrollmentListGrid() { 
 		super();
+		
+		datasource = LearnerEnrollmentDatasource.getInstance();
 		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
@@ -69,6 +76,7 @@ public class LearnerEnrollmentListGrid extends SuperListGrid  {
 		schoolIdField.setHidden(true);
 		
 
+		this.setDataSource(datasource);
 		this.setFields(idField , schoolCLassIdField ,academicTermIdField , academicYearIdField , schoolIdField,academicYearField , academicTermField,schoolField, schoolCLassField , totalBoysField , totalGirlsField , totalField ,statusField );
 
 	}
@@ -120,11 +128,62 @@ public class LearnerEnrollmentListGrid extends SuperListGrid  {
 			row++;
 		}
 		this.setData(records);
+		datasource.setTestData(records);
 	}
 	
 	
 	
 	public void addRecordToGrid(LearnerEnrollmentDTO dto) {
 		this.addData(addRowData(dto));
+	}
+	
+	
+	public static class LearnerEnrollmentDatasource extends DataSource {
+
+		 private static LearnerEnrollmentDatasource instance = null;  
+		  
+		    public static LearnerEnrollmentDatasource getInstance() {  
+		        if (instance == null) {  
+		            instance = new LearnerEnrollmentDatasource("LearnerEnrollmentDatasource");  
+		        }  
+		        return instance;  
+		    }
+
+			public LearnerEnrollmentDatasource(String id) {
+				setID(id);
+
+				DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+				idField.setHidden(true);
+				idField.setPrimaryKey(true);
+
+				DataSourceTextField schoolCLassField = new DataSourceTextField(SCHOOL_CLASS, "School Class");
+				DataSourceTextField schoolCLassIdField = new DataSourceTextField(SCHOOL_CLASS_ID, "School Class Id");
+				schoolCLassIdField.setHidden(true);
+				
+				
+				DataSourceIntegerField totalBoysField = new DataSourceIntegerField(TOTAL_BOYS, "Boys");
+				DataSourceIntegerField totalGirlsField = new DataSourceIntegerField(TOTAL_GIRLS, "Girls");
+				DataSourceIntegerField totalField = new DataSourceIntegerField(TOTAL, "Total");
+				DataSourceTextField statusField = new DataSourceTextField(STATUS, "status");
+				
+				DataSourceTextField academicTermField = new DataSourceTextField(ACADEMIC_TERM, "Academic Term");
+				DataSourceTextField academicTermIdField = new DataSourceTextField(ACADEMIC_TERM_ID, "Academic Term Id");
+				academicTermIdField.setHidden(true);
+				
+				DataSourceTextField academicYearField = new DataSourceTextField(ACADEMIC_YEAR, "Academic Year");
+				DataSourceTextField academicYearIdField = new DataSourceTextField(ACADEMIC_YEAR_ID, "Academic Year Id");
+				academicYearIdField.setHidden(true);
+				
+				DataSourceTextField schoolField = new DataSourceTextField(SCHOOL, "School");
+				DataSourceTextField schoolIdField = new DataSourceTextField(SCHOOL_ID, "SchoolId");
+				schoolIdField.setHidden(true);
+				
+
+				this.setFields(idField , schoolCLassIdField ,academicTermIdField , academicYearIdField , schoolIdField,academicYearField , academicTermField,schoolField, schoolCLassField , totalBoysField , totalGirlsField , totalField ,statusField );
+		
+				setClientOnly(true);
+			} 
+
+		
 	}
 }
