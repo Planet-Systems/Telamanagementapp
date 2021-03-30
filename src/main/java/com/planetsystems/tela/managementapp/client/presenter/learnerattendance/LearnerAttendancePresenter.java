@@ -133,12 +133,13 @@ public class LearnerAttendancePresenter
 				loadFilterLearnerAttendanceSchoolCombo(window);
 				window.show();
 				filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(window);
-				disableEnableFilterButton(window);
+//				disableEnableFilterButton(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterLearnerAttendanceWindow window) {
 		;
 		window.getFilterLearnerAttendancePane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {

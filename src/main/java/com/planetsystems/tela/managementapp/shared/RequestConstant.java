@@ -62,7 +62,7 @@ public class RequestConstant {
 	public static final String UPDATE_SUBJECT = "UPDATE_SUBJECT";
 	public static final String DELETE_SUBJECT = "DELETE_SUBJECT";
 	public static final String GET_SUBJECT = "GET_SUBJECT";
-	public static final String GET_SUBJECTS_SUBJECT_CATEGORY = "GET_SUBJECTS_SUBJECT_CATEGORY";
+	public static final String GET_SUBJECTS_IN_SUBJECT_CATEGORY = "GET_SUBJECTS_IN_SUBJECT_CATEGORY";
 
 	public static final String LOGIN = "LOGIN";
 	public static final String LOGIN_TOKEN = "LOGIN_TOKEN";// handler key

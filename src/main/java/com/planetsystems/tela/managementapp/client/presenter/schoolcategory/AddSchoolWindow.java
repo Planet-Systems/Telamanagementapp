@@ -11,12 +11,13 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class SchoolWindow extends Window {
+public class AddSchoolWindow extends Window {
 
 	private TextField schoolCode;
 	private TextField schoolName;
-	private ComboBox schoolCategory;
-	private ComboBox district;
+	private ComboBox schoolCategoryCombo;
+	private ComboBox districtCombo;
+	private ComboBox regionCombo;
 
 	private TextField latitude;
 	private TextField longtitude;
@@ -29,7 +30,7 @@ public class SchoolWindow extends Window {
 
 
 
-	public SchoolWindow() {
+	public AddSchoolWindow() {
 		super();
 		schoolCode = new TextField();
 		schoolCode.setTitle("Code");
@@ -37,8 +38,8 @@ public class SchoolWindow extends Window {
 		schoolName = new TextField();
 		schoolName.setTitle("Name");
 
-		schoolCategory = new ComboBox();
-		schoolCategory.setTitle("Category");
+		schoolCategoryCombo = new ComboBox();
+		schoolCategoryCombo.setTitle("Category");
 
 		latitude = new TextField();
 		latitude.setTitle("Latitude");
@@ -46,8 +47,11 @@ public class SchoolWindow extends Window {
 		longtitude = new TextField();
 		longtitude.setTitle("Longtitude");
 
-		district = new ComboBox();
-		district.setTitle("District");
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		
+		regionCombo = new ComboBox();
+		regionCombo.setTitle("Region");
 		
 		deviceNumber= new TextField();
 		deviceNumber.setTitle("Device Number");
@@ -59,7 +63,7 @@ public class SchoolWindow extends Window {
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(schoolCategory,district, schoolCode, schoolName , latitude, longtitude,deviceNumber);
+		form.setFields(schoolCategoryCombo , regionCombo , districtCombo , schoolCode, schoolName , latitude, longtitude,deviceNumber);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setColWidths("150","250");
@@ -106,14 +110,6 @@ public class SchoolWindow extends Window {
 		return schoolName;
 	}
 
-	public ComboBox getSchoolCategory() {
-		return schoolCategory;
-	}
-
-	public ComboBox getDistrict() {
-		return district;
-	}
-
 	public TextField getLatitude() {
 		return latitude;
 	}
@@ -132,9 +128,18 @@ public class SchoolWindow extends Window {
 		return saveButton;
 	}
 
-	
-	
-	
+	public ComboBox getSchoolCategoryCombo() {
+		return schoolCategoryCombo;
+	}
+
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
+	}
+
+	public ComboBox getRegionCombo() {
+		return regionCombo;
+	}
+
 	
 
 }

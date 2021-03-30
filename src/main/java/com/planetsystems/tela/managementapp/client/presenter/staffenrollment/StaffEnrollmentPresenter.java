@@ -178,13 +178,14 @@ public class StaffEnrollmentPresenter
 				loadFilterStaffDistrictCombo(window);
 				loadFilterStaffSchoolCombo(window);
 				window.show();
-				disableEnableFilterButton(window);
+				//disableEnableFilterButton(window);
 				filterSchoolStaffsByDistrictSchool(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterStaffWindow window) {
 		;
 		window.getFilterStaffsPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
@@ -256,6 +257,7 @@ public class StaffEnrollmentPresenter
 		});
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterStaffHeadCountWindow window) {
 		;
 		window.getFilterStaffHeadCountPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {

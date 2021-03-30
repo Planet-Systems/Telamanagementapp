@@ -171,12 +171,13 @@ public class StaffAttendancePresenter
 				loadFilterClockInSchoolCombo(window);
 				window.show();
 				filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
-				disableEnableFilterButton(window);
+				//disableEnableFilterButton(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterClockInWindow window) {
 		;
 		window.getFilterClockInPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
@@ -241,12 +242,13 @@ public class StaffAttendancePresenter
 				loadFilterClockOutSchoolCombo(window);
 				window.show();
 				filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
-				disableEnableFilterButton(window);
+				//disableEnableFilterButton(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterClockOutWindow window) {
 		;
 		window.getFilterClockOutPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {

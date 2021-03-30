@@ -26,6 +26,8 @@ import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
+import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterRegionDistrictSchoolCategory;
+import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterYearTermDistrictSchool;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
@@ -39,6 +41,8 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -212,44 +216,47 @@ public class SchoolCategoryPresenter
 			public void onClick(MenuItemClickEvent event) {
 //	   		SC.say("Advanced Search");
 				FilterSchoolWindow window = new FilterSchoolWindow();
+				loadFilterRegionCombo(window);
+				loadFilterDistrictCombo(window);
 				loadFilterSchoolCategoryCombo(window);
-				loadFilterSchoolDistrictCombo(window);
+				
 				window.show();
-				disableEnableFilterButton(window);
+			//	disableEnableFilterButton(window);
 				filterSchoolsBYDistrictSchoolCategory(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterSchoolWindow window) {
-		;
-		window.getFilterSchoolsPane().getCategoryCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterSchoolsPane().getCategoryCombo().getValueAsString() != null
-						&& window.getFilterSchoolsPane().getDistrictCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterSchoolsPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterSchoolsPane().getCategoryCombo().getValueAsString() != null
-						&& window.getFilterSchoolsPane().getDistrictCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
+//		;
+//		window.getFilterSchoolsPane().getCategoryCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (window.getFilterSchoolsPane().getCategoryCombo().getValueAsString() != null
+//						&& window.getFilterSchoolsPane().getDistrictCombo().getValueAsString() != null) {
+//					window.getFilterButton().setDisabled(false);
+//				} else {
+//					window.getFilterButton().setDisabled(true);
+//				}
+//			}
+//		});
+//
+//		window.getFilterSchoolsPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (window.getFilterSchoolsPane().getCategoryCombo().getValueAsString() != null
+//						&& window.getFilterSchoolsPane().getDistrictCombo().getValueAsString() != null) {
+//					window.getFilterButton().setDisabled(false);
+//				} else {
+//					window.getFilterButton().setDisabled(true);
+//				}
+//			}
+//		});
+//
 	}
 
 	private void selectFilterSchoolClassOption(final MenuButton filter) {
@@ -281,44 +288,47 @@ public class SchoolCategoryPresenter
 			public void onClick(MenuItemClickEvent event) {
 //	   		SC.say("Advanced Search");
 				FilterSchoolClassWindow window = new FilterSchoolClassWindow();
-				loadFilterSchoolClassAcademicTermCombo(window);
-				loadFilterSchoolClassSchoolCombo(window);
+			    loadFilterAcademicYearCombo(window);
+			    loadFilterDistrictCombo(window);
+			    loadFilterAcademicTermCombo(window);
+			    loadFilterSchoolCombo(window);
 				window.show();
-				disableEnableFilterButton(window);
+				//disableEnableFilterButton(window);
 				filterSchoolClassesByAcademicTermSchool(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterSchoolClassWindow window) {
-		;
-		window.getFilterSchoolClassPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				if (window.getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterSchoolClassPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterSchoolClassPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterSchoolClassPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
+//		;
+//		window.getFilterSchoolClassPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//
+//				if (window.getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString() != null
+//						&& window.getFilterSchoolClassPane().getSchoolCombo().getValueAsString() != null) {
+//					window.getFilterButton().setDisabled(false);
+//				} else {
+//					window.getFilterButton().setDisabled(true);
+//				}
+//			}
+//		});
+//
+//		window.getFilterSchoolClassPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (window.getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString() != null
+//						&& window.getFilterSchoolClassPane().getSchoolCombo().getValueAsString() != null) {
+//					window.getFilterButton().setDisabled(false);
+//				} else {
+//					window.getFilterButton().setDisabled(true);
+//				}
+//			}
+//		});
 
 	}
 
@@ -507,16 +517,39 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				SchoolWindow window = new SchoolWindow();
+				AddSchoolWindow window = new AddSchoolWindow();
 				window.show();
-				loadCategoryCombo(window, null);
+				loadRegionCombo(window, null);
+				loadSchoolCategoryCombo(window, null);
 				loadDistrictCombo(window, null);
 				saveSchool(window);
+			}
+
+		});
+	}
+	
+	//add school combos
+	
+	private void loadRegionCombo(AddSchoolWindow window , String defaultValue) {
+		ComboUtil.loadRegionCombo(window.getRegionCombo(), dispatcher, placeManager, defaultValue);
+	}
+	
+	private void loadDistrictCombo(final AddSchoolWindow window , final String defaultValue) {
+		window.getRegionCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);	
 			}
 		});
 	}
 
-	private void saveSchool(final SchoolWindow window) {
+	private void loadSchoolCategoryCombo(AddSchoolWindow window , String defaultValue) {
+		ComboUtil.loadSchoolCategoryCombo(window.getSchoolCategoryCombo() , dispatcher, placeManager, defaultValue);
+	}
+	
+
+	private void saveSchool(final AddSchoolWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -533,11 +566,11 @@ public class SchoolCategoryPresenter
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
-					schoolCategoryDTO.setId(window.getSchoolCategory().getValueAsString());
+					schoolCategoryDTO.setId(window.getSchoolCategoryCombo().getValueAsString());
 					dto.setSchoolCategoryDTO(schoolCategoryDTO);
 
 					DistrictDTO districtDTO = new DistrictDTO();
-					districtDTO.setId(window.getDistrict().getValueAsString());
+					districtDTO.setId(window.getDistrictCombo().getValueAsString());
 					dto.setDistrictDTO(districtDTO);
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -560,16 +593,19 @@ public class SchoolCategoryPresenter
 
 			}
 
-			private boolean checkIfNoSchoolWindowFieldIsEmpty(SchoolWindow window) {
+			private boolean checkIfNoSchoolWindowFieldIsEmpty(AddSchoolWindow window) {
 				boolean flag = true;
 
 				if (window.getSchoolName().getValueAsString() == null)
 					flag = false;
 
-				if (window.getSchoolCategory().getValueAsString() == null)
+				if (window.getSchoolCategoryCombo().getValueAsString() == null)
 					flag = false;
 
-				if (window.getDistrict().getValueAsString() == null)
+				if (window.getDistrictCombo().getValueAsString() == null)
+					flag = false;
+				
+				if (window.getRegionCombo().getValueAsString() == null)
 					flag = false;
 
 				if (window.getSchoolCode().getValueAsString() == null)
@@ -595,7 +631,7 @@ public class SchoolCategoryPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getView().getSchoolPane().getListGrid().anySelected()) {
-					SchoolWindow window = new SchoolWindow();
+					AddSchoolWindow window = new AddSchoolWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
 					updateSchool(window);
@@ -609,23 +645,23 @@ public class SchoolCategoryPresenter
 		});
 	}
 
-	private void loadFieldsToEdit(SchoolWindow window) {
+	private void loadFieldsToEdit(AddSchoolWindow window) {
 		ListGridRecord record = getView().getSchoolPane().getListGrid().getSelectedRecord();
 
-		window.getSchoolCategory().setValue(record.getAttribute(SchoolListGrid.CATEGORY));
+		window.getSchoolCategoryCombo().setValue(record.getAttribute(SchoolListGrid.CATEGORY));
 		window.getSchoolCode().setValue(record.getAttribute(SchoolListGrid.CODE));
-		window.getDistrict().setValue(record.getAttribute(SchoolListGrid.DISTRICT));
+		window.getDistrictCombo().setValue(record.getAttribute(SchoolListGrid.DISTRICT));
 		window.getSchoolName().setValue(record.getAttribute(SchoolListGrid.NAME));
 		window.getLatitude().setValue(record.getAttribute(SchoolListGrid.LATITUDE));
 		window.getLongtitude().setValue(record.getAttribute(SchoolListGrid.LONGITUDE));
 		window.getDeviceNumber().setValue(record.getAttribute(SchoolListGrid.DEVICE_NUMBER));
 
 		loadDistrictCombo(window, record.getAttribute(SchoolListGrid.DISTRICT_ID));
-		loadCategoryCombo(window, record.getAttribute(SchoolListGrid.CATEGORY_ID));
+		loadSchoolCategoryCombo(window, record.getAttribute(SchoolListGrid.CATEGORY_ID));
 
 	}
 
-	private void updateSchool(final SchoolWindow window) {
+	private void updateSchool(final AddSchoolWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -643,11 +679,11 @@ public class SchoolCategoryPresenter
 				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
-				schoolCategoryDTO.setId(window.getSchoolCategory().getValueAsString());
+				schoolCategoryDTO.setId(window.getSchoolCategoryCombo().getValueAsString());
 				dto.setSchoolCategoryDTO(schoolCategoryDTO);
 
 				DistrictDTO districtDTO = new DistrictDTO();
-				districtDTO.setId(window.getDistrict().getValueAsString());
+				districtDTO.setId(window.getDistrictCombo().getValueAsString());
 				dto.setDistrictDTO(districtDTO);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -667,36 +703,42 @@ public class SchoolCategoryPresenter
 		});
 	}
 
-	private void loadCategoryCombo(final SchoolWindow window, final String defaultValue) {
-		ComboUtil.loadSchoolCategoryCombo(window.getSchoolCategory(), dispatcher, placeManager, defaultValue);
-	}
-
-	private void loadDistrictCombo(final SchoolWindow window, final String defaultValue) {
-		ComboUtil.loadDistrictCombo(window.getDistrict(), dispatcher, placeManager, defaultValue);
-	}
 
 	////////////////////// Filter School combos
 
-	private void loadFilterSchoolDistrictCombo(final FilterSchoolWindow window) {
+	private void loadFilterRegionCombo(final FilterSchoolWindow window) {
 
-		ComboUtil.loadDistrictCombo(window.getFilterSchoolsPane().getDistrictCombo(), dispatcher, placeManager, null);
+		ComboUtil.loadRegionCombo(window.getFilterRegionDistrictSchoolCategory().getRegionCombo(), dispatcher, placeManager, null);
+	}
+	
+	private void loadFilterDistrictCombo(final FilterSchoolWindow window) {
+		window.getFilterRegionDistrictSchoolCategory().getRegionCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadDistrictComboByRegion(window.getFilterRegionDistrictSchoolCategory().getRegionCombo() , window.getFilterRegionDistrictSchoolCategory().getDistrictCombo(), dispatcher, placeManager, null);
+			}
+		});
+
 	}
 
 	private void loadFilterSchoolCategoryCombo(final FilterSchoolWindow window) {
-		ComboUtil.loadSchoolCategoryCombo(window.getFilterSchoolsPane().getCategoryCombo(), dispatcher, placeManager,
+		ComboUtil.loadSchoolCategoryCombo(window.getFilterRegionDistrictSchoolCategory().getSchoolCategoryCombo() , dispatcher, placeManager,
 				null);
 	}
 
 	////////////////// END OF FILTER SCHOOL COMBOS
 
-	private void clearSchoolWindowFields(SchoolWindow window) {
+	private void clearSchoolWindowFields(AddSchoolWindow window) {
 
 		window.getSchoolCode().clearValue();
 		window.getSchoolName().clearValue();
 		window.getLatitude().clearValue();
 		window.getLongtitude().clearValue();
 		window.getDeviceNumber().clearValue();
-		window.getSchoolCategory().clearValue();
+		window.getSchoolCategoryCombo().clearValue();
+		window.getRegionCombo().clearValue();
+		window.getDistrictCombo().clearValue();
 	}
 
 	private void deleteSchool(MenuButton button) {
@@ -899,14 +941,33 @@ public class SchoolCategoryPresenter
 		ComboUtil.loadSchoolCombo(window.getSchool(), dispatcher, placeManager, defaultValue);
 	}
 	//////////////////////////////// FILTER SCHOOL CLASS COMBOS
-
-	private void loadFilterSchoolClassSchoolCombo(final FilterSchoolClassWindow window) {
-		ComboUtil.loadSchoolCombo(window.getFilterSchoolClassPane().getSchoolCombo(), dispatcher, placeManager, null);
+	
+	private void loadFilterAcademicYearCombo(final FilterSchoolClassWindow window) {
+		ComboUtil.loadAcademicYearCombo(window.getFilterYearTermDistrictSchool().getAcademicYearCombo() , dispatcher, placeManager, null);
+	}
+	
+	private void loadFilterAcademicTermCombo(final FilterSchoolClassWindow window) {
+		window.getFilterYearTermDistrictSchool().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getFilterYearTermDistrictSchool().getAcademicYearCombo(), window.getFilterYearTermDistrictSchool().getAcademicTermCombo(), dispatcher, placeManager, null);
+			}
+		});
 	}
 
-	private void loadFilterSchoolClassAcademicTermCombo(final FilterSchoolClassWindow window) {
-		ComboUtil.loadAcademicTermCombo(window.getFilterSchoolClassPane().getAcademicTermCombo(), dispatcher,
-				placeManager, null);
+	private void loadFilterSchoolCombo(final FilterSchoolClassWindow window) {
+		window.getFilterYearTermDistrictSchool().getDistrictCombo().addChangeHandler(new ChangeHandler() {
+			
+			@Override
+			public void onChange(ChangeEvent event) {
+				ComboUtil.loadSchoolComboByDistrict(window.getFilterYearTermDistrictSchool().getDistrictCombo(), window.getFilterYearTermDistrictSchool().getSchoolCombo() , dispatcher, placeManager, null);			}
+		});
+	
+	}
+
+	private void loadFilterDistrictCombo(final FilterSchoolClassWindow window) {
+		ComboUtil.loadDistrictCombo(window.getFilterYearTermDistrictSchool().getDistrictCombo(), dispatcher, placeManager, null);
 	}
 
 	/////////////////////// END OF FILTER SCHOOL CLASS COMBOS
@@ -981,8 +1042,8 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				String schoolCategoryId = window.getFilterSchoolsPane().getCategoryCombo().getValueAsString();
-				String districtId = window.getFilterSchoolsPane().getDistrictCombo().getValueAsString();
+				String schoolCategoryId = window.getFilterRegionDistrictSchoolCategory().getSchoolCategoryCombo().getValueAsString();
+				String districtId = window.getFilterRegionDistrictSchoolCategory().getDistrictCombo().getValueAsString();
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
@@ -1005,8 +1066,8 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				String academicTermId = window.getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString();
-				String schoolId = window.getFilterSchoolClassPane().getSchoolCombo().getValueAsString();
+				String academicTermId = window.getFilterYearTermDistrictSchool().getAcademicTermCombo().getValueAsString();
+				String schoolId = window.getFilterYearTermDistrictSchool().getSchoolCombo().getValueAsString();
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);

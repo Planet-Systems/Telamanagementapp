@@ -585,12 +585,14 @@ public class SubjectCategoryPresenter
 				String subjectCategoryId = window.getFilterSubjectsPane().getCategoryCombo().getValueAsString();
 
 				map.put(RequestDelimeters.SUBJECT_CATEGORY_ID, subjectCategoryId);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SUBJECTS_SUBJECT_CATEGORY);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SUBJECTS_IN_SUBJECT_CATEGORY);
+				window.close();
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 					@Override
 					public void onNetworkResult(RequestResult result) {
+						window.close();
 						getView().getSubjectPane().getListGrid().addRecordsToGrid(result.getSubjectDTOs());
 					}
 				});

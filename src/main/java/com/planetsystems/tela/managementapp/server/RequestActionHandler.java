@@ -1197,7 +1197,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SUBJECTS_SUBJECT_CATEGORY)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SUBJECTS_IN_SUBJECT_CATEGORY)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SubjectDTO> list = new ArrayList<SubjectDTO>();
@@ -1208,7 +1208,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-
+//subjectcategories/{subjectCategoryID}/subjects
 				SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(API_LINK).path("subjectcategories")
 						.path(id).path("subjects").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SubjectDTO>>>() {

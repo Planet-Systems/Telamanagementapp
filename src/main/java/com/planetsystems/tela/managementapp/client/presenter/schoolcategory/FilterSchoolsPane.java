@@ -4,6 +4,8 @@ import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.HLayout;
 
+
+@Deprecated
 public class FilterSchoolsPane extends HLayout {
 
 	private ComboBox districtCombo;

@@ -273,6 +273,53 @@ public class ComboUtil {
 		});
 	}
 
+	
+	
+	public static void loadDistrictComboByRegion(final ComboBox regionCombo , final ComboBox districtCombo, final DispatchAsync dispatcher,
+			final PlaceManager placeManager, final String defaultValue) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestDelimeters.REGION_ID , regionCombo.getValueAsString());
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		SC.showPrompt("", "", new SwizimaLoader());
+		dispatcher.execute(new RequestAction(RequestConstant.GET_DISTRICTS_IN_REGION, map), new AsyncCallback<RequestResult>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+				SC.warn("ERROR", caught.getMessage());
+				GWT
+
+						.log("ERROR " + caught.getMessage());
+				SC.clearPrompt();
+
+			}
+
+			@Override
+			public void onSuccess(RequestResult result) {
+
+				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
+				if (result != null) {
+
+					if (result.getSystemFeedbackDTO() != null) {
+						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+						for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
+							valueMap.put(districtDTO.getId(), districtDTO.getName());
+						}
+						districtCombo.setValueMap(valueMap);
+						if (defaultValue != null) {
+							districtCombo.setValue(defaultValue);
+						}
+					}
+				} else {
+					SC.warn("ERROR", "Unknow error");
+				}
+
+			}
+		});
+	}
+
 	///////////////////////////// SCHOOL COMBOS
 
 	public static void loadSchoolCombo(final ComboBox schoolCombo, final DispatchAsync dispatcher,

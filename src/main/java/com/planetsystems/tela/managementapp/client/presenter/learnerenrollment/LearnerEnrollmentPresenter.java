@@ -135,12 +135,13 @@ public class LearnerEnrollmentPresenter
 				loadFilterLearnerHeadCountSchoolCombo(window);
 				filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
 				window.show();
-				disableEnableFilterButton(window);
+				//disableEnableFilterButton(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	private void disableEnableFilterButton(final FilterLearnerHeadCountWindow window) {
 		;
 		window.getFilterLearnerHeadCountPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
