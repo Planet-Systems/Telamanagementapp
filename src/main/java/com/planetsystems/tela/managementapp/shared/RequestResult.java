@@ -9,6 +9,7 @@ import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.RegionDto;
@@ -35,6 +36,7 @@ public class RequestResult implements Result {
 
 	private SystemFeedbackDTO systemFeedbackDTO;
 	private TokenFeedbackDTO tokenFeedbackDTO;
+	private FilterDTO filterDto;
 	private SystemErrorDTO systemErrorDTO;
 	private List<AcademicYearDTO> academicYearDTOs;
 	private List<AcademicTermDTO> academicTermDTOs;
@@ -59,6 +61,7 @@ public class RequestResult implements Result {
     private List<StaffDailyAttendanceSupervisionDTO> staffDailyAttendanceSupervisionDTOs;
     private List<StaffDailyAttendanceTaskSupervisionDTO> staffDailyAttendanceTaskSupervisionDTOs;
     private List<TimeAttendanceSupervisionDTO> timeAttendanceSupervisionDTOs;
+
 
 
 	/**
@@ -245,6 +248,13 @@ public class RequestResult implements Result {
 		super();
 		this.systemErrorDTO = systemErrorDTO;
 	}
+	
+	
+
+	public RequestResult(FilterDTO filterDto) {
+		super();
+		this.filterDto = filterDto;
+	}
 
 	public SystemFeedbackDTO getSystemFeedbackDTO() {
 		return systemFeedbackDTO;
@@ -362,6 +372,13 @@ public class RequestResult implements Result {
 	public List<TimeAttendanceSupervisionDTO> getTimeAttendanceSupervisionDTOs() {
 		return timeAttendanceSupervisionDTOs;
 	}
+	
+	
+
+	public FilterDTO getFilterDto() {
+		return filterDto;
+	}
+
 
 	@Override
 	public String toString() {

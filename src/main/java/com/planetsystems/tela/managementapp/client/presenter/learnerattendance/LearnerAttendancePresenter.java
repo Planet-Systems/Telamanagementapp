@@ -19,8 +19,12 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -462,15 +466,17 @@ public class LearnerAttendancePresenter
 				String schoolId = window.getFilterLearnerAttendancePane().getSchoolCombo().getValueAsString();
 				String date = dateFormat
 						.format(window.getFilterLearnerAttendancePane().getAttendanceDateItem().getValueAsDate());
-
+                FilterDTO dto = new FilterDTO();
+                dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+                dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+                dto.setDistrictDTO(new DistrictDTO(districtId));
+                dto.setSchoolDTO(new SchoolDTO(schoolId));
+                dto.setDate(date);
+				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.ATTENDANCE_DATE, date);
+				map.put(RequestDelimeters.FILTER_LEARNER_ATTENDANCES , dto);
 
-				map.put(NetworkDataUtil.ACTION , RequestConstant.GET_LEARNER_ATTENDANCE_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
+				map.put(NetworkDataUtil.ACTION , RequestConstant.FILTER_LEARNER_ATTENDANCE_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.bcel.generic.NEW;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -20,6 +22,9 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
@@ -178,43 +183,12 @@ public class StaffEnrollmentPresenter
 				loadFilterStaffDistrictCombo(window);
 				loadFilterStaffSchoolCombo(window);
 				window.show();
-				//disableEnableFilterButton(window);
 				filterSchoolStaffsByDistrictSchool(window);
 			}
 		});
 
 	}
 
-	@Deprecated
-	private void disableEnableFilterButton(final FilterStaffWindow window) {
-		;
-		window.getFilterStaffsPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterStaffsPane().getDistrictCombo().getValueAsString() != null
-						&& window.getFilterStaffsPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterStaffsPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterStaffsPane().getDistrictCombo().getValueAsString() != null
-						&& window.getFilterStaffsPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-	}
 
 	private void selectFilterStaffEnrollmentOption(final MenuButton filter) {
 		final Menu menu = new Menu();
@@ -251,43 +225,11 @@ public class StaffEnrollmentPresenter
 				loadFilterStaffHeadCountAcademicTermCombo(window);
 				filterSchoolStaffEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
 				window.show();
-				disableEnableFilterButton(window);
-
 			}
 		});
 	}
 
-	@Deprecated
-	private void disableEnableFilterButton(final FilterStaffHeadCountWindow window) {
-		;
-		window.getFilterStaffHeadCountPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				if (window.getFilterStaffHeadCountPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterStaffHeadCountPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterStaffHeadCountPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterStaffHeadCountPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterStaffHeadCountPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-	}
+	
 	//////////////////////
 
 	private void addStaffEnrollment(MenuButton newButton) {
@@ -689,11 +631,14 @@ public class StaffEnrollmentPresenter
 			public void onClick(ClickEvent event) {
 				String districtId = window.getFilterStaffsPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterStaffsPane().getSchoolCombo().getValueAsString();
+				
+				FilterDTO dto = new FilterDTO();
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL);
+				map.put(RequestDelimeters.FILTER_SCHOOL_STAFFS, dto);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -719,13 +664,16 @@ public class StaffEnrollmentPresenter
 				String districtId = window.getFilterStaffHeadCountPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterStaffHeadCountPane().getSchoolCombo().getValueAsString();
 
+				FilterDTO dto = new FilterDTO();
+				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+				map.put(RequestDelimeters.FILTER_STAFF_ENROLLMENTS, dto);
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.GET_SCHOOL_STAFF_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
+						RequestConstant.FILTER_SCHOOL_STAFF_ENROLLMENTS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

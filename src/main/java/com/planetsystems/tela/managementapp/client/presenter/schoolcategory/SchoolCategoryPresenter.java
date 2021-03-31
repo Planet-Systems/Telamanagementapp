@@ -19,7 +19,10 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
+import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
@@ -221,43 +224,12 @@ public class SchoolCategoryPresenter
 				loadFilterSchoolCategoryCombo(window);
 				
 				window.show();
-			//	disableEnableFilterButton(window);
 				filterSchoolsBYDistrictSchoolCategory(window);
 			}
 		});
 
 	}
 
-	@Deprecated
-	private void disableEnableFilterButton(final FilterSchoolWindow window) {
-//		;
-//		window.getFilterSchoolsPane().getCategoryCombo().addChangedHandler(new ChangedHandler() {
-//
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//				if (window.getFilterSchoolsPane().getCategoryCombo().getValueAsString() != null
-//						&& window.getFilterSchoolsPane().getDistrictCombo().getValueAsString() != null) {
-//					window.getFilterButton().setDisabled(false);
-//				} else {
-//					window.getFilterButton().setDisabled(true);
-//				}
-//			}
-//		});
-//
-//		window.getFilterSchoolsPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
-//
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//				if (window.getFilterSchoolsPane().getCategoryCombo().getValueAsString() != null
-//						&& window.getFilterSchoolsPane().getDistrictCombo().getValueAsString() != null) {
-//					window.getFilterButton().setDisabled(false);
-//				} else {
-//					window.getFilterButton().setDisabled(true);
-//				}
-//			}
-//		});
-//
-	}
 
 	private void selectFilterSchoolClassOption(final MenuButton filter) {
 		final Menu menu = new Menu();
@@ -293,44 +265,12 @@ public class SchoolCategoryPresenter
 			    loadFilterAcademicTermCombo(window);
 			    loadFilterSchoolCombo(window);
 				window.show();
-				//disableEnableFilterButton(window);
 				filterSchoolClassesByAcademicTermSchool(window);
 			}
 		});
 
 	}
 
-	@Deprecated
-	private void disableEnableFilterButton(final FilterSchoolClassWindow window) {
-//		;
-//		window.getFilterSchoolClassPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-//
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//
-//				if (window.getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString() != null
-//						&& window.getFilterSchoolClassPane().getSchoolCombo().getValueAsString() != null) {
-//					window.getFilterButton().setDisabled(false);
-//				} else {
-//					window.getFilterButton().setDisabled(true);
-//				}
-//			}
-//		});
-//
-//		window.getFilterSchoolClassPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-//
-//			@Override
-//			public void onChanged(ChangedEvent event) {
-//				if (window.getFilterSchoolClassPane().getAcademicTermCombo().getValueAsString() != null
-//						&& window.getFilterSchoolClassPane().getSchoolCombo().getValueAsString() != null) {
-//					window.getFilterButton().setDisabled(false);
-//				} else {
-//					window.getFilterButton().setDisabled(true);
-//				}
-//			}
-//		});
-
-	}
 
 	///////////////////////////////////////////////// SCHOOL
 	///////////////////////////////////////////////// CATEGORY//////////////////////////////////////////////////////////
@@ -1044,11 +984,18 @@ public class SchoolCategoryPresenter
 			public void onClick(ClickEvent event) {
 				String schoolCategoryId = window.getFilterRegionDistrictSchoolCategory().getSchoolCategoryCombo().getValueAsString();
 				String districtId = window.getFilterRegionDistrictSchoolCategory().getDistrictCombo().getValueAsString();
-
+				String regionId = window.getFilterRegionDistrictSchoolCategory().getRegionCombo().getValueAsString();
+                FilterDTO dto = new FilterDTO();
+                dto.setSchoolCategoryDTO(new SchoolCategoryDTO(schoolCategoryId));
+                dto.setDistrictDTO(new DistrictDTO(districtId));
+                dto.setRegionDto(new RegionDto(regionId));
+				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-				map.put(RequestDelimeters.SCHOOL_CATEGORY_ID, schoolCategoryId);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS_IN_SCHOOL_CATEGORY_DISTRICT);
+				
+//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
+//				map.put(RequestDelimeters.REGION_ID, regionId);
+				map.put(RequestDelimeters.FILTER_SCHOOL, dto);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_SCHOOLS_BY_SCHOOL_CATEGORY_REGION_DISTRICT);
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 					@Override
@@ -1066,14 +1013,20 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
+				String academicYearId = window.getFilterYearTermDistrictSchool().getAcademicYearCombo().getValueAsString();
 				String academicTermId = window.getFilterYearTermDistrictSchool().getAcademicTermCombo().getValueAsString();
+				String districtId = window.getFilterYearTermDistrictSchool().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterYearTermDistrictSchool().getSchoolCombo().getValueAsString();
-
+              
+				FilterDTO dto = new FilterDTO();
+                dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+                dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+                dto.setDistrictDTO(new DistrictDTO(districtId));
+                dto.setSchoolDTO(new SchoolDTO(schoolId));
+                
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-//				map.put(RequestConstant.GET_SCHOOL_CLASS_IN_SCHOOL_ACADEMIC, map);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASS_IN_SCHOOL_ACADEMIC);
+				map.put(RequestDelimeters.FILTER_SCHOOL_CLASS , dto);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_SCHOOL_CLASS_BY_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL);
 			}
 		});
 	}

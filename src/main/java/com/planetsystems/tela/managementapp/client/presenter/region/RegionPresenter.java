@@ -603,7 +603,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.REGION_ID, id);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_IN_REGION);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_DISTRICTS_BY_REGION);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

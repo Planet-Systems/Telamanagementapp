@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.bcel.generic.NEW;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -20,8 +22,11 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
+import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -171,43 +176,11 @@ public class StaffAttendancePresenter
 				loadFilterClockInSchoolCombo(window);
 				window.show();
 				filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
-				//disableEnableFilterButton(window);
 			}
 		});
 
 	}
 
-	@Deprecated
-	private void disableEnableFilterButton(final FilterClockInWindow window) {
-		;
-		window.getFilterClockInPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				if (window.getFilterClockInPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterClockInPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterClockInPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterClockInPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterClockInPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-	}
 
 	private void selectFilterClockOutOption(final MenuButton filter) {
 		final Menu menu = new Menu();
@@ -242,39 +215,6 @@ public class StaffAttendancePresenter
 				loadFilterClockOutSchoolCombo(window);
 				window.show();
 				filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
-				//disableEnableFilterButton(window);
-			}
-		});
-
-	}
-
-	@Deprecated
-	private void disableEnableFilterButton(final FilterClockOutWindow window) {
-		;
-		window.getFilterClockOutPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				if (window.getFilterClockOutPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterClockOutPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterClockOutPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterClockOutPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterClockOutPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
 			}
 		});
 
@@ -606,14 +546,22 @@ public class StaffAttendancePresenter
 				String schoolId = window.getFilterClockInPane().getSchoolCombo().getValueAsString();
 				String date = dateFormat.format(window.getFilterClockInPane().getClockinDateItem().getValueAsDate());
 
+				FilterDTO dto = new FilterDTO();
+				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				dto.setDate(date);
+				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.CLOCKIN_DATE, date);
+				map.put(RequestDelimeters.FILTER_CLOCK_INS, dto);
+//				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
+//				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
+//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
+//				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+//				map.put(RequestDelimeters.CLOCKIN_DATE, date);
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.GET_CLOCKINS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
+						RequestConstant.FILTER_CLOCKINS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -637,15 +585,23 @@ public class StaffAttendancePresenter
 				String districtId = window.getFilterClockOutPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterClockOutPane().getSchoolCombo().getValueAsString();
 				String date = dateFormat.format(window.getFilterClockOutPane().getClockinDateItem().getValueAsDate());
-
+                 
+				FilterDTO dto = new FilterDTO();
+				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				dto.setDate(date);
+				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.CLOCK_OUT_DATE, date);
+//				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
+//				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
+//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
+//				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+//				map.put(RequestDelimeters.CLOCK_OUT_DATE, date);
+				map.put(RequestDelimeters.FILTER_CLOCK_OUTS, dto);
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.GET_CLOCK_OUTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
+						RequestConstant.FILTER_CLOCK_OUTS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 					@Override

@@ -624,7 +624,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				String id = window.getFilterAcademicTermsPane().getAcademicYearCombo().getValueAsString();
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_ACADEMIC_TERMS_BY_ACADEMIC_YEAR);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
