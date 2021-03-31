@@ -1,65 +1,23 @@
 package com.planetsystems.tela.managementapp.server;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
+import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
+import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
+import com.gwtplatform.dispatch.shared.ActionException;
+import com.planetsystems.tela.dto.*;
+import com.planetsystems.tela.managementapp.shared.RequestAction;
+import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
+import com.planetsystems.tela.managementapp.shared.RequestResult;
 
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-
-import com.google.inject.Inject;
-import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
-import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
-import com.gwtplatform.dispatch.shared.ActionException;
-import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.AcademicYearDTO;
-import com.planetsystems.tela.dto.AuthenticationDTO;
-import com.planetsystems.tela.dto.ClockInDTO;
-import com.planetsystems.tela.dto.ClockOutDTO;
-import com.planetsystems.tela.dto.DistrictDTO;
-import com.planetsystems.tela.dto.LearnerAttendanceDTO;
-import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
-import com.planetsystems.tela.dto.RegionDto;
-import com.planetsystems.tela.dto.SchoolCategoryDTO;
-import com.planetsystems.tela.dto.SchoolClassDTO;
-import com.planetsystems.tela.dto.SchoolDTO;
-import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
-import com.planetsystems.tela.dto.StaffEnrollmentDto;
-import com.planetsystems.tela.dto.SubjectCategoryDTO;
-import com.planetsystems.tela.dto.SubjectDTO;
-import com.planetsystems.tela.dto.SystemErrorDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
-import com.planetsystems.tela.dto.SystemMenuDTO;
-import com.planetsystems.tela.dto.SystemResponseDTO;
-import com.planetsystems.tela.dto.SystemUserDTO;
-import com.planetsystems.tela.dto.SystemUserGroupDTO;
-import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
-import com.planetsystems.tela.dto.SystemUserProfileDTO;
-import com.planetsystems.tela.dto.TimeTableDTO;
-import com.planetsystems.tela.dto.TimeTableLessonDTO;
-import com.planetsystems.tela.dto.TokenFeedbackDTO;
-import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.FilterLearnerAttendanceWindow;
-import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.FilterLearnerHeadCountWindow;
-import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolClassPane;
-import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolsPane;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockInWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockOutWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.CreateStaffDailyTaskPane;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.StaffDailyAttendancePane;
-import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffHeadCountWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffsPane;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
-import com.planetsystems.tela.managementapp.shared.RequestConstant;
-import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
-import com.planetsystems.tela.managementapp.shared.RequestResult;
+import javax.ws.rs.core.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestActionHandler implements ActionHandler<RequestAction, RequestResult> {
 
