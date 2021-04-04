@@ -109,11 +109,13 @@ public class CreateStaffDailyTaskPane extends VLayout {
 		schoolStaffCombo.setTitle("Staff");
 		schoolStaffCombo.setHint("Staff");
 		schoolStaffCombo.setShowHintInField(true);
+ 
 
 		dayField = new TextItem("Day");
 		dayField.setValue(dayFormat.format(new Date()));
 		dayField.disable();
-
+		
+  
 		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField, schoolStaffCombo);
 
 		saveButton = new IButton("Save");

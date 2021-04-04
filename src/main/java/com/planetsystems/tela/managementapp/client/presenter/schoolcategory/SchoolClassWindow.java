@@ -13,10 +13,12 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class SchoolClassWindow extends Window {
 
-	private TextField classCode;
-	private TextField cName;
-	private ComboBox school;
-	private ComboBox academicTerm;
+	private ComboBox academicYearCombo;
+	private ComboBox academicTermCombo;
+	private ComboBox districtCombo;
+	private ComboBox schoolCombo;
+	private TextField codeField;
+	private TextField classNameField;
 	
 
 	private IButton saveButton;
@@ -24,25 +26,35 @@ public class SchoolClassWindow extends Window {
 
 	public SchoolClassWindow() {
 		super();
-		classCode = new TextField();
-		classCode.setTitle("Code");
-		classCode.setHint("Code");
-		classCode.setShowHintInField(true);
+		codeField = new TextField();
+		codeField.setTitle("Code");
+		codeField.setHint("Code");
+		codeField.setShowHintInField(true);
 
-		cName = new TextField();
-		cName.setTitle("Class");
-		cName.setHint("Class");
-		cName.setShowHintInField(true);
+		classNameField = new TextField();
+		classNameField.setTitle("Class");
+		classNameField.setHint("Class");
+		classNameField.setShowHintInField(true);
 
-		school = new ComboBox();
-		school.setTitle("School");
-		school.setHint("School");
-		school.setShowHintInField(true);
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("School");
+		schoolCombo.setShowHintInField(true);
 		
-		academicTerm = new ComboBox();
-		academicTerm.setTitle("Academic Term");
-		academicTerm.setHint("Academic Term");
-		academicTerm.setShowHintInField(true);
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
+		
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Academic Term");
+		academicTermCombo.setShowHintInField(true);
+		
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Academic Year");
+		academicYearCombo.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
 		
@@ -50,7 +62,7 @@ public class SchoolClassWindow extends Window {
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicTerm , school ,classCode, cName );
+		form.setFields(academicYearCombo , academicTermCombo  ,districtCombo , schoolCombo ,codeField , classNameField );
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setColWidths("150","250");
@@ -71,7 +83,7 @@ public class SchoolClassWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setHeight("70%");
 		this.setAutoCenter(true);
 		this.setTitle("Classes");
 		this.setIsModal(true);
@@ -89,34 +101,37 @@ public class SchoolClassWindow extends Window {
 		});
 	}
 
-	public TextField getClassCode() {
-		return classCode;
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
 	}
 
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
+	}
 
-	public ComboBox getSchool() {
-		return school;
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
+	}
+
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
+	}
+
+	public TextField getCodeField() {
+		return codeField;
+	}
+
+	public TextField getClassNameField() {
+		return classNameField;
 	}
 
 	public IButton getSaveButton() {
 		return saveButton;
 	}
 
-	public TextField getcName() {
-		return cName;
+	public IButton getCancelButton() {
+		return cancelButton;
 	}
-
-	public ComboBox getAcademicTerm() {
-		return academicTerm;
-	}
-
-
-	
-	
-
-	
-
-
 
 
 }

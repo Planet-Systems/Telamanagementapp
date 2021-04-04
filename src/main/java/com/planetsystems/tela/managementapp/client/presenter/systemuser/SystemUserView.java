@@ -8,7 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.ViewImpl; 
 import com.planetsystems.tela.managementapp.client.presenter.region.DistrictPane;
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
@@ -18,22 +18,50 @@ import com.smartgwt.client.widgets.tab.TabSet;
 
 class SystemUserView extends ViewImpl implements SystemUserPresenter.MyView {
 	private static final String DEFAULT_MARGIN = "0px";
+	
 	private VLayout panel;
-	private SystemUserPane systemUserPane;
 	private ControlsPane controlsPane;
+	private SystemUserPane systemUserPane;
+	 
+	private SystemMenuPane systemMenuPane;
+	
+	private UserGroupPane userGroupPane;
+	
+	private TabSet tabSet;
 	
     @Inject
     SystemUserView() {
     	panel = new VLayout();
     	controlsPane = new ControlsPane();
     	systemUserPane = new SystemUserPane();
+    	userGroupPane=new UserGroupPane();
+    	systemMenuPane=new SystemMenuPane();
 
-    	VLayout layout = new VLayout();
-    	layout.setWidth100();
-    	layout.setHeight100();
-    	layout.addMembers(controlsPane , systemUserPane);
-    	
-    	panel.addMember(layout);
+    	Tab userRolePaneTab = new Tab();
+		userRolePaneTab.setPane(userGroupPane);
+		userRolePaneTab.setTitle("System user groups");
+
+
+		Tab usersPaneTab = new Tab();
+		usersPaneTab.setPane(systemUserPane);
+		usersPaneTab.setTitle("System user details");
+		
+		Tab systemMenuPaneTab = new Tab();
+		systemMenuPaneTab.setPane(systemMenuPane);
+		systemMenuPaneTab.setTitle("System Menu Setup");
+
+		tabSet = new TabSet();
+
+		tabSet.addTab(userRolePaneTab);
+		tabSet.addTab(usersPaneTab); 
+		tabSet.addTab(systemMenuPaneTab);
+
+		tabSet.setMargin(0);
+		tabSet.setPadding(0);
+
+		panel.addMember(controlsPane);
+		panel.addMember(tabSet);
+		
     	panel.setWidth100();
 		panel.setHeight("90%");
 		Window.enableScrolling(false);
@@ -51,6 +79,18 @@ class SystemUserView extends ViewImpl implements SystemUserPresenter.MyView {
 
 	public SystemUserPane getSystemUserPane() {
 		return systemUserPane;
+	}
+
+	public SystemMenuPane getSystemMenuPane() {
+		return systemMenuPane;
+	}
+
+	public UserGroupPane getUserGroupPane() {
+		return userGroupPane;
+	}
+
+	public TabSet getTabSet() {
+		return tabSet;
 	}
 
 	

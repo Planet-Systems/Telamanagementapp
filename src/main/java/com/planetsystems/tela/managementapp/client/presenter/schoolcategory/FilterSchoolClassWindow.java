@@ -43,7 +43,7 @@ public class FilterSchoolClassWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("40%");
+		this.setHeight("50%");
 		this.setAutoCenter(true);
 		this.setTitle("Filter Classes");
 		this.setIsModal(true);

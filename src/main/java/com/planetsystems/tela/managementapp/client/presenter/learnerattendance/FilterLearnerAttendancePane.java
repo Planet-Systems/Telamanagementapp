@@ -18,11 +18,6 @@ public class FilterLearnerAttendancePane extends HLayout {
 	private DateItem attendanceDateItem;
 
 	
-	public static final String DISTRICT_ID = "DISTRICT_ID";
-	public static final String SCHOOL_ID = "SCHOOL_ID";
-	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
-	
 	public FilterLearnerAttendancePane() {
 		super();
 

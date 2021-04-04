@@ -103,6 +103,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 													.nameToken(NameTokens.dashboard).build();
 
 											placeManager.revealPlace(placeRequest);
+											
 										} else {
 											Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
 											Cookies.removeCookie(RequestConstant.LOGED_IN);
@@ -130,7 +131,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 
 	private void goToMain(String token) {
 		 PlaceRequest mainPlaceRequest = new
-		 PlaceRequest.Builder().nameToken(NameTokens.academicYear).build();
+		 PlaceRequest.Builder().nameToken(NameTokens.assessmentperiod).build();
 		 placeManager.revealPlace(mainPlaceRequest);
 
 	//	SC.say("going to main");

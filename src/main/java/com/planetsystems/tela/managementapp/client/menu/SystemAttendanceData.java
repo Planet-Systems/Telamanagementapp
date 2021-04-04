@@ -5,15 +5,10 @@ package com.planetsystems.tela.managementapp.client.menu;
 
 import java.util.List;
 
+import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class SystemAttendanceData {
-
-	public static final String STAFF = "Staff";
-	public static final String LEARNER = "Learner";
-	public	static	final String STAFF_DAILY_ATTENDANCE_SUPERVISION = "Staff Supervision";
-	public	static	final String STAFF_DAILY_TASKS = "Staff Daily Task";
-	public	static	final String STAFF_DAILY_TIME_ATTENDANCE = "Staff Daily Time Attendance";
 
 	private static ListGridRecord[] records;
 
@@ -35,12 +30,12 @@ public class SystemAttendanceData {
 
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] {
-				createRecord("", "application_form", STAFF),
-				createRecord("", "application_form", LEARNER),
-				createRecord("", "application_form", STAFF_DAILY_TASKS),
-				createRecord("", "application_form", STAFF_DAILY_ATTENDANCE_SUPERVISION),
-				createRecord("", "application_form", STAFF_DAILY_TIME_ATTENDANCE),
-					
+				createRecord("", "application_form", NameTokens.staffAttendance),
+				createRecord("", "application_form", NameTokens.learnerAttendance),
+				createRecord("", "application_form", NameTokens.StaffDailyTask),
+				createRecord("", "application_form", NameTokens.HeadTeacherSupervision),
+	
+
 		};
 
 	}

@@ -72,6 +72,7 @@ public class StaffDailyTaskPresenter
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
+	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
 	DateTimeFormat timeFormat = DateTimeFormat.getFormat(DatePattern.HOUR_MINUTE_SECONDS.getPattern());
 
 	@NameToken(NameTokens.StaffDailyTask)
@@ -172,10 +173,11 @@ public class StaffDailyTaskPresenter
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.ATTENDANCE_DATE, dateFormat.format(new Date()));
+				map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.GET_STAFF_DAILY_ATTENDANCE_ACADEMIC_YEAR_TERM_DUSTRICT_SCHOOL_DATE);
+						RequestConstant.GET_STAFF_DAILY_ATTENDANCE_ACADEMIC_YEAR_TERM_DUSTRICT_SCHOOL_DAY);
 
+				
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 					@Override
@@ -184,7 +186,6 @@ public class StaffDailyTaskPresenter
 								.addRecordsToGrid(result.getStaffDailyAttendanceDTOs());
 					}
 				});
-
 			}
 		});
 
@@ -278,7 +279,7 @@ public class StaffDailyTaskPresenter
 					}
 				});
 
-				getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDate(createStaffDailyTaskPane);
+				getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(createStaffDailyTaskPane);
 				saveStaffDailyAttendanceTask(createStaffDailyTaskPane);
 
 				closeCreateStaffDailyTaskTab(createStaffDailyTaskPane);
@@ -302,7 +303,7 @@ public class StaffDailyTaskPresenter
 
 	///////////////////////////
 
-	private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDate(
+	private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(
 			final CreateStaffDailyTaskPane createStaffDailyTaskPane) {
 		createStaffDailyTaskPane.getLoadLessonButton().addClickHandler(new ClickHandler() {
 
@@ -322,9 +323,9 @@ public class StaffDailyTaskPresenter
 					map.put(RequestDelimeters.DISTRICT_ID, districtId);
 					map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 					map.put(RequestDelimeters.SCHOOL_STAFF_ID, schoolStaffId);
-					map.put(RequestDelimeters.ATTENDANCE_DATE, dateFormat.format(new Date()));
+					map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
 					map.put(NetworkDataUtil.ACTION,
-							RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
+							RequestConstant.GET_TIME_TABLE_LESSONS_FOR_STAFF_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY);
 
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -338,7 +339,7 @@ public class StaffDailyTaskPresenter
 								createStaffDailyTaskPane.getSaveButton().enable();
 						}
 					});
-					
+
 				} else {
 					SC.say("Please Fill all the fields");
 				}
@@ -440,7 +441,7 @@ public class StaffDailyTaskPresenter
 
 					staffDailyAttendanceDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-					staffDailyAttendanceDTO.setDailyAttendanceDate(dateFormat.format(new Date()));
+					staffDailyAttendanceDTO.setLessonDay(dayFormat.format(new Date()));
 
 					staffDailyAttendanceDTO.setSchoolStaffDTO(new SchoolStaffDTO(staffBox.getValueAsString()));
 
@@ -454,7 +455,7 @@ public class StaffDailyTaskPresenter
 						taskDTO.setAttendanceStatus("present");
 						taskDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 						taskDTO.setUpdatedDateTime(dateTimeFormat.format(new Date()));
-						taskDTO.setDailyAttendanceDate(dateFormat.format(new Date()));
+						taskDTO.setLessonDay(dayFormat.format(new Date()));
 						taskDTO.setEndTime(record.getAttributeAsString(LessonListGrid.END_TIME));
 						taskDTO.setStartTime(record.getAttributeAsString(LessonListGrid.START_TIME));
 						taskDTO.setSchoolClassDTO(
@@ -469,15 +470,15 @@ public class StaffDailyTaskPresenter
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_STAFF_DAILY_ATTENDANCE_TASKS, staffDailyAttendanceDTO);
 					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_STAFF_DAILY_ATTENDANCE_TASKS);
-					
+
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-						
+
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							SC.say("Success" , result.getSystemFeedbackDTO().getMessage());
 						}
 					});
-					
+
 				} else {
 					SC.say("Please select lessons");
 				}
@@ -527,7 +528,7 @@ public class StaffDailyTaskPresenter
 					getView().getTabSet().addTab(tab);
 					getView().getTabSet().selectTab(tab);
 
-					getStaffDailyAttendanceTasksByStaffDateStaffDailyAttendance(viewStaffDailyAttendanceTaskPane,
+					getStaffDailyAttendanceTasksByStaffDayStaffDailyAttendance(viewStaffDailyAttendanceTaskPane,
 							record);
 
 					closeViewStaffDailyAttendanceTaskTab(viewStaffDailyAttendanceTaskPane);
@@ -539,16 +540,16 @@ public class StaffDailyTaskPresenter
 		});
 	}
 
-	private void getStaffDailyAttendanceTasksByStaffDateStaffDailyAttendance(
+	private void getStaffDailyAttendanceTasksByStaffDayStaffDailyAttendance(
 			final ViewStaffDailyAttendanceTaskPane viewStaffDailyAttendanceTaskPane, final ListGridRecord record) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.SCHOOL_STAFF_ID, record.getAttribute(StaffDailyAttendanceListGrid.SCHOOL_STAFF_ID));
 		map.put(RequestDelimeters.STAFF_DAILY_ATTENDANCE_LESSON_ID,
 				record.getAttribute(StaffDailyAttendanceListGrid.ID));
-		map.put(RequestDelimeters.ATTENDANCE_DATE, dateFormat.format(new Date()));
+		map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
 		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASKS_FOR_STAFF_DATE_DAILY_ATTENDANCE);
+				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASKS_FOR_STAFF_DAY_DAILY_ATTENDANCE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

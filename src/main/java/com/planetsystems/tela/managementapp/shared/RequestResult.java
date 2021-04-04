@@ -26,8 +26,12 @@ import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
+import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
+import com.planetsystems.tela.dto.SystemUserGroupDTO;
+import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
+import com.planetsystems.tela.dto.SystemUserProfileDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
@@ -50,18 +54,25 @@ public class RequestResult implements Result {
 	private List<SchoolStaffDTO> schoolStaffDTOs;
 	private List<StaffEnrollmentDto> staffEnrollmentDtos;
 	private List<LearnerEnrollmentDTO> learnerEnrollmentDTOs;
-    private List<ClockInDTO> clockInDTOs;
-    private List<ClockOutDTO> clockOutDTOs;
-    private List<LearnerAttendanceDTO> learnerAttendanceDTOs;
-    private List<TimeTableDTO> timeTableDTOs;
-    private List<TimeTableLessonDTO> tableLessonDTOs;
-    private List<SystemUserDTO> systemUserDTOs;
-    private List<StaffDailyAttendanceDTO> staffDailyAttendanceDTOs;
-    private List<StaffDailyAttendanceTaskDTO> staffDailyAttendanceTaskDTOs;
+
+	private List<ClockInDTO> clockInDTOs;
+	private List<ClockOutDTO> clockOutDTOs;
+	private List<LearnerAttendanceDTO> learnerAttendanceDTOs;
+	private List<TimeTableDTO> timeTableDTOs;
+	private List<TimeTableLessonDTO> tableLessonDTOs;
+	private List<SystemUserDTO> systemUserDTOs;
+	private List<StaffDailyAttendanceDTO> staffDailyAttendanceDTOs;
+	private List<StaffDailyAttendanceTaskDTO> staffDailyAttendanceTaskDTOs;
     private List<StaffDailyAttendanceSupervisionDTO> staffDailyAttendanceSupervisionDTOs;
     private List<StaffDailyAttendanceTaskSupervisionDTO> staffDailyAttendanceTaskSupervisionDTOs;
     private List<TimeAttendanceSupervisionDTO> timeAttendanceSupervisionDTOs;
+    private List<SystemMenuDTO> systemMenuDTOs;
 
+	private List<SystemUserGroupSystemMenuDTO> systemUserGroupSystemMenuDTOs;
+
+	private List<SystemUserGroupDTO> systemUserGroupDTOs;
+
+	private List<SystemUserProfileDTO> systemUserProfileDTOs;
 
 
 	/**
@@ -72,6 +83,33 @@ public class RequestResult implements Result {
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserProfileDTO> systemUserProfileDTOs,
+			SystemUserProfileDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemUserProfileDTOs = systemUserProfileDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserGroupDTO> systemUserGroupDTOs,
+			SystemUserGroupDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemUserGroupDTOs = systemUserGroupDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<SystemUserGroupSystemMenuDTO> systemUserGroupSystemMenuDTOs, SystemUserGroupSystemMenuDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemUserGroupSystemMenuDTOs = systemUserGroupSystemMenuDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemMenuDTO> systemMenuDTOs, SystemMenuDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemMenuDTOs = systemMenuDTOs;
 	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<AcademicYearDTO> academicYearDTOs,
@@ -173,21 +211,20 @@ public class RequestResult implements Result {
 		this.learnerAttendanceDTOs = learnerAttendanceDTOs;
 	}
 
-	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TimeTableDTO> timeTableDTOs , TimeTableDTO tableDTO) {
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TimeTableDTO> timeTableDTOs, TimeTableDTO tableDTO) {
 
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.timeTableDTOs = timeTableDTOs;
 	}
 
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserDTO> systemUserDTOs, SystemUserDTO dto) {
 
-
-	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserDTO> systemUserDTOs , SystemUserDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.systemUserDTOs = systemUserDTOs;
 	}
-	
+
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TimeTableLessonDTO> tableLessonDTOs  ,TimeTableLessonDTO dto) {
 		super();
@@ -202,7 +239,7 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.staffDailyAttendanceDTOs = staffDailyAttendanceDTOs;
 	}
-	
+
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<StaffDailyAttendanceSupervisionDTO> staffDailyAttendanceSupervisionDTOs , StaffDailyAttendanceSupervisionDTO dto) {
@@ -210,7 +247,7 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.staffDailyAttendanceSupervisionDTOs = staffDailyAttendanceSupervisionDTOs;
 	}
-		
+
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<StaffDailyAttendanceTaskSupervisionDTO> staffDailyAttendanceTaskSupervisionDTOs , StaffDailyAttendanceTaskSupervisionDTO dto) {
@@ -219,14 +256,14 @@ public class RequestResult implements Result {
 		this.staffDailyAttendanceTaskSupervisionDTOs = staffDailyAttendanceTaskSupervisionDTOs;
 	}
 
-	
+
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<StaffDailyAttendanceTaskDTO> staffDailyAttendanceTaskDTOs , StaffDailyAttendanceTaskDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.staffDailyAttendanceTaskDTOs = staffDailyAttendanceTaskDTOs;
 	}
-	
+
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<TimeAttendanceSupervisionDTO> timeAttendanceSupervisionDTOs , TimeAttendanceSupervisionDTO dto) {
@@ -248,8 +285,8 @@ public class RequestResult implements Result {
 		super();
 		this.systemErrorDTO = systemErrorDTO;
 	}
-	
-	
+
+
 
 	public RequestResult(FilterDTO filterDto) {
 		super();
@@ -336,22 +373,37 @@ public class RequestResult implements Result {
 		return systemUserDTOs;
 	}
 
-
-
 	public List<TimeTableLessonDTO> getTableLessonDTOs() {
 		return tableLessonDTOs;
 	}
 
 
 	
+	public List<SystemMenuDTO> getSystemMenuDTOs() {
+		return systemMenuDTOs;
+	}
+
+	public List<SystemUserGroupSystemMenuDTO> getSystemUserGroupSystemMenuDTOs() {
+		return systemUserGroupSystemMenuDTOs;
+	}
+
+	public List<SystemUserGroupDTO> getSystemUserGroupDTOs() {
+		return systemUserGroupDTOs;
+	}
+
+	public List<SystemUserProfileDTO> getSystemUserProfileDTOs() {
+		return systemUserProfileDTOs;
+	}
+
 	public List<StaffDailyAttendanceDTO> getStaffDailyAttendanceDTOs() {
 		return staffDailyAttendanceDTOs;
+
 	}
-	
-	
- 
-	
-	
+
+
+
+
+
 	public List<StaffDailyAttendanceTaskDTO> getStaffDailyAttendanceTaskDTOs() {
 		return staffDailyAttendanceTaskDTOs;
 	}
@@ -360,20 +412,20 @@ public class RequestResult implements Result {
 		return staffDailyAttendanceSupervisionDTOs;
 	}
 
-	
-	
+
+
 	public List<StaffDailyAttendanceTaskSupervisionDTO> getStaffDailyAttendanceTaskSupervisionDTOs() {
 		return staffDailyAttendanceTaskSupervisionDTOs;
 	}
-	
-	
+
+
 
 
 	public List<TimeAttendanceSupervisionDTO> getTimeAttendanceSupervisionDTOs() {
 		return timeAttendanceSupervisionDTOs;
 	}
-	
-	
+
+
 
 	public FilterDTO getFilterDto() {
 		return filterDto;

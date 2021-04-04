@@ -24,7 +24,7 @@ private SystemUserListGrid systemUserListGrid;
 		systemUserListGrid = new SystemUserListGrid();
 
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(systemUserListGrid);
 		this.addMember(layout);
 		

@@ -27,7 +27,7 @@ public class DailyTaskListGrid extends SuperListGrid {
 	public static final String END_TIME = "endTime";
 	
 	public static final String ATTENDANCE_STATUS = "attendanceStatus";
-	public static final String ATTENDANCE_DATE = "attendanceDate";
+	public static final String LESSON_DAY = "lessonDay";
 	
 	StaffDailyAttendanceTaskDataSource dataSource;
 	
@@ -56,7 +56,7 @@ public class DailyTaskListGrid extends SuperListGrid {
 		ListGridField staffDailyAttendanceIdField = new ListGridField(STAFF_DAILY_ATTENDANCE_ID, "Id");
 		staffDailyAttendanceIdField.setHidden(true);
 
-		ListGridField attendanceDateField = new ListGridField(ATTENDANCE_DATE, "AttendanceDate");
+		ListGridField attendanceDateField = new ListGridField(LESSON_DAY, "LessonDay");
 		attendanceDateField.setHidden(true);
 
 		ListGridField classField = new ListGridField(CLASS, "Class");
@@ -81,7 +81,7 @@ public class DailyTaskListGrid extends SuperListGrid {
 	public ListGridRecord addRowData(StaffDailyAttendanceTaskDTO staffDailyAttendanceTaskDTO) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, staffDailyAttendanceTaskDTO.getId());
-		record.setAttribute(ATTENDANCE_DATE , staffDailyAttendanceTaskDTO.getDailyAttendanceDate());
+		record.setAttribute(LESSON_DAY , staffDailyAttendanceTaskDTO.getLessonDay());
 		record.setAttribute(ATTENDANCE_STATUS , staffDailyAttendanceTaskDTO.getAttendanceStatus());
 
 		record.setAttribute(START_TIME, staffDailyAttendanceTaskDTO.getStartTime());
@@ -143,7 +143,7 @@ public class DailyTaskListGrid extends SuperListGrid {
 			DataSourceTextField staffDailyAttendanceIdField = new DataSourceTextField(STAFF_DAILY_ATTENDANCE_ID , "Id");
 			staffDailyAttendanceIdField.setHidden(true);
 
-			DataSourceTextField attendanceDateField = new DataSourceTextField(ATTENDANCE_DATE, "AttendanceDate");
+			DataSourceTextField attendanceDateField = new DataSourceTextField(LESSON_DAY, "LessonDate");
 			attendanceDateField.setHidden(true);
 
 			DataSourceTextField classField = new DataSourceTextField(CLASS, "Class");

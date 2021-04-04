@@ -12,7 +12,7 @@ public class LessonListGrid extends SuperListGrid {
 
 	public static final String ID = "id";
 
-	public static final String LESSON_DATE = "lessonDate";
+	public static final String LESSON_DAY = "lessonDay";
 
 	public static final String CLASS = "class";
 	public static final String CLASS_ID = "classId";
@@ -33,7 +33,7 @@ public class LessonListGrid extends SuperListGrid {
 		ListGridField idField = new ListGridField();
 		idField.setHidden(true);
 
-		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "Lesson Date");
+		ListGridField lessonDateField = new ListGridField(LESSON_DAY, "Lesson Day");
 
 		ListGridField classField = new ListGridField(CLASS, "Class");
 		ListGridField classIdField = new ListGridField(CLASS_ID, "ClassId");
@@ -56,7 +56,7 @@ public class LessonListGrid extends SuperListGrid {
 	public ListGridRecord addRowData(TimeTableLessonDTO timeTableLessonDTO) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, timeTableLessonDTO.getId());
-		record.setAttribute(LESSON_DATE, timeTableLessonDTO.getLessonDate());
+		record.setAttribute(LESSON_DAY, timeTableLessonDTO.getLessonDay());
 
 		record.setAttribute(START_TIME, timeTableLessonDTO.getStartTime());
 		record.setAttribute(END_TIME, timeTableLessonDTO.getEndTime());

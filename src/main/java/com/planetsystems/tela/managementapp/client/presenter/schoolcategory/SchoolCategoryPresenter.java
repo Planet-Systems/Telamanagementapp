@@ -739,8 +739,10 @@ public class SchoolCategoryPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				SchoolClassWindow window = new SchoolClassWindow();
-				loadSchoolCombo(window, null);
+				loadAcademicYearCombo(window, null);
 				loadAcademicTermCombo(window, null);
+				loadDistrictCombo(window, null);
+				loadSchoolCombo(window, null);
 				saveSchoolClass(window);
 				window.show();
 			}
@@ -755,16 +757,16 @@ public class SchoolCategoryPresenter
 
 				if (checkIfNoSchoolClassWindowFieldIsEmpty(window)) {
 					SchoolClassDTO dto = new SchoolClassDTO();
-					dto.setCode(window.getClassCode().getValueAsString());
-					dto.setName(window.getcName().getValueAsString());
+					dto.setCode(window.getCodeField().getValueAsString());
+					dto.setName(window.getClassNameField().getValueAsString());
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					SchoolDTO schoolDTO = new SchoolDTO();
-					schoolDTO.setId(window.getSchool().getValueAsString());
+					schoolDTO.setId(window.getSchoolCombo().getValueAsString());
 					dto.setSchoolDTO(schoolDTO);
 
 					AcademicTermDTO academicTermDTO = new AcademicTermDTO();
-					academicTermDTO.setId(window.getAcademicTerm().getValueAsString());
+					academicTermDTO.setId(window.getAcademicTermCombo().getValueAsString());
 					dto.setAcademicTermDTO(academicTermDTO);
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -775,9 +777,8 @@ public class SchoolCategoryPresenter
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							clearSchoolClassWindowFields(window);
-							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllSchools();
-
+							//SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+							getAllSchoolClasses();
 						}
 					});
 
@@ -794,16 +795,22 @@ public class SchoolCategoryPresenter
 	private boolean checkIfNoSchoolClassWindowFieldIsEmpty(SchoolClassWindow window) {
 		boolean flag = true;
 
-		if (window.getClassCode().getValueAsString() == null)
+		if (window.getCodeField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getcName().getValueAsString() == null)
+		if (window.getClassNameField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getSchool().getValueAsString() == null)
+		if (window.getSchoolCombo().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getDistrictCombo().getValueAsString() == null)
 			flag = false;
 
-		if (window.getAcademicTerm().getValueAsString() == null)
+		if (window.getAcademicTermCombo().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getAcademicYearCombo().getValueAsString() == null)
 			flag = false;
 
 		return flag;
@@ -837,15 +844,15 @@ public class SchoolCategoryPresenter
 
 				SchoolClassDTO dto = new SchoolClassDTO();
 				dto.setId(record.getAttribute(SchoolClassListGrid.ID));
-				dto.setCode(window.getClassCode().getValueAsString());
-				dto.setName(window.getcName().getValueAsString());
+				dto.setCode(window.getCodeField().getValueAsString());
+				dto.setName(window.getClassNameField().getValueAsString());
 
 				SchoolDTO schoolDTO = new SchoolDTO();
-				schoolDTO.setId(window.getSchool().getValueAsString());
+				schoolDTO.setId(window.getSchoolCombo().getValueAsString());
 				dto.setSchoolDTO(schoolDTO);
 
 				AcademicTermDTO academicTermDTO = new AcademicTermDTO();
-				academicTermDTO.setId(window.getAcademicTerm().getValueAsString());
+				academicTermDTO.setId(window.getAcademicTermCombo().getValueAsString());
 				dto.setAcademicTermDTO(academicTermDTO);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -868,18 +875,18 @@ public class SchoolCategoryPresenter
 
 	private void loadFieldsToEdit(SchoolClassWindow window) {
 		ListGridRecord record = getView().getSchoolClassPane().getListGrid().getSelectedRecord();
-		window.getClassCode().setValue(record.getAttribute(SchoolClassListGrid.CODE));
-		window.getcName().setValue(record.getAttribute(SchoolClassListGrid.NAME));
-		window.getSchool().setValue(record.getAttribute(SchoolClassListGrid.SCHOOL));
-		window.getAcademicTerm().setValue(record.getAttribute(SchoolClassListGrid.ACADEMIC_TERM));
+		window.getCodeField().setValue(record.getAttribute(SchoolClassListGrid.CODE));
+		window.getClassNameField().setValue(record.getAttribute(SchoolClassListGrid.NAME));
+		window.getSchoolCombo().setValue(record.getAttribute(SchoolClassListGrid.SCHOOL));
+		window.getSchoolCombo().setValue(record.getAttribute(SchoolClassListGrid.DISTRICT));
+		window.getAcademicTermCombo().setValue(record.getAttribute(SchoolClassListGrid.ACADEMIC_TERM));
+		window.getAcademicTermCombo().setValue(record.getAttribute(SchoolClassListGrid.ACADEMIC_YEAR));
 
 		loadSchoolCombo(window, record.getAttribute(SchoolClassListGrid.SCHOOL_ID));
 		loadAcademicTermCombo(window, record.getAttribute(SchoolClassListGrid.ACADEMIC_TERM_ID));
 	}
 
-	private void loadSchoolCombo(final SchoolClassWindow window, final String defaultValue) {
-		ComboUtil.loadSchoolCombo(window.getSchool(), dispatcher, placeManager, defaultValue);
-	}
+	
 	//////////////////////////////// FILTER SCHOOL CLASS COMBOS
 	
 	private void loadFilterAcademicYearCombo(final FilterSchoolClassWindow window) {
@@ -896,32 +903,63 @@ public class SchoolCategoryPresenter
 		});
 	}
 
+	
+	private void loadFilterDistrictCombo(final FilterSchoolClassWindow window) {
+		ComboUtil.loadDistrictCombo(window.getFilterYearTermDistrictSchool().getDistrictCombo(), dispatcher, placeManager, null);
+	}
+	
 	private void loadFilterSchoolCombo(final FilterSchoolClassWindow window) {
-		window.getFilterYearTermDistrictSchool().getDistrictCombo().addChangeHandler(new ChangeHandler() {
+		window.getFilterYearTermDistrictSchool().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 			
 			@Override
-			public void onChange(ChangeEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getFilterYearTermDistrictSchool().getDistrictCombo(), window.getFilterYearTermDistrictSchool().getSchoolCombo() , dispatcher, placeManager, null);			}
+			public void onChanged(ChangedEvent event) {
+             ComboUtil.loadSchoolComboByDistrict(window.getFilterYearTermDistrictSchool().getDistrictCombo(), window.getFilterYearTermDistrictSchool().getSchoolCombo() , dispatcher, placeManager, null);			
+
+			}
 		});
 	
 	}
 
-	private void loadFilterDistrictCombo(final FilterSchoolClassWindow window) {
-		ComboUtil.loadDistrictCombo(window.getFilterYearTermDistrictSchool().getDistrictCombo(), dispatcher, placeManager, null);
-	}
+
 
 	/////////////////////// END OF FILTER SCHOOL CLASS COMBOS
 
-	private void loadAcademicTermCombo(final SchoolClassWindow window, final String defaultValue) {
+	private void loadAcademicYearCombo(final SchoolClassWindow window, final String defaultValue) {
 
-		ComboUtil.loadAcademicTermCombo(window.getAcademicTerm(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo() , dispatcher, placeManager, defaultValue);
+	}
+	
+	private void loadAcademicTermCombo(final SchoolClassWindow window, final String defaultValue) {
+		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo() , window.getAcademicTermCombo() , dispatcher, placeManager, defaultValue);	
+			}
+		});
+	}
+	
+	private void loadDistrictCombo(final SchoolClassWindow window, final String defaultValue) {
+		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+	}
+	
+	private void loadSchoolCombo(final SchoolClassWindow window, final String defaultValue) {
+		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo() , window.getSchoolCombo(), dispatcher, placeManager, defaultValue);	
+			}
+		});
 	}
 
 	private void clearSchoolClassWindowFields(SchoolClassWindow window) {
-		window.getClassCode().clearValue();
-		window.getcName().clearValue();
-		window.getSchool().clearValue();
-		window.getAcademicTerm().clearValue();
+		window.getCodeField().clearValue();
+		window.getClassNameField().clearValue();
+		window.getSchoolCombo().clearValue();
+		window.getDistrictCombo().clearValue();
+		window.getAcademicTermCombo().clearValue();
+		window.getAcademicYearCombo().clearValue();
 	}
 
 	private void deleteSchoolClass(MenuButton button) {
@@ -1027,6 +1065,15 @@ public class SchoolCategoryPresenter
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.FILTER_SCHOOL_CLASS , dto);
 				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_SCHOOL_CLASS_BY_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL);
+				
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+					
+					@Override
+					public void onNetworkResult(RequestResult result) {
+					 getView().getSchoolClassPane().getListGrid().addRecordsToGrid(result.getSchoolClassDTOs());
+					}
+				});
+				
 			}
 		});
 	}

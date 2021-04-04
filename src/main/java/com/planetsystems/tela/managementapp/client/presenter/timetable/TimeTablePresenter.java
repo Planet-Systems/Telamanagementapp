@@ -29,6 +29,7 @@ import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
+import com.planetsystems.tela.managementapp.client.enums.LessonDay;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -230,12 +231,13 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 							TimeTableDTO timeTableDTO = new TimeTableDTO();
 							timeTableDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-							String schoolId = createTimeTablePane.getSchoolComboBox().getValueAsString();
+							String schoolId = createTimeTablePane.getSchoolCombo().getValueAsString();
 							SchoolDTO schoolDTO = new SchoolDTO(schoolId);
 							timeTableDTO.setSchoolDTO(schoolDTO);
 
-							String academicId = createTimeTablePane.getAcademicTermComboBox().getValueAsString();
+							String academicId = createTimeTablePane.getAcademicTermCombo().getValueAsString();
 							AcademicTermDTO academicTermDTO = new AcademicTermDTO(academicId);
+							
 							timeTableDTO.setAcademicTermDTO(academicTermDTO);
 
 							ListGridRecord[] records = createTimeTablePane.getLessonListGrid().getSelectedRecords(); // new
@@ -245,7 +247,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 							for (int i = 0; i < records.length; i++) {
 								ListGridRecord record = records[i];
 								TimeTableLessonDTO lessonDTO = new TimeTableLessonDTO();
-								lessonDTO.setLessonDate(record.getAttribute(LessonListGrid.LESSON_DATE));
+								lessonDTO.setLessonDay(record.getAttribute(LessonListGrid.LESSON_DAY));
 								lessonDTO.setStartTime(record.getAttribute(LessonListGrid.START_TIME));
 								lessonDTO.setEndTime(record.getAttribute(LessonListGrid.END_TIME));
 
@@ -267,8 +269,16 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 							timeTableDTO.setTimeTableLessonDTOS(tableLessonDTOs);
 
-							GWT.log("RECORD " + timeTableDTO);
+							//GWT.log("RECORD " + timeTableDTO);
 
+						
+							GWT.log("TIME TABLE "+timeTableDTO);
+							GWT.log("term "+timeTableDTO.getAcademicTermDTO().getId());
+							GWT.log("school "+timeTableDTO.getSchoolDTO().getId());
+							GWT.log("subject "+timeTableDTO.getTimeTableLessonDTOS().get(0).getSubjectDTO().getId());
+							GWT.log("class  "+timeTableDTO.getTimeTableLessonDTOS().get(0).getSchoolClassDTO().getId());
+							GWT.log("staff  "+timeTableDTO.getTimeTableLessonDTOS().get(0).getSchoolStaffDTO().getId());
+//						        System.out.println("timetable  "+timeTableDTO.getTimeTableLessonDTOS().get(0).getTimeTableDTO());
 							saveTimeTable(timeTableDTO, null);
 
 						} else {
@@ -305,11 +315,15 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			@Override
 			public void onClick(ClickEvent event) {
 				TimeTableLessonWindow window = new TimeTableLessonWindow();
-				loadDayCombo(window);
-
-				loadClassesInSchoolCombo(window, createTimeTablePane.getSchoolComboBox(), null);
-				loadStaffsInSchoolCombo(window, createTimeTablePane.getSchoolComboBox(), null);
-				loadSubjectsCombo(window, null);
+				loadLessonDayCombo(window);
+				String defaultValue = null;
+				ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(createTimeTablePane.getAcademicTermCombo() ,createTimeTablePane.getSchoolCombo() , window.getSchoolClassCombo(), dispatcher, placeManager,
+						defaultValue);
+				
+				ComboUtil.loadSchoolStaffComboBySchool(createTimeTablePane.getSchoolCombo(), window.getSchoolStaffCombo(), dispatcher, placeManager, defaultValue);
+		
+				ComboUtil.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
+				
 				window.show();
 				addLessonRecord(window, createTimeTablePane);
 
@@ -327,7 +341,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				TimeTableLessonDTO dto = new TimeTableLessonDTO();
 				// dto.setId(id);
 				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-				dto.setLessonDate(dateFormat.format(window.getLessonDateItem().getValueAsDate()));
+				dto.setLessonDay(window.getLessonDayCombo().getValueAsString());
 				dto.setEndTime(window.getEndTime().getEnteredValue());
 				dto.setStartTime(window.getStartTime().getEnteredValue());
 //				   dto.setStatus(status);
@@ -336,9 +350,9 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				schoolClassDTO.setName(window.getSchoolClassCombo().getDisplayValue());
 				dto.setSchoolClassDTO(schoolClassDTO);
 
-				SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getStaffCombo().getValueAsString());
-				if (window.getStaffCombo().getDisplayValue() != null) {
-					String[] names = window.getStaffCombo().getDisplayValue().split(" ");
+				SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString());
+				if (window.getSchoolStaffCombo().getDisplayValue() != null) {
+					String[] names = window.getSchoolStaffCombo().getDisplayValue().split(" ");
 					GeneralUserDetailDTO userDetailDTO = new GeneralUserDetailDTO();
 					userDetailDTO.setFirstName(names[0]);
 					userDetailDTO.setLastName(names[1]);
@@ -378,9 +392,9 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			flag = false;
 		if (window.getSubjectCombo().getValueAsString() == null)
 			flag = false;
-		if (window.getStaffCombo().getValueAsString() == null)
+		if (window.getSchoolStaffCombo().getValueAsString() == null)
 			flag = false;
-		if (window.getLessonDateItem().getValueAsDate() == null)
+		if (window.getLessonDayCombo().getValueAsString() == null)
 			flag = false;
 		if (window.getStartTime().getEnteredValue() == null)
 			flag = false;
@@ -393,76 +407,58 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	private void clearTimeTableLessonWindow(TimeTableLessonWindow window) {
 		window.getSchoolClassCombo().clearValue();
 		window.getSubjectCombo().clearValue();
-		window.getStaffCombo().clearValue();
+		window.getSchoolStaffCombo().clearValue();
 		window.getStartTime().clearValue();
 		window.getEndTime().clearValue();
-		window.getLessonDateItem().clearValue();
+		window.getLessonDayCombo().clearValue();
 	}
 
-	@Deprecated
-	private void loadDayCombo(TimeTableLessonWindow window) {
-		Map<String, String> daysMap = new HashMap<String, String>();
-		daysMap.put("Monday", "Monday");
-		daysMap.put("Tuesday", "Tuesday");
-		daysMap.put("Wednesday", "Wednesday");
-		daysMap.put("Thursday", "Thursday");
-		daysMap.put("Friday", "Friday");
 
-		// window.getDayCombo().setValueMap(daysMap);
+	private void loadLessonDayCombo(TimeTableLessonWindow window) {
+		Map<String, String> daysMap = new HashMap<String, String>();
+	    for (LessonDay lessonDay : LessonDay.values()) {
+			daysMap.put(lessonDay.getDay() , lessonDay.getDay());
+		}
+
+		window.getLessonDayCombo().setValueMap(daysMap);
 	}
 
 	private void loadDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
-		ComboUtil.loadDistrictCombo(createTimeTablePane.getDistrictComboBox(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadDistrictCombo(createTimeTablePane.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
 
 	private void loadSchoolsInDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
 
-		createTimeTablePane.getDistrictComboBox().addChangedHandler(new ChangedHandler() {
+		createTimeTablePane.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 
-				ComboUtil.loadSchoolComboByDistrict(createTimeTablePane.getDistrictComboBox(),
-						createTimeTablePane.getSchoolComboBox(), dispatcher, placeManager, defaultValue);
+				ComboUtil.loadSchoolComboByDistrict(createTimeTablePane.getDistrictCombo(),
+						createTimeTablePane.getSchoolCombo(), dispatcher, placeManager, defaultValue);
 			}
 		});
 
 	}
 
 	public void loadAcademicYearCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
-		ComboUtil.loadAcademicYearCombo(createTimeTablePane.getAcademicYearComboBox(), dispatcher, placeManager,
+		ComboUtil.loadAcademicYearCombo(createTimeTablePane.getAcademicYearCombo(), dispatcher, placeManager,
 				defaultValue);
 	}
 
 	private void loadAcademicTermsInAcademicYearCombo(final CreateTimeTablePane createTimeTablePane,
 			final String defaultValue) {
-		createTimeTablePane.getAcademicYearComboBox().addChangedHandler(new ChangedHandler() {
+		createTimeTablePane.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadAcademicTermComboByAcademicYear(createTimeTablePane.getAcademicYearComboBox(),
-						createTimeTablePane.getAcademicTermComboBox(), dispatcher, placeManager, defaultValue);
+				ComboUtil.loadAcademicTermComboByAcademicYear(createTimeTablePane.getAcademicYearCombo(),
+						createTimeTablePane.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
 			}
 		});
 
 	}
 
-	private void loadClassesInSchoolCombo(final TimeTableLessonWindow window, final ComboBox schoolComboBox,
-			final String defaultValue) {
-		ComboUtil.loadSchoolClassesComboBySchool(schoolComboBox, window.getSchoolClassCombo(), dispatcher, placeManager,
-				defaultValue);
-	}
-
-	private void loadStaffsInSchoolCombo(TimeTableLessonWindow window, ComboBox schoolComboBox,
-			final String defaultValue) {
-
-		ComboUtil.loadSchoolStaffComboBySchool(schoolComboBox, window.getStaffCombo(), dispatcher, placeManager,
-				defaultValue);
-	}
-
-	private void loadSubjectsCombo(final TimeTableLessonWindow window, final String defaultValue) {
-		ComboUtil.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
-	}
 
 	private void getAllTimeTables() {
 
@@ -482,12 +478,12 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	public void activateAddLessonButton(final CreateTimeTablePane createTimeTablePane) {
 		final boolean[] flag = new boolean[1];
 		flag[0] = true;
-		createTimeTablePane.getAcademicTermComboBox().addChangedHandler(new ChangedHandler() {
+		createTimeTablePane.getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (createTimeTablePane.getAcademicTermComboBox().getValueAsString() == null
-						|| createTimeTablePane.getSchoolComboBox().getValueAsString() == null) {
+				if (createTimeTablePane.getAcademicTermCombo().getValueAsString() == null
+						|| createTimeTablePane.getSchoolCombo().getValueAsString() == null) {
 					createTimeTablePane.getAddLessonButton().disable();
 				} else {
 					createTimeTablePane.getAddLessonButton().enable();
@@ -497,12 +493,12 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			}
 		});
 
-		createTimeTablePane.getSchoolComboBox().addChangedHandler(new ChangedHandler() {
+		createTimeTablePane.getSchoolCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (createTimeTablePane.getSchoolComboBox().getValueAsString() == null
-						|| createTimeTablePane.getAcademicTermComboBox().getValueAsString() == null) {
+				if (createTimeTablePane.getSchoolCombo().getValueAsString() == null
+						|| createTimeTablePane.getAcademicTermCombo().getValueAsString() == null) {
 					createTimeTablePane.getAddLessonButton().disable();
 				} else {
 					createTimeTablePane.getAddLessonButton().enable();

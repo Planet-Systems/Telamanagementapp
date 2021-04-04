@@ -13,6 +13,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
+@Deprecated
 public class SchoolStaffListGrid extends SuperListGrid {
 	public static String ID = "id";
     public static String STAFF_CODE = "staffCode";

@@ -16,6 +16,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
+
+@Deprecated
 class SchoolStaffView extends ViewImpl implements SchoolStaffPresenter.MyView {
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;

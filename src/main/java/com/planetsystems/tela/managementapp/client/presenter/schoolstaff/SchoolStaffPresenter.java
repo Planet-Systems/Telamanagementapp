@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolstaff;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,6 +35,8 @@ import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
+
+@Deprecated
 public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView, SchoolStaffPresenter.MyProxy>  {
     interface MyView extends View  {
      ControlsPane getControlsPane();
@@ -51,7 +54,7 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
-    @NameToken(NameTokens.schoolStaff)
+    @NameToken(NameTokens.assessmentperiod) 
     @ProxyCodeSplit
     interface MyProxy extends ProxyPlace<SchoolStaffPresenter> {
     }

@@ -72,6 +72,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	DateTimeFormat timeFormat = DateTimeFormat.getFormat(DatePattern.HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
 
 	@NameToken(NameTokens.StaffDailyAttendanceSuperVision)
 	@ProxyCodeSplit
@@ -274,8 +275,8 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				map.put(RequestDelimeters.SCHOOL_STAFF_ID, schoolStaffId);
-				map.put(RequestDelimeters.ATTENDANCE_DATE, dateFormat.format(new Date()));
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SCHOOL_STAFF_DATE);
+				map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
+				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SCHOOL_STAFF_DAY);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

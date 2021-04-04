@@ -57,6 +57,7 @@ public class LearnerEnrollmentPresenter
 
 	@SuppressWarnings("deprecation")
 	@ContentSlot
+ 
 	public static final Type<RevealContentHandler<?>> SLOT_LearnerEnrollment = new Type<RevealContentHandler<?>>();
 
 	@Inject
@@ -66,7 +67,7 @@ public class LearnerEnrollmentPresenter
 	private PlaceManager placeManager;
 
 	DateTimeFormat dateTimeFormat = DateTimeFormat
-			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern()); 
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	@NameToken(NameTokens.learnerEnrollment)
@@ -186,8 +187,14 @@ public class LearnerEnrollmentPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				LearnerEnrollmentWindow window = new LearnerEnrollmentWindow();
+				String defaultValue = null;
 				setLearnerTotal(window);
-				loadSchoolClassCombo(window, null);
+				loadAcademicYearCombo(window, defaultValue);
+				loadAcademicTermCombo(window, defaultValue);
+				loadDistrictCombo(window, defaultValue);
+				loadSchoolCombo(window, defaultValue);
+				loadSchoolClassCombo(window, defaultValue);
+				
 				window.show();
 
 				saveLearnerEnrollment(window);
@@ -196,8 +203,42 @@ public class LearnerEnrollmentPresenter
 		});
 	}
 
+	
+	private void loadAcademicYearCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo() , dispatcher, placeManager, defaultValue);
+	}
+	
+	private void loadAcademicTermCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo() , window.getAcademicTermCombo() , dispatcher, placeManager, defaultValue);	
+			}
+		});
+	}
+	
+	private void loadDistrictCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+	}
+	private void loadSchoolCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo() ,window.getSchoolCombo(), dispatcher, placeManager, defaultValue);	
+			}
+		});
+		
+	}
 	private void loadSchoolClassCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
-		ComboUtil.loadSchoolClassCombo(window.getSchoolClassComboBox(), dispatcher, placeManager, defaultValue);
+		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo() , window.getSchoolCombo() , window.getSchoolClassCombo() , dispatcher, placeManager , defaultValue);		
+			}
+		});
 	}
 
 	public void setLearnerTotal(final LearnerEnrollmentWindow window) {
@@ -263,7 +304,7 @@ public class LearnerEnrollmentPresenter
 				dto.setTotalGirls(Long.valueOf(window.getTotalGirlsField().getValueAsString()));
 				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassComboBox().getValueAsString());
+				SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
 				dto.setSchoolClassDTO(schoolClassDTO);
 
 				GWT.log("DTO " + dto);
@@ -297,7 +338,13 @@ public class LearnerEnrollmentPresenter
 		if (window.getTotalGirlsField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getSchoolClassComboBox().getValueAsString() == null)
+		if (window.getDistrictCombo().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getSchoolCombo().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getSchoolClassCombo().getValueAsString() == null)
 			flag = false;
 
 		return flag;
@@ -305,7 +352,9 @@ public class LearnerEnrollmentPresenter
 
 	private void clearLearnerEnrollmentWindowFields(LearnerEnrollmentWindow window) {
 
-		window.getSchoolClassComboBox().clearValue();
+		window.getDistrictCombo().clearValue();
+		window.getSchoolCombo().clearValue();
+		window.getSchoolClassCombo().clearValue();
 		window.getTotalBoysField().clearValue();
 		window.getTotalGirlsField().clearValue();
 		window.getLearnerTotalField().clearValue();

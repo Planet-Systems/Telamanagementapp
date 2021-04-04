@@ -21,7 +21,7 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 	public static final String SCHOOL_STAFF = "SCHOOL_STAFF";
 	public static final String SCHOOL_STAFF_ID = "SCHOOL_STAFF_ID";
 	
-	public static final String ATTENDANCE_DATE = "ATTENDANCE_DATE";
+	public static final String LESSON_DAY = "LESSON_DAY";
 	
 	
 	/*
@@ -57,17 +57,17 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "School Staff Id");
 		schoolStaffIdField.setHidden(true);
 
-		ListGridField attendanceDateField = new ListGridField(ATTENDANCE_DATE, "Attendance Date");
+		ListGridField lessonDayField = new ListGridField(LESSON_DAY, "Lesson Day");
 
 	
         this.setDataSource(dataSource);
-		this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , attendanceDateField);
+		this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDayField);
 	}
 
 	public ListGridRecord addRowData(StaffDailyAttendanceDTO staffDailyAttendanceDTO) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, staffDailyAttendanceDTO.getId());
-		record.setAttribute(ATTENDANCE_DATE, staffDailyAttendanceDTO.getDailyAttendanceDate());
+		record.setAttribute(LESSON_DAY, staffDailyAttendanceDTO.getLessonDay());
 
 		if (staffDailyAttendanceDTO.getAcademicTermDTO() != null) {
 			record.setAttribute(ACADEMIC_TERM_ID, staffDailyAttendanceDTO.getAcademicTermDTO().getId());
@@ -142,11 +142,11 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 			DataSourceTextField schoolStaffIdField = new DataSourceTextField(SCHOOL_STAFF_ID, "School Staff Id");
 			schoolStaffIdField.setHidden(true);
 
-			DataSourceTextField attendanceDateField = new DataSourceTextField(ATTENDANCE_DATE, "Attendance Date");
+			DataSourceTextField lessonDayField = new DataSourceTextField(LESSON_DAY, "Lesson Date");
 
 		
 
-			this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , attendanceDateField);
+			this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDayField);
 
 			setClientOnly(true);
 

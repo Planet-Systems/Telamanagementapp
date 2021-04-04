@@ -20,11 +20,12 @@ public class SchoolStaffWindow extends Window {
 	    private TextItem emailField;
 	    private DateItem dobItem;
 	    private TextItem nationalIdField;
-	    private ComboBox genderComboBox;
+	    private ComboBox genderCombo;
 	    private TextItem nameAbrevField;
-	    private TextItem staffCode;
-	    private ComboBox registeredComboBox;
-	    private ComboBox schoolComboBox;
+	    private TextItem codeField;
+	    private ComboBox registeredCombo;
+	    private ComboBox districtCombo;
+	    private ComboBox schoolCombo;
 	   
 	    
 	    private IButton saveButton;
@@ -67,30 +68,35 @@ public class SchoolStaffWindow extends Window {
 		nameAbrevField.setHint("Name Abbreviation");
 		nameAbrevField.setShowHintInField(true);
 		
-		staffCode = new TextItem();
-		staffCode.setTitle("StaffCode");
-		staffCode.setHint("staffCode");
-		staffCode.setShowHintInField(true);
+		codeField = new TextItem();
+		codeField.setTitle("CodeField");
+		codeField.setHint("codeField");
+		codeField.setShowHintInField(true);
 		
-		genderComboBox = new ComboBox();
-		genderComboBox.setTitle("Gender");
-		genderComboBox.setHint("Gender");
-		genderComboBox.setShowHintInField(true);
+		genderCombo = new ComboBox();
+		genderCombo.setTitle("Gender");
+		genderCombo.setHint("Gender");
+		genderCombo.setShowHintInField(true);
 		
-		registeredComboBox = new ComboBox();
-		registeredComboBox.setTitle("Registered");
-		registeredComboBox.setHint("Registered");
-		registeredComboBox.setShowHintInField(true);
+		registeredCombo = new ComboBox();
+		registeredCombo.setTitle("Registered");
+		registeredCombo.setHint("Registered");
+		registeredCombo.setShowHintInField(true);
 		
 		
 		
-		schoolComboBox = new ComboBox();
-		schoolComboBox.setTitle("School");
-		schoolComboBox.setHint("schoolComboBox");
-		schoolComboBox.setShowHintInField(true);
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("school");
+		schoolCombo.setShowHintInField(true);
+		
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
 		
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(firstNameField , lastNameField , nameAbrevField , emailField , nationalIdField , phoneNumberField , staffCode , registeredComboBox , genderComboBox , schoolComboBox , dobItem);
+		dynamicForm.setFields(firstNameField , lastNameField , nameAbrevField , emailField , nationalIdField , phoneNumberField , codeField , districtCombo , genderCombo , schoolCombo , dobItem , registeredCombo);
 		dynamicForm.setNumCols(4);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
@@ -155,108 +161,58 @@ public class SchoolStaffWindow extends Window {
 		return firstNameField;
 	}
 
-	public void setFirstNameField(TextItem firstNameField) {
-		this.firstNameField = firstNameField;
-	}
-
 	public TextItem getLastNameField() {
 		return lastNameField;
-	}
-
-	public void setLastNameField(TextItem lastNameField) {
-		this.lastNameField = lastNameField;
 	}
 
 	public TextItem getPhoneNumberField() {
 		return phoneNumberField;
 	}
 
-	public void setPhoneNumberField(TextItem phoneNumberField) {
-		this.phoneNumberField = phoneNumberField;
-	}
-
 	public TextItem getEmailField() {
 		return emailField;
-	}
-
-	public void setEmailField(TextItem emailField) {
-		this.emailField = emailField;
 	}
 
 	public DateItem getDobItem() {
 		return dobItem;
 	}
 
-	public void setDobItem(DateItem dobItem) {
-		this.dobItem = dobItem;
-	}
-
 	public TextItem getNationalIdField() {
 		return nationalIdField;
 	}
 
-	public void setNationalIdField(TextItem nationalIdField) {
-		this.nationalIdField = nationalIdField;
-	}
-
-	public ComboBox getGenderComboBox() {
-		return genderComboBox;
-	}
-
-	public void setGenderComboBox(ComboBox genderComboBox) {
-		this.genderComboBox = genderComboBox;
+	public ComboBox getGenderCombo() {
+		return genderCombo;
 	}
 
 	public TextItem getNameAbrevField() {
 		return nameAbrevField;
 	}
 
-	public void setNameAbrevField(TextItem nameAbrevField) {
-		this.nameAbrevField = nameAbrevField;
+	public TextItem getCodeField() {
+		return codeField;
 	}
 
-	public TextItem getStaffCode() {
-		return staffCode;
+	public ComboBox getRegisteredCombo() {
+		return registeredCombo;
 	}
 
-	public void setStaffCode(TextItem staffCode) {
-		this.staffCode = staffCode;
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
 	}
 
-	public ComboBox getRegisteredComboBox() {
-		return registeredComboBox;
-	}
-
-	public void setRegisteredComboBox(ComboBox registeredComboBox) {
-		this.registeredComboBox = registeredComboBox;
-	}
-
-	public ComboBox getSchoolComboBox() {
-		return schoolComboBox;
-	}
-
-	public void setSchoolComboBox(ComboBox schoolComboBox) {
-		this.schoolComboBox = schoolComboBox;
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
 	}
 
 	public IButton getSaveButton() {
 		return saveButton;
 	}
 
-	public void setSaveButton(IButton saveButton) {
-		this.saveButton = saveButton;
-	}
-
 	public IButton getCancelButton() {
 		return cancelButton;
 	}
 
-	public void setCancelButton(IButton cancelButton) {
-		this.cancelButton = cancelButton;
-	}
-
-	
-	
 	
 	
 

@@ -1,9 +1,15 @@
 package com.planetsystems.tela.managementapp.client.presenter.main;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -12,8 +18,8 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
-import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
-import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent.HighlightActiveLinkHandler;
+import com.planetsystems.tela.dto.NavigationMenuDTO;
+import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationData;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationDataSource;
@@ -29,13 +35,15 @@ import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.widget.MainStatusBar;
 import com.planetsystems.tela.managementapp.client.widget.Masthead;
 import com.planetsystems.tela.managementapp.client.widget.NavigationPane;
+import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.events.HoverEvent;
-import com.smartgwt.client.widgets.events.HoverHandler;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.events.RecordClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.VStack;
@@ -45,295 +53,283 @@ import com.smartgwt.client.widgets.menu.MenuItemSeparator;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 @SuppressWarnings("deprecation")
-public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter.MyProxy> implements HighlightActiveLinkHandler   {
-    interface MyView extends View  {
-    	public Masthead getMastHead();
+public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter.MyProxy> {
+	interface MyView extends View {
+		public Masthead getMastHead();
 
-    	public NavigationPane getNavigationPane();
+		public NavigationPane getNavigationPane();
 
-    	public MainStatusBar getMainStatusBar();
-    }
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> SLOT_Main = new Type<RevealContentHandler<?>>();
+		public MainStatusBar getMainStatusBar();
+	}
 
-    @Inject
-    private PlaceManager placeManager;
-    
-    @ProxyStandard
-    interface MyProxy extends Proxy<MainPresenter> {
-    }
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> SLOT_Main = new Type<RevealContentHandler<?>>();
 
-    @Inject
-    MainPresenter(
-            EventBus eventBus,
-            MyView view, 
-            MyProxy proxy) {
-        super(eventBus, view, proxy, RevealType.Root);   
-    }
-    
-    @Override
-    protected void onBind() {
-    	super.onBind();
-    	registerEvents();
-    	manageUserProfile(Cookies.getCookie(RequestConstant.USERNAME), "Admin");
-     loadMenu();
-    }
-    
-    private void registerEvents() {
-    	 registerHandler(getEventBus().addHandler(HighlightActiveLinkEvent.getType(), this));
-		
+	@Inject
+	private PlaceManager placeManager;
+
+	@Inject
+	private DispatchAsync dispatcher;
+
+	@ProxyStandard
+	interface MyProxy extends Proxy<MainPresenter> {
+	}
+
+	@Inject
+	MainPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
+		super(eventBus, view, proxy, RevealType.Root);
 	}
 
 	@Override
-    protected void onReset() {
-    	super.onReset();
-    }
-    
-  
-    
-   
-    private void loadMenu() {
+	protected void onBind() {
+		super.onBind();
+		manageUserProfile(Cookies.getCookie(RequestConstant.USERNAME), "");
+		//loadMenu();
+		loadSystemUserMenu();
+	}
+
+	@Override
+	protected void onReset() {
+		super.onReset();
+	}
+
+	private class NavigationPaneClickHandler implements RecordClickHandler {
+		public void onRecordClick(RecordClickEvent event) {
+
+			Record record = event.getRecord();
+			String name = record.getAttributeAsString("name");
+
+			PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(name).build();
+
+			placeManager.revealPlace(placeRequest);
+
+		}
+
+	}
+
+	private void loadMenu() {
 		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
 				SystemAdministrationDataSource.getInstance(SystemAdministrationData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_CONFIGURATION , new RecordClickHandler() {
-			
-			@Override
-			public void onRecordClick(RecordClickEvent event) {
-				onSystemConfigurationMenuClick(event);
-			}
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_CONFIGURATION,
+				new NavigationPaneClickHandler());
 
-		});
-		
 		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
 				SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT , new RecordClickHandler() {
-			
-			@Override
-			public void onRecordClick(RecordClickEvent event) {
-				onSystemEnrollmentMenuClick(event);
-			}
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
+				new NavigationPaneClickHandler());
 
-		} );
-		
-		
 		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
 				SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE , new RecordClickHandler() {
-			
-			@Override
-			public void onRecordClick(RecordClickEvent event) {
-				onSystemAttendanceMenuClick(event);
-			}
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
+				new NavigationPaneClickHandler());
 
-		});
-		
-		
 		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
 				SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES , new RecordClickHandler() {
-			
-			@Override
-			public void onRecordClick(RecordClickEvent event) {
-				onSystemTimeTableMenuClick(event);
-			}
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
+				new NavigationPaneClickHandler());
 
-		});
-		
-		
 		getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
 				SystemUserDataSource.getInstance(SystemUserData.getNewRecords()));
 
-		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS , new RecordClickHandler() {
-			
+		getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
+				new NavigationPaneClickHandler());
+
+	}
+
+	private void manageUserProfile(final String userName, final String role) {
+
+		getView().getMastHead().getUserProfile().addClickHandler(new ClickHandler() {
+
 			@Override
-			public void onRecordClick(RecordClickEvent event) {
-				onSystemUserMenuClick(event);
-			}
-		});
-	
-	}
-    
-    
-	private void onSystemUserMenuClick(RecordClickEvent event) {
-		Record record = event.getRecord();
-		String name = record.getAttributeAsString("name");
-		 placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.SystemUser).build());
-		
-	}
-    
+			public void onClick(ClickEvent event) {
 
-	private void onSystemTimeTableMenuClick(RecordClickEvent event) {
-		Record record = event.getRecord();
-		String name = record.getAttributeAsString("name");
-		 placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.timeTable).build());
-		
-	}
-    
-	private void onSystemAttendanceMenuClick(RecordClickEvent event) {
+				Label banner2 = new Label();
+				banner2.setContents("<p style='margin-left:10px; text-align:center;'>" + userName + "</p>"
+						+ "<p style='margin-left:10px; text-align:center;'>" + role + "</p>");
+				banner2.setAutoHeight();
+				banner2.setAlign(Alignment.LEFT);
+				banner2.setWidth100();
 
-		Record record = event.getRecord();
-		String name = record.getAttributeAsString("name");
-		
-		switch (name) {
-		case SystemAttendanceData.LEARNER :
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.learnerAttendance).build());
-			break;
-			
-		case SystemAttendanceData.STAFF:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.staffAttendance).build());
-			break;
-		case SystemAttendanceData.STAFF_DAILY_ATTENDANCE_SUPERVISION:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.StaffDailyAttendanceSuperVision).build());
-			break;
-		case SystemAttendanceData.STAFF_DAILY_TASKS:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.StaffDailyTask).build());
-			break;
-		case SystemAttendanceData.STAFF_DAILY_TIME_ATTENDANCE:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.TimeAttendanceSupervision).build());
-			break;
-		}
-		;
-	}
-    
-	private void onSystemConfigurationMenuClick(RecordClickEvent event) {
-		Record record = event.getRecord();
-		String name = record.getAttributeAsString("name");
-		
-		switch (name) {
-		case SystemAdministrationData.ACADEMIC_YEAR:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.academicYear).build());
-			break;
-		case SystemAdministrationData.LOCATION:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.region).build());
-		    break;
-		case SystemAdministrationData.SCHOOLS:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.schoolClassCategory).build());
-	
-		    break;
-		case SystemAdministrationData.SUBJECTS:
-			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(NameTokens.subjectCategory).build());
-		    break;
-		}
-	}
-    
-    private void onSystemEnrollmentMenuClick(RecordClickEvent event) {
-    	Record record = event.getRecord();
-		String name = record.getAttributeAsString("name");
+				VStack layout = new VStack();
+				layout.addMember(banner2);
+				layout.setMembersMargin(0);
+				layout.setAutoHeight();
 
-		PlaceRequest placeRequest = null;
-	
-		switch (name) {
-		case SystemEnrollmentData.STAFF_ENROLLMENT :
-			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.enrollment).build();
-			break;
-			
-		case SystemEnrollmentData.LEARNER_ENROLLMENT :
-			 placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.learnerEnrollment).build();
-			break;
-		}
-		placeManager.revealPlace(placeRequest);
-	}
+				final Menu menu = new Menu();
 
+				MenuItem item1 = new MenuItem(userName);
 
-	@Override
-	public void onHighlightActiveLink(HighlightActiveLinkEvent event) {	 
-//	    SC.say("EVENT TRIGGERED "+event.getMessage());
-//	      GWT.log("EVENT TRIGGERED "+event.getMessage());
-		switch(event.getMessage()) {
-		case NameTokens.academicYear:
-			
-			//getView().getNavigationPane().setBackgroundColor("blue");
-		
-			 break;
-		case NameTokens.region:
-			
-			//getView().getNavigationPane().setBackgroundColor("red");
-		  
-			 break;
-		case NameTokens.schoolClassCategory:
+				MenuItem item2 = new MenuItem("Change Password");
 
-			 //getView().getNavigationPane().setBackgroundColor("green");
+				MenuItem item3 = new MenuItem("Logout");
 
-			 break;
-		case NameTokens.subjectCategory:
-		  
-			 //getView().getNavigationPane().setBackgroundColor("pink");
-		    break;
-		}
-	}
-	
-	
-	private void manageUserProfile(String userName, String role) {
+				item2.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
-		Label banner2 = new Label();
-		banner2.setContents("<p style='margin-left:10px; text-align:center;'>" + userName + "</p>"
-				+ "<p style='margin-left:10px; text-align:center;'>" + role + "</p>");
-		banner2.setAutoHeight();
-		banner2.setAlign(Alignment.LEFT);
-		banner2.setWidth100();
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+						// changePassword();
+					}
+				});
 
-		VStack layout = new VStack();
-		layout.addMember(banner2);
-		layout.setMembersMargin(0);
-		layout.setAutoHeight();
+				item3.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
-		final Menu menu = new Menu();
+					public void onClick(MenuItemClickEvent event) {
 
-		MenuItem item1 = new MenuItem(userName);
+						SessionManager.getInstance().logOut(placeManager);
 
-		MenuItem item2 = new MenuItem("Change Password");
+					}
+				});
 
-		MenuItem item3 = new MenuItem("Logout");
+				MenuItemSeparator separator = new MenuItemSeparator();
+				menu.setItems(item1, item2, separator, item3);
 
-		item2.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				//changePassword();
-			}
-		});
-
-		item3.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-
-			public void onClick(MenuItemClickEvent event) {
-
-				logOut();
+				menu.showNextTo(getView().getMastHead().getUserProfile(), "bottom");
 
 			}
 		});
 
-		MenuItemSeparator separator = new MenuItemSeparator();
-		menu.setItems(item1, item2, separator, item3);
-//		getView().getMastHead().getUserProfile().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
-//
-//			public void onClick(ClickEvent event) {
-//				menu.showNextTo(getView().getMastHead().getUserProfile(), "bottom");
-//
-//			}
-//		});
-		
-		//waiting acceptance
-		getView().getMastHead().getUserProfile().setCanHover(true);
-		getView().getMastHead().getUserProfile().addHoverHandler(new HoverHandler() {
-			
-			@Override
-			public void onHover(HoverEvent event) {
-				menu.showNextTo(getView().getMastHead().getUserProfile(), "bottom");	
-			}
-		});
-		
 	}
-	
-	
-	
-	
-	public void logOut() {
-		  SessionManager.getInstance().logOut(placeManager);	
+
+	private void loadSystemUserMenu() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_LOGEDIN_USER_SystemMENU, map),
+				new AsyncCallback<RequestResult>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.say("ERROR", caught.getMessage());
+						SC.clearPrompt();
+					}
+
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							List<String> systemConfig = new ArrayList<String>();
+							List<String> enrollemnt = new ArrayList<String>();
+							List<String> attendance = new ArrayList<String>();
+							List<String> timetable = new ArrayList<String>();
+							List<String> systemusers = new ArrayList<String>();
+							List<String> generatereports = new ArrayList<String>();
+
+							List<SystemUserGroupSystemMenuDTO> list = result.getSystemUserGroupSystemMenuDTOs();
+
+							for (SystemUserGroupSystemMenuDTO dto : list) {
+								if (dto.getSystemMenuDTO() != null) {
+									if (dto.getSystemMenuDTO().getNavigationMenu() != null) {
+										if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
+												NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu())) {
+
+											systemConfig.add(dto.getSystemMenuDTO().getSubMenuItem());
+
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+												.equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu())) {
+
+											enrollemnt.add(dto.getSystemMenuDTO().getSubMenuItem());
+
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+												.equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu())) {
+
+											attendance.add(dto.getSystemMenuDTO().getSubMenuItem());
+
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+												.equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu())) {
+
+											timetable.add(dto.getSystemMenuDTO().getSubMenuItem());
+
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+												.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu())) {
+
+											systemusers.add(dto.getSystemMenuDTO().getSubMenuItem());
+
+										} else if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
+												NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu())) {
+
+											generatereports.add(dto.getSystemMenuDTO().getSubMenuItem());
+										}
+									}
+								}
+							}
+
+							if (!systemConfig.isEmpty()) {
+								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
+										SystemAdministrationDataSource
+												.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
+								getView().getNavigationPane().addRecordClickHandler(
+										RequestConstant.SYSTEM_CONFIGURATION, new NavigationPaneClickHandler());
+							}
+
+							if (!enrollemnt.isEmpty()) {
+
+								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
+										SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords()));
+
+								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
+										new NavigationPaneClickHandler());
+							}
+
+							if (!attendance.isEmpty()) {
+
+								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
+										SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords()));
+
+								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
+										new NavigationPaneClickHandler());
+
+							}
+
+							if (!timetable.isEmpty()) {
+
+								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
+										SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords()));
+
+								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
+										new NavigationPaneClickHandler());
+
+							}
+
+							if (!systemusers.isEmpty()) {
+								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
+										SystemUserDataSource.getInstance(SystemUserData.getNewRecords()));
+
+								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
+										new NavigationPaneClickHandler());
+							}
+
+							if (!generatereports.isEmpty()) {
+
+							}
+
+							if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty()
+									&& timetable.isEmpty() && generatereports.isEmpty()) {
+
+								PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.dashboard)
+										.build();
+
+								placeManager.revealPlace(placeRequest);
+
+							} else {
+
+								placeManager.revealDefaultPlace();
+
+							}
+
+						} else {
+							SC.say("ERROR", "Unknow error");
+						}
+
+					}
+				});
+
 	}
-	
-    
+
 }

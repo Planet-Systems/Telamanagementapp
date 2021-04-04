@@ -15,14 +15,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class ClockInWindow extends Window {
 
 
-	private ComboBox academicYearComboBox;
+	private ComboBox academicYearCombo;
 
-	private ComboBox academicTermComboBox;
+	private ComboBox academicTermCombo;
 	
-	private ComboBox districtComboBox;
-	private ComboBox schoolComboBox;
+	private ComboBox districtCombo;
+	private ComboBox schoolCombo;
 
-	private ComboBox schoolStaffComboBox;
+	private ComboBox schoolStaffCombo;
 
 	private TextAreaItem commentField;
 	private TextItem latitudeField;
@@ -49,34 +49,34 @@ public class ClockInWindow extends Window {
 		longitudeField.setHint("longitude");
 		longitudeField.setShowHintInField(true);
 		
-		academicYearComboBox = new ComboBox();
-		academicYearComboBox.setTitle("AcademicYear");
-		academicYearComboBox.setHint("academicYear");
-		academicYearComboBox.setShowHintInField(true);
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("AcademicYear");
+		academicYearCombo.setHint("academicYear");
+		academicYearCombo.setShowHintInField(true);
 		
-		academicTermComboBox = new ComboBox();
-		academicTermComboBox.setTitle("AcademicTerm");
-		academicTermComboBox.setHint("AcademicTerm");
-		academicTermComboBox.setShowHintInField(true);
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("AcademicTerm");
+		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setShowHintInField(true);
 		
-		districtComboBox = new ComboBox();
-		districtComboBox.setTitle("District");
-		districtComboBox.setHint("District");
-		districtComboBox.setShowHintInField(true);
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
 		
-		schoolComboBox = new ComboBox();
-		schoolComboBox.setTitle("School");
-		schoolComboBox.setHint("School");
-		schoolComboBox.setShowHintInField(true);
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("School");
+		schoolCombo.setShowHintInField(true);
 		
-		schoolStaffComboBox = new ComboBox();
-		schoolStaffComboBox.setTitle("Staff");
-		schoolStaffComboBox.setHint("Staff");
-		schoolStaffComboBox.setShowHintInField(true);
+		schoolStaffCombo = new ComboBox();
+		schoolStaffCombo.setTitle("Staff");
+		schoolStaffCombo.setHint("Staff");
+		schoolStaffCombo.setShowHintInField(true);
        
 		
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearComboBox ,districtComboBox , academicTermComboBox  , schoolComboBox , latitudeField ,schoolStaffComboBox, longitudeField  , commentField);
+		form.setFields(academicYearCombo ,districtCombo, academicTermCombo  , schoolCombo, latitudeField ,schoolStaffCombo, longitudeField  , commentField);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(7);
@@ -125,12 +125,24 @@ public class ClockInWindow extends Window {
 		});
 	}
 
-	public ComboBox getAcademicTermComboBox() {
-		return academicTermComboBox;
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
 	}
 
-	public ComboBox getSchoolStaffComboBox() {
-		return schoolStaffComboBox;
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
+	}
+
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
+	}
+
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
+	}
+
+	public ComboBox getSchoolStaffCombo() {
+		return schoolStaffCombo;
 	}
 
 	public TextAreaItem getCommentField() {
@@ -153,22 +165,6 @@ public class ClockInWindow extends Window {
 		return cancelButton;
 	}
 
-	public ComboBox getAcademicYearComboBox() {
-		return academicYearComboBox;
-	}
-
-	public ComboBox getDistrictComboBox() {
-		return districtComboBox;
-	}
-
-	public ComboBox getSchoolComboBox() {
-		return schoolComboBox;
-	}
-
-	
-	
-	
-	
 	
 	
 }

@@ -28,11 +28,14 @@ public class LearnerAttendanceWindow extends Window {
     private long girlsAbsent;
     private String comment;
 	 */
-	private ComboBox academicTermComboBox;
-
-	private ComboBox schoolClassComboBox;
 	
-	private ComboBox schoolStaffComboBox;
+	private ComboBox academicYearCombo;
+	private ComboBox academicTermCombo;
+
+	private ComboBox schoolCombo;
+	private ComboBox districtCombo;
+	private ComboBox schoolClassCombo;
+	private ComboBox schoolStaffCombo;
 
 	private TextAreaItem commentField;
 	private TextItem girlsPresentField;
@@ -88,24 +91,42 @@ public class LearnerAttendanceWindow extends Window {
 		totalPresentField.setHint("TotalPresent: 0");
 		totalPresentField.setShowHintInField(true);
 		
-		academicTermComboBox = new ComboBox();
-		academicTermComboBox.setTitle("AcademicTerm");
-		academicTermComboBox.setHint("AcademicTerm");
-		academicTermComboBox.setShowHintInField(true);
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("AcademicYear");
+		academicYearCombo.setHint("AcademicYear");
+		academicYearCombo.setShowHintInField(true);
 		
-		schoolStaffComboBox = new ComboBox();
-		schoolStaffComboBox.setTitle("Staff");
-		schoolStaffComboBox.setHint("Staff");
-		schoolStaffComboBox.setShowHintInField(true);
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("AcademicTerm");
+		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setShowHintInField(true);
 		
-		schoolClassComboBox = new ComboBox();
-		schoolClassComboBox.setTitle("Class");
-		schoolClassComboBox.setHint("Class");
-		schoolClassComboBox.setShowHintInField(true);
+		
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
+		
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("school");
+		schoolCombo.setShowHintInField(true);
+		
+		
+		
+		schoolStaffCombo = new ComboBox();
+		schoolStaffCombo.setTitle("Staff");
+		schoolStaffCombo.setHint("Staff");
+		schoolStaffCombo.setShowHintInField(true);
+		
+		schoolClassCombo = new ComboBox();
+		schoolClassCombo.setTitle("Class");
+		schoolClassCombo.setHint("Class");
+		schoolClassCombo.setShowHintInField(true);
        
 		
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(academicTermComboBox ,schoolClassComboBox ,schoolStaffComboBox , 
+		dynamicForm.setFields(academicYearCombo ,districtCombo , academicTermCombo , schoolCombo , schoolClassCombo ,schoolStaffCombo , 
 				boysPresentField , boysAbsentField , girlsPresentField , girlsAbsentField , commentField , totalAbsentField , totalPresentField);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
@@ -138,7 +159,7 @@ public class LearnerAttendanceWindow extends Window {
 		
 	
 		this.setWidth("60%");
-		this.setHeight("70%");
+		this.setHeight("80%");
 		this.setAutoCenter(true);
 		this.setTitle("Learner Attendance");
 		this.setIsModal(true);
@@ -156,16 +177,28 @@ public class LearnerAttendanceWindow extends Window {
 		});
 	}
 
-	public ComboBox getAcademicTermComboBox() {
-		return academicTermComboBox;
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
 	}
 
-	public ComboBox getSchoolClassComboBox() {
-		return schoolClassComboBox;
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
 	}
 
-	public ComboBox getSchoolStaffComboBox() {
-		return schoolStaffComboBox;
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
+	}
+
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
+	}
+
+	public ComboBox getSchoolClassCombo() {
+		return schoolClassCombo;
+	}
+
+	public ComboBox getSchoolStaffCombo() {
+		return schoolStaffCombo;
 	}
 
 	public TextAreaItem getCommentField() {
@@ -188,14 +221,6 @@ public class LearnerAttendanceWindow extends Window {
 		return girlsAbsentField;
 	}
 
-	public IButton getSaveButton() {
-		return saveButton;
-	}
-
-	public IButton getCancelButton() {
-		return cancelButton;
-	}
-
 	public TextItem getTotalAbsentField() {
 		return totalAbsentField;
 	}
@@ -204,9 +229,14 @@ public class LearnerAttendanceWindow extends Window {
 		return totalPresentField;
 	}
 
-	
-	
-	
+	public IButton getSaveButton() {
+		return saveButton;
+	}
+
+	public IButton getCancelButton() {
+		return cancelButton;
+	}
+
 	
 	
 }

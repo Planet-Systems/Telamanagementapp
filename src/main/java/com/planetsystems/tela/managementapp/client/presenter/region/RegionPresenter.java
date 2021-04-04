@@ -75,7 +75,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 	@Inject
 	PlaceManager placeManager;
 
-	@NameToken(NameTokens.region)
+	@NameToken(NameTokens.locations)
 	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<RegionPresenter> {
 	}

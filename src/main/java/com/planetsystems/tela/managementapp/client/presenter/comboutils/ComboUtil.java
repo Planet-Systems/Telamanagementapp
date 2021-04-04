@@ -706,6 +706,52 @@ public class ComboUtil {
 				});
 
 	}
+	
+	
+	public static void loadSchoolClassesComboBySchoolAcademicTerm(final ComboBox academicTermCombo,final ComboBox schoolCombo,
+			final ComboBox schoolClassCombo,final DispatchAsync dispatcher,final PlaceManager placeManager,final String defaultValue) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestDelimeters.SCHOOL_ID, schoolCombo.getValueAsString());
+		map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermCombo.getValueAsString());
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM, map),
+				new AsyncCallback<RequestResult>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+					}
+
+					public void onSuccess(RequestResult result) {
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+
+						if (result != null) {
+
+							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+							for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
+								valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
+							}
+							schoolClassCombo.setValueMap(valueMap);
+
+							if (defaultValue != null) {
+								schoolClassCombo.setValue(defaultValue);
+							}
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+
+				});
+		
+	}
 
 ////////////////////////////////////SUBJECT COMBOS
 	public static void loadSubjectCombo(final ComboBox subjectCombo, final DispatchAsync dispatcher,
@@ -750,5 +796,7 @@ public class ComboUtil {
 
 		});
 	}
+
+
 
 }

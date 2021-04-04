@@ -77,7 +77,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_AcademicYear = new Type<RevealContentHandler<?>>();
 
-	@NameToken(NameTokens.academicYear)
+	@NameToken(NameTokens.assessmentperiod)
 	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<AcademicYearPresenter> {
 	}
