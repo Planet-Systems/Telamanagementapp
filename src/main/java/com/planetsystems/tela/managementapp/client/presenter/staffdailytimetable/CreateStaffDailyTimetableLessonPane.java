@@ -1,9 +1,10 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailytask;
+package com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable;
 
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
@@ -14,35 +15,37 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class ViewStaffDailyAttendanceTaskPane extends VLayout {
-	private TextItem schoolField;
-	private TextItem districtField;
-	private TextItem academicYearField;
-	private TextItem schoolStaffField;
+public class CreateStaffDailyTimetableLessonPane extends VLayout {
+	private ComboBox schoolCombo;
+	private ComboBox districtCombo;
+	private ComboBox academicYearCombo;
+	private ComboBox schoolStaffCombo;
 	private TextItem dayField;
-	private TextItem academicTermField;
+	private ComboBox academicTermCombo;
 	private IButton loadLessonButton;
 	private IButton saveButton;
+	private IButton closeTabButton;
 
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
-	private DailyTaskListGrid dailyTaskListGrid;
-	private IButton closeTabButton;
+	private LessonListGrid lessonListGrid;
 
-	public ViewStaffDailyAttendanceTaskPane() {
+	public CreateStaffDailyTimetableLessonPane() {
 		super();
 		Label header = new Label();
-		dailyTaskListGrid = new DailyTaskListGrid();
-		dailyTaskListGrid.setSelectionType(SelectionStyle.NONE);
-
-		loadLessonButton = new IButton("Load Lesson");
+		lessonListGrid = new LessonListGrid();
+		lessonListGrid.setSelectionType(SelectionStyle.SIMPLE);
+		
+		loadLessonButton = new IButton("Load Lesson(s)");
 		loadLessonButton.setLayoutAlign(Alignment.RIGHT);
 		loadLessonButton.setPadding(10);
+		loadLessonButton.disable();
+
 
 		header.setStyleName("crm-ContextArea-Header-Label");
 		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("View Staff Daily Attendance Tasks");
-		header.setPadding(5);
+		header.setContents("Create Staff Daily Tasks");
+		header.setPadding(10);
 		header.setAutoHeight();
 		header.setAutoWidth();
 		header.setWrap(false);
@@ -54,14 +57,12 @@ public class ViewStaffDailyAttendanceTaskPane extends VLayout {
 		formLayout.setPadding(5);
 		formLayout.setAutoHeight();
 		formLayout.setWidth("50%");
-//		    formLayout.setBorder("1px solid red");
 		formLayout.setLayoutAlign(Alignment.CENTER);
 
 		HLayout schoolDistrictLayout = new HLayout();
 		schoolDistrictLayout.setPadding(5);
 		schoolDistrictLayout.setAutoHeight();
 		schoolDistrictLayout.setWidth("50%");
-//	    schoolDistrictLayout.setBorder("1px solid red");
 		schoolDistrictLayout.setLayoutAlign(Alignment.CENTER);
 
 		Label schoolLabel = new Label("School: ");
@@ -76,98 +77,93 @@ public class ViewStaffDailyAttendanceTaskPane extends VLayout {
 
 		DynamicForm form = new DynamicForm();
 		form.setWrapItemTitles(false);
-		form.setMargin(2);
-		form.setColWidths("80", "150");
+		form.setMargin(10);
+		form.setColWidths("150", "250");
 		form.setCellPadding(5);
 		form.setNumCols(4);
 
-		academicYearField = new TextItem();
-		academicYearField.setTitle("AcademicYear");
-		academicYearField.setHint("Year");
-		academicYearField.setShowHintInField(true);
-		academicYearField.disable();
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("AcademicYear");
+		academicYearCombo.setHint("Year");
+		academicYearCombo.setShowHintInField(true);
 
-		academicTermField = new TextItem();
-		academicTermField.setTitle("AcademicTerm");
-		academicTermField.setHint("AcademicTerm");
-		academicTermField.setShowHintInField(true);
-		academicTermField.disable();
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("AcademicTerm");
+		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setShowHintInField(true);
 
-		districtField = new TextItem();
-		districtField.setTitle("District");
-		districtField.setHint("District");
-		districtField.setShowHintInField(true);
-		districtField.disable();
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
 
-		schoolField = new TextItem();
-		schoolField.setTitle("School");
-		schoolField.setHint("School");
-		schoolField.disable();
-		schoolField.setShowHintInField(true);
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("School");
+		schoolCombo.setShowHintInField(true);
 
-		schoolStaffField = new TextItem();
-		schoolStaffField.setTitle("Staff");
-		schoolStaffField.setHint("Staff");
-		schoolStaffField.disable();
-		schoolStaffField.setShowHintInField(true);
+		schoolStaffCombo = new ComboBox();
+		schoolStaffCombo.setTitle("Staff");
+		schoolStaffCombo.setHint("Staff");
+		schoolStaffCombo.setShowHintInField(true);
+ 
 
 		dayField = new TextItem("Day");
 		dayField.setValue(dayFormat.format(new Date()));
 		dayField.disable();
-
-		form.setFields(academicYearField, districtField, academicTermField, schoolField, dayField, schoolStaffField);
+		
+  
+		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField, schoolStaffCombo);
 
 		saveButton = new IButton("Save");
 		saveButton.setLayoutAlign(Alignment.CENTER);
 		saveButton.setPadding(10);
 		saveButton.disable();
 
+		
 		closeTabButton = new IButton("Close");
-
+		
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(closeTabButton);
+		buttonLayout.setMembers(closeTabButton, saveButton);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
 		buttonLayout.setMembersMargin(4);
-
+		
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
+		
 
 		VLayout layout = new VLayout();
-		//layout.addMember(header);
 		layout.addMember(form);
-		// layout.addMember(loadLessonButton);
-		layout.addMember(dailyTaskListGrid);
+		layout.addMember(loadLessonButton);
+		layout.addMember(lessonListGrid);
 		layout.addMember(buttonLayout);
 		this.addMember(layout);
 
 	}
 
-	public TextItem getSchoolField() {
-		return schoolField;
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
 	}
 
-	public TextItem getDistrictField() {
-		return districtField;
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
 	}
 
-	public TextItem getAcademicYearField() {
-		return academicYearField;
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
 	}
 
-
-	
-	
-	public TextItem getSchoolStaffField() {
-		return schoolStaffField;
+	public ComboBox getSchoolStaffCombo() {
+		return schoolStaffCombo;
 	}
 
 	public TextItem getDayField() {
 		return dayField;
 	}
 
-	public TextItem getAcademicTermField() {
-		return academicTermField;
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
 	}
 
 	public IButton getLoadLessonButton() {
@@ -178,15 +174,14 @@ public class ViewStaffDailyAttendanceTaskPane extends VLayout {
 		return saveButton;
 	}
 
-
-	public DailyTaskListGrid getDailyTaskListGrid() {
-		return dailyTaskListGrid;
-	}
-
 	public IButton getCloseTabButton() {
 		return closeTabButton;
 	}
-	
+
+	public LessonListGrid getLessonListGrid() {
+		return lessonListGrid;
+	}
+
 	
 
 }

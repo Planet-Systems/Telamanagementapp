@@ -20,15 +20,15 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
+import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.DailyTaskListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable.StaffDailyTimetableLessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
@@ -276,16 +276,16 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				map.put(RequestDelimeters.SCHOOL_STAFF_ID, schoolStaffId);
 				map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SCHOOL_STAFF_DAY);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DAY);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 					@Override
 					public void onNetworkResult(RequestResult result) {
 						createSupervisionTaskPane.getDailyAttendanceTaskListGrid()
-								.addRecordsToGrid(result.getStaffDailyAttendanceTaskDTOs());
+								.addRecordsToGrid(result.getStaffDailyTimeTableLessonDTOs());
 
-						if (result.getStaffDailyAttendanceTaskDTOs().isEmpty())
+						if (result.getStaffDailyTimeTableLessonDTOs().isEmpty())
 							createSupervisionTaskPane.getCommentButton().disable();
 						else
 							createSupervisionTaskPane.getCommentButton().enable();
@@ -325,9 +325,9 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					StaffDailyAttendanceTaskSupervisionDTO task = new StaffDailyAttendanceTaskSupervisionDTO();
 					task.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-					StaffDailyAttendanceDTO staffDailyAttendanceDTO = new StaffDailyAttendanceDTO();
-					staffDailyAttendanceDTO.setId(record.getAttribute(DailyTaskListGrid.STAFF_DAILY_ATTENDANCE_ID));
-					task.setStaffDailyAttendanceDTO(staffDailyAttendanceDTO);
+					StaffDailyTimeTableDTO staffDailyTimeTableDTO = new StaffDailyTimeTableDTO();
+					staffDailyTimeTableDTO.setId(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID));
+					task.setStaffDailyTimeTableDTO(staffDailyTimeTableDTO);
 
 					task.setTeachingStatus("present");
 					task.setTeachingTimeStatus("In Time");

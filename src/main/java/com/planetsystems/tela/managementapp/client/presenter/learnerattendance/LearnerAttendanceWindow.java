@@ -14,21 +14,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class LearnerAttendanceWindow extends Window {
 	
-	/*
-	 *     private SchoolClassDTO schoolClassDTO;
-
-    private AcademicTermDTO academicTermDTO;
-
-    private SchoolStaffDTO schoolStaffDTO;
-
-    private LocalDate attendanceDate;
-    private long girlsPresent;
-    private long boysPresent;
-    private long boysAbsent;
-    private long girlsAbsent;
-    private String comment;
-	 */
-	
 	private ComboBox academicYearCombo;
 	private ComboBox academicTermCombo;
 

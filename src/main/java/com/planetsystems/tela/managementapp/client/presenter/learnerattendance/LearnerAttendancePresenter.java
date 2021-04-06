@@ -26,7 +26,6 @@ import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -137,44 +136,12 @@ public class LearnerAttendancePresenter
 				loadFilterLearnerAttendanceSchoolCombo(window);
 				window.show();
 				filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(window);
-//				disableEnableFilterButton(window);
 			}
 		});
 
 	}
 
-	@Deprecated
-	private void disableEnableFilterButton(final FilterLearnerAttendanceWindow window) {
-		;
-		window.getFilterLearnerAttendancePane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				if (window.getFilterLearnerAttendancePane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterLearnerAttendancePane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterLearnerAttendancePane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterLearnerAttendancePane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterLearnerAttendancePane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-	}
-
+	
 //////////////////////LEARNER Attendance
 
 	private void addLearnerAttendance(MenuButton newButton) {

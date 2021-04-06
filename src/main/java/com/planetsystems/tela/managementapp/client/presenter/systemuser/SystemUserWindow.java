@@ -24,7 +24,7 @@ public class SystemUserWindow extends Window {
 	private TextItem emailField;
 	private DateItem dobItem;
 	private TextItem nationalIdField;
-	private ComboBox genderComboBox;
+	private ComboBox genderCombo;
 	private TextItem nameAbbrevField;
 	private RadioGroupItem enabledRadioGroupItem;
 
@@ -83,17 +83,17 @@ public class SystemUserWindow extends Window {
 		nameAbbrevField.setShowHintInField(true);
 		nameAbbrevField.hide();
 
-		genderComboBox = new ComboBox();
-		genderComboBox.setTitle("Gender");
-		genderComboBox.setHint("Gender");
-		genderComboBox.setShowHintInField(true);
+		genderCombo = new ComboBox();
+		genderCombo.setTitle("Gender");
+		genderCombo.setHint("Gender");
+		genderCombo.setShowHintInField(true);
 
 		systemUserGroup = new ComboBox();
 		systemUserGroup.setTitle("User Group");
 
 		DynamicForm dynamicForm = new DynamicForm();
 		dynamicForm.setFields(firstNameField, lastNameField, emailField, phoneNumberField, nationalIdField,
-				genderComboBox, dobItem, systemUserGroup, enabledRadioGroupItem, nameAbbrevField);
+				genderCombo, dobItem, systemUserGroup, enabledRadioGroupItem, nameAbbrevField);
 		dynamicForm.setNumCols(2);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
@@ -164,8 +164,10 @@ public class SystemUserWindow extends Window {
 		return nationalIdField;
 	}
 
-	public ComboBox getGenderComboBox() {
-		return genderComboBox;
+	
+
+	public ComboBox getGenderCombo() {
+		return genderCombo;
 	}
 
 	public TextItem getNameAbbrevField() {

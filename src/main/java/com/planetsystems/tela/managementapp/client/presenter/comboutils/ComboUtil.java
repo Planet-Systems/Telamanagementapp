@@ -25,8 +25,6 @@ import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 
 public class ComboUtil {
 

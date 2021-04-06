@@ -3,12 +3,9 @@ package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendan
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.SelectionAppearance;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -20,11 +17,9 @@ public class StaffDailyAttendanceSupervisionPane extends VLayout {
 	private ComboBox schoolCombo;
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
-//	private ComboBox schoolStaffCombo;
 	private TextItem dayField;
 	private ComboBox academicTermCombo;
 	private IButton loadSuperVisionButton;
-//	private IButton saveButton;
 
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 

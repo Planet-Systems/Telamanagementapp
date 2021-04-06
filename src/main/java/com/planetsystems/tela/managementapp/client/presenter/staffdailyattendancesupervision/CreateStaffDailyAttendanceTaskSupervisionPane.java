@@ -3,7 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendan
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.DailyTaskListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable.StaffDailyTimetableLessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
@@ -28,12 +28,12 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 
 
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
-	private DailyTaskListGrid dailyAttendanceTaskListGrid;
+	private StaffDailyTimetableLessonListGrid dailyAttendanceTaskListGrid;
 
 	public CreateStaffDailyAttendanceTaskSupervisionPane() {
 		super();
 		Label header = new Label();
-		dailyAttendanceTaskListGrid = new DailyTaskListGrid();
+		dailyAttendanceTaskListGrid = new StaffDailyTimetableLessonListGrid();
 		dailyAttendanceTaskListGrid.setSelectionType(SelectionStyle.SIMPLE);
 		
 		loadTasksButton = new IButton("Load Tasks");
@@ -57,14 +57,12 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		formLayout.setPadding(5);
 		formLayout.setAutoHeight();
 		formLayout.setWidth("50%");
-//		    formLayout.setBorder("1px solid red");
 		formLayout.setLayoutAlign(Alignment.CENTER);
 
 		HLayout schoolDistrictLayout = new HLayout();
 		schoolDistrictLayout.setPadding(5);
 		schoolDistrictLayout.setAutoHeight();
 		schoolDistrictLayout.setWidth("50%");
-//	    schoolDistrictLayout.setBorder("1px solid red");
 		schoolDistrictLayout.setLayoutAlign(Alignment.CENTER);
 
 		Label schoolLabel = new Label("School: ");
@@ -134,7 +132,6 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		
 
 		VLayout layout = new VLayout();
-		//layout.addMember(header);
 		layout.addMember(form);
 		layout.addMember(loadTasksButton);
 		layout.addMember(dailyAttendanceTaskListGrid);
@@ -179,7 +176,7 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		return commentButton;
 	}
 
-	public DailyTaskListGrid getDailyAttendanceTaskListGrid() {
+	public StaffDailyTimetableLessonListGrid getDailyAttendanceTaskListGrid() {
 		return dailyAttendanceTaskListGrid;
 	}
 

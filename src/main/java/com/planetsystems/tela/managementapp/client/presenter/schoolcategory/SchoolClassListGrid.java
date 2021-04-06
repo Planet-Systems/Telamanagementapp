@@ -2,9 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.schoolcategory;
 
 import java.util.List;
 
-import com.google.gwt.user.client.ui.Tree;
 import com.planetsystems.tela.dto.SchoolClassDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -29,8 +27,6 @@ public class SchoolClassListGrid extends SuperListGrid {
 	public static String ACADEMIC_YEAR_ID = "Academic Year ID";
 
 	private SchoolClassDataSource dataSource;
-//	private String code;
-//    private String name;
 
 	public SchoolClassListGrid() {
 		super();

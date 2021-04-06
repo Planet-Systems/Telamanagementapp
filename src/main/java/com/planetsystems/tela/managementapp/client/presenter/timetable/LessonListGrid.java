@@ -2,9 +2,10 @@ package com.planetsystems.tela.managementapp.client.presenter.timetable;
 
 import java.util.List;
 
-import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -26,10 +27,12 @@ public class LessonListGrid extends SuperListGrid {
 	public static final String START_TIME = "startTime";
 	public static final String END_TIME = "endTime";
 
-
+	  LessonDataSource dataSource;
 
 	public LessonListGrid() {
 
+		dataSource = LessonDataSource.getInstance();
+		
 		ListGridField idField = new ListGridField();
 		idField.setHidden(true);
 
@@ -51,6 +54,7 @@ public class LessonListGrid extends SuperListGrid {
 		staffIdField.setHidden(true);
 
 		this.setFields(lessonDateField, classField, subjectField, startTimeField, endTimeField, staffField);
+		 this.setDataSource(dataSource);
 	}
 
 	public ListGridRecord addRowData(TimeTableLessonDTO timeTableLessonDTO) {
@@ -89,10 +93,54 @@ public class LessonListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
 
 	public void addRecordToGrid(TimeTableLessonDTO dto) {
 		this.addData(addRowData(dto));
 	}
+	
+	
+	public static class LessonDataSource extends DataSource {
+
+		private static LessonDataSource instance = null;
+
+		public static LessonDataSource getInstance() {
+			if (instance == null) {
+				instance = new LessonDataSource("LessonDataSource");
+			}
+			return instance;
+		}
+
+		public LessonDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField lessonDateField = new DataSourceTextField(LESSON_DAY, "Lesson Day");
+
+			DataSourceTextField classField = new DataSourceTextField(CLASS, "Class");
+			DataSourceTextField classIdField = new DataSourceTextField(CLASS_ID, "ClassId");
+			classIdField.setHidden(true);
+
+			DataSourceTextField subjectField = new DataSourceTextField(SUBJECT, "Subject");
+			DataSourceTextField subjectIdField = new DataSourceTextField(SUBJECT_ID, "Subject Id");
+			subjectIdField.setHidden(true);
+
+			DataSourceTextField startTimeField = new DataSourceTextField(START_TIME, "Start Time");
+			DataSourceTextField endTimeField = new DataSourceTextField(END_TIME, "End Time");
+
+			DataSourceTextField staffField = new DataSourceTextField(STAFF, "Staff");
+			DataSourceTextField staffIdField = new DataSourceTextField(STAFF_ID, "Staff Id");
+			staffIdField.setHidden(true);
+			
+			this.setFields(lessonDateField, classField, subjectField, startTimeField, endTimeField, staffField);
+			setClientOnly(true);
+
+		}
+	}
+	
 
 }

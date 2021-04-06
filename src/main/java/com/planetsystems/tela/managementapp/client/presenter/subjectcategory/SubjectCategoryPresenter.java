@@ -55,7 +55,7 @@ public class SubjectCategoryPresenter
 
 		TabSet getTabSet();
 
-		SubCategoryPane getSubCategoryPane();
+		SubjectCategoryPane getSubCategoryPane();
 
 		SubjectPane getSubjectPane();
 	}
@@ -209,8 +209,8 @@ public class SubjectCategoryPresenter
 	}
 
 	private void clearSubjectCategoryWindowFields(SubjectCategoryWindow window) {
-		window.getCategoryCode().clearValue();
-		window.getCategoryName().clearValue();
+		window.getCodeField().clearValue();
+		window.getNameField().clearValue();
 	}
 
 	private void saveSubjectCategory(final SubjectCategoryWindow window) {
@@ -221,8 +221,8 @@ public class SubjectCategoryPresenter
 
 				if (checkIfNoSubjectCategoryWindowFieldIsEmpty(window)) {
 					SubjectCategoryDTO dto = new SubjectCategoryDTO();
-					dto.setName(window.getCategoryName().getValueAsString());
-					dto.setCode(window.getCategoryCode().getValueAsString());
+					dto.setName(window.getNameField().getValueAsString());
+					dto.setCode(window.getCodeField().getValueAsString());
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -251,10 +251,10 @@ public class SubjectCategoryPresenter
 	private boolean checkIfNoSubjectCategoryWindowFieldIsEmpty(SubjectCategoryWindow window) {
 		boolean flag = true;
 
-		if (window.getCategoryCode().getValueAsString() == null)
+		if (window.getCodeField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getCategoryName().getValueAsString() == null)
+		if (window.getNameField().getValueAsString() == null)
 			flag = false;
 
 		return flag;
@@ -287,9 +287,9 @@ public class SubjectCategoryPresenter
 				ListGridRecord record = getView().getSubCategoryPane().getListGrid().getSelectedRecord();
 
 				SubjectCategoryDTO dto = new SubjectCategoryDTO();
-				dto.setName(window.getCategoryName().getValueAsString());
-				dto.setCode(window.getCategoryCode().getValueAsString());
-				dto.setId(record.getAttribute(SubCategoryListGrid.ID));
+				dto.setName(window.getNameField().getValueAsString());
+				dto.setCode(window.getCodeField().getValueAsString());
+				dto.setId(record.getAttribute(SubjectCategoryListGrid.ID));
 				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -314,8 +314,8 @@ public class SubjectCategoryPresenter
 	private void loadFieldsToEdit(SubjectCategoryWindow window) {
 		ListGridRecord record = getView().getSubCategoryPane().getListGrid().getSelectedRecord();
 
-		window.getCategoryCode().setValue(record.getAttribute(SchoolClassListGrid.CODE));
-		window.getCategoryName().setValue(record.getAttribute(SchoolClassListGrid.NAME));
+		window.getCodeField().setValue(record.getAttribute(SchoolClassListGrid.CODE));
+		window.getNameField().setValue(record.getAttribute(SchoolClassListGrid.NAME));
 	}
 
 	private void deleteSubjectCategory(MenuButton button) {
@@ -390,7 +390,7 @@ public class SubjectCategoryPresenter
 	}
 
 	private void loadSubjectCategoryCombo(final SubjectWindow window, final String defaultValue) {
-		ComboUtil.loadSubjectCategoryCombo(window.getSubjectCategory(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadSubjectCategoryCombo(window.getSubjectCategoryCombo(), dispatcher, placeManager, defaultValue);
 	}
 
 	private void loadFilterSubjectCategoryCombo(final FilterSubjectWindow window) {
@@ -399,9 +399,9 @@ public class SubjectCategoryPresenter
 	}
 
 	public void clearSubjectWindowFields(SubjectWindow window) {
-		window.getSubjectCode().clearValue();
-		window.getSubjectName().clearValue();
-		window.getSubjectCategory().clearValue();
+		window.getCodeField().clearValue();
+		window.getNameField().clearValue();
+		window.getSubjectCategoryCombo().clearValue();
 	}
 
 	private void saveSubject(final SubjectWindow window) {
@@ -412,12 +412,12 @@ public class SubjectCategoryPresenter
 
 				if (checkIfNoSubjectWindowFieldIsEmpty(window)) {
 					SubjectDTO dto = new SubjectDTO();
-					dto.setName(window.getSubjectName().getValueAsString());
-					dto.setCode(window.getSubjectCode().getValueAsString());
+					dto.setName(window.getNameField().getValueAsString());
+					dto.setCode(window.getCodeField().getValueAsString());
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
-					subjectCategory.setId(window.getSubjectCategory().getValueAsString());
+					subjectCategory.setId(window.getSubjectCategoryCombo().getValueAsString());
 					dto.setSubjectCategory(subjectCategory);
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -444,13 +444,13 @@ public class SubjectCategoryPresenter
 
 	private boolean checkIfNoSubjectWindowFieldIsEmpty(SubjectWindow window) {
 		boolean flag = true;
-		if (window.getSubjectCategory().getValueAsString() == null)
+		if (window.getSubjectCategoryCombo().getValueAsString() == null)
 			flag = false;
 
-		if (window.getSubjectName().getValueAsString() == null)
+		if (window.getNameField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getSubjectCode().getValueAsString() == null)
+		if (window.getCodeField().getValueAsString() == null)
 			flag = false;
 
 		return flag;
@@ -478,9 +478,9 @@ public class SubjectCategoryPresenter
 	private void loadFieldsToEdit(SubjectWindow window) {
 		ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
 
-		window.getSubjectCategory().setValue(record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY));
-		window.getSubjectCode().setValue(record.getAttribute(SubjectListGrid.CODE));
-		window.getSubjectName().setValue(record.getAttribute(SubjectListGrid.NAME));
+		window.getSubjectCategoryCombo().setValue(record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY));
+		window.getCodeField().setValue(record.getAttribute(SubjectListGrid.CODE));
+		window.getNameField().setValue(record.getAttribute(SubjectListGrid.NAME));
 
 		loadSubjectCategoryCombo(window, record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY_ID));
 	}
@@ -494,15 +494,14 @@ public class SubjectCategoryPresenter
 
 				SubjectDTO dto = new SubjectDTO();
 				dto.setId(record.getAttribute(SubjectListGrid.ID));
-				dto.setName(window.getSubjectName().getValueAsString());
-				dto.setCode(window.getSubjectCode().getValueAsString());
+				dto.setName(window.getNameField().getValueAsString());
+				dto.setCode(window.getCodeField().getValueAsString());
 				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
 				SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
-				subjectCategory.setId(window.getSubjectCategory().getValueAsString());
+				subjectCategory.setId(window.getSubjectCategoryCombo().getValueAsString());
 				dto.setSubjectCategory(subjectCategory);
 
-				// GWT.log("dto "+dto.getId()+" cat "+subjectCategory.getId());
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_SUBJECT, dto);

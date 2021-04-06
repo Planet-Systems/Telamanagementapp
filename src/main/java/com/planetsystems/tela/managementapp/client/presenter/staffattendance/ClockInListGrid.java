@@ -3,7 +3,6 @@ package com.planetsystems.tela.managementapp.client.presenter.staffattendance;
 import java.util.List;
 
 import com.planetsystems.tela.dto.ClockInDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateField;
@@ -35,14 +34,6 @@ public class ClockInListGrid extends SuperListGrid {
 
 	private ClockInDataSource dataSource;
 
-	/*
-	 * private AcademicTermDTO academicTerm;
-	 * 
-	 * private SchoolStaffDTO schoolStaff;
-	 * 
-	 * private Date clockInDate; private String comment; private String latitude;
-	 * private String longitude; private String status;
-	 */
 
 	public ClockInListGrid() {
 		super();

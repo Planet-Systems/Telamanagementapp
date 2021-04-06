@@ -125,14 +125,7 @@ public class SchoolStaffWindow extends Window {
 		layout.addMember(buttonLayout);
 		layout.setMembersMargin(10);
 		layout.setMargin(10);
-		
-		
-		
-		/*
-		 * this.setWidth("60%"); this.setHeight("60%"); this.setAutoCenter(true);
-		 * this.setTitle("SchoolStaff"); this.setIsModal(true);
-		 * this.setShowModalMask(true); this.addMember(layout);
-		 */
+
 		
 		layout.setMargin(10);
 		this.addItem(layout);

@@ -19,7 +19,6 @@ public class TimeTableLessonWindow extends Window {
 	private TimeItem endTime;
 
 	private ComboBox schoolStaffCombo;
-//	private ComboBox dayCombo;
 	private ComboBox lessonDayCombo;
 
 	private IButton addRecordButton;
@@ -55,11 +54,6 @@ public class TimeTableLessonWindow extends Window {
 		schoolStaffCombo.setTitle("Staff");
 		schoolStaffCombo.setHint("Teacher");
 		schoolStaffCombo.setShowHintInField(true);
-		
-//		dayCombo = new ComboBox();
-//		dayCombo.setTitle("Day");
-//		dayCombo.setHint("Day");
-//		dayCombo.setShowHintInField(true);
 		
 		lessonDayCombo = new ComboBox();
 		lessonDayCombo.setTitle("Day");
@@ -146,9 +140,5 @@ public class TimeTableLessonWindow extends Window {
 	public ComboBox getLessonDayCombo() {
 		return lessonDayCombo;
 	}
-
-	
-	
-	
 
 }

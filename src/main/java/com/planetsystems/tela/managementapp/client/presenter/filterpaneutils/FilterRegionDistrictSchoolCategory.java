@@ -1,15 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.filterpaneutils;
 
-import java.util.Date;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
-import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class FilterRegionDistrictSchoolCategory extends VLayout {

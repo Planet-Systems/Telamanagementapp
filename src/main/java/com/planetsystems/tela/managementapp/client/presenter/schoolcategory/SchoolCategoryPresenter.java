@@ -363,8 +363,8 @@ public class SchoolCategoryPresenter
 
 	private void loadFieldsToEdit(SchoolCategoryWindow window) {
 		ListGridRecord record = getView().getSchoolCategoryPane().getListGrid().getSelectedRecord();
-		window.getCategoryCode().setValue(record.getAttribute(SchCategoryListGrid.CODE));
-		window.getCategoryName().setValue(record.getAttribute(SchCategoryListGrid.NAME));
+		window.getCategoryCode().setValue(record.getAttribute(SchoolCategoryListGrid.CODE));
+		window.getCategoryName().setValue(record.getAttribute(SchoolCategoryListGrid.NAME));
 	}
 
 	private void updateSchCategory(final SchoolCategoryWindow window) {
@@ -375,7 +375,7 @@ public class SchoolCategoryPresenter
 				ListGridRecord record = getView().getSchoolCategoryPane().getListGrid().getSelectedRecord();
 
 				SchoolCategoryDTO dto = new SchoolCategoryDTO();
-				dto.setId(record.getAttribute(SchCategoryListGrid.ID));
+				dto.setId(record.getAttribute(SchoolCategoryListGrid.ID));
 				dto.setCode(window.getCategoryCode().getValueAsString());
 				dto.setName(window.getCategoryName().getValueAsString());
 				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));

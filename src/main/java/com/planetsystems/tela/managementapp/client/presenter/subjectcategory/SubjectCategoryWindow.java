@@ -12,8 +12,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class SubjectCategoryWindow extends Window {
 
-	private TextField categoryCode;
-	private TextField categoryName;
+	private TextField codeField;
+	private TextField nameField;
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -21,15 +21,15 @@ public class SubjectCategoryWindow extends Window {
 
 	public SubjectCategoryWindow() {
 		super();
-		categoryCode = new TextField();
-		categoryCode.setTitle("Code");
-		categoryCode.setHint("Code");
-		categoryCode.setShowHintInField(true);
+		codeField = new TextField();
+		codeField.setTitle("Code");
+		codeField.setHint("Code");
+		codeField.setShowHintInField(true);
 
-		categoryName = new TextField();
-		categoryName.setTitle("Category");
-		categoryName.setHint("Category");
-		categoryName.setShowHintInField(true);
+		nameField = new TextField();
+		nameField.setTitle("Category");
+		nameField.setHint("Category");
+		nameField.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
 		
@@ -37,7 +37,7 @@ public class SubjectCategoryWindow extends Window {
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(categoryCode, categoryName);
+		form.setFields(codeField, nameField);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setColWidths("150","250");
@@ -77,16 +77,19 @@ public class SubjectCategoryWindow extends Window {
 		});
 	}
 	
-	public TextField getCategoryCode() {
-		return categoryCode;
-	}
-
-	public TextField getCategoryName() {
-		return categoryName;
-	}
 
 	public IButton getSaveButton() {
 		return saveButton;
 	}
+
+	public TextField getCodeField() {
+		return codeField;
+	}
+
+	public TextField getNameField() {
+		return nameField;
+	}
+	
+	
 
 }

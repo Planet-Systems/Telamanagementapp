@@ -24,7 +24,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.NavigationMenuDTO;
 import com.planetsystems.tela.dto.SubMenuItemDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
@@ -533,7 +532,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		valueMap.put("female", "Female");
 		valueMap.put("male", "Male");
 
-		window.getGenderComboBox().setValueMap(valueMap);
+		window.getGenderCombo().setValueMap(valueMap);
 	}
 
 	private void saveSystemUser(final SystemUserWindow window) {
@@ -558,7 +557,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
 				generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
 				generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
-				generalUserDetailDTO.setGender(window.getGenderComboBox().getValueAsString());
+				generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
 				generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
 				generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
 				generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
@@ -683,7 +682,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		window.getEmailField().clearValue();
 		window.getDobItem().clearValue();
 		window.getNationalIdField().clearValue();
-		window.getGenderComboBox().clearValue();
+		window.getGenderCombo().clearValue();
 		window.getNameAbbrevField().clearValue();
 		window.getEnabledRadioGroupItem().clearValue();
 	}
@@ -709,7 +708,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		if (window.getNationalIdField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getGenderComboBox().getValueAsString() == null)
+		if (window.getGenderCombo().getValueAsString() == null)
 			flag = false;
 
 		return flag;

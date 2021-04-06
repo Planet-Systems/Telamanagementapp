@@ -15,7 +15,7 @@ public class CreateTimeTablePane extends VLayout {
 	private ComboBox academicTermCombo;
 	private ComboBox districtCombo;
 	private ComboBox schoolCombo;
-	private IButton addLessonButton ;
+	private IButton addLessonButton;
 	private LessonListGrid lessonListGrid;
 	
 	private IButton saveButton;

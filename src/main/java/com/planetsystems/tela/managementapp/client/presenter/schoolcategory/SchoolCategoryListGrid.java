@@ -3,27 +3,21 @@ package com.planetsystems.tela.managementapp.client.presenter.schoolcategory;
 import java.util.List;
 
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class SchCategoryListGrid extends SuperListGrid {
+public class SchoolCategoryListGrid extends SuperListGrid {
 	public static String ID = "id";
 	public static String CODE = "code";
 	public static String NAME = "name";
 	
 	private SchoolCategoryDataSource dataSource;
-
-/*
- *    private String code;
-    private String name;
- */
 		
 
-	public SchCategoryListGrid() { 
+	public SchoolCategoryListGrid() { 
 		super();
 		
 		dataSource = SchoolCategoryDataSource.getInstance();

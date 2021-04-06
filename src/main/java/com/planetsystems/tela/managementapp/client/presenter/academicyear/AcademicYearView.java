@@ -34,7 +34,6 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
     	panel = new VLayout();
     	academicYearPane = new AcademicYearPane();
     	academicTermPane = new AcademicTermPane();
-    	academicYearDashboardPane = new AcademicYearDashboardPane();
     	controlsPane = new ControlsPane();
     	vlayout=new VLayout();
     	

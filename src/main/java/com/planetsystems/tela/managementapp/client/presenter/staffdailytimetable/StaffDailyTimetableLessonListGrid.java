@@ -1,21 +1,18 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailytask;
+package com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable;
 
 import java.util.List;
 
-import com.planetsystems.tela.dto.StaffDailyAttendanceTaskDTO;
-import com.planetsystems.tela.dto.TimeTableLessonDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
-import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
+import com.planetsystems.tela.dto.StaffDailyTimeTableLessonDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class DailyTaskListGrid extends SuperListGrid {
+public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 	public static final String ID = "id";
      
-	public static final String STAFF_DAILY_ATTENDANCE_ID = "staffDailyAttendanceId";
+	public static final String STAFF_DAILY_TIME_TABLE_ID = "staffDailyTimeTableId";
 
 	public static final String CLASS = "class";
 	public static final String CLASS_ID = "classId";
@@ -29,31 +26,19 @@ public class DailyTaskListGrid extends SuperListGrid {
 	public static final String ATTENDANCE_STATUS = "attendanceStatus";
 	public static final String LESSON_DAY = "lessonDay";
 	
-	StaffDailyAttendanceTaskDataSource dataSource;
+	StaffDailyTimeTableLessonDTODataSource dataSource;
 	
-	/*
-	 *      private AcademicTermDTO academicTermDTO;
-
-    private SchoolStaffDTO schoolStaffDTO;
-
-    private String comment;
-
-    private String dailyAttendanceDate;
-
-
-    private StaffDailyAttendanceDTO staffDailyAttendanceDTO; // not set
-	 */
 	
-	public DailyTaskListGrid() {
+	public StaffDailyTimetableLessonListGrid() {
 		super();
 		
 		
-		dataSource = StaffDailyAttendanceTaskDataSource.getInstance();
+		dataSource = StaffDailyTimeTableLessonDTODataSource.getInstance();
 		
 		ListGridField idField = new ListGridField(ID , "Id");
 		idField.setHidden(true);
 		
-		ListGridField staffDailyAttendanceIdField = new ListGridField(STAFF_DAILY_ATTENDANCE_ID, "Id");
+		ListGridField staffDailyAttendanceIdField = new ListGridField(STAFF_DAILY_TIME_TABLE_ID, "Id");
 		staffDailyAttendanceIdField.setHidden(true);
 
 		ListGridField attendanceDateField = new ListGridField(LESSON_DAY, "LessonDay");
@@ -78,37 +63,37 @@ public class DailyTaskListGrid extends SuperListGrid {
 		this.setDataSource(dataSource);
 	}
 
-	public ListGridRecord addRowData(StaffDailyAttendanceTaskDTO staffDailyAttendanceTaskDTO) {
+	public ListGridRecord addRowData(StaffDailyTimeTableLessonDTO staffDailyTimeTableLessonDTO) {
 		ListGridRecord record = new ListGridRecord();
-		record.setAttribute(ID, staffDailyAttendanceTaskDTO.getId());
-		record.setAttribute(LESSON_DAY , staffDailyAttendanceTaskDTO.getLessonDay());
-		record.setAttribute(ATTENDANCE_STATUS , staffDailyAttendanceTaskDTO.getAttendanceStatus());
+		record.setAttribute(ID, staffDailyTimeTableLessonDTO.getId());
+		record.setAttribute(LESSON_DAY , staffDailyTimeTableLessonDTO.getLessonDay());
+		record.setAttribute(ATTENDANCE_STATUS , staffDailyTimeTableLessonDTO.getAttendanceStatus());
 
-		record.setAttribute(START_TIME, staffDailyAttendanceTaskDTO.getStartTime());
-		record.setAttribute(END_TIME, staffDailyAttendanceTaskDTO.getEndTime());
+		record.setAttribute(START_TIME, staffDailyTimeTableLessonDTO.getStartTime());
+		record.setAttribute(END_TIME, staffDailyTimeTableLessonDTO.getEndTime());
 
-		if (staffDailyAttendanceTaskDTO.getSchoolClassDTO() != null) {
-			record.setAttribute(CLASS_ID, staffDailyAttendanceTaskDTO.getSchoolClassDTO().getId());
-			record.setAttribute(CLASS, staffDailyAttendanceTaskDTO.getSchoolClassDTO().getName());
+		if (staffDailyTimeTableLessonDTO.getSchoolClassDTO() != null) {
+			record.setAttribute(CLASS_ID, staffDailyTimeTableLessonDTO.getSchoolClassDTO().getId());
+			record.setAttribute(CLASS, staffDailyTimeTableLessonDTO.getSchoolClassDTO().getName());
 		}
 
 
-		if (staffDailyAttendanceTaskDTO.getSubjectDTO() != null) {
-			record.setAttribute(SUBJECT_ID, staffDailyAttendanceTaskDTO.getSubjectDTO().getId());
-			record.setAttribute(SUBJECT, staffDailyAttendanceTaskDTO.getSubjectDTO().getName());
+		if (staffDailyTimeTableLessonDTO.getSubjectDTO() != null) {
+			record.setAttribute(SUBJECT_ID, staffDailyTimeTableLessonDTO.getSubjectDTO().getId());
+			record.setAttribute(SUBJECT, staffDailyTimeTableLessonDTO.getSubjectDTO().getName());
 		}
 		
-		if (staffDailyAttendanceTaskDTO.getStaffDailyAttendanceDTO() != null) {
-			record.setAttribute(STAFF_DAILY_ATTENDANCE_ID , staffDailyAttendanceTaskDTO.getStaffDailyAttendanceDTO().getId());
+		if (staffDailyTimeTableLessonDTO.getStaffDailyTimeTableDTO() != null) {
+			record.setAttribute(STAFF_DAILY_TIME_TABLE_ID , staffDailyTimeTableLessonDTO.getStaffDailyTimeTableDTO().getId());
 		}
 
 		return record;
 	}
 
-	public void addRecordsToGrid(List<StaffDailyAttendanceTaskDTO> list) {
+	public void addRecordsToGrid(List<StaffDailyTimeTableLessonDTO> list) {
 		ListGridRecord[] records = new ListGridRecord[list.size()];
 		int row = 0;
-		for (StaffDailyAttendanceTaskDTO item : list) {
+		for (StaffDailyTimeTableLessonDTO item : list) {
 			records[row] = addRowData(item);
 			row++;
 		}
@@ -116,31 +101,31 @@ public class DailyTaskListGrid extends SuperListGrid {
 		dataSource.setTestData(records);
 	}
 
-	public void addRecordToGrid(StaffDailyAttendanceTaskDTO dto) {
+	public void addRecordToGrid(StaffDailyTimeTableLessonDTO dto) {
 		this.addData(addRowData(dto));
 	}
 	
 	
 	
-	public static class StaffDailyAttendanceTaskDataSource extends DataSource {
+	public static class StaffDailyTimeTableLessonDTODataSource extends DataSource {
 
-		private static StaffDailyAttendanceTaskDataSource instance = null;
+		private static StaffDailyTimeTableLessonDTODataSource instance = null;
 
-		public static StaffDailyAttendanceTaskDataSource getInstance() {
+		public static StaffDailyTimeTableLessonDTODataSource getInstance() {
 			if (instance == null) {
-				instance = new StaffDailyAttendanceTaskDataSource("StaffDailyAttendanceTaskDataSource");
+				instance = new StaffDailyTimeTableLessonDTODataSource("StaffDailyTimeTableLessonDTODataSource");
 			}
 			return instance;
 		}
 
-		public StaffDailyAttendanceTaskDataSource(String id) {
+		public StaffDailyTimeTableLessonDTODataSource(String id) {
 			setID(id);
 			
 			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
 			idField.setHidden(true);
 			idField.setPrimaryKey(true);
 			
-			DataSourceTextField staffDailyAttendanceIdField = new DataSourceTextField(STAFF_DAILY_ATTENDANCE_ID , "Id");
+			DataSourceTextField staffDailyAttendanceIdField = new DataSourceTextField(STAFF_DAILY_TIME_TABLE_ID , "Id");
 			staffDailyAttendanceIdField.setHidden(true);
 
 			DataSourceTextField attendanceDateField = new DataSourceTextField(LESSON_DAY, "LessonDate");

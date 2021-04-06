@@ -26,7 +26,6 @@ public class SessionManager {
 
 		if (result != null) {
 			SystemErrorDTO errorDTO = result.getSystemErrorDTO();
-			// GWT.log("Manager ERROR "+errorDTO);
 
 			if (errorDTO != null) {
 				if (errorDTO.getMessage() != null && errorDTO.getErrorCode() != 0) {

@@ -13,23 +13,23 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class SubjectWindow extends Window {
 
-	private TextField subjectCode;
-	private TextField subjectName;
-	private ComboBox subjectCategory;
+	private TextField codeField;
+	private TextField nameField;
+	private ComboBox subjectCategoryCombo;
 
 	private IButton saveButton;
 	private IButton cancelButton;
 
 	public SubjectWindow() {
 		super();
-		subjectCode = new TextField();
-		subjectCode.setTitle("Code");
+		codeField = new TextField();
+		codeField.setTitle("Code");
 
-		subjectName = new TextField();
-		subjectName.setTitle("Subject");
+		nameField = new TextField();
+		nameField.setTitle("Subject");
 
-		subjectCategory = new ComboBox();
-		subjectCategory.setTitle("Category");
+		subjectCategoryCombo = new ComboBox();
+		subjectCategoryCombo.setTitle("Category");
 
 		saveButton = new IButton("Save");
 		
@@ -37,7 +37,7 @@ public class SubjectWindow extends Window {
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(subjectCategory , subjectCode, subjectName);
+		form.setFields(subjectCategoryCombo , codeField, nameField);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setColWidths("150","250");
@@ -77,16 +77,19 @@ public class SubjectWindow extends Window {
 		});
 	}
 
-	public TextField getSubjectCode() {
-		return subjectCode;
+	
+
+
+	public TextField getCodeField() {
+		return codeField;
 	}
 
-	public TextField getSubjectName() {
-		return subjectName;
+	public TextField getNameField() {
+		return nameField;
 	}
 
-	public ComboBox getSubjectCategory() {
-		return subjectCategory;
+	public ComboBox getSubjectCategoryCombo() {
+		return subjectCategoryCombo;
 	}
 
 	public IButton getSaveButton() {

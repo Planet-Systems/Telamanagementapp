@@ -10,7 +10,7 @@ import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.Scho
 import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision.StaffDailyAttendanceSupervisionModule;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.StaffDailyTaskModule;
+import com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable.StaffDailyTimetableModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.StaffEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.SubjectCategoryModule;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.SystemUserModule;
@@ -33,7 +33,7 @@ public class MainModule extends AbstractPresenterModule {
           install(new LearnerEnrollmentModule());
           install(new TimeTableModule());
           install(new SystemUserModule());
-          install(new StaffDailyTaskModule());
+          install(new StaffDailyTimetableModule());
           install(new StaffDailyAttendanceSupervisionModule());
           install(new TimeAttendanceSupervisionModule());
           

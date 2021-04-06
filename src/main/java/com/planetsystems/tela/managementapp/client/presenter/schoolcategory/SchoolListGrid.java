@@ -29,25 +29,6 @@ public class SchoolListGrid extends SuperListGrid {
 	
 	private SchoolDataSource dataSource;
 
-/*
- *     private String code;
-    private String name;
-    private String location;
-    private SchoolCategoryDTO schoolCategory;
-
-    private String latitude;
-    private String longitude;
-
-    private DistrictDTO district;
-
-    private String deviceNumber; // Phone Serial number
-
-    private boolean attendanceTracked = true;
-
-    private String activationStatus;
- */
-
-		
 
 	public SchoolListGrid() { 
 		super();

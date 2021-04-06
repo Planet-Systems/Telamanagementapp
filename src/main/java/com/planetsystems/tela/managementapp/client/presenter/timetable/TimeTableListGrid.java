@@ -3,7 +3,6 @@ package com.planetsystems.tela.managementapp.client.presenter.timetable;
 import java.util.List;
 
 import com.planetsystems.tela.dto.TimeTableDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -29,27 +28,6 @@ public class TimeTableListGrid extends SuperListGrid {
 	   public static final String ACADEMIC_YEAR_ID = "academicYearId";
 	 
 	   TimeTableDataSource dataSource;
-	   
-	 
-	   
-	/*
-	 * 
-	 *  private SchoolDTO schoolDTO;
-
-
-    private AcademicTermDTO academicTermDTO;
-
-
-    private List<TimeTableLessonDTO> timeTableLessonDTOS;
-	 * 
-	 */
-	   
-	//   private String day;
-	//   private SchoolClassDTO schoolClassDTO;
-	//   private SubjectDTO subjectDTO;
-	//   private String startTime;
-	//   private String endTime;
-	//   private SchoolStaffDTO schoolStaffDTO
 	   
 		
 		public TimeTableListGrid() {

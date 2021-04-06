@@ -3,7 +3,6 @@ package com.planetsystems.tela.managementapp.client.presenter.region;
 import java.util.List;
 
 import com.planetsystems.tela.dto.RegionDto;
-import com.planetsystems.tela.managementapp.client.presenter.region.DistrictListGrid.DistrictDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -15,9 +14,6 @@ public class RegionListGrid extends SuperListGrid {
 	public static String CODE = "code";
 	public static String NAME = "name";
 
-	
-//	private String code;
-//    private String name;
 
 	private RegionDataSource dataSource;
 		

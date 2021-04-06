@@ -20,14 +20,6 @@ public class AcademicTermListGrid extends SuperListGrid {
 	public static String ACTIVATION_STATUS = "activationStatus";
 	public static String END_DATE = "endDate";
 	public static String START_DATE = "startDate";
-
-//    private String code;
-//    private String term;
-//    private String activationStatus;
-//    private String startDate;
-//    private String endDate;
-//
-//    private AcademicYearDTO academicYear;
 		
 	AcademicTermDataSource dataSource;
 	public AcademicTermListGrid() { 
@@ -37,7 +29,6 @@ public class AcademicTermListGrid extends SuperListGrid {
 
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
-		//idField.setPrimaryKey(true);
 
 		ListGridField codeField = new ListGridField(CODE, "Code");
 		ListGridField yearField = new ListGridField(YEAR, "Academic year");
@@ -48,7 +39,6 @@ public class AcademicTermListGrid extends SuperListGrid {
 		ListGridField statusField= new ListGridField(STATUS, "Status");
 		ListGridField startDateField = new ListGridField(START_DATE, "Start date(DD/MM/YYYY)");
 		ListGridField endDateField= new ListGridField(END_DATE, "End date(DD/MM/YYYY)");
-		//ListGridField activationStatusField= new ListGridField(ACTIVATION_STATUS, "Activation status");
 		
 		this.setDataSource(dataSource);
 

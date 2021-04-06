@@ -1,10 +1,23 @@
 package com.planetsystems.tela.managementapp.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
 import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
-import com.planetsystems.tela.dto.*;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.AuthenticationDTO;
@@ -19,45 +32,28 @@ import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
-import com.planetsystems.tela.dto.StaffDailyAttendanceTaskDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
+import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
+import com.planetsystems.tela.dto.StaffDailyTimeTableLessonDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
+import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemResponseDTO;
-import com.planetsystems.tela.dto.SystemUserDTO;
+import com.planetsystems.tela.dto.SystemUserGroupDTO;
+import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
+import com.planetsystems.tela.dto.SystemUserProfileDTO;
 import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
-import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.FilterLearnerAttendanceWindow;
-import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.FilterLearnerHeadCountWindow;
-import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolClassPane;
-import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.FilterSchoolsPane;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockInWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockOutWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision.StaffDailyAttendanceSupervisionListGrid;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.CreateStaffDailyTaskPane;
-import com.planetsystems.tela.managementapp.client.presenter.staffdailytask.StaffDailyAttendancePane;
-import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffHeadCountWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffsPane;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-
-import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RequestActionHandler implements ActionHandler<RequestAction, RequestResult> {
 
@@ -2601,7 +2597,61 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 			} ///////////////////////////////////////////////////////////////////
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				TimeTableLessonDTO dto = (TimeTableLessonDTO) action.getRequestBody().get(RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE);
+				String timeTableId = (String) action.getRequestBody().get(RequestDelimeters.TIME_TABLE_ID);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+///timetables/{id}/timetablelessons
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("timetables")
+						.path(timeTableId).path("timetablelessons")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+					System.out.print("FEEDBACK " + feedback);
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_TIME_TABLE_LESSON)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestDelimeters.TIME_TABLE_LESSON_ID);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				Client client = ClientBuilder.newClient();
+///timetablelessons/{id}
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
+						.path("timetablelessons").path(id).request(MediaType.APPLICATION_JSON).headers(headers)
+						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
@@ -2744,13 +2794,13 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_ATTENDANCE_TASKS)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_TIMETABLE_LESSONS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				StaffDailyAttendanceDTO dto = (StaffDailyAttendanceDTO) action.getRequestBody()
-						.get(RequestConstant.SAVE_STAFF_DAILY_ATTENDANCE_TASKS);
+				StaffDailyTimeTableDTO dto = (StaffDailyTimeTableDTO) action.getRequestBody()
+						.get(RequestConstant.SAVE_STAFF_DAILY_TIMETABLE_LESSONS);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2759,7 +2809,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
-						.path("staffdailyattendances").request(MediaType.APPLICATION_JSON).headers(headers)
+						.path("staffDailyTimeTables").request(MediaType.APPLICATION_JSON).headers(headers)
 						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
@@ -2772,10 +2822,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			} else if (action.getRequest().equalsIgnoreCase(
-					RequestConstant.GET_STAFF_DAILY_ATTENDANCE_ACADEMIC_YEAR_TERM_DUSTRICT_SCHOOL_DAY)
+					RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				List<StaffDailyAttendanceDTO> list = new ArrayList<StaffDailyAttendanceDTO>();
+				List<StaffDailyTimeTableDTO> list = new ArrayList<StaffDailyTimeTableDTO>();
 
 				String academicYearId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
 				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
@@ -2794,13 +2844,13 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				 * /schools/8a008082648d961401648dadbf0f0003/staffdailyattendances?attendanceDate=17/03/2021
 				 */
 
-				SystemResponseDTO<List<StaffDailyAttendanceDTO>> responseDto = client.target(API_LINK)
+				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
 						.path("academicyears").path(academicYearId).path("academicterms").path(academicTermId)
 						.path("districts").path(districtId).path("schools").path(schoolId)
 						.path("days").path(lessonDay)
-						.path("staffdailyattendances")
+						.path("staffDailyTimeTables")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
-						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceDTO>>>() {
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyTimeTableDTO>>>() {
 						});
 
 				if(responseDto.getData() != null)
@@ -2816,10 +2866,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			}
 
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SCHOOL_STAFF_DAY)
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DAY)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				List<StaffDailyAttendanceTaskDTO> list = new ArrayList<StaffDailyAttendanceTaskDTO>();
+				List<StaffDailyTimeTableLessonDTO> list = new ArrayList<StaffDailyTimeTableLessonDTO>();
 
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
@@ -2835,15 +2885,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				 * /schools/{school}/schoolstaffs/{staff}/staffdailyattendances
 				 */
 
-				SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>> responseDto = client.target(API_LINK)
+				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
 						.path("schools")
 						.path(schoolId)
 						.path("schoolstaffs")
 						.path(schoolStaffId)
 						.path("days").path(lessonDay)
-						.path("staffdailyattendances")
+						.path("staffDailyTimeTableLessons")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
-						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>>>() {
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>>>() {
 						});
 
 				if(responseDto.getData() != null)
@@ -2862,9 +2912,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASKS_FOR_STAFF_DAY_DAILY_ATTENDANCE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				List<StaffDailyAttendanceTaskDTO> list = new ArrayList<StaffDailyAttendanceTaskDTO>();
+				List<StaffDailyTimeTableLessonDTO> list = new ArrayList<StaffDailyTimeTableLessonDTO>();
 
-				String staffDailyAttendanceId = (String) action.getRequestBody().get(RequestDelimeters.STAFF_DAILY_ATTENDANCE_LESSON_ID);
+				String staffDailyAttendanceId = (String) action.getRequestBody().get(RequestDelimeters.STAFF_TIMETABLE_LESSON_ID);
 				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
 				String lessonDay = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DAY);
 
@@ -2878,15 +2928,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				 * /staffdailyattendances/{staffDailyAttendanceId}/schoolstaffs/{staff}/staffdailyattendancestasks
 				 */
 
-				SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>> responseDto = client.target(API_LINK)
+				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
 						.path("staffdailyattendances")
 						.path(staffDailyAttendanceId)
 						.path("schoolstaffs")
 						.path(schoolStaffId)
 						.path("days").path(lessonDay)
-						.path("staffdailyattendancestasks")
+						.path("staffDailyTimeTableLessons")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
-						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceTaskDTO>>>() {
+						.get(new GenericType<SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>>>() {
 						});
 
 				if (responseDto.getData() != null)

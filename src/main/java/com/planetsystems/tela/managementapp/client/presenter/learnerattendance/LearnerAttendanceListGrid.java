@@ -3,10 +3,8 @@ package com.planetsystems.tela.managementapp.client.presenter.learnerattendance;
 import java.util.List;
 
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
-import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicYearListGrid.AcademicYearDatasource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
-import com.smartgwt.client.data.fields.DataSourceDateField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -60,10 +58,12 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 		academicTermIdField.setHidden(true);
 		
 		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		academicYearField.setHidden(true);
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 		
 		ListGridField schoolField = new ListGridField(SCHOOL, "School");
+		schoolField.setHidden(true);
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 		
@@ -87,7 +87,7 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 		     	
 		this.setDataSource(datasource);
 
-		this.setFields(idField , schoolClassIdField , academicTermIdField  , schoolStaffIdField , academicTermField , schoolClassField , schoolStaffField , attendanceDateField ,boysPresentField , girlsPresentField ,totalPresentField, boysAbsentField ,girlsAbsentField , totalAbsentField  , commentField  );
+		this.setFields(idField , schoolClassIdField , academicTermIdField ,academicTermField , schoolField , schoolStaffIdField , academicTermField , schoolClassField , schoolStaffField , attendanceDateField ,boysPresentField , girlsPresentField ,totalPresentField, boysAbsentField ,girlsAbsentField , totalAbsentField  , commentField  );
 
 	}
 
@@ -188,10 +188,12 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 				academicTermIdField.setHidden(true);
 				
 				DataSourceTextField academicYearField = new DataSourceTextField(ACADEMIC_YEAR, "Academic Year");
+				academicYearField.setHidden(true);
 				DataSourceTextField academicYearIdField = new DataSourceTextField(ACADEMIC_YEAR_ID, "Academic Year Id");
 				academicYearIdField.setHidden(true);
 				
 				DataSourceTextField schoolField = new DataSourceTextField(SCHOOL, "School");
+				schoolField.setHidden(true);
 				DataSourceTextField schoolIdField = new DataSourceTextField(SCHOOL_ID, "School Id");
 				schoolIdField.setHidden(true);
 				
@@ -211,7 +213,7 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 				
 				DataSourceTextField commentField = new DataSourceTextField(COMMENT, "Comment");
 				
-				this.setFields(idField , schoolClassIdField , academicTermIdField  , schoolStaffIdField , academicTermField , schoolClassField , schoolStaffField , attendanceDateField ,boysPresentField , girlsPresentField ,totalPresentField, boysAbsentField ,girlsAbsentField , totalAbsentField  , commentField  );
+				this.setFields(idField , schoolClassIdField , academicTermIdField  ,academicTermField , schoolField , schoolStaffIdField , academicTermField , schoolClassField , schoolStaffField , attendanceDateField ,boysPresentField , girlsPresentField ,totalPresentField, boysAbsentField ,girlsAbsentField , totalAbsentField  , commentField  );
 	
 				setClientOnly(true);
 			} 

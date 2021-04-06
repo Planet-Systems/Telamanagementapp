@@ -2,9 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.region;
 
 import java.util.List;
 
-import com.google.gwt.user.client.ui.Tree;
 import com.planetsystems.tela.dto.DistrictDTO;
-import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicTermListGrid.AcademicTermDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -23,11 +21,6 @@ public class DistrictListGrid extends SuperListGrid {
 	public static String ROLLEDOUT_STATUS = "rolledOutStatus";
     
 	private DistrictDataSource dataSource;
-	
-//private RegionDto region;
-//private String name;
-//private String code;
-//private boolean rolledOut;
 
 	public DistrictListGrid() {
 		super();

@@ -17,12 +17,9 @@ public class ClockOutWindow extends Window {
 	private ComboBox academicTermCombo;
 
 	private ComboBox schoolStaffCombo;
-
-	// private DateItem clockInDate; taken from server
 	private TextAreaItem commentField;
 	private TextItem latitudeField;
 	private TextItem longitudeField;
-	// private TextItem statusField; set from server side
 
 	private IButton saveButton;
 	private IButton cancelButton;

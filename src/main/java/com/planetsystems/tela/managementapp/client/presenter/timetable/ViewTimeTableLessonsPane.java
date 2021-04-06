@@ -11,7 +11,6 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.LayoutSpacer;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.menu.MenuItem;
 
 public class ViewTimeTableLessonsPane extends VLayout {
 
@@ -40,7 +39,6 @@ public class ViewTimeTableLessonsPane extends VLayout {
 	    schoolDistrictLayout.setPadding(5);
 	    schoolDistrictLayout.setAutoHeight();
 	    schoolDistrictLayout.setWidth("50%");
-//	    schoolDistrictLayout.setBorder("1px solid red");
 	    schoolDistrictLayout.setLayoutAlign(Alignment.CENTER);
 	    
 	    Label schoolLabel = new Label("School: ");
@@ -76,7 +74,6 @@ public class ViewTimeTableLessonsPane extends VLayout {
 	    yearTermLayout.setPadding(2);
 	    yearTermLayout.setWidth("50%");
 	    yearTermLayout.setAutoHeight();
-//	    yearTermLayout.setBorder("1px solid green");
 	    yearTermLayout.setLayoutAlign(Alignment.CENTER);
 	    
 	    Label academicYearLabel = new Label("AcademicYear: ");
@@ -157,6 +154,12 @@ public class ViewTimeTableLessonsPane extends VLayout {
 		return closeTabButton;
 	}
 
+	public ControlsPane getControlsPane() {
+		return controlsPane;
+	}
+
+	
+	
 	
 	
 	

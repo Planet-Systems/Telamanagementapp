@@ -6,7 +6,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class SchCategoryPane extends VLayout {
 
-private SchCategoryListGrid listGrid;
+private SchoolCategoryListGrid listGrid;
 	
 	public SchCategoryPane() {
 		super();
@@ -19,7 +19,7 @@ private SchCategoryListGrid listGrid;
 		header.setMargin(10);
 		header.setAlign(Alignment.LEFT);
 
-		listGrid = new SchCategoryListGrid();
+		listGrid = new SchoolCategoryListGrid();
 
 		VLayout layout = new VLayout();
 		layout.addMember(header);
@@ -28,7 +28,7 @@ private SchCategoryListGrid listGrid;
 		
 	}
 
-	public SchCategoryListGrid getListGrid() {
+	public SchoolCategoryListGrid getListGrid() {
 		return listGrid;
 	}
 

@@ -27,7 +27,6 @@ import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -279,6 +278,7 @@ public class StaffEnrollmentPresenter
 
 						@Override
 						public void onNetworkResult(RequestResult result) {
+							clearStaffEnrollmentWindowFields(window);
 							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 							getAllStaffEnrollments();
 						}

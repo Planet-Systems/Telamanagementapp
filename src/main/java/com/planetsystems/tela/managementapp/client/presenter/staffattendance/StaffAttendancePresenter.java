@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.apache.bcel.generic.NEW;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -168,7 +166,6 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-//	   		SC.say("Advanced Search");
 				FilterClockInWindow window = new FilterClockInWindow();
 				loadFilterClockInAcademicYearCombo(window);
 				loadFilterClockInAcademicTermCombo(window);

@@ -3,7 +3,6 @@ package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 import java.util.List;
 
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
@@ -27,21 +26,6 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 	public static String TOTAL = "Total";
 	
 	public static String STATUS = "status";
-	
-	
-
-/*
- * private SchoolDTO schoolDTO;
-
-    private AcademicTermDTO academicTermDTO;
-
-
-    private long  totalMale;
-
-    private long totalFemale;
-
-    private String status;
- */
 
 
 	StaffEnrollmentDataSource dataSource;

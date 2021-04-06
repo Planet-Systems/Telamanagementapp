@@ -7,7 +7,6 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -23,7 +22,6 @@ public class StaffEnrollmentWindow extends Window {
 	private TextItem totalMaleField;
 	private TextItem totalFemaleField;
 	private TextItem staffTotalField;
-	// private TextItem statusField; set from server side
 
 	private IButton saveButton;
 	private IButton cancelButton;

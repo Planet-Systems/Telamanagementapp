@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.timetable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -35,7 +36,6 @@ import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUti
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
-import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
@@ -105,7 +105,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					getView().getTabSet().removeTab(1);
 
 					MenuButton newButton = new MenuButton("New");
-					MenuButton view = new MenuButton("View");
+					MenuButton view = new MenuButton("View Lessons");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton fiter = new MenuButton("Filter");
 
@@ -117,7 +117,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addTimeTablePane(newButton);
-					viewTimeTable(view);
+					viewTimeTableLessons(view);
 
 					getAllTimeTables();
 
@@ -131,18 +131,52 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		});
 	}
 
-	private void viewTimeTable(MenuButton view) {
+	private void viewTimeTableLessons(MenuButton view) {
 		view.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().getTimetablePane().getTimeTableListGrid().anySelected()) {
+				if (getView().getTimetablePane().getTimeTableListGrid().anySelected()) {					
+					
 					Tab tab = new Tab();
 					tab.setTitle("Time Table Lessons");
 					getView().getTabSet().removeTab(1);// remove before putting
-					ListGridRecord record = getView().getTimetablePane().getTimeTableListGrid().getSelectedRecord();
+					final ListGridRecord record = getView().getTimetablePane().getTimeTableListGrid().getSelectedRecord();
+					final String timeTableId = record.getAttribute(TimeTableListGrid.ID);
 
-					ViewTimeTableLessonsPane viewTimeTableLessonsPane = new ViewTimeTableLessonsPane();
+					final ViewTimeTableLessonsPane viewTimeTableLessonsPane = new ViewTimeTableLessonsPane();
+					viewTimeTableLessonsPane.getLessonListGrid().setShowFilterEditor(true);
+					//set controls button
+					MenuButton add = new MenuButton("Add");
+					add.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent event) {
+							saveTimeTableLessonByTimeTable(viewTimeTableLessonsPane , record , null);
+						}
+					});
+					MenuButton edit = new MenuButton("edit");
+					MenuButton delete = new MenuButton("delete");
+					delete.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent event) {
+							if(viewTimeTableLessonsPane.getLessonListGrid().anySelected()) {
+								deleteTimeTableLesson(viewTimeTableLessonsPane , record , null);
+							}else {
+								SC.say("Select lesson to delete");
+							}
+						}
+
+						
+					});
+					
+					
+                    viewTimeTableLessonsPane.getControlsPane().addMenuButtons(Arrays.asList(add , edit , delete));
+                    
+
+					
+					
 					viewTimeTableLessonsPane.getSchool().setContents(record.getAttribute(TimeTableListGrid.SCHOOL));
 					viewTimeTableLessonsPane.getDistrict().setContents(record.getAttribute(TimeTableListGrid.DISTRICT));
 
@@ -156,7 +190,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					getView().getTabSet().addTab(tab);
 					getView().getTabSet().selectTab(tab);
 
-					getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, record.getAttribute(TimeTableListGrid.ID));
+					getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, timeTableId);
 
 					viewTimeTableLessonsPane.getCloseTabButton().addClickHandler(new ClickHandler() {
 
@@ -172,6 +206,107 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 			}
 
+
+		});
+
+	}
+	
+	
+	private void deleteTimeTableLesson(final ViewTimeTableLessonsPane viewTimeTableLessonsPane, final ListGridRecord timeTableRecord , final String defaultValue) {
+		final ListGridRecord lessonRecord = viewTimeTableLessonsPane.getLessonListGrid().getSelectedRecord();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put(RequestDelimeters.TIME_TABLE_LESSON_ID, lessonRecord.getAttribute(LessonListGrid.ID));
+		map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_TIME_TABLE_LESSON);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				SC.say(result.getSystemFeedbackDTO().getMessage());
+				getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane , timeTableRecord.getAttribute(TimeTableListGrid.ID) );
+			}
+		});
+		
+	}
+	
+	private void saveTimeTableLessonByTimeTable(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , final ListGridRecord timeTableRecord , final String defaultValue) {
+		final TimeTableLessonWindow window = new TimeTableLessonWindow();
+		 window.getAddRecordButton().setTitle("Save");
+		 loadLessonDayCombo(window);
+
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			map.put(RequestDelimeters.SCHOOL_ID, timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID));
+			map.put(RequestDelimeters.ACADEMIC_TERM_ID, timeTableRecord.getAttribute(TimeTableListGrid.ACADEMIC_TERM_ID));
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM);
+			
+            NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {		
+				@Override
+				public void onNetworkResult(RequestResult result) {
+					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+					for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
+						valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
+					}
+					window.getSchoolClassCombo().setValueMap(valueMap);
+
+					if (defaultValue != null) {
+						window.getSchoolClassCombo().setValue(defaultValue);
+					}
+				}
+			});
+			
+        	LinkedHashMap<String, Object> staffMap = new LinkedHashMap<>();
+        	staffMap.put(RequestDelimeters.SCHOOL_ID, timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID));
+        	staffMap.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
+			
+            NetworkDataUtil.callNetwork(dispatcher, placeManager, staffMap , new NetworkResult() {		
+				@Override
+				public void onNetworkResult(RequestResult result) {
+					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+					for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+						
+						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+						valueMap.put(schoolStaffDTO.getId(), fullName);
+					}
+					window.getSchoolStaffCombo().setValueMap(valueMap);
+
+					if (defaultValue != null) {
+						window.getSchoolStaffCombo().setValueMap(valueMap);
+					}
+				}
+			});
+			ComboUtil.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
+		 window.show();
+		 
+		 ///lesson dto
+	     window.getAddRecordButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				 TimeTableLessonDTO lessonDTO = new TimeTableLessonDTO();
+				 lessonDTO.setEndTime(timeFormat.format(window.getEndTime().getValueAsDate()));
+				 lessonDTO.setStartTime(timeFormat.format(window.getStartTime().getValueAsDate()));
+				 lessonDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				 lessonDTO.setSchoolClassDTO(new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString()));
+				 lessonDTO.setSchoolStaffDTO(new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString()));
+				 lessonDTO.setLessonDay(window.getLessonDayCombo().getValueAsString());
+				 lessonDTO.setSubjectDTO(new SubjectDTO(window.getSubjectCombo().getValueAsString()));
+				 
+				 LinkedHashMap<String, Object> saveMap = new LinkedHashMap<>();
+				 saveMap.put(RequestDelimeters.TIME_TABLE_ID, timeTableRecord.getAttribute(TimeTableListGrid.ID));
+				 saveMap.put(RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE , lessonDTO);
+				 saveMap.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE);
+				 NetworkDataUtil.callNetwork(dispatcher, placeManager, saveMap , new NetworkResult() {
+					
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						SC.say(result.getSystemFeedbackDTO().getMessage());
+						clearTimeTableLessonWindow(window);
+						getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, timeTableRecord.getAttribute(TimeTableListGrid.ID));
+					}
+				});
+			}
 		});
 
 	}
@@ -187,6 +322,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			@Override
 			public void onNetworkResult(RequestResult result) {
 				viewTimeTableLessonsPane.getLessonListGrid().addRecordsToGrid(result.getTableLessonDTOs());
+				
 			}
 		});
 

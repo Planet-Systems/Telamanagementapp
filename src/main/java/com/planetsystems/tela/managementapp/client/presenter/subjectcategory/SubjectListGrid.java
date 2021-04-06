@@ -3,7 +3,6 @@ package com.planetsystems.tela.managementapp.client.presenter.subjectcategory;
 import java.util.List;
 
 import com.planetsystems.tela.dto.SubjectDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -17,11 +16,6 @@ public class SubjectListGrid extends SuperListGrid {
 	public static String SUBJECT_CATEGORY = "subjectCategory";
 	public static String SUBJECT_CATEGORY_ID = "subjectCategoryId";
 
-	/*
-	 * private String code; private String name; private SubjectCategoryDTO
-	 * subjectCategory;
-	 * 
-	 */
 	SubjectDataSource dataSource;
 
 	public SubjectListGrid() {

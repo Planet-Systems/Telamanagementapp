@@ -1,7 +1,6 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailytask;
+package com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
-import com.planetsystems.tela.managementapp.client.widget.TextField;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -12,19 +11,17 @@ import com.smartgwt.client.widgets.form.fields.TimeItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class AddStaffDailyTaskWindow extends Window {
+public class AddStaffDailyTimetableLessonWindow extends Window {
 
 	private ComboBox schoolClassCombo;
 	private ComboBox subjectCombo;
 	private TimeItem startTime;
 	private TimeItem endTime;
-    
-	
 
 	private IButton saveButton;
 	private IButton cancelButton;
 
-	public AddStaffDailyTaskWindow() {
+	public AddStaffDailyTimetableLessonWindow() {
 		super();
 		
 		subjectCombo = new ComboBox();
@@ -79,7 +76,7 @@ public class AddStaffDailyTaskWindow extends Window {
 		this.setWidth("40%");
 		this.setHeight("40%");
 		this.setAutoCenter(true);
-		this.setTitle("Daily Tasks");
+		this.setTitle("Daily Lessons");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

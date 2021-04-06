@@ -26,7 +26,6 @@ import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -141,39 +140,6 @@ public class LearnerEnrollmentPresenter
 				loadFilterLearnerHeadCountSchoolCombo(window);
 				filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
 				window.show();
-				//disableEnableFilterButton(window);
-			}
-		});
-
-	}
-
-	@Deprecated
-	private void disableEnableFilterButton(final FilterLearnerHeadCountWindow window) {
-		;
-		window.getFilterLearnerHeadCountPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				if (window.getFilterLearnerHeadCountPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterLearnerHeadCountPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterLearnerHeadCountPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterLearnerHeadCountPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterLearnerHeadCountPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
 			}
 		});
 

@@ -12,11 +12,6 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class LearnerEnrollmentWindow extends Window {
-	/*
-	 * 
-	 * private SchoolClassDTO schoolClassDTO; private long totalBoys; private long
-	 * totalGirls; private String status;
-	 */
 
 	private ComboBox schoolClassCombo;
 	private ComboBox schoolCombo;
@@ -27,7 +22,6 @@ public class LearnerEnrollmentWindow extends Window {
 	private TextItem totalBoysField;
 	private TextItem totalGirlsField;
 	private TextItem learnerTotalField;
-	// private TextItem statusField; set from server side
 
 	private IButton saveButton;
 	private IButton cancelButton;

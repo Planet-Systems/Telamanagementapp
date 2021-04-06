@@ -129,12 +129,4 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 		getView().getLoginPane().getPassword().clearValue();
 	}
 
-	private void goToMain(String token) {
-		 PlaceRequest mainPlaceRequest = new
-		 PlaceRequest.Builder().nameToken(NameTokens.assessmentperiod).build();
-		 placeManager.revealPlace(mainPlaceRequest);
-
-	//	SC.say("going to main");
-	}
-
 }

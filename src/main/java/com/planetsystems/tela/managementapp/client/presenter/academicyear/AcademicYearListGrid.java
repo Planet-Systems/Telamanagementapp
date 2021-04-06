@@ -35,7 +35,6 @@ public class AcademicYearListGrid extends SuperListGrid {
 		ListGridField statusField= new ListGridField(STATUS, "Status");
 		ListGridField startDateField = new ListGridField(START_DATE, "Start date");
 		ListGridField endDateField= new ListGridField(END_DATE, "End date");
-		//ListGridField activationStatusField= new ListGridField(ACTIVATION_STATUS, "Activation status");
 		
 		
         this.setDataSource(datasource);
@@ -93,13 +92,9 @@ public class AcademicYearListGrid extends SuperListGrid {
 				DataSourceTextField statusField= new DataSourceTextField(STATUS, "Status");
 				DataSourceDateField startDateField = new DataSourceDateField(START_DATE, "Start date");
 				DataSourceDateField endDateField= new DataSourceDateField(END_DATE, "End date");
-				//ListGridField activationStatusField= new ListGridField(ACTIVATION_STATUS, "Activation status");
-				
-				
 
 				this.setFields(idField, codeField , nameField  ,startDateField , endDateField ,statusField);
-
-							
+				
 				setClientOnly(true);
 			} 
 

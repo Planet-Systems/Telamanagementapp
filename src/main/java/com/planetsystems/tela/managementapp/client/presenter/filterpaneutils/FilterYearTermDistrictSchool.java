@@ -14,20 +14,6 @@ public class FilterYearTermDistrictSchool extends VLayout {
 
 	public FilterYearTermDistrictSchool() {
 		super();
-		
-//		HLayout formLayout = new HLayout();
-//		formLayout.setPadding(5);
-//		formLayout.setAutoHeight();
-//		formLayout.setWidth("50%");
-////		    formLayout.setBorder("1px solid red");
-//		formLayout.setLayoutAlign(Alignment.CENTER);
-//
-//		HLayout schoolDistrictLayout = new HLayout();
-//		schoolDistrictLayout.setPadding(5);
-//		schoolDistrictLayout.setAutoHeight();
-//		schoolDistrictLayout.setWidth("50%");
-////	    schoolDistrictLayout.setBorder("1px solid red");
-//		schoolDistrictLayout.setLayoutAlign(Alignment.CENTER);
 
 		Label schoolLabel = new Label("School: ");
 		schoolLabel.setAutoHeight();

@@ -23,17 +23,6 @@ public class StaffDailyAttendanceTaskSupervisionListGrid extends SuperListGrid {
 
 	StaffDailyAttendanceTaskSupervisionDataSource dataSource;
 
-	/*
-	 * private SystemUserDTO supervisorDTO; private SchoolStaffDTO schoolStaffDTO;
-	 * 
-	 * private String comment;
-	 * 
-	 * private String attendanceDate;
-	 * 
-	 * private String attendanceTime
-	 * 
-	 */
-
 	public StaffDailyAttendanceTaskSupervisionListGrid() {
 		super();
 

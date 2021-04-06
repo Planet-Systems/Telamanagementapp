@@ -3,8 +3,6 @@ package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendan
 import java.util.List;
 
 import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
-import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -25,20 +23,6 @@ public class StaffDailyAttendanceSupervisionListGrid extends SuperListGrid {
 	public static final String COMMENT = "COMMENT";
 	
 	StaffDailyAttendanceSupervisionDataSource dataSource;
-	/*
-	 *   private SystemUser supervisor;
-
-    @OneToOne
-    private SchoolStaff schoolStaff;
-
-    private String comment;
-
-    @Temporal(TemporalType.DATE)
-    private Date supervisionDate;
-
-    private LocalTime supervisionTime;
-	 */
-
 
 
 	public StaffDailyAttendanceSupervisionListGrid() {

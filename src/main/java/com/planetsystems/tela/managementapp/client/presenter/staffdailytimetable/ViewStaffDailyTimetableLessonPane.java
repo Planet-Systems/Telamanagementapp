@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision;
+package com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable;
 
 import java.util.Date;
 
@@ -13,7 +13,7 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class ViewStaffDailyAttendanceTaskSupervisionPane extends VLayout {
+public class ViewStaffDailyTimetableLessonPane extends VLayout {
 	private TextItem schoolField;
 	private TextItem districtField;
 	private TextItem academicYearField;
@@ -23,25 +23,24 @@ public class ViewStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 	private IButton loadLessonButton;
 	private IButton saveButton;
 
-
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
-	private StaffDailyAttendanceTaskSupervisionListGrid staffDailyAttendanceTaskSupervisionListGrid;
+	private StaffDailyTimetableLessonListGrid staffDailyTimetableLessonListGrid;
 	private IButton closeTabButton;
 
-	public ViewStaffDailyAttendanceTaskSupervisionPane() {
+	public ViewStaffDailyTimetableLessonPane() {
 		super();
 		Label header = new Label();
-		staffDailyAttendanceTaskSupervisionListGrid = new StaffDailyAttendanceTaskSupervisionListGrid();
-		staffDailyAttendanceTaskSupervisionListGrid.setSelectionType(SelectionStyle.NONE);
+		staffDailyTimetableLessonListGrid = new StaffDailyTimetableLessonListGrid();
+		staffDailyTimetableLessonListGrid.setSelectionType(SelectionStyle.NONE);
 
-		loadLessonButton = new IButton("Load Supervision");
+		loadLessonButton = new IButton("Load Lesson");
 		loadLessonButton.setLayoutAlign(Alignment.RIGHT);
 		loadLessonButton.setPadding(10);
 
 		header.setStyleName("crm-ContextArea-Header-Label");
 		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("View Staff Daily Attendance Task Supervisions");
+		header.setContents("View Staff Daily Attendance Tasks");
 		header.setPadding(5);
 		header.setAutoHeight();
 		header.setAutoWidth();
@@ -54,14 +53,12 @@ public class ViewStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		formLayout.setPadding(5);
 		formLayout.setAutoHeight();
 		formLayout.setWidth("50%");
-//		    formLayout.setBorder("1px solid red");
 		formLayout.setLayoutAlign(Alignment.CENTER);
 
 		HLayout schoolDistrictLayout = new HLayout();
 		schoolDistrictLayout.setPadding(5);
 		schoolDistrictLayout.setAutoHeight();
 		schoolDistrictLayout.setWidth("50%");
-//	    schoolDistrictLayout.setBorder("1px solid red");
 		schoolDistrictLayout.setLayoutAlign(Alignment.CENTER);
 
 		Label schoolLabel = new Label("School: ");
@@ -134,10 +131,8 @@ public class ViewStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
-		//layout.addMember(header);
 		layout.addMember(form);
-		//layout.addMember(loadLessonButton);
-		layout.addMember(staffDailyAttendanceTaskSupervisionListGrid);
+		layout.addMember(staffDailyTimetableLessonListGrid);
 		layout.addMember(buttonLayout);
 		this.addMember(layout);
 
@@ -179,11 +174,8 @@ public class ViewStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 	}
 
 
-	
-
-
-	public StaffDailyAttendanceTaskSupervisionListGrid getStaffDailyAttendanceTaskSupervisionListGrid() {
-		return staffDailyAttendanceTaskSupervisionListGrid;
+	public StaffDailyTimetableLessonListGrid getDailyTaskListGrid() {
+		return staffDailyTimetableLessonListGrid;
 	}
 
 	public IButton getCloseTabButton() {

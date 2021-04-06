@@ -2,9 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.staffattendance;
 
 import java.util.List;
 
-import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateField;
@@ -38,9 +36,6 @@ public class ClockOutListGrid extends SuperListGrid {
 	public static String ACADEMIC_YEAR = "academicYear";
 	public static String ACADEMIC_YEAR_ID = "academicYearId";
 
-	/*
-	 * private String comment; private ClockInDTO clockInDTO;
-	 */
 
 	private ClockOutDataSource dataSource;
 	

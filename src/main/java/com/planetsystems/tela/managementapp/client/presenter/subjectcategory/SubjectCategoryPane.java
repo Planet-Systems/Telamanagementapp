@@ -4,12 +4,12 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class SubCategoryPane extends VLayout {
+public class SubjectCategoryPane extends VLayout {
 
 
-private SubCategoryListGrid listGrid;
+private SubjectCategoryListGrid listGrid;
 	
-	public SubCategoryPane() {
+	public SubjectCategoryPane() {
 		super();
 		Label header = new Label();
 		
@@ -20,7 +20,7 @@ private SubCategoryListGrid listGrid;
 		header.setMargin(10);
 		header.setAlign(Alignment.LEFT);
 
-		listGrid = new SubCategoryListGrid();
+		listGrid = new SubjectCategoryListGrid();
 
 		VLayout layout = new VLayout();
 		layout.addMember(header);
@@ -29,7 +29,7 @@ private SubCategoryListGrid listGrid;
 		
 	}
 
-	public SubCategoryListGrid getListGrid() {
+	public SubjectCategoryListGrid getListGrid() {
 		return listGrid;
 	}
 }

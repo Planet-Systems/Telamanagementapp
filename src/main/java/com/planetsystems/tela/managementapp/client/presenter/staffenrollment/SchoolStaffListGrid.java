@@ -3,14 +3,10 @@ package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Tree;
-import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateField;
-import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -31,20 +27,6 @@ public class SchoolStaffListGrid extends SuperListGrid {
 	public static String GENDER = "gender";
 	public static String NAME_ABBREV = "nameAbbrev";
 
-	/*
-	 * private String firstName; private String lastName; private String
-	 * phoneNumber; private String email; private String dob; private String
-	 * nationalId; private String gender; private String nameAbrev;
-	 */
-
-	/*
-	 * private String staffCode; private String staffType; private boolean
-	 * registered;
-	 * 
-	 * 
-	 * private GeneralUserDetailDTO generalUserDetailDTO; private SchoolDTO
-	 * schoolDTO;
-	 */
 
 	SchoolStaffDataSource dataSource;
 

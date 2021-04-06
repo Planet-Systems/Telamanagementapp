@@ -1,15 +1,15 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailytask;
+package com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable;
 
 import java.util.List;
 
-import com.planetsystems.tela.dto.StaffDailyAttendanceDTO;
+import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class StaffDailyAttendanceListGrid extends SuperListGrid {
+public class StaffDailyTimetableListGrid extends SuperListGrid {
 	public static final String ID = "id";
 
 	public static final String ACADEMIC_YEAR = "ACADEMIC_YEAR";
@@ -22,21 +22,10 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 	public static final String SCHOOL_STAFF_ID = "SCHOOL_STAFF_ID";
 	
 	public static final String LESSON_DAY = "LESSON_DAY";
-	
-	
-	/*
-	 *     private AcademicTermDTO academicTermDTO;
 
-    private SchoolStaffDTO schoolStaffDTO;
-
-    private String comment;
-
-    private String dailyAttendanceDate;
-
-	 */
 	StaffDailyAttendanceDataSource dataSource;
 	
-	public StaffDailyAttendanceListGrid() {
+	public StaffDailyTimetableListGrid() {
 		super();
 		
 		dataSource = StaffDailyAttendanceDataSource.getInstance();
@@ -64,27 +53,27 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 		this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDayField);
 	}
 
-	public ListGridRecord addRowData(StaffDailyAttendanceDTO staffDailyAttendanceDTO) {
+	public ListGridRecord addRowData(StaffDailyTimeTableDTO staffDailyTimeTableDTO) {
 		ListGridRecord record = new ListGridRecord();
-		record.setAttribute(ID, staffDailyAttendanceDTO.getId());
-		record.setAttribute(LESSON_DAY, staffDailyAttendanceDTO.getLessonDay());
+		record.setAttribute(ID, staffDailyTimeTableDTO.getId());
+		record.setAttribute(LESSON_DAY, staffDailyTimeTableDTO.getLessonDay());
 
-		if (staffDailyAttendanceDTO.getAcademicTermDTO() != null) {
-			record.setAttribute(ACADEMIC_TERM_ID, staffDailyAttendanceDTO.getAcademicTermDTO().getId());
-			record.setAttribute(ACADEMIC_TERM, staffDailyAttendanceDTO.getAcademicTermDTO().getTerm());
+		if (staffDailyTimeTableDTO.getAcademicTermDTO() != null) {
+			record.setAttribute(ACADEMIC_TERM_ID, staffDailyTimeTableDTO.getAcademicTermDTO().getId());
+			record.setAttribute(ACADEMIC_TERM, staffDailyTimeTableDTO.getAcademicTermDTO().getTerm());
 			
-			if(staffDailyAttendanceDTO.getAcademicTermDTO().getAcademicYearDTO() != null) {
-				record.setAttribute(ACADEMIC_YEAR_ID, staffDailyAttendanceDTO.getAcademicTermDTO().getAcademicYearDTO().getId());
-				record.setAttribute(ACADEMIC_YEAR, staffDailyAttendanceDTO.getAcademicTermDTO().getAcademicYearDTO().getName());	
+			if(staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO() != null) {
+				record.setAttribute(ACADEMIC_YEAR_ID, staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO().getId());
+				record.setAttribute(ACADEMIC_YEAR, staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO().getName());	
 			}
 		}
 
 
-		if (staffDailyAttendanceDTO.getSchoolStaffDTO() != null) {
-			record.setAttribute(SCHOOL_STAFF_ID, staffDailyAttendanceDTO.getSchoolStaffDTO().getId());
-			if(staffDailyAttendanceDTO.getSchoolStaffDTO().getGeneralUserDetailDTO() != null) {
-                String fullName = staffDailyAttendanceDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getFirstName()+" "
-			+staffDailyAttendanceDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getLastName();
+		if (staffDailyTimeTableDTO.getSchoolStaffDTO() != null) {
+			record.setAttribute(SCHOOL_STAFF_ID, staffDailyTimeTableDTO.getSchoolStaffDTO().getId());
+			if(staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO() != null) {
+                String fullName = staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getFirstName()+" "
+			+staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getLastName();
                 
 				record.setAttribute(SCHOOL_STAFF, fullName);
 			
@@ -95,10 +84,10 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 		return record;
 	}
 
-	public void addRecordsToGrid(List<StaffDailyAttendanceDTO> list) {
+	public void addRecordsToGrid(List<StaffDailyTimeTableDTO> list) {
 		ListGridRecord[] records = new ListGridRecord[list.size()];
 		int row = 0;
-		for (StaffDailyAttendanceDTO item : list) {
+		for (StaffDailyTimeTableDTO item : list) {
 			records[row] = addRowData(item);
 			row++;
 		}
@@ -106,7 +95,7 @@ public class StaffDailyAttendanceListGrid extends SuperListGrid {
 		dataSource.setTestData(records);
 	}
 
-	public void addRecordToGrid(StaffDailyAttendanceDTO dto) {
+	public void addRecordToGrid(StaffDailyTimeTableDTO dto) {
 		this.addData(addRowData(dto));
 	}
 	

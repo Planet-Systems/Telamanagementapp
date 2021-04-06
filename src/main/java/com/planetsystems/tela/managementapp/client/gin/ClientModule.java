@@ -20,13 +20,10 @@ public class ClientModule extends AbstractPresenterModule {
 	@Override
 	protected void configure() {
 		install(new DefaultModule.Builder().tokenFormatter(ParameterTokenFormatter.class).build()); 
-		//install(new DefaultModule.Builder().tokenFormatter(RouteTokenFormatter.class).build());
 		
-		install(new RpcDispatchAsyncModule()); // binds DispatchAsync to RpcDispatchAsync
+		install(new RpcDispatchAsyncModule());
 	    install(new MainModule());
 	    install(new LoginModule());
-//		
-//	    bind(CurrentUser.class).asEagerSingleton();
 
 		// DefaultPlaceManager Places
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.dashboard);
