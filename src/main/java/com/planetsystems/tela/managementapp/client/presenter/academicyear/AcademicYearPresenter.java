@@ -8,8 +8,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -23,17 +21,15 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
-import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -41,8 +37,6 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HoverEvent;
-import com.smartgwt.client.widgets.events.HoverHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -90,16 +84,11 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	private EventBus eventBus;
 
-	private ComboUtil comboUtil;
-
 	@Inject
 	AcademicYearPresenter(EventBus eventBus, MyView view, MyProxy proxy, final DispatchAsync dispatcher) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
 		this.eventBus = eventBus;
 		this.dispatcher = dispatcher;
-		this.comboUtil = new ComboUtil();
-
-		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
 	}
 
 	@Override
@@ -108,8 +97,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		onTabSelected();
 		getAllAcademicYears();
 		getAllAcademicTerms();
-
-		GWT.log("Token " + Cookies.getCookie(RequestConstant.AUTH_TOKEN));
 	}
 
 	@Override
@@ -129,6 +116,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_YEAR_TAB_TITLE)) {
+					getView().getAcademicTermPane().getListGrid().setShowFilterEditor(false);
+					
 					MenuButton editAcademicYearButton = new MenuButton("Edit");
 					MenuButton deleteAcademicYearButton = new MenuButton("Delete");
 					MenuButton newAcademicYear = new MenuButton("New");
@@ -202,8 +191,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				SC.say("Basic Search");
-
+				getView().getAcademicTermPane().getListGrid().setShowFilterEditor(true);
 			}
 		});
 
@@ -224,7 +212,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	// filter window
 	private void loadFilterAcademicYearCombo(final FilterAcademicTermWindow window) {
-		comboUtil.loadAcademicYearCombo(window.getFilterAcademicTermsPane().getAcademicYearCombo(), dispatcher,
+		ComboUtil.loadAcademicYearCombo(window.getFilterAcademicTermsPane().getAcademicYearCombo(), dispatcher,
 				placeManager, null);
 	}
 
@@ -258,42 +246,16 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_ACADEMIC_YEAR, dto);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_ACADEMIC_YEAR);
 
-					SC.showPrompt("", "", new SwizimaLoader());
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_YEAR, map),
-							new AsyncCallback<RequestResult>() {
-
-								public void onFailure(Throwable caught) {
-
-									SC.clearPrompt();
-									System.out.println(caught.getMessage());
-									SC.say("ERROR", caught.getMessage());
-								}
-
-								public void onSuccess(RequestResult result) {
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									clearAcademicYearWindowFields(window);
-
-									if (result != null) {
-										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-										if (feedback.isResponse()) {
-											SC.say("SUCCESS", feedback.getMessage());
-											getView().getAcademicYearPane().getListGrid()
-													.addRecordsToGrid(result.getAcademicYearDTOs());
-										} else {
-											SC.warn("INFO", feedback.getMessage());
-										}
-
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-							});
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							clearAcademicYearWindowFields(window);
+							getAllAcademicYears();
+						}
+					});
 				} else {
 					SC.say("Fill all fields");
 				}
@@ -367,44 +329,18 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_ACADEMIC_YEAR, dto);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				map.put(NetworkDataUtil.ACTION, RequestConstant.UPDATE_ACADEMIC_YEAR);
 
-				SC.showPrompt("", "", new SwizimaLoader());
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				dispatcher.execute(new RequestAction(RequestConstant.UPDATE_ACADEMIC_YEAR, map),
-						new AsyncCallback<RequestResult>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								SC.clearPrompt();
-								System.out.println(caught.getMessage());
-								SC.say("ERROR", caught.getMessage());
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								clearAcademicYearWindowFields(window);
-								window.show();
-
-								if (result != null) {
-									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-									if (feedback.isResponse()) {
-										SC.say("SUCCESS", feedback.getMessage());
-										getView().getAcademicYearPane().getListGrid()
-												.addRecordsToGrid(result.getAcademicYearDTOs());
-									} else {
-										SC.warn("INFO", feedback.getMessage());
-									}
-
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-						});
-
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						clearAcademicYearWindowFields(window);
+						window.show();
+						SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+						getAllAcademicYears();
+					}
+				});
 			}
 		});
 
@@ -427,45 +363,15 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								String id = record.getAttributeAsString(AcademicYearListGrid.ID);
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
-								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-								GWT.log("DELETE " + map);
+								map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_ACADEMIC_YEAR);
+								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-								SC.showPrompt("", "", new SwizimaLoader());
-
-								dispatcher.execute(new RequestAction(RequestConstant.DELETE_ACADEMIC_YEAR, map),
-										new AsyncCallback<RequestResult>() {
-
-											public void onFailure(Throwable caught) {
-												SC.clearPrompt();
-												System.out.println(caught.getMessage());
-												SC.say("ERROR", caught.getMessage());
-											}
-
-											public void onSuccess(RequestResult result) {
-												SC.clearPrompt();
-												SessionManager.getInstance().manageSession(result, placeManager);
-
-												if (result != null) {
-													SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-
-													if (feedbackDTO != null) {
-														if (feedbackDTO.isResponse()) {
-															SC.say("SUCCESS", feedbackDTO.getMessage());
-
-															getView().getAcademicYearPane().getListGrid()
-																	.addRecordsToGrid(result.getAcademicYearDTOs());
-
-														} else {
-															SC.warn("ERROR", feedbackDTO.getMessage());
-														}
-													}
-												} else {
-													SC.warn("ERROR", "Unknow error");
-												}
-
-											}
-										});
-
+									@Override
+									public void onNetworkResult(RequestResult result) {
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+										getAllAcademicYears();
+									}
+								});
 							}
 						}
 					});
@@ -481,38 +387,14 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_ACADEMIC_YEAR, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_ACADEMIC_YEAR);
 
-		GWT.log("YEAR TOKEN " + SessionManager.getInstance().getLoginToken());
-		GWT.log("YEAR TOKEN " + map.get(RequestConstant.LOGIN_TOKEN));
-
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR, map),
-				new AsyncCallback<RequestResult>() {
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-					}
-
-					public void onSuccess(RequestResult result) {
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-
-						GWT.log("PRESENTER LIST " + result.getAcademicYearDTOs());
-						if (result != null) {
-
-							getView().getAcademicYearPane().getListGrid()
-									.addRecordsToGrid(result.getAcademicYearDTOs());
-
-						} else {
-							SC.warn("ERROR", "Service Down");
-						}
-
-					}
-				});
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getAcademicYearPane().getListGrid().addRecordsToGrid(result.getAcademicYearDTOs());
+			}
+		});
 	}
 
 	private void clearAcademicYearWindowFields(AcademicYearWindow window) {
@@ -524,7 +406,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	// add academic term window
 	public void loadAcademicYearCombo(final AcademicTermWindow window, final String defaultValue) {
-		comboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, defaultValue);
 	}
 
 	///////////////////////////////////////////////////////////// ACADEMIC
@@ -565,44 +447,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_ACADEMIC_TERM, academicTermDTO);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_ACADEMIC_TERM);
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_ACADEMIC_TERM, map),
-							new AsyncCallback<RequestResult>() {
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-								}
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									clearAcademicTermWindowFields(window);
-
-									if (result != null) {
-										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-										if (feedback.isResponse()) {
-											SC.say("SUCCESS", feedback.getMessage());
-										} else {
-											SC.warn("INFO", feedback.getMessage());
-										}
-
-										getView().getAcademicTermPane().getListGrid()
-												.addRecordsToGrid(result.getAcademicTermDTOs());
-
-									} else {
-										SC.warn("ERROR", "Service Down");
-										// SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							clearAcademicTermWindowFields(window);
+							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+							getAllAcademicTerms();
+						}
+					});
 				} else {
 					SC.warn("Please fill all fields");
 				}
@@ -685,46 +540,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_ACADEMIC_TERM, academicTermDTO);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				map.put(NetworkDataUtil.ACTION, RequestConstant.UPDATE_ACADEMIC_TERM);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				SC.showPrompt("", "", new SwizimaLoader());
-
-				dispatcher.execute(new RequestAction(RequestConstant.UPDATE_ACADEMIC_TERM, map),
-						new AsyncCallback<RequestResult>() {
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
-							}
-
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								clearAcademicTermWindowFields(window);
-								window.show();
-
-								if (result != null) {
-									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-									if (feedback.isResponse()) {
-										SC.say("SUCCESS", feedback.getMessage());
-
-										getView().getAcademicTermPane().getListGrid()
-												.addRecordsToGrid(result.getAcademicTermDTOs());
-									} else {
-										SC.warn("INFO", feedback.getMessage());
-									}
-
-								} else {
-									SC.warn("ERROR", "Service Down");
-									// SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
-
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						clearAcademicTermWindowFields(window);
+						window.close();
+						SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+						getAllAcademicTerms();
+					}
+				});
 			}
 		});
 	}
@@ -742,54 +568,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 							if (value) {
 								ListGridRecord record = getView().getAcademicTermPane().getListGrid()
 										.getSelectedRecord();
-								// SC.say("Id "+record.getAttributeAsString("id")+" Name
-								// "+record.getAttributeAsString("name"));
-
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
-								map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-								GWT.log("DELETE " + map);
+								map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_ACADEMIC_TERM);
 
-								SC.showPrompt("", "", new SwizimaLoader());
+								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-								dispatcher.execute(new RequestAction(RequestConstant.DELETE_ACADEMIC_TERM, map),
-										new AsyncCallback<RequestResult>() {
-
-											public void onFailure(Throwable caught) {
-												SC.clearPrompt();
-												System.out.println(caught.getMessage());
-												SC.say("ERROR", caught.getMessage());
-											}
-
-											public void onSuccess(RequestResult result) {
-
-												SC.clearPrompt();
-
-												SessionManager.getInstance().manageSession(result, placeManager);
-
-												if (result != null) {
-
-													if (result.getSystemFeedbackDTO() != null) {
-														if (result.getSystemFeedbackDTO().isResponse()) {
-															SC.say("SUCCESS",
-																	result.getSystemFeedbackDTO().getMessage());
-
-															getView().getAcademicTermPane().getListGrid()
-																	.addRecordsToGrid(result.getAcademicTermDTOs());
-
-														} else {
-															SC.warn("ERROR",
-																	result.getSystemFeedbackDTO().getMessage());
-														}
-													}
-												} else {
-													// SC.warn("ERROR", "Unknow error");
-													SC.warn("ERROR", "Service Down");
-												}
-
-											}
-										});
-
+									@Override
+									public void onNetworkResult(RequestResult result) {
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									}
+								});
 							}
 						}
 					});
@@ -817,37 +606,14 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	public void getAllAcademicTerms() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_ACADEMIC_TERM, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_ACADEMIC_TERM);
 
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERM, map),
-				new AsyncCallback<RequestResult>() {
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-					}
-
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-
-						SessionManager.getInstance().manageSession(result, placeManager);
-
-						if (result != null) {
-
-							getView().getAcademicTermPane().getListGrid()
-									.addRecordsToGrid(result.getAcademicTermDTOs());
-
-						} else {
-							// SC.warn("ERROR", "Unknown error");
-							SC.warn("ERROR", "Service Down");
-						}
-
-					}
-				});
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getAcademicTermPane().getListGrid().addRecordsToGrid(result.getAcademicTermDTOs());
+			}
+		});
 	}
 
 	public void filterAcademicTermsByAcademicYear(final FilterAcademicTermWindow window) {
@@ -856,43 +622,18 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String id = window.getFilterAcademicTermsPane().getAcademicYearCombo().getValueAsString();
-
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-
 				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_ACADEMIC_TERMS_BY_ACADEMIC_YEAR);
 
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				SC.showPrompt("", "", new SwizimaLoader());
-
-				dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, map),
-						new AsyncCallback<RequestResult>() {
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
-							}
-
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-
-								SessionManager.getInstance().manageSession(result, placeManager);
-								window.close();
-
-								if (result != null) {
-
-									getView().getAcademicTermPane().getListGrid()
-											.addRecordsToGrid(result.getAcademicTermDTOs());
-
-								} else {
-									// SC.warn("ERROR", "Unknown error");
-									SC.warn("ERROR", "Service Down");
-								}
-
-							}
-						});
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						window.close();
+						getView().getAcademicTermPane().getListGrid().addRecordsToGrid(result.getAcademicTermDTOs());
+					}
+				});
 			}
 		});
 

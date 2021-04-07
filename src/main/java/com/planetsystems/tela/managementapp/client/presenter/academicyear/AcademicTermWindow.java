@@ -73,13 +73,6 @@ public class AcademicTermWindow extends Window {
 		VLayout layout = new VLayout();
 		layout.addMember(form);
 		layout.addMember(buttonLayout);
-
-		/*
-		 * layout.setMargin(10); this.addItem(layout); this.setWidth("40%");
-		 * this.setHeight("60%"); this.setAutoCenter(true);
-		 * this.setTitle("Academic Term"); this.setIsModal(true);
-		 * this.setShowModalMask(true);
-		 */
 		
 		layout.setMargin(10);
 		this.addItem(layout);

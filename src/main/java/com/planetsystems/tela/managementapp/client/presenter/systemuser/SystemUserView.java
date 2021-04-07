@@ -2,15 +2,9 @@ package com.planetsystems.tela.managementapp.client.presenter.systemuser;
 
 import javax.inject.Inject;
 
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtplatform.mvp.client.ViewImpl; 
-import com.planetsystems.tela.managementapp.client.presenter.region.DistrictPane;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionPane;
+import com.gwtplatform.mvp.client.ViewImpl;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;

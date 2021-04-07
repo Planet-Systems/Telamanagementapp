@@ -5,7 +5,10 @@ import java.util.List;
 import org.apache.bcel.generic.I2F;
 
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -24,29 +27,13 @@ public class SchoolListGrid extends SuperListGrid {
 	public static String LATITUDE = "latitude";
 	public static String LONGITUDE = "longitude";
 	
+	private SchoolDataSource dataSource;
 
-/*
- *     private String code;
-    private String name;
-    private String location;
-    private SchoolCategoryDTO schoolCategory;
-
-    private String latitude;
-    private String longitude;
-
-    private DistrictDTO district;
-
-    private String deviceNumber; // Phone Serial number
-
-    private boolean attendanceTracked = true;
-
-    private String activationStatus;
- */
-
-		
 
 	public SchoolListGrid() { 
 		super();
+		
+		dataSource = SchoolDataSource.getInstance();
 		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
@@ -70,14 +57,10 @@ public class SchoolListGrid extends SuperListGrid {
 		ListGridField districtField = new ListGridField(DISTRICT, "District");
 		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
 		districtIdField.setHidden(true);
-		
-	
-
-		
 
 		this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , categoryField, districtField , attendanceTrackedField , locationField , 
-				latitudeField , latitudeField
-				);
+				latitudeField , latitudeField);
+		this.setDataSource(dataSource);
 
 	}
 
@@ -118,5 +101,56 @@ public class SchoolListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
+		dataSource.setTestData(records);
 	}
+	
+	
+	
+	
+	public static class SchoolDataSource extends DataSource {
+
+		private static SchoolDataSource instance = null;
+
+		public static SchoolDataSource getInstance() {
+			if (instance == null) {
+				instance = new SchoolDataSource("SchoolDataSource");
+			}
+			return instance;
+		}
+
+		public SchoolDataSource(String id) {
+			setID(id);
+			
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
+			
+			DataSourceTextField codeField = new DataSourceTextField(CODE, "Code");
+			DataSourceTextField nameField = new DataSourceTextField(NAME, "Name");
+			DataSourceTextField deviceNumberField = new DataSourceTextField(DEVICE_NUMBER, "Device Number");
+			DataSourceTextField attendanceTrackedField = new DataSourceTextField(ATTENDANCETRACKED, "Attendance Tracked"); 
+			DataSourceTextField locationField = new DataSourceTextField(LOCATION, "Location");
+			
+			DataSourceTextField latitudeField = new DataSourceTextField(LATITUDE, "Latitude");
+			DataSourceTextField longitudeField = new DataSourceTextField(LONGITUDE, "Longitude");
+			latitudeField.setHidden(true);
+			longitudeField.setHidden(true);
+			
+			DataSourceTextField categoryField = new DataSourceTextField(CATEGORY, "School Category");
+			DataSourceTextField categoryIdField = new DataSourceTextField(CATEGORY_ID, "School Category Id");
+			categoryIdField.setHidden(true);
+			
+			
+			DataSourceTextField districtField = new DataSourceTextField(DISTRICT, "District");
+			DataSourceTextField districtIdField = new DataSourceTextField(DISTRICT_ID, "District Id");
+			districtIdField.setHidden(true);
+
+			this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , categoryField, districtField , attendanceTrackedField , locationField , 
+					latitudeField , latitudeField);
+			setClientOnly(true);
+
+		}
+	}
+	
+	
 }

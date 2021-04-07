@@ -145,8 +145,14 @@ public class NavigationPaneSection extends SectionStackSection {
     
   public String getSelectedRecord() {
     String name = "";
-    
-    ListGridRecord[] records = listGrid.getSelection();
+
+         
+/**
+ * replaced since its deprecated
+ *     ListGridRecord[] records = listGrid.getSelection();
+ */
+    ListGridRecord[] records = listGrid.getSelectedRecords();
+
     
     if (records.length != 0) { 
       // get the name of the first selected record e.g. "Activities"

@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolstaff;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,7 +9,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -23,19 +23,20 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
-import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
+
+@Deprecated
 public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView, SchoolStaffPresenter.MyProxy>  {
     interface MyView extends View  {
      ControlsPane getControlsPane();
@@ -53,7 +54,7 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
-    @NameToken(NameTokens.schoolStaff) 
+    @NameToken(NameTokens.assessmentperiod) 
     @ProxyCodeSplit
     interface MyProxy extends ProxyPlace<SchoolStaffPresenter> {
     }
@@ -147,44 +148,18 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 				   
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_SCHOOL_STAFF, dto);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
+					map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_SCHOOL_STAFF);
+					
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+						
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							clearSchoolStaffWindowFields(window);
+							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+							getAllSchoolStaff();
+						}
+					});
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SCHOOL_STAFF, map),
-							new AsyncCallback<RequestResult>() {
-
-								public void onFailure(Throwable caught) {
-
-									SC.clearPrompt();
-									System.out.println(caught.getMessage());
-									SC.say("ERROR", caught.getMessage());
-								}
-
-								public void onSuccess(RequestResult result) {
-									SC.clearPrompt();
-									
-									clearSchoolStaffWindowFields(window);
-
-									SessionManager.getInstance().manageSession(result, placeManager);
-									
-									if (result != null) {
-										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-										if (feedback.isResponse()) {
-											SC.say("SUCCESS", feedback.getMessage());
-										} else {
-											SC.warn("INFO", feedback.getMessage());
-										}
-
-										getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
-
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
 			}else {
 				SC.warn("Please Fill the fields");
 			}
@@ -258,86 +233,22 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 	private void loadSchoolCombo(final SchoolStaffWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SCHOOL, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL , map), new AsyncCallback<RequestResult>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-				SC.warn("ERROR", caught.getMessage());
-				GWT.log("ERROR " + caught.getMessage());
-				SC.clearPrompt();
-
-			}
-
-			@Override
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-
-					if (result.getSystemFeedbackDTO() != null) {
-						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-						for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-							valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-						}
-						window.getSchoolComboBox().setValueMap(valueMap);
-						if (defaultValue != null) {
-							window.getSchoolComboBox().setValue(defaultValue);
-						}
-					}
-				} else {
-					SC.warn("ERROR", "Unknow error");
-				}
-
-			}
-		});
+		ComboUtil.loadSchoolCombo(window.getSchoolComboBox() , dispatcher , placeManager , defaultValue);
+		
 	}
 
 	private void getAllSchoolStaff() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF , map),
-				new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-							if ( feedbackDTO != null) {
-								if (result.getSystemFeedbackDTO().isResponse()) {
-									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-									getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
-								} else {
-									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-								}
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-
-				});
+		map.put(NetworkDataUtil.ACTION , RequestConstant.GET_SCHOOL_STAFF);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+			}
+		});
 
 	}
 

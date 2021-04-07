@@ -31,16 +31,16 @@ class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.M
     	controlsPane = new ControlsPane();
     	tabSet = new TabSet();
     	
-    	Tab staffTab = new Tab();
-    	staffTab.setTitle(STAFF_ENROLLMENT);
-    	staffTab.setPane(staffEnrollmentPane);
+    	Tab tab1 = new Tab();
+    	tab1.setTitle(STAFF_ENROLLMENT);
+    	tab1.setPane(staffEnrollmentPane);
     	
-    	Tab teacherTab = new Tab();
-    	teacherTab.setTitle(TEACHER_LIST);
-    	teacherTab.setPane(schoolStaffPane);
+    	Tab tab2 = new Tab();
+    	tab2.setTitle(TEACHER_LIST);
+    	tab2.setPane(schoolStaffPane);
     
-    	tabSet.addTab(teacherTab);
-    	tabSet.addTab(staffTab);
+    	tabSet.addTab(tab1);
+    	tabSet.addTab(tab2);
     
     	controlsPane.addMember(new Label("Menus"));
     	

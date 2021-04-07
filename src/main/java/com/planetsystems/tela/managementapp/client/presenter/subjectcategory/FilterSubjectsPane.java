@@ -29,7 +29,6 @@ public class FilterSubjectsPane extends HLayout {
 		this.addMember(form);
 		this.setAutoHeight();
 		this.setWidth100();
-		//this.setBorder("1px solid green");
 	}
 	
 	

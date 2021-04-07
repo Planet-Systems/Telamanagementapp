@@ -22,9 +22,7 @@ class LoginView extends ViewImpl implements LoginPresenter.MyView {
 		
 		VLayout centerLayout = new VLayout();
 		centerLayout.setLayoutAlign(Alignment.CENTER);
-//		centerLayout.setBorder("1px solid green");
 		centerLayout.setWidth("50%");
-		//centerLayout.setAutoHeight();
 		centerLayout.setHeight("70%");
 		centerLayout.setMargin(50);
 		centerLayout.addMember(loginPane);

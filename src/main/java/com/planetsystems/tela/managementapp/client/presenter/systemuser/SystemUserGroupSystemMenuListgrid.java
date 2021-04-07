@@ -52,15 +52,15 @@ public class SystemUserGroupSystemMenuListgrid extends SuperListGrid {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, dto.getId());
 		
-		if (dto.getSystemUserGroup() != null) {
-			record.setAttribute(SystemUserGroupId, dto.getSystemUserGroup().getId());
-			record.setAttribute(SystemUserGroup, dto.getSystemUserGroup().getName());
+		if (dto.getSystemUserGroupDTO() != null) {
+			record.setAttribute(SystemUserGroupId, dto.getSystemUserGroupDTO().getId());
+			record.setAttribute(SystemUserGroup, dto.getSystemUserGroupDTO().getName());
 		}
 
-		if (dto.getSystemMenu() != null) {
-			record.setAttribute(SystemMenuId, dto.getSystemMenu().getId());
-			record.setAttribute(SystemMenu, dto.getSystemMenu().getNavigationMenu());
-			record.setAttribute(SystemMenuItem, dto.getSystemMenu().getSubMenuItem());
+		if (dto.getSystemMenuDTO() != null) {
+			record.setAttribute(SystemMenuId, dto.getSystemMenuDTO().getId());
+			record.setAttribute(SystemMenu, dto.getSystemMenuDTO().getNavigationMenu());
+			record.setAttribute(SystemMenuItem, dto.getSystemMenuDTO().getSubMenuItem());
 		}
 
 		record.setAttribute(Status, dto.isDisabled());

@@ -3,7 +3,6 @@ package com.planetsystems.tela.managementapp.client.presenter.academicyear;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;

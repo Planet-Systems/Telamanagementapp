@@ -8,49 +8,43 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
+import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
+import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffHeadCountWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.FilterStaffWindow;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
-import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HoverEvent;
-import com.smartgwt.client.widgets.events.HoverHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
-import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.AcademicYearDTO;
-import com.planetsystems.tela.dto.DistrictDTO;
-import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
-import com.planetsystems.tela.dto.SchoolClassDTO;
-import com.planetsystems.tela.dto.SchoolDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
-import com.planetsystems.tela.managementapp.client.place.NameTokens;
 
 public class LearnerEnrollmentPresenter
 		extends Presenter<LearnerEnrollmentPresenter.MyView, LearnerEnrollmentPresenter.MyProxy> {
@@ -71,8 +65,6 @@ public class LearnerEnrollmentPresenter
 	@Inject
 	private PlaceManager placeManager;
 
-	private ComboUtil comboUtil;
-
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern()); 
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
@@ -85,7 +77,6 @@ public class LearnerEnrollmentPresenter
 	@Inject
 	LearnerEnrollmentPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
-		this.comboUtil = new ComboUtil();
 
 	}
 
@@ -133,7 +124,7 @@ public class LearnerEnrollmentPresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				SC.say("Basic Search");
+				getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid().setShowFilterEditor(true);
 			}
 		});
 
@@ -149,38 +140,6 @@ public class LearnerEnrollmentPresenter
 				loadFilterLearnerHeadCountSchoolCombo(window);
 				filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
 				window.show();
-				disableEnableFilterButton(window);
-			}
-		});
-
-	}
-
-	private void disableEnableFilterButton(final FilterLearnerHeadCountWindow window) {
-		;
-		window.getFilterLearnerHeadCountPane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				if (window.getFilterLearnerHeadCountPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterLearnerHeadCountPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
-			}
-		});
-
-		window.getFilterLearnerHeadCountPane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getFilterLearnerHeadCountPane().getAcademicTermCombo().getValueAsString() != null
-						&& window.getFilterLearnerHeadCountPane().getSchoolCombo().getValueAsString() != null) {
-					window.getFilterButton().setDisabled(false);
-				} else {
-					window.getFilterButton().setDisabled(true);
-				}
 			}
 		});
 
@@ -194,8 +153,14 @@ public class LearnerEnrollmentPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				LearnerEnrollmentWindow window = new LearnerEnrollmentWindow();
+				String defaultValue = null;
 				setLearnerTotal(window);
-				loadSchoolClassCombo(window, null);
+				loadAcademicYearCombo(window, defaultValue);
+				loadAcademicTermCombo(window, defaultValue);
+				loadDistrictCombo(window, defaultValue);
+				loadSchoolCombo(window, defaultValue);
+				loadSchoolClassCombo(window, defaultValue);
+				
 				window.show();
 
 				saveLearnerEnrollment(window);
@@ -204,8 +169,42 @@ public class LearnerEnrollmentPresenter
 		});
 	}
 
+	
+	private void loadAcademicYearCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo() , dispatcher, placeManager, defaultValue);
+	}
+	
+	private void loadAcademicTermCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo() , window.getAcademicTermCombo() , dispatcher, placeManager, defaultValue);	
+			}
+		});
+	}
+	
+	private void loadDistrictCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+	}
+	private void loadSchoolCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo() ,window.getSchoolCombo(), dispatcher, placeManager, defaultValue);	
+			}
+		});
+		
+	}
 	private void loadSchoolClassCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
-		comboUtil.loadSchoolClassCombo(window.getSchoolClassComboBox(), dispatcher, placeManager, defaultValue);
+		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+			
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo() , window.getSchoolCombo() , window.getSchoolClassCombo() , dispatcher, placeManager , defaultValue);		
+			}
+		});
 	}
 
 	public void setLearnerTotal(final LearnerEnrollmentWindow window) {
@@ -271,7 +270,7 @@ public class LearnerEnrollmentPresenter
 				dto.setTotalGirls(Long.valueOf(window.getTotalGirlsField().getValueAsString()));
 				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassComboBox().getValueAsString());
+				SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
 				dto.setSchoolClassDTO(schoolClassDTO);
 
 				GWT.log("DTO " + dto);
@@ -279,47 +278,18 @@ public class LearnerEnrollmentPresenter
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_LEARNER_ENROLLMENT, dto);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
-
-				dispatcher.execute(new RequestAction(RequestConstant.SAVE_LEARNER_ENROLLMENT, map),
-						new AsyncCallback<RequestResult>() {
-
-							public void onFailure(Throwable caught) {
-
-								SC.clearPrompt();
-								System.out.println(caught.getMessage());
-								SC.say("ERROR", caught.getMessage());
-							}
-
-							public void onSuccess(RequestResult result) {
-								SC.clearPrompt();
-
-								clearLearnerEnrollmentWindowFields(window);
-								window.close();
-
-								SessionManager.getInstance().manageSession(result, placeManager);
-
-								if (result != null) {
-									SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-									if (feedback.isResponse()) {
-										SC.say("SUCCESS", feedback.getMessage());
-									} else {
-										SC.warn("INFO", feedback.getMessage());
-									}
-
-									getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid()
-											.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
-
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
-
+				map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_LEARNER_ENROLLMENT);
+				
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+					
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						clearLearnerEnrollmentWindowFields(window);
+						window.close();
+						SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+						getAllLearnerEnrollments();
+					}
+				});
 			}
 		});
 
@@ -334,7 +304,13 @@ public class LearnerEnrollmentPresenter
 		if (window.getTotalGirlsField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getSchoolClassComboBox().getValueAsString() == null)
+		if (window.getDistrictCombo().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getSchoolCombo().getValueAsString() == null)
+			flag = false;
+		
+		if (window.getSchoolClassCombo().getValueAsString() == null)
 			flag = false;
 
 		return flag;
@@ -342,7 +318,9 @@ public class LearnerEnrollmentPresenter
 
 	private void clearLearnerEnrollmentWindowFields(LearnerEnrollmentWindow window) {
 
-		window.getSchoolClassComboBox().clearValue();
+		window.getDistrictCombo().clearValue();
+		window.getSchoolCombo().clearValue();
+		window.getSchoolClassCombo().clearValue();
 		window.getTotalBoysField().clearValue();
 		window.getTotalGirlsField().clearValue();
 		window.getLearnerTotalField().clearValue();
@@ -352,45 +330,16 @@ public class LearnerEnrollmentPresenter
 	private void getAllLearnerEnrollments() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_LEARNER_ENROLLMENT, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ENROLLMENT);
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_LEARNER_ENROLLMENT, map),
-				new AsyncCallback<RequestResult>() {
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-							SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-							if (feedbackDTO != null) {
-								if (feedbackDTO.isResponse()) {
-									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-									getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid()
-											.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
-								} else {
-									SC.warn("Not Successful \n ERROR:", feedbackDTO.getMessage());
-								}
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-
-				});
-
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid()
+						.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
+			}
+		});
 	}
 
 ///////////////////////FILTER LEARNER HEADCOUNT COMBOS(4)
@@ -402,7 +351,7 @@ public class LearnerEnrollmentPresenter
 			@Override
 			public void onChanged(ChangedEvent event) {
 
-				comboUtil.loadSchoolComboByDistrict(window.getFilterLearnerHeadCountPane().getDistrictCombo(),
+				ComboUtil.loadSchoolComboByDistrict(window.getFilterLearnerHeadCountPane().getDistrictCombo(),
 						window.getFilterLearnerHeadCountPane().getSchoolCombo(), dispatcher, placeManager, null);
 			}
 		});
@@ -411,13 +360,13 @@ public class LearnerEnrollmentPresenter
 
 //loads district combo in filter learner head count pane	
 	private void loadFilterLearnerHeadCountDistrictCombo(final FilterLearnerHeadCountWindow window) {
-		comboUtil.loadDistrictCombo(window.getFilterLearnerHeadCountPane().getDistrictCombo(), dispatcher, placeManager,
+		ComboUtil.loadDistrictCombo(window.getFilterLearnerHeadCountPane().getDistrictCombo(), dispatcher, placeManager,
 				null);
 	}
 
 //loads academic year combo in filter learner head count pane	
 	private void loadFilterLearnerHeadCountAcademicYearCombo(final FilterLearnerHeadCountWindow window) {
-		comboUtil.loadAcademicYearCombo(window.getFilterLearnerHeadCountPane().getAcademicYearCombo(), dispatcher,
+		ComboUtil.loadAcademicYearCombo(window.getFilterLearnerHeadCountPane().getAcademicYearCombo(), dispatcher,
 				placeManager, null);
 	}
 
@@ -428,7 +377,7 @@ public class LearnerEnrollmentPresenter
 			@Override
 			public void onChanged(ChangedEvent event) {
 
-				comboUtil.loadAcademicTermComboByAcademicYear(
+				ComboUtil.loadAcademicTermComboByAcademicYear(
 						window.getFilterLearnerHeadCountPane().getAcademicYearCombo(),
 						window.getFilterLearnerHeadCountPane().getAcademicTermCombo(), dispatcher, placeManager, null);
 			}
@@ -451,55 +400,25 @@ public class LearnerEnrollmentPresenter
 				String districtId = window.getFilterLearnerHeadCountPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterLearnerHeadCountPane().getSchoolCombo().getValueAsString();
 
+				FilterDTO dto = new FilterDTO();
+				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+				map.put(RequestDelimeters.FILTER_LEARNER_ENROLLEMENTS, dto);
+				map.put(NetworkDataUtil.ACTION,
+						RequestConstant.FILTER_LEARNER_ENROLLMENTS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
 
-//						map.put(RequestConstant.GET_LEARNER_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map);
-				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-				SC.showPrompt("", "", new SwizimaLoader());
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				dispatcher.execute(new RequestAction(
-						RequestConstant.GET_LEARNER_ENROLLMENTS_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map),
-						new AsyncCallback<RequestResult>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								System.out.println(caught.getMessage());
-								SC.warn("ERROR", caught.getMessage());
-								GWT.log("ERROR " + caught.getMessage());
-								SC.clearPrompt();
-
-							}
-
-							@Override
-							public void onSuccess(RequestResult result) {
-
-								SC.clearPrompt();
-								SessionManager.getInstance().manageSession(result, placeManager);
-								if (result != null) {
-									SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-									if (feedbackDTO != null) {
-										window.close();
-										if (result.getSystemFeedbackDTO().isResponse()) {
-											// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-											getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid()
-													.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
-										} else {
-											SC.warn("Not Successful \n ERROR:",
-													result.getSystemFeedbackDTO().getMessage());
-										}
-									}
-								} else {
-									SC.warn("ERROR", "Unknow error");
-								}
-
-							}
-
-						});
-
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid()
+								.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
+					}
+				});
 			}
 		});
 	}

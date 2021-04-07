@@ -27,9 +27,8 @@ public class LoginPane extends VLayout {
 		  Img desLogo = new Img("des_logo.jpg");
 			desLogo.setHeight(130);
 			desLogo.setWidth(130);
-			desLogo.setTooltip("DES LOGO");
+			desLogo.setTooltip("DIRECTORATE OF EDUCATION STANDARDS");
 			desLogo.setLayoutAlign(Alignment.CENTER);
-			//desLogo.setAltText("Des Logo");
 			
 			Img telaLogo = new Img("telalog.png");
 			telaLogo.setHeight(50);
@@ -37,10 +36,8 @@ public class LoginPane extends VLayout {
 			telaLogo.setTooltip("TELA LOGO");
 			telaLogo.setLayoutAlign(Alignment.CENTER);
 			telaLogo.setBackgroundColor("blue");
-			//telaLogo.setAltText("Tela log");
 
 			VLayout imgLayout = new VLayout();
-			//imgLayout.setBorder("1px solid red");
 			imgLayout.setWidth100();
 			imgLayout.setAutoHeight();
 			imgLayout.setMembersMargin(5);
@@ -52,7 +49,6 @@ public class LoginPane extends VLayout {
 			loginLabel.setAutoWidth();
 			loginLabel.setPadding(5);
 			loginLabel.setMargin(2);
-			//loginLabel.setBorder("1px solid green");
 			loginLabel.setLayoutAlign(Alignment.CENTER);
 			
 			
@@ -86,7 +82,7 @@ public class LoginPane extends VLayout {
 			
 			HLayout buttonLayout = new HLayout();
 			buttonLayout.setMembersMargin(40);
-			buttonLayout.addMembers(forgotPassword , loginButton);
+			buttonLayout.addMembers(loginButton , forgotPassword);
 			buttonLayout.setAlign(Alignment.CENTER);		
 			buttonLayout.setAutoHeight();
 			buttonLayout.setAutoWidth();

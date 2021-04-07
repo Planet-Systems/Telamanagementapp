@@ -12,18 +12,16 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class LearnerEnrollmentWindow extends Window {
-	/*
-	 * 
-	 * private SchoolClassDTO schoolClassDTO; private long totalBoys; private long
-	 * totalGirls; private String status;
-	 */
 
-	private ComboBox schoolClassComboBox;
+	private ComboBox schoolClassCombo;
+	private ComboBox schoolCombo;
+	private ComboBox districtCombo;
+	private ComboBox academicYearCombo;
+	private ComboBox academicTermCombo;
 
 	private TextItem totalBoysField;
 	private TextItem totalGirlsField;
 	private TextItem learnerTotalField;
-	// private TextItem statusField; set from server side
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -49,17 +47,39 @@ public class LearnerEnrollmentWindow extends Window {
 		learnerTotalField.setHint("Total: 0");
 		learnerTotalField.setShowHintInField(true);
 
-		schoolClassComboBox = new ComboBox();
-		schoolClassComboBox.setTitle("Class");
-		schoolClassComboBox.setHint("Class");
-		schoolClassComboBox.setShowHintInField(true);
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Academic Year");
+		academicYearCombo.setShowHintInField(true);
+		
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Academic Term");
+		academicTermCombo.setShowHintInField(true);
+		
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
+		
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("School");
+		schoolCombo.setShowHintInField(true);
+		
+		schoolClassCombo = new ComboBox();
+		schoolClassCombo.setTitle("Class");
+		schoolClassCombo.setHint("Class");
+		schoolClassCombo.setShowHintInField(true);
 
-		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(schoolClassComboBox, totalBoysField, totalGirlsField, learnerTotalField);
-		dynamicForm.setWrapItemTitles(false);
-		dynamicForm.setMargin(10);
-		dynamicForm.setColWidths("150", "250");
-		dynamicForm.setCellPadding(10);
+		DynamicForm form = new DynamicForm();
+		form.setFields(academicYearCombo ,  districtCombo ,academicTermCombo , schoolCombo ,  schoolClassCombo, totalBoysField, totalGirlsField, learnerTotalField);
+		form.setWrapItemTitles(false);
+		form.setMargin(10);
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250"  ,"150", "250");
+		form.setCellPadding(10);
+		form.setNumCols(4);
+		
 
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Cancel");
@@ -74,14 +94,14 @@ public class LearnerEnrollmentWindow extends Window {
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
-		layout.addMember(dynamicForm);
+		layout.addMember(form);
 		layout.addMember(buttonLayout);
 		layout.setMembersMargin(10);
 		layout.setMargin(10);
 
 		this.addItem(layout);
-		this.setWidth("40%");
-		this.setHeight("50%");
+		this.setWidth("70%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
 		this.setTitle("Learner Enrollment");
 		this.setIsModal(true);
@@ -99,8 +119,16 @@ public class LearnerEnrollmentWindow extends Window {
 		});
 	}
 
-	public ComboBox getSchoolClassComboBox() {
-		return schoolClassComboBox;
+	public ComboBox getSchoolClassCombo() {
+		return schoolClassCombo;
+	}
+
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
+	}
+
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
 	}
 
 	public TextItem getTotalBoysField() {
@@ -111,12 +139,27 @@ public class LearnerEnrollmentWindow extends Window {
 		return totalGirlsField;
 	}
 
+	public TextItem getLearnerTotalField() {
+		return learnerTotalField;
+	}
+
 	public IButton getSaveButton() {
 		return saveButton;
 	}
 
-	public TextItem getLearnerTotalField() {
-		return learnerTotalField;
+	public IButton getCancelButton() {
+		return cancelButton;
 	}
+
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
+	}
+
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
+	}
+
+	
+	
 
 }

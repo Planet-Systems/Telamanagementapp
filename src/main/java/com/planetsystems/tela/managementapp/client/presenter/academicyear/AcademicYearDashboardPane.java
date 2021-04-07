@@ -4,6 +4,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+@Deprecated
 public class AcademicYearDashboardPane extends VLayout {
 
 	

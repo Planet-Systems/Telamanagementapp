@@ -72,10 +72,6 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 					final AuthenticationDTO dto = new AuthenticationDTO();
 					dto.setPassword(password);
 					dto.setUserName(userName);
-		
-					// map.put(RequestConstant.LOGIN_TOKEN, loginToken);
-
-					//SC.say("DTO", dto.getPassword()+" "+dto.getUserName());
 					
 					SC.showPrompt("", "", new SwizimaLoader());
 
@@ -131,14 +127,6 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 	private void clearLoginFields() {
 		getView().getLoginPane().getUsername().clearValue();
 		getView().getLoginPane().getPassword().clearValue();
-	}
-
-	private void goToMain(String token) {
-		 PlaceRequest mainPlaceRequest = new
-		 PlaceRequest.Builder().nameToken(NameTokens.assessmentperiod).build();
-		 placeManager.revealPlace(mainPlaceRequest);
-
-	//	SC.say("going to main");
 	}
 
 }

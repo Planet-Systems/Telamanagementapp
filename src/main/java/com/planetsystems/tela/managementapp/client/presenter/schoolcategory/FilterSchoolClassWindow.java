@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolcategory;
 
+import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterYearTermDistrictSchool;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -8,22 +9,24 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+
 public class FilterSchoolClassWindow extends Window {
 	
 	private IButton filterButton;
 	private IButton cancelButton;
-	private FilterSchoolClassPane filterSchoolClassPane;
+	private FilterYearTermDistrictSchool filterYearTermDistrictSchool;
 
 	public FilterSchoolClassWindow() {
 		super();
 		
-		filterSchoolClassPane = new FilterSchoolClassPane();
+		filterYearTermDistrictSchool = new FilterYearTermDistrictSchool();
+		filterYearTermDistrictSchool.getForm().setNumCols(2);
 		
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 		
 		filterButton = new IButton("Filter");
-		filterButton.disable();
+		
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , filterButton);
@@ -34,13 +37,13 @@ public class FilterSchoolClassWindow extends Window {
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
-		layout.addMember(filterSchoolClassPane);
+		layout.addMember(filterYearTermDistrictSchool);
 		layout.addMember(buttonLayout);
 
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("40%");
+		this.setHeight("50%");
 		this.setAutoCenter(true);
 		this.setTitle("Filter Classes");
 		this.setIsModal(true);
@@ -62,8 +65,10 @@ public class FilterSchoolClassWindow extends Window {
 		return cancelButton;
 	}
 
-	public FilterSchoolClassPane getFilterSchoolClassPane() {
-		return filterSchoolClassPane;
+
+
+	public FilterYearTermDistrictSchool getFilterYearTermDistrictSchool() {
+		return filterYearTermDistrictSchool;
 	}
 
 	public IButton getFilterButton() {

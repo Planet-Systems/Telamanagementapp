@@ -1,12 +1,8 @@
 package com.planetsystems.tela.managementapp.client.presenter.learnerattendance;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
-import com.smartgwt.client.types.VerticalAlignment;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class FilterLearnerAttendancePane extends HLayout {
@@ -17,11 +13,6 @@ public class FilterLearnerAttendancePane extends HLayout {
 	private ComboBox academicTermCombo;
 	private DateItem attendanceDateItem;
 
-	
-	public static final String DISTRICT_ID = "DISTRICT_ID";
-	public static final String SCHOOL_ID = "SCHOOL_ID";
-	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
 	
 	public FilterLearnerAttendancePane() {
 		super();

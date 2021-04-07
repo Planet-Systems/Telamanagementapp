@@ -15,6 +15,8 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+
+@Deprecated
 public class SchoolStaffWindow extends Window {
     
 	    private TextItem firstNameField;

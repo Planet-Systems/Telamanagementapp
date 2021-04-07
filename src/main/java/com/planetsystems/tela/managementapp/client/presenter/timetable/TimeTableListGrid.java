@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -24,31 +26,13 @@ public class TimeTableListGrid extends SuperListGrid {
 	   
 	   public static final String ACADEMIC_YEAR = "academicYear";
 	   public static final String ACADEMIC_YEAR_ID = "academicYearId";
-	   
-	   
 	 
-	   
-	/*
-	 * 
-	 *  private SchoolDTO schoolDTO;
-
-
-    private AcademicTermDTO academicTermDTO;
-
-
-    private List<TimeTableLessonDTO> timeTableLessonDTOS;
-	 * 
-	 */
-	   
-	//   private String day;
-	//   private SchoolClassDTO schoolClassDTO;
-	//   private SubjectDTO subjectDTO;
-	//   private String startTime;
-	//   private String endTime;
-	//   private SchoolStaffDTO schoolStaffDTO
+	   TimeTableDataSource dataSource;
 	   
 		
 		public TimeTableListGrid() {
+			
+			dataSource = TimeTableDataSource.getInstance();
 			
 			ListGridField idField = new ListGridField(ID , "Id");
 			idField.setHidden(true);
@@ -73,6 +57,8 @@ public class TimeTableListGrid extends SuperListGrid {
 
 			
 			this.setFields(idField,academicTermIdField , academicYearIdField , districtIdField , districtField , schoolIdField , academicYearField , academicTermField , schoolField);
+		
+		   this.setDataSource(dataSource);
 		}
 		
 		public ListGridRecord addRowData(TimeTableDTO timeTableDTO) {
@@ -112,11 +98,56 @@ public class TimeTableListGrid extends SuperListGrid {
 				row++;
 			}
 			this.setData(records);
+			dataSource.setTestData(records);
 		}
 		
 		
 		public void addRecordToGrid(TimeTableDTO dto) {
 			this.addData(addRowData(dto));
+		}
+		
+		
+		public static class TimeTableDataSource extends DataSource {
+
+			private static TimeTableDataSource instance = null;
+
+			public static TimeTableDataSource getInstance() {
+				if (instance == null) {
+					instance = new TimeTableDataSource("TimeTableDataSource");
+				}
+				return instance;
+			}
+
+			public TimeTableDataSource(String id) {
+				setID(id);
+				
+				DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+				idField.setHidden(true);
+				idField.setPrimaryKey(true);
+				
+				DataSourceTextField schoolField = new DataSourceTextField(SCHOOL, "School");
+				DataSourceTextField schoolIdField = new DataSourceTextField(SCHOOL_ID, "School Id");
+				schoolIdField.setHidden(true);
+				
+				DataSourceTextField districtField = new DataSourceTextField(DISTRICT, "District");
+				districtField.setHidden(true);
+				DataSourceTextField districtIdField = new DataSourceTextField(DISTRICT_ID, "District Id");
+				districtIdField.setHidden(true);
+				
+				DataSourceTextField academicTermField = new DataSourceTextField(ACADEMIC_TERM , "Academic Term");
+				DataSourceTextField academicTermIdField = new DataSourceTextField(ACADEMIC_TERM_ID , "Academic Term Id");
+				academicTermIdField.setHidden(true);
+				
+				DataSourceTextField academicYearField = new DataSourceTextField(ACADEMIC_YEAR , "Academic Year");
+				DataSourceTextField academicYearIdField = new DataSourceTextField(ACADEMIC_YEAR_ID , "Academic Year Id");
+				academicYearIdField.setHidden(true);
+
+				
+				this.setFields(idField,academicTermIdField , academicYearIdField , districtIdField , districtField , schoolIdField , academicYearField , academicTermField , schoolField);
+			
+				setClientOnly(true);
+
+			}
 		}
 	
 }

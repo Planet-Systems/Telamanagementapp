@@ -224,37 +224,37 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 							List<SystemUserGroupSystemMenuDTO> list = result.getSystemUserGroupSystemMenuDTOs();
 
 							for (SystemUserGroupSystemMenuDTO dto : list) {
-								if (dto.getSystemMenu() != null) {
-									if (dto.getSystemMenu().getNavigationMenu() != null) {
-										if (dto.getSystemMenu().getNavigationMenu().equalsIgnoreCase(
+								if (dto.getSystemMenuDTO() != null) {
+									if (dto.getSystemMenuDTO().getNavigationMenu() != null) {
+										if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
 												NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu())) {
 
-											systemConfig.add(dto.getSystemMenu().getSubMenuItem());
+											systemConfig.add(dto.getSystemMenuDTO().getSubMenuItem());
 
-										} else if (dto.getSystemMenu().getNavigationMenu()
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
 												.equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu())) {
 
-											enrollemnt.add(dto.getSystemMenu().getSubMenuItem());
+											enrollemnt.add(dto.getSystemMenuDTO().getSubMenuItem());
 
-										} else if (dto.getSystemMenu().getNavigationMenu()
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
 												.equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu())) {
 
-											attendance.add(dto.getSystemMenu().getSubMenuItem());
+											attendance.add(dto.getSystemMenuDTO().getSubMenuItem());
 
-										} else if (dto.getSystemMenu().getNavigationMenu()
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
 												.equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu())) {
 
-											timetable.add(dto.getSystemMenu().getSubMenuItem());
+											timetable.add(dto.getSystemMenuDTO().getSubMenuItem());
 
-										} else if (dto.getSystemMenu().getNavigationMenu()
+										} else if (dto.getSystemMenuDTO().getNavigationMenu()
 												.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu())) {
 
-											systemusers.add(dto.getSystemMenu().getSubMenuItem());
+											systemusers.add(dto.getSystemMenuDTO().getSubMenuItem());
 
-										} else if (dto.getSystemMenu().getNavigationMenu().equalsIgnoreCase(
+										} else if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
 												NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu())) {
 
-											generatereports.add(dto.getSystemMenu().getSubMenuItem());
+											generatereports.add(dto.getSystemMenuDTO().getSubMenuItem());
 										}
 									}
 								}

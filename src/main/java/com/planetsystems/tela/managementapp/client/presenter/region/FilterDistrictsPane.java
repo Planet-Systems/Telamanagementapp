@@ -1,7 +1,5 @@
 package com.planetsystems.tela.managementapp.client.presenter.region;
 
-import org.apache.bcel.generic.NEW;
-
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.HLayout;

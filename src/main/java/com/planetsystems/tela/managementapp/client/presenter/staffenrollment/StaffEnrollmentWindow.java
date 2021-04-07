@@ -7,32 +7,21 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class StaffEnrollmentWindow extends Window {
-	/*
-	 *   private SchoolDTO schoolDTO;
-
-    private AcademicTermDTO academicTermDTO;
 
 
-    private long  totalMale;
-
-    private long totalFemale;
-
-    private String status;
-	 */
-	private ComboBox academicTermComboBox;
-
-	private ComboBox schoolComboBox;
+	private ComboBox academicYearCombo;
+	private ComboBox academicTermCombo;
+	private ComboBox districtCombo;
+	private ComboBox schoolCombo;
 
 	private TextItem totalMaleField;
 	private TextItem totalFemaleField;
 	private TextItem staffTotalField;
-	// private TextItem statusField; set from server side
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -52,15 +41,26 @@ public class StaffEnrollmentWindow extends Window {
 		totalFemaleField.setKeyPressFilter("[0-9.]"); 
 		totalFemaleField.setShowHintInField(true);
 		
-		academicTermComboBox = new ComboBox();
-		academicTermComboBox.setTitle("AcademicTerm");
-		academicTermComboBox.setHint("AcademicTerm");
-		academicTermComboBox.setShowHintInField(true);
 		
-		schoolComboBox = new ComboBox();
-		schoolComboBox.setTitle("School");
-		schoolComboBox.setHint("School");
-		schoolComboBox.setShowHintInField(true);
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Academic Year");
+		academicYearCombo.setShowHintInField(true);
+		
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setShowHintInField(true);
+		
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
+		
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("School");
+		schoolCombo.setShowHintInField(true);
 		
 		staffTotalField = new TextItem();
 		staffTotalField.setTitle("Total");
@@ -72,7 +72,7 @@ public class StaffEnrollmentWindow extends Window {
        
 		
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(academicTermComboBox , schoolComboBox , totalMaleField , totalFemaleField , staffTotalField);
+		dynamicForm.setFields(academicYearCombo , academicTermCombo ,districtCombo , schoolCombo , totalMaleField , totalFemaleField , staffTotalField);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
 		dynamicForm.setColWidths("100","250");
@@ -101,8 +101,8 @@ public class StaffEnrollmentWindow extends Window {
 		
 		
 		this.addItem(layout);
-		this.setWidth("40%");
-		this.setHeight("65%");
+		this.setWidth("45%");
+		this.setHeight("75%");
 		this.setAutoCenter(true);
 		this.setTitle("Staff Enrollment");
 		this.setIsModal(true);
@@ -120,12 +120,20 @@ public class StaffEnrollmentWindow extends Window {
 		});
 	}
 
-	public ComboBox getAcademicTermComboBox() {
-		return academicTermComboBox;
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
 	}
 
-	public ComboBox getSchoolComboBox() {
-		return schoolComboBox;
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
+	}
+
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
+	}
+
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
 	}
 
 	public TextItem getTotalMaleField() {
@@ -136,6 +144,10 @@ public class StaffEnrollmentWindow extends Window {
 		return totalFemaleField;
 	}
 
+	public TextItem getStaffTotalField() {
+		return staffTotalField;
+	}
+
 	public IButton getSaveButton() {
 		return saveButton;
 	}
@@ -144,12 +156,6 @@ public class StaffEnrollmentWindow extends Window {
 		return cancelButton;
 	}
 
-	public TextItem getStaffTotalField() {
-		return staffTotalField;
-	}
-	
-	
-	
 	
 	
 	

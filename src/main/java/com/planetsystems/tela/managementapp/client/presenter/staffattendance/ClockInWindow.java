@@ -13,9 +13,16 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class ClockInWindow extends Window {
-	private ComboBox academicTermComboBox;
 
-	private ComboBox schoolStaffComboBox;
+
+	private ComboBox academicYearCombo;
+
+	private ComboBox academicTermCombo;
+	
+	private ComboBox districtCombo;
+	private ComboBox schoolCombo;
+
+	private ComboBox schoolStaffCombo;
 
 	private TextAreaItem commentField;
 	private TextItem latitudeField;
@@ -42,24 +49,39 @@ public class ClockInWindow extends Window {
 		longitudeField.setHint("longitude");
 		longitudeField.setShowHintInField(true);
 		
-		academicTermComboBox = new ComboBox();
-		academicTermComboBox.setTitle("AcademicTerm");
-		academicTermComboBox.setHint("AcademicTerm");
-		academicTermComboBox.setShowHintInField(true);
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("AcademicYear");
+		academicYearCombo.setHint("academicYear");
+		academicYearCombo.setShowHintInField(true);
 		
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("AcademicTerm");
+		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setShowHintInField(true);
 		
-		schoolStaffComboBox = new ComboBox();
-		schoolStaffComboBox.setTitle("Staff");
-		schoolStaffComboBox.setHint("Staff");
-		schoolStaffComboBox.setShowHintInField(true);
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHintInField(true);
+		
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("School");
+		schoolCombo.setShowHintInField(true);
+		
+		schoolStaffCombo = new ComboBox();
+		schoolStaffCombo.setTitle("Staff");
+		schoolStaffCombo.setHint("Staff");
+		schoolStaffCombo.setShowHintInField(true);
        
 		
-		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(academicTermComboBox , schoolStaffComboBox , latitudeField , longitudeField , commentField);
-		dynamicForm.setWrapItemTitles(false);
-		dynamicForm.setMargin(10);
-		dynamicForm.setCellPadding(7);
-		dynamicForm.setColWidths("60", "220");
+		DynamicForm form = new DynamicForm();
+		form.setFields(academicYearCombo ,districtCombo, academicTermCombo  , schoolCombo, latitudeField ,schoolStaffCombo, longitudeField  , commentField);
+		form.setWrapItemTitles(false);
+		form.setMargin(10);
+		form.setCellPadding(7);
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "100", "250");
+		form.setNumCols(4);
 		
 		
 		saveButton = new IButton("Save");
@@ -75,7 +97,7 @@ public class ClockInWindow extends Window {
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 		
 		VLayout layout = new VLayout();
-		layout.addMember(dynamicForm);
+		layout.addMember(form);
 		layout.addMember(buttonLayout);
 		layout.setMembersMargin(10);
 		layout.setMargin(10);
@@ -84,8 +106,8 @@ public class ClockInWindow extends Window {
 		this.addItem(layout);
 		
 	
-		this.setWidth("40%");
-		this.setHeight("70%");
+		this.setWidth("70%");
+		this.setHeight("80%");
 		this.setAutoCenter(true);
 		this.setTitle("Clock In");
 		this.setIsModal(true);
@@ -103,12 +125,24 @@ public class ClockInWindow extends Window {
 		});
 	}
 
-	public ComboBox getAcademicTermComboBox() {
-		return academicTermComboBox;
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
 	}
 
-	public ComboBox getSchoolStaffComboBox() {
-		return schoolStaffComboBox;
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
+	}
+
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
+	}
+
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
+	}
+
+	public ComboBox getSchoolStaffCombo() {
+		return schoolStaffCombo;
 	}
 
 	public TextAreaItem getCommentField() {
@@ -131,7 +165,6 @@ public class ClockInWindow extends Window {
 		return cancelButton;
 	}
 
-	
 	
 	
 }

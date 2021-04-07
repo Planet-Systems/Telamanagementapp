@@ -9,7 +9,7 @@ import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class SystemAttendanceData {
-  
+
 	private static ListGridRecord[] records;
 
 	public static ListGridRecord[] getRecords() {
@@ -33,7 +33,9 @@ public class SystemAttendanceData {
 				createRecord("", "application_form", NameTokens.staffAttendance),
 				createRecord("", "application_form", NameTokens.learnerAttendance),
 				createRecord("", "application_form", NameTokens.StaffDailyTask),
-				createRecord("", "application_form", NameTokens.HeadTeacherSupervision),		
+				createRecord("", "application_form", NameTokens.HeadTeacherSupervision),
+	
+
 		};
 
 	}

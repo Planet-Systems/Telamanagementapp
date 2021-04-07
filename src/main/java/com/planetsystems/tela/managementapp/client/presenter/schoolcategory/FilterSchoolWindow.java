@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.client.presenter.schoolcategory;
 
+import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterRegionDistrictSchoolCategory;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -8,23 +9,24 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+
 public class FilterSchoolWindow extends Window {
 	
 	private IButton filterButton;
 	private IButton cancelButton;
-	private FilterSchoolsPane filterSchoolsPane;
+	private FilterRegionDistrictSchoolCategory filterRegionDistrictSchoolCategory;
 
 	public FilterSchoolWindow() {
 		super();
 		
-		filterSchoolsPane = new FilterSchoolsPane();
-		filterSchoolsPane.setLayoutAlign(Alignment.CENTER);
+		filterRegionDistrictSchoolCategory = new FilterRegionDistrictSchoolCategory();
+		filterRegionDistrictSchoolCategory.setLayoutAlign(Alignment.CENTER);
 		
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 		
 		filterButton = new IButton("Filter");
-		filterButton.disable();
+	
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , filterButton);
@@ -35,7 +37,7 @@ public class FilterSchoolWindow extends Window {
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
-		layout.addMember(filterSchoolsPane);
+		layout.addMember(filterRegionDistrictSchoolCategory);
 		layout.addMember(buttonLayout);
 
 		layout.setMargin(10);
@@ -70,9 +72,12 @@ public class FilterSchoolWindow extends Window {
 		return cancelButton;
 	}
 
-	public FilterSchoolsPane getFilterSchoolsPane() {
-		return filterSchoolsPane;
+	public FilterRegionDistrictSchoolCategory getFilterRegionDistrictSchoolCategory() {
+		return filterRegionDistrictSchoolCategory;
 	}
+
+	
+	
 
 
 	

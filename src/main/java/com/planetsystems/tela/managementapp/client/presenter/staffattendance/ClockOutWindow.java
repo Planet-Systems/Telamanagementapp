@@ -12,16 +12,14 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
+
 public class ClockOutWindow extends Window {
-	private ComboBox academicTermComboBox;
+	private ComboBox academicTermCombo;
 
-	private ComboBox schoolStaffComboBox;
-
-	// private DateItem clockInDate; taken from server
+	private ComboBox schoolStaffCombo;
 	private TextAreaItem commentField;
 	private TextItem latitudeField;
 	private TextItem longitudeField;
-	// private TextItem statusField; set from server side
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -38,15 +36,15 @@ public class ClockOutWindow extends Window {
 		longitudeField = new TextItem();
 		longitudeField.setTitle("longitude");
 		
-		academicTermComboBox = new ComboBox();
-		academicTermComboBox.setTitle("AcademicTerm");
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("AcademicTerm");
 		
-		schoolStaffComboBox = new ComboBox();
-		schoolStaffComboBox.setTitle("Staff");
+		schoolStaffCombo = new ComboBox();
+		schoolStaffCombo.setTitle("Staff");
        
 		
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(academicTermComboBox , schoolStaffComboBox , latitudeField , longitudeField , commentField);
+		dynamicForm.setFields(academicTermCombo , schoolStaffCombo , latitudeField , longitudeField , commentField);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
 		dynamicForm.setCellPadding(7);
@@ -95,12 +93,12 @@ public class ClockOutWindow extends Window {
 		});
 	}
 
-	public ComboBox getAcademicTermComboBox() {
-		return academicTermComboBox;
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
 	}
 
-	public ComboBox getSchoolStaffComboBox() {
-		return schoolStaffComboBox;
+	public ComboBox getSchoolStaffCombo() {
+		return schoolStaffCombo;
 	}
 
 	public TextAreaItem getCommentField() {

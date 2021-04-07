@@ -29,7 +29,6 @@ public class FilterLearnerHeadCountWindow extends Window {
 		cancelButton.setBaseStyle("cancel-button");
 		
 		filterButton = new IButton("Filter");
-		filterButton.disable();
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , filterButton);

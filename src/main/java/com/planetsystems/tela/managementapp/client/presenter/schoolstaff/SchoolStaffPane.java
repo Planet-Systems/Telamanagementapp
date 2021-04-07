@@ -11,6 +11,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author wanfadger
  *
  */
+
+@Deprecated
 public class SchoolStaffPane extends VLayout {
 	private SchoolStaffListGrid staffListGrid;
 

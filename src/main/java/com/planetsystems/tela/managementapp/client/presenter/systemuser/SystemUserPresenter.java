@@ -24,7 +24,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.NavigationMenuDTO;
 import com.planetsystems.tela.dto.SubMenuItemDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
@@ -33,6 +32,8 @@ import com.planetsystems.tela.dto.SystemUserProfileDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -531,7 +532,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		valueMap.put("female", "Female");
 		valueMap.put("male", "Male");
 
-		window.getGenderComboBox().setValueMap(valueMap);
+		window.getGenderCombo().setValueMap(valueMap);
 	}
 
 	private void saveSystemUser(final SystemUserWindow window) {
@@ -541,79 +542,137 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			public void onClick(ClickEvent event) {
 
 				SystemUserProfileDTO dto = new SystemUserProfileDTO();
+				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				SystemUserDTO systemUser = new SystemUserDTO();
-				systemUser.setEnabled(Boolean.valueOf(window.getEnabledRadioGroupItem().getValueAsString()));
-				systemUser.setUserName(window.getEmailField().getValueAsString());
+				SystemUserDTO systemUserDTO = new SystemUserDTO();
+				systemUserDTO.setEnabled(Boolean.valueOf(window.getEnabledRadioGroupItem().getValueAsString()));
+				systemUserDTO.setUserName(window.getEmailField().getValueAsString());
+				systemUserDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				
+				 // dto.setPassword(window.getPasswordField().getValueAsString());
+			
 
-				GeneralUserDetailDTO generalUserDetail = new GeneralUserDetailDTO();
-				generalUserDetail.setFirstName(window.getFirstNameField().getValueAsString());
-				generalUserDetail.setLastName(window.getLastNameField().getValueAsString());
-				generalUserDetail.setEmail(window.getEmailField().getValueAsString());
-				generalUserDetail.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
-				generalUserDetail.setGender(window.getGenderComboBox().getValueAsString());
-				generalUserDetail.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
-				generalUserDetail.setNationalId(window.getNationalIdField().getValueAsString());
-				generalUserDetail.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+				GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
+				generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+				generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+				generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
+				generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+				generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
+				generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
+				generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+				generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
 
-				SystemUserGroupDTO systemUserGroup = new SystemUserGroupDTO();
-				systemUserGroup.setId(window.getSystemUserGroup().getValueAsString());
+				SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
+				systemUserGroupDTO.setId(window.getSystemUserGroup().getValueAsString());
 
-				dto.setSystemUser(systemUser);
-				dto.setSystemUserGroup(systemUserGroup);
-				dto.setGeneralUserDetail(generalUserDetail);
+				dto.setSystemUserDTO(systemUserDTO);
+				dto.setSystemUserGroupDTO(systemUserGroupDTO);
+				dto.setGeneralUserDetailDTO(generalUserDetailDTO);
 
 				if (checkIfNoSystemUserWindowFieldIsEmpty(window)) {
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_SYSTEM_USER, dto);
+					map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_SYSTEM_USER);
 					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 					SC.showPrompt("", "", new SwizimaLoader());
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SYSTEM_USER, map),
-							new AsyncCallback<RequestResult>() {
+						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-								public void onFailure(Throwable caught) {
-
-									SC.clearPrompt();
-									System.out.println(caught.getMessage());
-									SC.say("ERROR", caught.getMessage());
-								}
-
-								public void onSuccess(RequestResult result) {
-									SC.clearPrompt();
-
-									clearSystemUserWindowFields(window);
-
-									SessionManager.getInstance().manageSession(result, placeManager);
-
-									if (result != null) {
-										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-
-										if (feedback.isResponse()) {
-
-											SC.say("Success", feedback.getMessage());
-
-											getView().getSystemUserPane().getSystemUserListGrid()
-													.addRecordsToGrid(result.getSystemUserProfileDTOs());
-
-										} else {
-											SC.warn("ERROR", feedback.getMessage());
-										}
-
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
+							@Override
+							public void onNetworkResult(RequestResult result) {
+								clearSystemUserWindowFields(window);
+								getAllSystemUserProfiles();
+							}
+						});
+						
+						
+					
+//					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SYSTEM_USER, map),
+//							new AsyncCallback<RequestResult>() {
+//
+//								public void onFailure(Throwable caught) {
+//
+//									SC.clearPrompt();
+//									System.out.println(caught.getMessage());
+//									SC.say("ERROR", caught.getMessage());
+//								}
+//
+//								public void onSuccess(RequestResult result) {
+//									SC.clearPrompt();
+//
+//									clearSystemUserWindowFields(window);
+//
+//									SessionManager.getInstance().manageSession(result, placeManager);
+//
+//									if (result != null) {
+//										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
+//
+//										if (feedback.isResponse()) {
+//
+//											SC.say("Success", feedback.getMessage());
+//
+//											getView().getSystemUserPane().getSystemUserListGrid()
+//													.addRecordsToGrid(result.getSystemUserProfileDTOs());
+//
+//										} else {
+//											SC.warn("ERROR", feedback.getMessage());
+//										}
+//
+//									} else {
+//										SC.warn("ERROR", "Unknow error");
+//									}
+//
+//								}
+//
+//							});
 				} else {
 					SC.say("Please Fill all fields");
 				}
 
+		
+
+			
+
+//			  GWT.log("USER "+dto);
+//			  if(confirmPassword(window)) {
+//				  if(checkIfNoSystemUserWindowFieldIsEmpty(window)) {
+//					  LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//						map.put(RequestConstant.SAVE_SYSTEM_USER, dto);
+//						map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_SYSTEM_USER);
+//
+//						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+//
+//							@Override
+//							public void onNetworkResult(RequestResult result) {
+//								clearSystemUserWindowFields(window);
+//								getAllSystemUsers();
+//							}
+//						});
+//				  }else {
+//					  SC.say("Please Fill all fields");
+//				  }
+//
+//			  }else {
+//				  SC.say("Passwords don't match");
+//			  }
+
 			}
 		});
+	}
+	
+	private void getAllSystemUserProfiles() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION ,RequestConstant.GET_ALL_SYSTEM_USERS);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getSystemUserPane().getSystemUserListGrid().addRecordsToGrid(result.getSystemUserProfileDTOs());
+			}
+		});
+		
 	}
 
 	private void clearSystemUserWindowFields(SystemUserWindow window) {
@@ -623,7 +682,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		window.getEmailField().clearValue();
 		window.getDobItem().clearValue();
 		window.getNationalIdField().clearValue();
-		window.getGenderComboBox().clearValue();
+		window.getGenderCombo().clearValue();
 		window.getNameAbbrevField().clearValue();
 		window.getEnabledRadioGroupItem().clearValue();
 	}
@@ -649,9 +708,9 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		if (window.getNationalIdField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getGenderComboBox().getValueAsString() == null)
+		if (window.getGenderCombo().getValueAsString() == null)
 			flag = false;
-    
+
 		return flag;
 	}
 
@@ -969,6 +1028,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			SC.warn("ERROR", "Please select record to view permissions");
 		}
 
+		
 	}
 
 	private void saveSystemUserMenu(final SystemUserGroupSystemMenuWindow window) {
@@ -1000,8 +1060,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 						SystemMenuDTO systemMenu = new SystemMenuDTO();
 						systemMenu.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
 
-						dto.setSystemMenu(systemMenu);
-						dto.setSystemUserGroup(userGroup);
+						dto.setSystemMenuDTO(systemMenu);
+						dto.setSystemUserGroupDTO(userGroup);
 						dto.setDisabled(false);
 
 						dtos.add(dto);
@@ -1016,11 +1076,11 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 								dto.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID));
 							}
 
-							SystemMenuDTO systemMenu = new SystemMenuDTO();
-							systemMenu.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
+							SystemMenuDTO systemMenuDTO = new SystemMenuDTO();
+							systemMenuDTO.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
 
-							dto.setSystemMenu(systemMenu);
-							dto.setSystemUserGroup(userGroup);
+							dto.setSystemMenuDTO(systemMenuDTO);
+							dto.setSystemUserGroupDTO(userGroup);
 							dto.setDisabled(true);
 
 							dtos.add(dto);

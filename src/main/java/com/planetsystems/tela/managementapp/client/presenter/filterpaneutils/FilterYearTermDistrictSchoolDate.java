@@ -1,77 +1,39 @@
-package com.planetsystems.tela.managementapp.client.presenter.staffdailytask;
+package com.planetsystems.tela.managementapp.client.presenter.filterpaneutils;
 
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.SelectionAppearance;
-import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class StaffDailyAttendancePane extends VLayout {
+public class FilterYearTermDistrictSchoolDate extends VLayout {
 	private ComboBox schoolCombo;
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
-//	private ComboBox schoolStaffCombo;
 	private TextItem dayField;
 	private ComboBox academicTermCombo;
-	private IButton loadAttendanceButton;
-//	private IButton saveButton;
+	
+	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
-	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
-	public static final String DISTRICT_ID = "DISTRICT_ID";
-	public static final String SCHOOL_ID = "SCHOOL_ID";
-	public static final String ATTENDANCE_DATE = "ATTENDANCE_DATE";
-
-	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
-	DateTimeFormat yearFormat = DateTimeFormat.getFormat(DatePattern.YEAR.getPattern());
-
-	private StaffDailyAttendanceListGrid staffDailyAttendanceListGrid;
-
-	public StaffDailyAttendancePane() {
+	public FilterYearTermDistrictSchoolDate() {
 		super();
-		Label header = new Label();
-		staffDailyAttendanceListGrid = new StaffDailyAttendanceListGrid();
-
 		
-		loadAttendanceButton = new IButton("Load Attendance");
-		loadAttendanceButton.setLayoutAlign(Alignment.RIGHT);
-		loadAttendanceButton.setPadding(10);
-		loadAttendanceButton.disable();
-
-
-		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("School Staff Daily Task Attendance");
-		header.setPadding(10);
-		header.setAutoHeight();
-		header.setAutoWidth();
-		header.setWrap(false);
-		header.setAlign(Alignment.CENTER);
-		header.setLayoutAlign(Alignment.CENTER);
-		header.setMargin(3);
-
 		HLayout formLayout = new HLayout();
 		formLayout.setPadding(5);
 		formLayout.setAutoHeight();
 		formLayout.setWidth("50%");
-//		    formLayout.setBorder("1px solid red");
 		formLayout.setLayoutAlign(Alignment.CENTER);
 
 		HLayout schoolDistrictLayout = new HLayout();
 		schoolDistrictLayout.setPadding(5);
 		schoolDistrictLayout.setAutoHeight();
 		schoolDistrictLayout.setWidth("50%");
-//	    schoolDistrictLayout.setBorder("1px solid red");
 		schoolDistrictLayout.setLayoutAlign(Alignment.CENTER);
 
 		Label schoolLabel = new Label("School: ");
@@ -110,11 +72,6 @@ public class StaffDailyAttendancePane extends VLayout {
 		schoolCombo.setTitle("School");
 		schoolCombo.setHint("School");
 		schoolCombo.setShowHintInField(true);
-//
-//		schoolStaffCombo = new ComboBox();
-//		schoolStaffCombo.setTitle("Staff");
-//		schoolStaffCombo.setHint("Staff");
-//		schoolStaffCombo.setShowHintInField(true);
 
 		dayField = new TextItem("Day");
 		dayField.setValue(dayFormat.format(new Date()));
@@ -122,19 +79,9 @@ public class StaffDailyAttendancePane extends VLayout {
 
 		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField);
 
-//		saveButton = new IButton("Save");
-//		saveButton.setLayoutAlign(Alignment.CENTER);
-//		saveButton.setPadding(10);
-//		saveButton.disable();
-
-		VLayout layout = new VLayout();
-		//layout.addMember(header);
-		layout.addMember(form);
-		layout.addMember(loadAttendanceButton);
-		layout.addMember(staffDailyAttendanceListGrid);
-//		layout.addMember(saveButton);
-		this.addMember(layout);
-
+		this.addMember(form);
+		this.setWidth100();
+		this.setAutoHeight();
 	}
 
 	public ComboBox getSchoolCombo() {
@@ -149,10 +96,6 @@ public class StaffDailyAttendancePane extends VLayout {
 		return academicYearCombo;
 	}
 
-//	public ComboBox getSchoolStaffCombo() {
-//		return schoolStaffCombo;
-//	}
-
 	public TextItem getDayField() {
 		return dayField;
 	}
@@ -161,30 +104,10 @@ public class StaffDailyAttendancePane extends VLayout {
 		return academicTermCombo;
 	}
 
-	
-
-
-	public IButton getLoadAttendanceButton() {
-		return loadAttendanceButton;
-	}
-
-
-
 	public DateTimeFormat getDayFormat() {
 		return dayFormat;
 	}
 
-	public DateTimeFormat getYearFormat() {
-		return yearFormat;
-	}
-
-	public StaffDailyAttendanceListGrid getStaffDailyAttendanceListGrid() {
-		return staffDailyAttendanceListGrid;
-	}
-
 	
 	
-	
-
-
 }
