@@ -21,7 +21,7 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 	public static final String SCHOOL_STAFF = "SCHOOL_STAFF";
 	public static final String SCHOOL_STAFF_ID = "SCHOOL_STAFF_ID";
 	
-	public static final String LESSON_DAY = "LESSON_DAY";
+	public static final String LESSON_DATE = "LESSON_DATE";
 
 	StaffDailyAttendanceDataSource dataSource;
 	
@@ -46,17 +46,17 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "School Staff Id");
 		schoolStaffIdField.setHidden(true);
 
-		ListGridField lessonDayField = new ListGridField(LESSON_DAY, "Lesson Day");
+		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "Lesson Day");
 
 	
         this.setDataSource(dataSource);
-		this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDayField);
+		this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDateField);
 	}
 
 	public ListGridRecord addRowData(StaffDailyTimeTableDTO staffDailyTimeTableDTO) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, staffDailyTimeTableDTO.getId());
-		record.setAttribute(LESSON_DAY, staffDailyTimeTableDTO.getLessonDay());
+		record.setAttribute(LESSON_DATE, staffDailyTimeTableDTO.getLessonDate());
 
 		if (staffDailyTimeTableDTO.getAcademicTermDTO() != null) {
 			record.setAttribute(ACADEMIC_TERM_ID, staffDailyTimeTableDTO.getAcademicTermDTO().getId());
@@ -131,11 +131,11 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 			DataSourceTextField schoolStaffIdField = new DataSourceTextField(SCHOOL_STAFF_ID, "School Staff Id");
 			schoolStaffIdField.setHidden(true);
 
-			DataSourceTextField lessonDayField = new DataSourceTextField(LESSON_DAY, "Lesson Date");
+			DataSourceTextField lessonDateField = new DataSourceTextField(LESSON_DATE, "Lesson Date");
 
 		
 
-			this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDayField);
+			this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDateField);
 
 			setClientOnly(true);
 

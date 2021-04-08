@@ -470,6 +470,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	}
 
 	private void addLessonRecord(final TimeTableLessonWindow window, final CreateTimeTablePane createTimeTablePane) {
+		
 		window.getAddRecordButton().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -503,8 +504,13 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 				dto.setSubjectDTO(subjectDTO);
 
 				GWT.log("DTO " + dto);
+				
 
+				int id = 0;
 				if (checkIfNoTimeTableLessonFieldIsEmpty(window)) {
+					String id2 = String.valueOf(++id);
+					dto.setId(id2);
+					SC.say("ID "+id2);
 					createTimeTablePane.getLessonListGrid().addRecordToGrid(dto);
 					clearTimeTableLessonWindow(window);
 					createTimeTablePane.getSaveButton().enable();

@@ -37,7 +37,7 @@ public class StaffDailyTimetablePane extends VLayout {
 		staffDailyTimetableListGrid = new StaffDailyTimetableListGrid();
 
 		
-		loadAttendanceButton = new IButton("Load Attendance");
+		loadAttendanceButton = new IButton("Load daily timetable");
 		loadAttendanceButton.setLayoutAlign(Alignment.RIGHT);
 		loadAttendanceButton.setPadding(10);
 		loadAttendanceButton.disable();

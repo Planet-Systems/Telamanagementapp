@@ -33,10 +33,10 @@ public class LessonListGrid extends SuperListGrid {
 
 		dataSource = LessonDataSource.getInstance();
 		
-		ListGridField idField = new ListGridField();
+		ListGridField idField = new ListGridField(ID , "ID");
 		idField.setHidden(true);
 
-		ListGridField lessonDateField = new ListGridField(LESSON_DAY, "Lesson Day");
+		ListGridField lessonDayField = new ListGridField(LESSON_DAY, "Lesson Day");
 
 		ListGridField classField = new ListGridField(CLASS, "Class");
 		ListGridField classIdField = new ListGridField(CLASS_ID, "ClassId");
@@ -53,8 +53,8 @@ public class LessonListGrid extends SuperListGrid {
 		ListGridField staffIdField = new ListGridField(STAFF_ID, "Staff Id");
 		staffIdField.setHidden(true);
 
-		this.setFields(lessonDateField, classField, subjectField, startTimeField, endTimeField, staffField);
-		 this.setDataSource(dataSource);
+		this.setFields(idField , lessonDayField, classIdField ,classField, subjectIdField ,subjectField, startTimeField, endTimeField, staffIdField ,staffField);
+		// this.setDataSource(dataSource);
 	}
 
 	public ListGridRecord addRowData(TimeTableLessonDTO timeTableLessonDTO) {
@@ -93,7 +93,7 @@ public class LessonListGrid extends SuperListGrid {
 			row++;
 		}
 		this.setData(records);
-		dataSource.setTestData(records);
+		//dataSource.setTestData(records);
 	}
 
 	public void addRecordToGrid(TimeTableLessonDTO dto) {
@@ -119,7 +119,7 @@ public class LessonListGrid extends SuperListGrid {
 			idField.setHidden(true);
 			idField.setPrimaryKey(true);
 			
-			DataSourceTextField lessonDateField = new DataSourceTextField(LESSON_DAY, "Lesson Day");
+			DataSourceTextField lessonDayField = new DataSourceTextField(LESSON_DAY, "Lesson Day");
 
 			DataSourceTextField classField = new DataSourceTextField(CLASS, "Class");
 			DataSourceTextField classIdField = new DataSourceTextField(CLASS_ID, "ClassId");
@@ -136,7 +136,7 @@ public class LessonListGrid extends SuperListGrid {
 			DataSourceTextField staffIdField = new DataSourceTextField(STAFF_ID, "Staff Id");
 			staffIdField.setHidden(true);
 			
-			this.setFields(lessonDateField, classField, subjectField, startTimeField, endTimeField, staffField);
+			this.setFields(idField , lessonDayField, classIdField ,classField, subjectIdField ,subjectField, startTimeField, endTimeField, staffIdField ,staffField);
 			setClientOnly(true);
 
 		}
