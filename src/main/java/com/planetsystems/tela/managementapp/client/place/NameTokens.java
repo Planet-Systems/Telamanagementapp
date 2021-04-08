@@ -25,8 +25,7 @@ public class NameTokens {
 
 	public static final String staffAttendance = "Staff Attendance";
 	public static final String learnerAttendance = "Learner Attendance";
-	public static final String StaffDailyTask = "Staff Daily Lessons";
-	public static final String HeadTeacherSupervision = "Head Teacher Supervision";
+	public static final String StaffDailyTask = "Staff Daily Lessons"; 
 
 	public static final String timeTable = "TimeTables";
 
@@ -83,11 +82,7 @@ public class NameTokens {
 
 	public static String getSystemUser() {
 		return SystemUser;
-	}
-
-	public static String getHeadTeacherSupervision() {
-		return HeadTeacherSupervision;
-	}
+	} 
 
 	public static String getStaffDailyTask() {
 		return StaffDailyTask;

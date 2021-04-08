@@ -33,7 +33,7 @@ public class SystemAttendanceData {
 				createRecord("", "application_form", NameTokens.staffAttendance),
 				createRecord("", "application_form", NameTokens.learnerAttendance),
 				createRecord("", "application_form", NameTokens.StaffDailyTask),
-				createRecord("", "application_form", NameTokens.HeadTeacherSupervision),
+				createRecord("", "application_form", NameTokens.StaffDailyAttendanceSuperVision),
 	
 
 		};

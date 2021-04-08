@@ -197,10 +197,26 @@
 		</dependency>
 
 
+		<!-- Charts -->
+
+		<dependency>
+			<groupId>com.googlecode.gwt-charts</groupId>
+			<artifactId>gwt-charts</artifactId>
+			<version>0.9.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.moxieapps.gwt</groupId>
+			<artifactId>org.moxieapps.gwt.highcharts</artifactId>
+			<version>1.7.0</version>
+		</dependency>
 
 	</dependencies>
 
 	<build>
+
+		<finalName>tela</finalName>
+
 		<!-- Output classes directly into the webapp, so that IDEs and "mvn process-classes" 
 			update them in DevMode -->
 		<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>

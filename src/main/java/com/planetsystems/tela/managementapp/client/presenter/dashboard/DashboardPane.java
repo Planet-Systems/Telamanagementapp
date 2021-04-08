@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.client.presenter.dashboard;
 
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -30,6 +31,7 @@ public class DashboardPane extends VLayout{
 		
 		
 		this.setMembers(buttonLayout);
+		this.setOverflow(Overflow.AUTO);
 		
 	}
 

@@ -15,10 +15,12 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler; 
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
+import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
@@ -40,6 +42,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	interface MyView extends View {
 
 		public DashboardPane getDashboardPane();
+		public ControlsPane getControlsPane();
 	}
 
 	@ContentSlot
@@ -63,6 +66,20 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		migrateData();
 		migrateAttendanceData();
 		migrateTimeTablesData();
+		loadDashboard();
+		loadMenuButtons();
+	}
+	
+	
+	private void loadMenuButtons() {
+
+		MenuButton filterButton = new MenuButton("Filter");
+		MenuButton refreshButton = new MenuButton("Refresh");
+		getView().getControlsPane().addTitle("Dashboard");
+		getView().getControlsPane().addMember(filterButton);
+		getView().getControlsPane().addMember(refreshButton);
+	  
+
 	}
 
 	private void migrateData() {
@@ -121,7 +138,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		});
 
 	}
-	
+
 	private void migrateAttendanceData() {
 		getView().getDashboardPane().getImportAttendaceButton().addClickHandler(new ClickHandler() {
 
@@ -178,7 +195,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		});
 
 	}
-	
+
 	private void migrateTimeTablesData() {
 		getView().getDashboardPane().getImportTimeTablesButton().addClickHandler(new ClickHandler() {
 
@@ -236,6 +253,8 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 	}
 
-
+	private void loadDashboard() {
+		OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+	}
 
 }

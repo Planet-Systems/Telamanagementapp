@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 class DashboardView extends ViewImpl implements DashboardPresenter.MyView {
@@ -14,16 +15,17 @@ class DashboardView extends ViewImpl implements DashboardPresenter.MyView {
 	private DashboardPane dashboardPane;
 	private static final String DEFAULT_MARGIN = "0px";
 	
+	private ControlsPane controlsPane;
+	
     @Inject
     DashboardView() {
-    	panel = new VLayout();
-		
-		
-		
-		dashboardPane = new DashboardPane();
+    	panel = new VLayout(); 
+    	controlsPane=new ControlsPane();
+		dashboardPane = new DashboardPane(); 
+		 
+		panel.addMember(controlsPane);
 		panel.addMember(dashboardPane);
-		
-		
+		 
 		panel.setWidth100();
 		panel.setHeight100();
 		Window.enableScrolling(false);
@@ -46,6 +48,10 @@ class DashboardView extends ViewImpl implements DashboardPresenter.MyView {
 
 	public DashboardPane getDashboardPane() {
 		return dashboardPane;
+	}
+
+	public ControlsPane getControlsPane() {
+		return controlsPane;
 	}
     
     
