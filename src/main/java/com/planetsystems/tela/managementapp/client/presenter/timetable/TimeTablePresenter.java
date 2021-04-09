@@ -407,13 +407,6 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 							//GWT.log("RECORD " + timeTableDTO);
 
-						
-							GWT.log("TIME TABLE "+timeTableDTO);
-							GWT.log("term "+timeTableDTO.getAcademicTermDTO().getId());
-							GWT.log("school "+timeTableDTO.getSchoolDTO().getId());
-							GWT.log("subject "+timeTableDTO.getTimeTableLessonDTOS().get(0).getSubjectDTO().getId());
-							GWT.log("class  "+timeTableDTO.getTimeTableLessonDTOS().get(0).getSchoolClassDTO().getId());
-							GWT.log("staff  "+timeTableDTO.getTimeTableLessonDTOS().get(0).getSchoolStaffDTO().getId());
 //						        System.out.println("timetable  "+timeTableDTO.getTimeTableLessonDTOS().get(0).getTimeTableDTO());
 							saveTimeTable(timeTableDTO, null);
 
@@ -505,12 +498,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 				GWT.log("DTO " + dto);
 				
-
-				int id = 0;
-				if (checkIfNoTimeTableLessonFieldIsEmpty(window)) {
-					String id2 = String.valueOf(++id);
-					dto.setId(id2);
-					SC.say("ID "+id2);
+				if (checkIfNoTimeTableLessonFieldIsEmpty(window)) {;
 					createTimeTablePane.getLessonListGrid().addRecordToGrid(dto);
 					clearTimeTableLessonWindow(window);
 					createTimeTablePane.getSaveButton().enable();

@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.server;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -2862,14 +2863,14 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			}
 
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DAY)
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyTimeTableLessonDTO> list = new ArrayList<StaffDailyTimeTableLessonDTO>();
 
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
-				String lessonDay = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DAY);
+				String lessonDate = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DATE);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2886,8 +2887,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.path(schoolId)
 						.path("schoolstaffs")
 						.path(schoolStaffId)
-						.path("days").path(lessonDay)
 						.path("staffDailyTimeTableLessons")
+						.queryParam("date" , lessonDate)
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>>>() {
 						});
@@ -3509,7 +3510,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			return new RequestResult(error);
 
-		} catch (ProcessingException exception) {
+		}
+		catch (ProcessingException exception) {
 			exception.printStackTrace();
 			SystemErrorDTO error = new SystemErrorDTO();
 			error.setErrorCode(8082);

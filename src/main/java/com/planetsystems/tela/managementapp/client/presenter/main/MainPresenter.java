@@ -309,20 +309,21 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 							}
 
-							if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty()
-									&& timetable.isEmpty() && generatereports.isEmpty()) {
-
-								PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.dashboard)
-										.build();
-
-								placeManager.revealPlace(placeRequest);
-
-							} else {
-
-								placeManager.revealDefaultPlace();
-
-							}
-
+							/*
+							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&
+							 * timetable.isEmpty() && generatereports.isEmpty()) {
+							 * 
+							 * PlaceRequest placeRequest = new
+							 * PlaceRequest.Builder().nameToken(NameTokens.dashboard) .build();
+							 * 
+							 * placeManager.revealPlace(placeRequest);
+							 * 
+							 * } else {
+							 * 
+							 * placeManager.revealDefaultPlace();
+							 * 
+							 * }
+							 */
 						} else {
 							SC.say("ERROR", "Unknow error");
 						}
