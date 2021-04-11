@@ -112,7 +112,7 @@ public class StaffDailyTimtablePresenter
 					buttons.add(view);
 					getView().getControlsPane().addMenuButtons(buttons);
 					showCreateTab(newButton);
-					viewTimetableLessonTab(view);
+					viewStaffDailyTimetableLessonTab(view);
 
 					ComboUtil.loadAcademicYearCombo(getView().getStaffDailyTimetablePane().getAcademicYearCombo(),
 							dispatcher, placeManager, null);
@@ -144,7 +144,7 @@ public class StaffDailyTimtablePresenter
 							});
 
 					disableEnableStaffDailyAttendancePaneLoadLessonButton();
-					getStaffDailyTimetables();
+					getStaffDailyTimetablesByAcademicYearTermDistrictSchoolDate();
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -156,7 +156,7 @@ public class StaffDailyTimtablePresenter
 		});
 	}
 
-	private void getStaffDailyTimetables() {
+	private void getStaffDailyTimetablesByAcademicYearTermDistrictSchoolDate() {
 		getView().getStaffDailyTimetablePane().getLoadAttendanceButton().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -173,9 +173,9 @@ public class StaffDailyTimtablePresenter
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
+				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY);
+						RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
 
 				
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -441,7 +441,7 @@ public class StaffDailyTimtablePresenter
 
 					staffDailyTimeTableDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-					staffDailyTimeTableDTO.setLessonDay(dayFormat.format(new Date()));
+					staffDailyTimeTableDTO.setLessonDate(dateFormat.format(new Date()));
 
 					staffDailyTimeTableDTO.setSchoolStaffDTO(new SchoolStaffDTO(staffBox.getValueAsString()));
 
@@ -452,10 +452,9 @@ public class StaffDailyTimtablePresenter
 						ListGridRecord record = records[i];
 
 						StaffDailyTimeTableLessonDTO lessonDTO = new StaffDailyTimeTableLessonDTO();
-						lessonDTO.setAttendanceStatus("present");
 						lessonDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 						lessonDTO.setUpdatedDateTime(dateTimeFormat.format(new Date()));
-						lessonDTO.setLessonDay(dayFormat.format(new Date()));
+						lessonDTO.setLessonDate(dateFormat.format(new Date()));
 						lessonDTO.setEndTime(record.getAttributeAsString(LessonListGrid.END_TIME));
 						lessonDTO.setStartTime(record.getAttributeAsString(LessonListGrid.START_TIME));
 						lessonDTO.setSchoolClassDTO(
@@ -490,7 +489,7 @@ public class StaffDailyTimtablePresenter
 
 	/////////////////////////// VIEW TAB
 
-	private void viewTimetableLessonTab(MenuButton view) {
+	private void viewStaffDailyTimetableLessonTab(MenuButton view) {
 		view.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -528,7 +527,7 @@ public class StaffDailyTimtablePresenter
 					getView().getTabSet().addTab(tab);
 					getView().getTabSet().selectTab(tab);
 
-					getStaffDailyAttendanceTasksByStaffDayStaffDailyAttendance(viewStaffDailyTimetableLessonPane,
+					getStaffDailyTimetableLessonsByStaffDailyTimetableStaffDate(viewStaffDailyTimetableLessonPane,
 							record);
 
 					closeViewStaffDailyAttendanceTaskTab(viewStaffDailyTimetableLessonPane);
@@ -540,16 +539,16 @@ public class StaffDailyTimtablePresenter
 		});
 	}
 
-	private void getStaffDailyAttendanceTasksByStaffDayStaffDailyAttendance(
+	private void getStaffDailyTimetableLessonsByStaffDailyTimetableStaffDate(
 			final ViewStaffDailyTimetableLessonPane viewStaffDailyTimetableLessonPane, final ListGridRecord record) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.SCHOOL_STAFF_ID, record.getAttribute(StaffDailyTimetableListGrid.SCHOOL_STAFF_ID));
-		map.put(RequestDelimeters.STAFF_TIMETABLE_LESSON_ID,
+		map.put(RequestDelimeters.STAFF_DAILY_TIMETALE_ID,
 				record.getAttribute(StaffDailyTimetableListGrid.ID));
-		map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
+		map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
 		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASKS_FOR_STAFF_DAY_DAILY_ATTENDANCE);
+				RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_FOR_STAFF_DATE_DAILY_TIMETABLE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

@@ -66,6 +66,7 @@ public class CreateTimeTablePane extends VLayout {
 		
 		lessonListGrid = new LessonListGrid();
 		lessonListGrid.setSelectionType(SelectionStyle.MULTIPLE);
+	
 		
 		saveButton = new IButton("Save");
         saveButton.disable();
@@ -85,7 +86,7 @@ public class CreateTimeTablePane extends VLayout {
 		
 		VLayout layout = new VLayout();
 		layout.setMembersMargin(10);
-		layout.addMembers(filterForm , addLessonButton ,lessonListGrid , buttonLayout);
+		layout.addMembers(filterForm , addLessonButton , lessonListGrid , buttonLayout);
 		
 		
 	 

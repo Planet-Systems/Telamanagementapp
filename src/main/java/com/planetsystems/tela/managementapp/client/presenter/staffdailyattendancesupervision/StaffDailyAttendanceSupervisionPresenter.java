@@ -235,7 +235,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					}
 				});
 
-				getTimeTableLessonsForStaffSchoolStaffDate(createSupervisionTaskPane);
+				getStaffDailyTimetableLessonsForStaffSchoolStaffDate(createSupervisionTaskPane);
 				displayCommentWindow(createSupervisionTaskPane);
 				closeCreateStaffDailyTaskTab(createSupervisionTaskPane);
 
@@ -263,7 +263,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 
 	}
 
-	private void getTimeTableLessonsForStaffSchoolStaffDate(
+	private void getStaffDailyTimetableLessonsForStaffSchoolStaffDate(
 			final CreateStaffDailyAttendanceTaskSupervisionPane createSupervisionTaskPane) {
 		createSupervisionTaskPane.getLoadTasksButton().addClickHandler(new ClickHandler() {
 
@@ -275,8 +275,8 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				map.put(RequestDelimeters.SCHOOL_STAFF_ID, schoolStaffId);
-				map.put(RequestDelimeters.LESSON_DAY, dayFormat.format(new Date()));
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DAY);
+				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

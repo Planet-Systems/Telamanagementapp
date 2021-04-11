@@ -23,8 +23,8 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 	public static final String START_TIME = "startTime";
 	public static final String END_TIME = "endTime";
 	
-	public static final String ATTENDANCE_STATUS = "attendanceStatus";
-	public static final String LESSON_DAY = "lessonDay";
+	public static final String LESSON_STATUS = "lessonStatus";
+	public static final String LESSON_DATE = "lessonDate";
 	
 	StaffDailyTimeTableLessonDTODataSource dataSource;
 	
@@ -38,11 +38,11 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 		ListGridField idField = new ListGridField(ID , "Id");
 		idField.setHidden(true);
 		
-		ListGridField staffDailyAttendanceIdField = new ListGridField(STAFF_DAILY_TIME_TABLE_ID, "Id");
-		staffDailyAttendanceIdField.setHidden(true);
+		ListGridField staffDailyTimetableIdField = new ListGridField(STAFF_DAILY_TIME_TABLE_ID, "Id");
+		staffDailyTimetableIdField.setHidden(true);
 
-		ListGridField attendanceDateField = new ListGridField(LESSON_DAY, "LessonDay");
-		attendanceDateField.setHidden(true);
+		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "LessonDate");
+		lessonDateField.setHidden(true);
 
 		ListGridField classField = new ListGridField(CLASS, "Class");
 		ListGridField classIdField = new ListGridField(CLASS_ID, "ClassId");
@@ -55,10 +55,10 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 		ListGridField startTimeField = new ListGridField(START_TIME, "Start Time");
 		ListGridField endTimeField = new ListGridField(END_TIME, "End Time");
 
-		ListGridField attendanceStatusField = new ListGridField(ATTENDANCE_STATUS, "AttendanceStatus");
+		ListGridField lessonStatusField = new ListGridField(LESSON_STATUS, "LessonStatus");
 
-		this.setFields(staffDailyAttendanceIdField, attendanceDateField, classField, subjectField, startTimeField,
-				endTimeField, attendanceStatusField);
+		this.setFields(staffDailyTimetableIdField, lessonDateField, classField, subjectField, startTimeField,
+				endTimeField, lessonStatusField);
 
 		this.setDataSource(dataSource);
 	}
@@ -66,8 +66,8 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 	public ListGridRecord addRowData(StaffDailyTimeTableLessonDTO staffDailyTimeTableLessonDTO) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, staffDailyTimeTableLessonDTO.getId());
-		record.setAttribute(LESSON_DAY , staffDailyTimeTableLessonDTO.getLessonDay());
-		record.setAttribute(ATTENDANCE_STATUS , staffDailyTimeTableLessonDTO.getAttendanceStatus());
+		record.setAttribute(LESSON_DATE , staffDailyTimeTableLessonDTO.getLessonDate());
+		record.setAttribute(LESSON_STATUS , staffDailyTimeTableLessonDTO.getDailyTimeTableLessonStatus());
 
 		record.setAttribute(START_TIME, staffDailyTimeTableLessonDTO.getStartTime());
 		record.setAttribute(END_TIME, staffDailyTimeTableLessonDTO.getEndTime());
@@ -128,8 +128,8 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 			DataSourceTextField staffDailyAttendanceIdField = new DataSourceTextField(STAFF_DAILY_TIME_TABLE_ID , "Id");
 			staffDailyAttendanceIdField.setHidden(true);
 
-			DataSourceTextField attendanceDateField = new DataSourceTextField(LESSON_DAY, "LessonDate");
-			attendanceDateField.setHidden(true);
+			DataSourceTextField lessonDateField = new DataSourceTextField(LESSON_DATE, "LessonDate");
+			lessonDateField.setHidden(true);
 
 			DataSourceTextField classField = new DataSourceTextField(CLASS, "Class");
 			DataSourceTextField classIdField = new DataSourceTextField(CLASS_ID, "ClassId");
@@ -142,10 +142,10 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 			DataSourceTextField startTimeField = new DataSourceTextField(START_TIME, "Start Time");
 			DataSourceTextField endTimeField = new DataSourceTextField(END_TIME, "End Time");
 
-			DataSourceTextField attendanceStatusField = new DataSourceTextField(ATTENDANCE_STATUS, "AttendanceStatus");
+			DataSourceTextField lessonStatusField = new DataSourceTextField(LESSON_STATUS, "LessonStatus");
 		
 
-			this.setFields(staffDailyAttendanceIdField , attendanceDateField, classField, subjectField, startTimeField, endTimeField, attendanceStatusField);
+			this.setFields(staffDailyAttendanceIdField , lessonDateField, classField, subjectField, startTimeField, endTimeField, lessonStatusField);
 		
 			setClientOnly(true);
 

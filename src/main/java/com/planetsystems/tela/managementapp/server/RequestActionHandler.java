@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.server;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -2822,7 +2823,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			} else if (action.getRequest().equalsIgnoreCase(
-					RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DAY)
+					RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyTimeTableDTO> list = new ArrayList<StaffDailyTimeTableDTO>();
@@ -2831,7 +2832,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
 				String districtId = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
-				String lessonDay = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DAY);
+				String lessonDate = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DATE);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2839,16 +2840,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				/*
-				 * http://localhost:8070/academicyears/1/academicterms/2c9180866ff5c74b01700ab38a410111/districts/8a0080826522e0f601652ef26af8001b
-				 * /schools/8a008082648d961401648dadbf0f0003/staffdailyattendances?attendanceDate=17/03/2021
-				 */
 
 				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
 						.path("academicyears").path(academicYearId).path("academicterms").path(academicTermId)
 						.path("districts").path(districtId).path("schools").path(schoolId)
-						.path("days").path(lessonDay)
 						.path("staffDailyTimeTables")
+						.queryParam("date", lessonDate)
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<StaffDailyTimeTableDTO>>>() {
 						});
@@ -2866,14 +2863,14 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			}
 
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DAY)
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyTimeTableLessonDTO> list = new ArrayList<StaffDailyTimeTableLessonDTO>();
 
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
-				String lessonDay = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DAY);
+				String lessonDate = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DATE);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2890,8 +2887,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.path(schoolId)
 						.path("schoolstaffs")
 						.path(schoolStaffId)
-						.path("days").path(lessonDay)
 						.path("staffDailyTimeTableLessons")
+						.queryParam("date" , lessonDate)
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>>>() {
 						});
@@ -2909,14 +2906,14 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			}
 
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASKS_FOR_STAFF_DAY_DAILY_ATTENDANCE)
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_FOR_STAFF_DATE_DAILY_TIMETABLE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyTimeTableLessonDTO> list = new ArrayList<StaffDailyTimeTableLessonDTO>();
 
-				String staffDailyAttendanceId = (String) action.getRequestBody().get(RequestDelimeters.STAFF_TIMETABLE_LESSON_ID);
+				String staffDailyTimetableId = (String) action.getRequestBody().get(RequestDelimeters.STAFF_DAILY_TIMETALE_ID);
 				String schoolStaffId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
-				String lessonDay = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DAY);
+				String lessonDate = (String) action.getRequestBody().get(RequestDelimeters.LESSON_DATE);
 
 				Client client = ClientBuilder.newClient();
 
@@ -2925,16 +2922,16 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/*
-				 * /staffdailyattendances/{staffDailyAttendanceId}/schoolstaffs/{staff}/staffdailyattendancestasks
+				 * /staffdailytimetables/{dailytimetable}/schoolstaffs/{staff}/staffDailyTimeTableLessons
 				 */
 
 				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
-						.path("staffdailyattendances")
-						.path(staffDailyAttendanceId)
+						.path("staffdailytimetables")
+						.path(staffDailyTimetableId)
 						.path("schoolstaffs")
 						.path(schoolStaffId)
-						.path("days").path(lessonDay)
 						.path("staffDailyTimeTableLessons")
+						.queryParam("date", lessonDate)
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>>>() {
 						});
@@ -3513,7 +3510,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			return new RequestResult(error);
 
-		} catch (ProcessingException exception) {
+		}
+		catch (ProcessingException exception) {
 			exception.printStackTrace();
 			SystemErrorDTO error = new SystemErrorDTO();
 			error.setErrorCode(8082);
