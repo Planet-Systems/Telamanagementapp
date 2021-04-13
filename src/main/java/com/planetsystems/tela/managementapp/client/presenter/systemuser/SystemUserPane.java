@@ -2,6 +2,8 @@ package com.planetsystems.tela.managementapp.client.presenter.systemuser;
 
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.SelectionAppearance;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
 

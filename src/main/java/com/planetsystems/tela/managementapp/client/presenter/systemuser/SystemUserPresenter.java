@@ -23,28 +23,35 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.NavigationMenuDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SubMenuItemDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserProfileDTO;
+import com.planetsystems.tela.dto.SystemUserProfileSchoolDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
@@ -103,7 +110,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 				String selectedTab = event.getTab().getTitle();
 
-				if (selectedTab.equalsIgnoreCase("System user groups")) {
+				if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_USER_GROUPS)) {
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -123,18 +130,22 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					loadUserGroups();
 					loaSystemUserMenu(permissions);
 
-				} else if (selectedTab.equalsIgnoreCase("System user details")) {
+				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_USER_PROFILES)) {
 
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton details = new MenuButton("Details");
+					MenuButton permission = new MenuButton("Permissions");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					buttons.add(delete);
 					buttons.add(details);
+					buttons.add(permission);
+					
+					addSystemUserPermission(permission);
 
 					getView().getControlsPane().addMenuButtons("System user details", buttons);
 
@@ -144,7 +155,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					// onDeleteButtonCLicked(delete);
 					// onDetailsButtonCLicked(details);
 					loadUserDetails();
-				} else if (selectedTab.equalsIgnoreCase("System Menu Setup")) {
+				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_MENU_SETUP)) {
 
 					MenuButton newButton = new MenuButton("New");
 					MenuButton delete = new MenuButton("Delete");
@@ -160,8 +171,151 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				}
 
 			}
+
+			
 		});
 	}
+	
+	
+	////personal user permissions
+	private void addSystemUserPermission(MenuButton permission) {
+      permission.addClickHandler(new ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent event) {
+            if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
+            	final ListGridRecord record = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
+            	final SystemUserProfilePermissionWindow window = new SystemUserProfilePermissionWindow();
+            	
+            	window.setTitle("Add Permission to "+record.getAttribute(SystemUserListGrid.EMAIL));
+         
+            	getSchoolsBySystemUserProfile(window, record);
+            	
+            	
+    			window.show();	
+    			showFilterSchoolsRegionDistrictWindow(window);
+    			window.getSystemUserSchoolPane().getUserSchoolButton().addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						getSchoolsBySystemUserProfile(window , record);
+					}
+				});
+    			
+    			addUserSchools(window);
+    		
+			}else {
+				SC.say("Please a user to add permissions");
+			}
+			
+		}
+
+
+	});
+		
+	}
+	
+	private void addUserSchools(final SystemUserProfilePermissionWindow window) {
+     window.getSaveButton().addClickHandler(new ClickHandler() {
+		
+		@Override
+		public void onClick(ClickEvent event) {
+			if(window.getSystemUserSchoolPane().getSchoolListGrid().anySelected()) {
+				ListGridRecord[] records = window.getSystemUserSchoolPane().getSchoolListGrid().getSelectedRecords();
+				List<SystemUserProfileSchoolDTO> userProfileSchoolDTOs = new ArrayList<SystemUserProfileSchoolDTO>();
+				final ListGridRecord systemUserRecord = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
+				SystemUserProfileDTO profileDTO = new SystemUserProfileDTO(systemUserRecord.getAttribute(SystemUserListGrid.ID));
+				
+				for (int i = 0; i < records.length; i++) {
+					ListGridRecord schoolRecord = records[i];
+					SystemUserProfileSchoolDTO dto = new SystemUserProfileSchoolDTO();
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+				    dto.setSchoolDTO(new SchoolDTO(schoolRecord.getAttribute(SchoolListGrid.ID)));
+				    dto.setSystemUserProfileDTO(profileDTO);
+				    
+					userProfileSchoolDTOs.add(dto);
+				}
+//				SC.say("SIZE "+userProfileSchoolDTOs.size()+ profileDTO.getId());
+				
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(NetworkDataUtil.ACTION	, RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS);
+				map.put(RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS , userProfileSchoolDTOs);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+					
+					@Override
+					public void onNetworkResult(RequestResult result) {
+					 getSchoolsBySystemUserProfile(window, systemUserRecord);	
+					}
+				});
+				
+				
+			}else {
+				SC.say("Please select school/s to add");
+			}
+			
+		}
+	});
+		
+	}
+	
+	public void getSchoolsBySystemUserProfile(final SystemUserProfilePermissionWindow window , ListGridRecord record) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE);
+		map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID, record.getAttribute(SystemUserListGrid.ID));
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+			 window.getSystemUserSchoolPane().getSchoolListGrid().addRecordsToGrid(result.getSchoolDTOs());		
+			}
+		});
+	}
+	
+	private void showFilterSchoolsRegionDistrictWindow(final SystemUserProfilePermissionWindow profilePermissionWindow) {
+		profilePermissionWindow.getSystemUserSchoolPane().getAddButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				final FilterSchoolsRegionDistrictWindow regionDistrictWindow = new FilterSchoolsRegionDistrictWindow();
+				final String defaultValue = null;
+				ComboUtil.loadRegionCombo(regionDistrictWindow.getFilterRegionDistrict().getRegionCombo() , dispatcher, placeManager, defaultValue);
+				regionDistrictWindow.getFilterRegionDistrict().getRegionCombo().addChangedHandler(new ChangedHandler() {
+					
+					@Override
+					public void onChanged(ChangedEvent event) {
+						ComboUtil.loadDistrictComboByRegion(regionDistrictWindow.getFilterRegionDistrict().getRegionCombo(), regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo(), dispatcher, placeManager, defaultValue);
+					}
+				});
+				
+				regionDistrictWindow.getLoadSchoolsButton().addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						if (regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo().getValueAsString() != null) {
+							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+							map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS_IN_DISTRICT);
+							map.put(RequestDelimeters.DISTRICT_ID, regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo().getValueAsString());
+							NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+								
+								@Override
+								public void onNetworkResult(RequestResult result) {
+									profilePermissionWindow.getSystemUserSchoolPane().getSchoolListGrid().addRecordsToGrid(result.getSchoolDTOs());
+									if (!result.getSchoolDTOs().isEmpty())
+										profilePermissionWindow.getSaveButton().enable();
+								}
+							});
+						}else {
+							SC.say("Please select a district");
+						}
+						
+					}
+				});
+				
+				regionDistrictWindow.show();
+			}
+		});
+	}
+	
 
 	// Systems user groups setup
 
