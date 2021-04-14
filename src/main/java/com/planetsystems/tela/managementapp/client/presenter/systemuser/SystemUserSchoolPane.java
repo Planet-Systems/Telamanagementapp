@@ -14,6 +14,7 @@ public class SystemUserSchoolPane  extends VLayout{
 
 	private IButton userSchoolButton;
 	private IButton addButton;
+	private IButton deleteButton;
 	private SchoolListGrid schoolListGrid;
 	
 	
@@ -28,10 +29,11 @@ public class SystemUserSchoolPane  extends VLayout{
         controlButtonLayout.setAutoHeight();
         controlButtonLayout.setAutoWidth();
         
-    	userSchoolButton = new IButton("User Schools");
+    	userSchoolButton = new IButton("Load User Schools");
     	addButton = new IButton("Add");
+    	deleteButton = new IButton("Delete");
     	
-    	controlButtonLayout.setMembers(userSchoolButton , addButton);
+    	controlButtonLayout.setMembers(userSchoolButton , deleteButton , addButton);
 		
     	 schoolListGrid = new SchoolListGrid();
     	 schoolListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
@@ -60,6 +62,12 @@ public class SystemUserSchoolPane  extends VLayout{
 
 	public SchoolListGrid getSchoolListGrid() {
 		return schoolListGrid;
+	}
+
+
+
+	public IButton getDeleteButton() {
+		return deleteButton;
 	}
 	
 	

@@ -102,7 +102,6 @@ public class SchoolCategoryPresenter
 		super.onBind();
 		onTabSelected();
 		getAllSchoolCategories();
-		getAllSchools();
 		getAllSchoolClasses();
 	}
 
@@ -156,6 +155,7 @@ public class SchoolCategoryPresenter
 					addSchool(newButton);
 					deleteSchool(delete);
 					editSchool(edit);
+					getAllSchools();
 					selectFilterSchoolOption(filter);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CLASSES_TAB_TITLE)) {
@@ -438,9 +438,9 @@ public class SchoolCategoryPresenter
 
 	private void getAllSchoolCategories() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL_CATEGORY, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CATEGORY);
-
+//		map.put(RequestConstant.GET_SCHOOL_CATEGORY, null);
+//		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CATEGORY);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CATEGORIES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -719,8 +719,9 @@ public class SchoolCategoryPresenter
 
 	private void getAllSchools() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL);
+		map.put(RequestConstant.GET_SCHOOLS, null);
+		//map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -1000,8 +1001,8 @@ public class SchoolCategoryPresenter
 
 	private void getAllSchoolClasses() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL_CLASS, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASS);
+//		map.put(RequestConstant.GET_SCHOOL_CLASS, null);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

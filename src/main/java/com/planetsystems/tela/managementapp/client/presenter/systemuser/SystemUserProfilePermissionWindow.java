@@ -24,7 +24,10 @@ public class SystemUserProfilePermissionWindow extends Window {
 		Tab tab1 = new Tab("Select User Schools");
 		tab1.setPane(systemUserSchoolPane);
 		
+		Tab tab2 = new Tab("Other");
+		
 		tabSet.addTab(tab1);
+		tabSet.addTab(tab2);
 	    
 		 cancelButton = new IButton("Close");
 	        cancelButton.setLayoutAlign(Alignment.CENTER);

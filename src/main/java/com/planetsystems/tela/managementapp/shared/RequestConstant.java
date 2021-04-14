@@ -27,12 +27,14 @@ public class RequestConstant {
 	public static final String SAVE_REGION = "SAVE_REGION";
 	public static final String UPDATE_REGION = "UPDATE_REGION";
 	public static final String DELETE_REGION = "DELETE_REGION";
-	public static final String GET_REGION = "GET_REGION";
+	public static final String GET_REGION = "GET_REGION";//associated handler block to be removed
+	public static final String GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS";
 
 	public static final String SAVE_DISTRICT = "SAVE_DISTRICT";
 	public static final String UPDATE_DISTRICT = "UPDATE_DISTRICT";
 	public static final String DELETE_DISTRICT = "DELETE_DISTRICT";
-	public static final String GET_DISTRICT = "GET_DISTRICT";
+	public static final String GET_DISTRICT = "GET_DISTRICT";//associated handler block to be deleted
+	public static final String GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS";
 	public static final String GET_DISTRICTS_IN_REGION = "GET_DISTRICTS_IN_REGION";
 	public static final String FILTER_DISTRICTS_BY_REGION = "FILTER_DISTRICTS_BY_REGION";
 
@@ -40,12 +42,13 @@ public class RequestConstant {
 	public static final String SAVE_SCHOOL_CATEGORY = "SAVE_SCHOOL_CATEGORY";
 	public static final String UPDATE_SCHOOL_CATEGORY = "UPDATE_SCHOOL_CATEGORY";
 	public static final String DELETE_SCHOOL_CATEGORY = "DELETE_SCHOOL_CATEGORY";
-	public static final String GET_SCHOOL_CATEGORY = "GET_SCHOOL_CATEGORY";
+	public static final String GET_SCHOOL_CATEGORY = "GET_SCHOOL_CATEGORY";//associated handler block to be removed
+	public static final String GET_SCHOOL_CATEGORIES_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_SCHOOL_CATEGORIES_BY_SYSTEM_USER_PROFILE_SCHOOLS";
 
 	public static final String SAVE_SCHOOL = "SAVE_SCHOOL";
 	public static final String UPDATE_SCHOOL = "UPDATE_SCHOOL";
 	public static final String DELETE_SCHOOL = "DELETE_SCHOOL";
-	public static final String GET_SCHOOL = "GET_SCHOOL";
+	public static final String GET_SCHOOLS = "GET_SCHOOLS";
 	public static final String GET_SCHOOLS_IN_DISTRICT = "GET_SCHOOLS_IN_DISTRICT";
 	public static final String GET_SCHOOLS_IN_SCHOOL_CATEGORY_DISTRICT = "GET_SCHOOLS_IN_SCHOOL_CATEGORY_DISTRICT";
 	public static final String GET_SCHOOLS_BY_SYSTEM_USER_PROFILE = "GET_SCHOOLS_BY_SYSTEM_USER_PROFILE";
@@ -54,7 +57,8 @@ public class RequestConstant {
 	public static final String SAVE_SCHOOL_CLASS = "SAVE_SCHOOL_CLASS";
 	public static final String UPDATE_SCHOOL_CLASS = "UPDATE_SCHOOL_CLASS";
 	public static final String DELETE_SCHOOL_CLASS = "DELETE_SCHOOL_CLASS";
-	public static final String GET_SCHOOL_CLASS = "GET_SCHOOL_CLASS";
+	public static final String GET_SCHOOL_CLASS = "GET_SCHOOL_CLASS"; //ASSOCIATED HANDLER BLOCK TO BE REMOVED
+	public static final String GET_SCHOOL_CLASSES_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_SCHOOL_CLASSES_BY_SYSTEM_USER_PROFILE_SCHOOLS";
 	public static final String GET_SCHOOL_CLASSES_IN_SCHOOL = "GET_SCHOOL_CLASSES_IN_SCHOOL";
 	public static final String GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM = "GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM";
 	public static final String FILTER_SCHOOL_CLASS_BY_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL = "FILTER_SCHOOL_CLASS_BY_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL";
@@ -187,7 +191,10 @@ public class RequestConstant {
 	
 	
 	public static final String SAVE_SYSTEM_USER_PROFILE_SCHOOLS = "SAVE_SYSTEM_USER_PROFILE_SCHOOLS";
+	public static final String DELETE_SYSTEM_USER_PROFILE_SCHOOLS = "DELETE_SYSTEM_USER_PROFILE_SCHOOLS";
 
+	public static final String DATA = "DATA";
+	
 
 
 }

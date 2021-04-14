@@ -114,7 +114,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					MenuButton permissions = new MenuButton("Permissions");
+					
+					MenuButton permissions = new MenuButton("Manage User");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -202,6 +203,43 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					}
 				});
     			
+    			window.getSystemUserSchoolPane().getDeleteButton().addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						if (window.getSystemUserSchoolPane().getSchoolListGrid().anySelected()) {
+							SC.confirm("Are Sure to remove this schools ", new BooleanCallback() {
+								
+								@Override
+								public void execute(Boolean value) {
+									if (value) {
+										ListGridRecord[] records = window.getSystemUserSchoolPane().getSchoolListGrid().getSelectedRecords();
+										List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
+										for (int i = 0; i < records.length; i++) {
+											schoolDTOs.add(new SchoolDTO(records[i].getAttribute(SchoolListGrid.ID)));
+										}
+										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+										map.put(NetworkDataUtil.ACTION	, RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS);
+										map.put(RequestConstant.DATA , schoolDTOs);
+										
+										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+											
+											@Override
+											public void onNetworkResult(RequestResult result) {
+												getSchoolsBySystemUserProfile(window, record);
+											}
+										});
+											
+									}
+								}
+							});
+	
+						}else {
+							SC.say("Select Schools to delete from your account");
+						}
+					}
+				});
+    			
     			addUserSchools(window);
     		
 			}else {
@@ -221,25 +259,20 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		@Override
 		public void onClick(ClickEvent event) {
 			if(window.getSystemUserSchoolPane().getSchoolListGrid().anySelected()) {
+
 				ListGridRecord[] records = window.getSystemUserSchoolPane().getSchoolListGrid().getSelectedRecords();
-				List<SystemUserProfileSchoolDTO> userProfileSchoolDTOs = new ArrayList<SystemUserProfileSchoolDTO>();
+				List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
 				final ListGridRecord systemUserRecord = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
-				SystemUserProfileDTO profileDTO = new SystemUserProfileDTO(systemUserRecord.getAttribute(SystemUserListGrid.ID));
 				
 				for (int i = 0; i < records.length; i++) {
 					ListGridRecord schoolRecord = records[i];
-					SystemUserProfileSchoolDTO dto = new SystemUserProfileSchoolDTO();
-					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-				    dto.setSchoolDTO(new SchoolDTO(schoolRecord.getAttribute(SchoolListGrid.ID)));
-				    dto.setSystemUserProfileDTO(profileDTO);
-				    
-					userProfileSchoolDTOs.add(dto);
+				    schoolDTOs.add(new SchoolDTO(schoolRecord.getAttribute(SchoolListGrid.ID)));
 				}
 //				SC.say("SIZE "+userProfileSchoolDTOs.size()+ profileDTO.getId());
 				
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(NetworkDataUtil.ACTION	, RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS);
-				map.put(RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS , userProfileSchoolDTOs);
+				map.put(RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS , schoolDTOs);
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 					
 					@Override
@@ -247,7 +280,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					 getSchoolsBySystemUserProfile(window, systemUserRecord);	
 					}
 				});
-				
+
 				
 			}else {
 				SC.say("Please select school/s to add");
@@ -261,7 +294,6 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	public void getSchoolsBySystemUserProfile(final SystemUserProfilePermissionWindow window , ListGridRecord record) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE);
-		map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID, record.getAttribute(SystemUserListGrid.ID));
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 			
 			@Override

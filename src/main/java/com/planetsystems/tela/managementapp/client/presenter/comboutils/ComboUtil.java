@@ -417,13 +417,13 @@ public class ComboUtil {
 	public static void loadSchoolCombo(final ComboBox schoolCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL);
+		map.put(RequestConstant.GET_SCHOOLS, null);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
 
 //		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 //		SC.showPrompt("", "", new SwizimaLoader());
 //
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL, map), new AsyncCallback<RequestResult>() {
+//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOLS, map), new AsyncCallback<RequestResult>() {
 //
 //			@Override
 //			public void onFailure(Throwable caught) {

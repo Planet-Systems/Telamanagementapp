@@ -362,8 +362,9 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	private void getAllRegions() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_REGION, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
+//		map.put(RequestConstant.GET_REGION, null);
+//		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -583,8 +584,10 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	private void getAllDistricts() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_DISTRICT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
+//		map.put(RequestConstant.GET_DISTRICT, null);
+		
+//		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

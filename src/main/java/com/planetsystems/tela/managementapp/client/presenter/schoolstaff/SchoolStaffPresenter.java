@@ -232,7 +232,7 @@ public class SchoolStaffPresenter extends Presenter<SchoolStaffPresenter.MyView,
 	
 	private void loadSchoolCombo(final SchoolStaffWindow window, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL, null);
+		map.put(RequestConstant.GET_SCHOOLS, null);
 
 		ComboUtil.loadSchoolCombo(window.getSchoolComboBox() , dispatcher , placeManager , defaultValue);
 		
