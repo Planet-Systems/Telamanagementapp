@@ -376,8 +376,8 @@ public class StaffAttendancePresenter
 
 	private void getAllStaffClockIn() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_CLOCK_IN, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_IN);
+
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -438,7 +438,7 @@ public class StaffAttendancePresenter
 	private void getAllStaffClockOut() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_CLOCK_OUT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUT);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

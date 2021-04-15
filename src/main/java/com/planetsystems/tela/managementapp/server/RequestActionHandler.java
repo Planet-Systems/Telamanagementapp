@@ -946,7 +946,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("SystemUserProfileSchools")
+				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
+						.path("Schools")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
 						});
@@ -1161,16 +1162,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
-//				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-				// schools/ff80818177f1b9680177f1c1f6960007/schoolclasses
-				// /schools/{id}/schoolclasses
-				///SystemUserProfile/SchoolClasses
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
 						.path("SchoolClasses").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
@@ -1589,7 +1586,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_STAFF)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SchoolStaffDTO> list = new ArrayList<SchoolStaffDTO>();
@@ -1600,7 +1597,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("schoolstaffs")
+				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile").path("SchoolStaffs")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
 						});
@@ -1815,7 +1812,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_ENROLLMENT)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_STAFF_ENROLLMENTS_SYSTEM_USER_PROFILE_SCHOOLS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffEnrollmentDto> list = new ArrayList<StaffEnrollmentDto>();
@@ -1827,7 +1824,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK)
-						.path("staffenrollments").request(MediaType.APPLICATION_JSON).headers(headers)
+						.path("SystemUserProfile").path("StaffEnrollments").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<StaffEnrollmentDto>>>() {
 						});
 
@@ -1992,7 +1989,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LEARNER_ENROLLMENT)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LEARNER_ENROLLMENTS_BY_SYSTEM_USER_PROFILE_SCHOOLS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<LearnerEnrollmentDTO> list = new ArrayList<LearnerEnrollmentDTO>();
@@ -2004,7 +2001,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK)
-						.path("learnerenrollments").request(MediaType.APPLICATION_JSON).headers(headers)
+						.path("SystemUserProfile").path("LearnerEnrollments").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<LearnerEnrollmentDTO>>>() {
 						});
 
@@ -2165,7 +2162,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_CLOCK_IN)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<ClockInDTO> list = new ArrayList<ClockInDTO>();
@@ -2176,7 +2173,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("clockins")
+				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile").path("ClockIns")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<ClockInDTO>>>() {
 						});
@@ -2375,7 +2372,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_CLOCK_OUT)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<ClockOutDTO> list = new ArrayList<ClockOutDTO>();
@@ -2386,7 +2383,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("clockouts")
+				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile").path("ClockOuts")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<ClockOutDTO>>>() {
 						});
@@ -2589,7 +2586,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LEARNER_ATTENDANCE)
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LEARNER_ATTENDANCES_BY_SYSTEM_USER_PROFILE_SCHOOLS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<LearnerAttendanceDTO> list = new ArrayList<LearnerAttendanceDTO>();
@@ -2601,7 +2598,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK)
-						.path("learnerattendances").request(MediaType.APPLICATION_JSON).headers(headers)
+						.path("SystemUserProfile").path("LearnerAttendances").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<LearnerAttendanceDTO>>>() {
 						});
 

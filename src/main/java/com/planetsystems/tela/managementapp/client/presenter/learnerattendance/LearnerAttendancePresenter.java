@@ -344,8 +344,7 @@ public class LearnerAttendancePresenter
 
 	private void getAllLearnerAttendance() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_LEARNER_ATTENDANCE, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCE);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

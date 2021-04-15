@@ -330,7 +330,7 @@ public class LearnerEnrollmentPresenter
 	private void getAllLearnerEnrollments() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_LEARNER_ENROLLMENT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ENROLLMENT);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ENROLLMENTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

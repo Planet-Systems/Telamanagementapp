@@ -473,8 +473,7 @@ public class StaffEnrollmentPresenter
 
 	private void getAllStaffEnrollments() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_STAFF_ENROLLMENT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_ENROLLMENT);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_ENROLLMENTS_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -654,7 +653,7 @@ public class StaffEnrollmentPresenter
 	private void getAllSchoolStaff() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_STAFF);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
