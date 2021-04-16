@@ -168,7 +168,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 						map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 						map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
-						map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_IN_SCHOOL_DATE);
+						map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE);
 
 						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -519,7 +519,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.ID));
 		map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
 		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_FOR_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION);
+				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

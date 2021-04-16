@@ -175,7 +175,7 @@ public class StaffDailyTimtablePresenter
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
+						RequestConstant.GET_STAFF_DAILY_TIMETABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
 
 				
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -548,7 +548,7 @@ public class StaffDailyTimtablePresenter
 				record.getAttribute(StaffDailyTimetableListGrid.ID));
 		map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
 		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_FOR_STAFF_DATE_DAILY_TIMETABLE);
+				RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_DAILY_TIMETABLE_SCHOOL_STAFF_DATE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

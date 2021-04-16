@@ -593,8 +593,8 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	private void getAllTimeTables() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_TIME_TABLES, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLES);
+//		map.put(RequestConstant.GET_TIME_TABLES, null);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
