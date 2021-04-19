@@ -15,7 +15,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler; 
+import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -29,6 +29,9 @@ import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 @SuppressWarnings("deprecation")
 public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, DashboardPresenter.MyProxy> {
@@ -42,6 +45,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	interface MyView extends View {
 
 		public DashboardPane getDashboardPane();
+
 		public ControlsPane getControlsPane();
 	}
 
@@ -66,11 +70,12 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		migrateData();
 		migrateAttendanceData();
 		migrateTimeTablesData();
-		loadDashboard();
+
 		loadMenuButtons();
+
+		loadDashboard();
 	}
-	
-	
+
 	private void loadMenuButtons() {
 
 		MenuButton filterButton = new MenuButton("Filter");
@@ -78,7 +83,9 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		getView().getControlsPane().addTitle("Dashboard");
 		getView().getControlsPane().addMember(filterButton);
 		getView().getControlsPane().addMember(refreshButton);
-	  
+
+		showFilter(filterButton);
+		refresh(refreshButton);
 
 	}
 
@@ -255,6 +262,76 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 	private void loadDashboard() {
 		OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+	}
+
+	private void showFilter(final MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				final Menu menu = new Menu();
+
+				MenuItem item1 = new MenuItem("View Enrollment Dashboard");
+				MenuItem item2 = new MenuItem("View Attendance Dashboard");
+				MenuItem item3 = new MenuItem("View Enrollment Over Time Dashboard");
+				MenuItem item4 = new MenuItem("View Attendance Over Time Dashboard");
+				MenuItem item5 = new MenuItem("Advanced Filter");
+
+				menu.setItems(item1, item2, item3, item4, item5);
+
+				menu.showNextTo(button, "bottom");
+
+				item1.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+					}
+				});
+
+				item2.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						OverallAttendanceDashboardGenerator.getInstance()
+								.generateDashboard(getView().getDashboardPane());
+					}
+				});
+
+				item3.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+						OverallImpactDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+					}
+				});
+
+				item4.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						OverallAttendanceImpactDashboardGenerator.getInstance()
+								.generateDashboard(getView().getDashboardPane());
+					}
+				});
+
+			}
+		});
+	}
+
+	private void refresh(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+
+			}
+		});
 	}
 
 }
