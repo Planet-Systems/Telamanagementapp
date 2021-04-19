@@ -27,7 +27,14 @@ import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUti
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
-import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolClassListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.schoolclass.SchoolClassListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.category.SubjectCategoryListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.category.SubjectCategoryPane;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.category.SubjectCategoryWindow;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.subject.FilterSubjectWindow;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.subject.SubjectListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.subject.SubjectPane;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.subject.SubjectWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;

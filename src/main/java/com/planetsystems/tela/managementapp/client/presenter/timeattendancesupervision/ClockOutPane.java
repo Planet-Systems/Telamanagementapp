@@ -1,7 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.timeattendancesupervision;
 
 import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterYearTermDistrictSchoolDate;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.ClockOutListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockout.ClockOutListGrid;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.layout.HLayout;

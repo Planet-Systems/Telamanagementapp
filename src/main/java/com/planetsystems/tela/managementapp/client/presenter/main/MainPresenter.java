@@ -19,6 +19,7 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.NavigationMenuDTO;
+import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationData;
@@ -32,6 +33,8 @@ import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableDataSourc
 import com.planetsystems.tela.managementapp.client.menu.SystemUserData;
 import com.planetsystems.tela.managementapp.client.menu.SystemUserDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.MainStatusBar;
 import com.planetsystems.tela.managementapp.client.widget.Masthead;
 import com.planetsystems.tela.managementapp.client.widget.NavigationPane;
@@ -85,8 +88,11 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		super.onBind();
 		manageUserProfile(Cookies.getCookie(RequestConstant.USERNAME), "");
 		// loadMenu();
-		loadSystemUserMenu();
+		//loadSystemUserMenu();
+		loadLoggedInSystemUserMenu();
 	}
+
+	
 
 	@Override
 	protected void onReset() {
@@ -193,13 +199,114 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		});
 
 	}
+	
+	private void loadLoggedInSystemUserMenu() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION ,RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				//grouping menus , wish it was j8+
+				List<String> systemConfig = new ArrayList<String>();
+				List<String> enrollemnt = new ArrayList<String>();
+				List<String> attendance = new ArrayList<String>();
+				List<String> timetable = new ArrayList<String>();
+				List<String> systemusers = new ArrayList<String>();
+				List<String> generatereports = new ArrayList<String>();
+				
+				if (result.getSystemMenuDTOs().isEmpty()) {
+					SC.say("You don have any menu");
+				}else {
+			
+				List<SystemMenuDTO> systemMenuDTOs = result.getSystemMenuDTOs();
+	
+				for (SystemMenuDTO systemMenuDTO : systemMenuDTOs) {
+					if(systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu()))
+						systemConfig.add(systemMenuDTO.getSubMenuItem());
+					
+					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu()))
+						enrollemnt.add(systemMenuDTO.getSubMenuItem());
+					
+					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu()))
+						attendance.add(systemMenuDTO.getSubMenuItem());
+					
+					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu()))
+						systemusers.add(systemMenuDTO.getSubMenuItem());
+					
+					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu()))
+						timetable.add(systemMenuDTO.getSubMenuItem());
+					
+					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu()))
+						generatereports.add(systemMenuDTO.getSubMenuItem());
+						
+				}
+				
+				
+				if (!systemConfig.isEmpty()) {
+					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
+							SystemAdministrationDataSource
+									.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
+					getView().getNavigationPane().addRecordClickHandler(
+							RequestConstant.SYSTEM_CONFIGURATION, new NavigationPaneClickHandler());
+				}
+				
+				
+				if (!enrollemnt.isEmpty()) {
+
+					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
+							SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords()));
+
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
+							new NavigationPaneClickHandler());
+				}
+				
+				
+				if (!attendance.isEmpty()) {
+
+					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
+							SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords()));
+
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
+							new NavigationPaneClickHandler());
+
+				}
+				
+				
+				if (!timetable.isEmpty()) {
+
+					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
+							SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords()));
+
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
+							new NavigationPaneClickHandler());
+
+				}
+				
+				
+				if (!systemusers.isEmpty()) {
+					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
+							SystemUserDataSource.getInstance(SystemUserData.getNewRecords()));
+
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
+							new NavigationPaneClickHandler());
+				}
+
+				if (!generatereports.isEmpty()) {
+
+				}
+					
+				
+				}}
+		});
+	}
 
 	private void loadSystemUserMenu() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_LOGEDIN_USER_SystemMENU, map),
+		dispatcher.execute(new RequestAction(RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS, map),
 				new AsyncCallback<RequestResult>() {
 					public void onFailure(Throwable caught) {
 						System.out.println(caught.getMessage());

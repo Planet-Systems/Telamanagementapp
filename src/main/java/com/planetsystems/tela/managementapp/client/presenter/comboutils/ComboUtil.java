@@ -14,6 +14,7 @@ import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
@@ -218,8 +219,10 @@ public class ComboUtil {
 	public static void loadRegionCombo(final ComboBox comboBox, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_REGION, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -291,8 +294,11 @@ public class ComboUtil {
 	public static void loadDistrictCombo(final ComboBox districtCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_DISTRICT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
+
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -354,7 +360,12 @@ public class ComboUtil {
 			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.REGION_ID, regionCombo.getValueAsString());
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_IN_REGION);
+		
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_IN_REGION);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS_REGION);
+		
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -417,8 +428,23 @@ public class ComboUtil {
 	public static void loadSchoolCombo(final ComboBox schoolCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOLS, null);
 		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
+					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
+				}
+				schoolCombo.setValueMap(valueMap);
+				if (defaultValue != null) {
+					schoolCombo.setValue(defaultValue);
+				}
+			}
+		});
 
 //		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 //		SC.showPrompt("", "", new SwizimaLoader());

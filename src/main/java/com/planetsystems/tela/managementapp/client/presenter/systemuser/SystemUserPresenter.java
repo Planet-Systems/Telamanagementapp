@@ -30,14 +30,27 @@ import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserProfileDTO;
-import com.planetsystems.tela.dto.SystemUserProfileSchoolDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
-import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupSystemMenuListgrid;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupSystemMenuWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupListgrid;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupPane;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.manage.FilterSchoolsRegionDistrictWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.manage.SelectProfileSchoolWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.manage.SystemUserProfilePermissionWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.menu.SystemMenuListgrid;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.menu.SystemMenuPane;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.menu.SystemMenuWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserPane;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -115,7 +128,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
 					
-					MenuButton permissions = new MenuButton("Manage User");
+					MenuButton permissions = new MenuButton("Permissions");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -137,7 +150,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton details = new MenuButton("Details");
-					MenuButton permission = new MenuButton("Permissions");
+					MenuButton permission = new MenuButton("Manage User");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -147,6 +160,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					buttons.add(permission);
 					
 					addSystemUserPermission(permission);
+					
 
 					getView().getControlsPane().addMenuButtons("System user details", buttons);
 
@@ -173,10 +187,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 			}
 
-			
 		});
 	}
-	
 	
 	////personal user permissions
 	private void addSystemUserPermission(MenuButton permission) {
@@ -185,12 +197,12 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		@Override
 		public void onClick(ClickEvent event) {
             if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
-            	final ListGridRecord record = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
+            	final ListGridRecord profileRecord = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
             	final SystemUserProfilePermissionWindow window = new SystemUserProfilePermissionWindow();
             	
-            	window.setTitle("Add Permission to "+record.getAttribute(SystemUserListGrid.EMAIL));
+            	window.setTitle("Add Permission to "+profileRecord.getAttribute(SystemUserListGrid.EMAIL));
          
-            	getSchoolsBySystemUserProfile(window, record);
+            	getSchoolsBySystemUserProfile(window, profileRecord);
             	
             	
     			window.show();	
@@ -199,7 +211,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					
 					@Override
 					public void onClick(ClickEvent event) {
-						getSchoolsBySystemUserProfile(window , record);
+						getSchoolsBySystemUserProfile(window , profileRecord);
 					}
 				});
     			
@@ -207,26 +219,27 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					
 					@Override
 					public void onClick(ClickEvent event) {
-						if (window.getSystemUserSchoolPane().getSchoolListGrid().anySelected()) {
+						if (window.getSystemUserSchoolPane().getSchoolDistrictListGrid().anySelected()) {
 							SC.confirm("Are Sure to remove this schools ", new BooleanCallback() {
 								
 								@Override
 								public void execute(Boolean value) {
 									if (value) {
-										ListGridRecord[] records = window.getSystemUserSchoolPane().getSchoolListGrid().getSelectedRecords();
+										ListGridRecord[] records = window.getSystemUserSchoolPane().getSchoolDistrictListGrid().getSelectedRecords();
 										List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
 										for (int i = 0; i < records.length; i++) {
 											schoolDTOs.add(new SchoolDTO(records[i].getAttribute(SchoolListGrid.ID)));
 										}
 										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-										map.put(NetworkDataUtil.ACTION	, RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS);
+										map.put(NetworkDataUtil.ACTION	, RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
+										map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID, profileRecord.getAttribute(SystemUserListGrid.ID));
 										map.put(RequestConstant.DATA , schoolDTOs);
 										
 										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 											
 											@Override
 											public void onNetworkResult(RequestResult result) {
-												getSchoolsBySystemUserProfile(window, record);
+												getSchoolsBySystemUserProfile(window, profileRecord);
 											}
 										});
 											
@@ -239,8 +252,6 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 						}
 					}
 				});
-    			
-    			addUserSchools(window);
     		
 			}else {
 				SC.say("Please a user to add permissions");
@@ -252,53 +263,20 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	});
 		
 	}
-	
-	private void addUserSchools(final SystemUserProfilePermissionWindow window) {
-     window.getSaveButton().addClickHandler(new ClickHandler() {
-		
-		@Override
-		public void onClick(ClickEvent event) {
-			if(window.getSystemUserSchoolPane().getSchoolListGrid().anySelected()) {
 
-				ListGridRecord[] records = window.getSystemUserSchoolPane().getSchoolListGrid().getSelectedRecords();
-				List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
-				final ListGridRecord systemUserRecord = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
-				
-				for (int i = 0; i < records.length; i++) {
-					ListGridRecord schoolRecord = records[i];
-				    schoolDTOs.add(new SchoolDTO(schoolRecord.getAttribute(SchoolListGrid.ID)));
-				}
-//				SC.say("SIZE "+userProfileSchoolDTOs.size()+ profileDTO.getId());
-				
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(NetworkDataUtil.ACTION	, RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS);
-				map.put(RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS , schoolDTOs);
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-					
-					@Override
-					public void onNetworkResult(RequestResult result) {
-					 getSchoolsBySystemUserProfile(window, systemUserRecord);	
-					}
-				});
-
-				
-			}else {
-				SC.say("Please select school/s to add");
-			}
-			
-		}
-	});
-		
-	}
 	
-	public void getSchoolsBySystemUserProfile(final SystemUserProfilePermissionWindow window , ListGridRecord record) {
+	public void getSchoolsBySystemUserProfile(final SystemUserProfilePermissionWindow window , ListGridRecord profileRecord) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE);
+		map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID, profileRecord.getAttributeAsObject(SystemUserListGrid.ID));
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
+			map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS);
+			else 
+		map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 			
 			@Override
 			public void onNetworkResult(RequestResult result) {
-			 window.getSystemUserSchoolPane().getSchoolListGrid().addRecordsToGrid(result.getSchoolDTOs());		
+			 window.getSystemUserSchoolPane().getSchoolDistrictListGrid().addRecordsToGrid(result.getSchoolDTOs());		
 			}
 		});
 	}
@@ -308,6 +286,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			
 			@Override
 			public void onClick(ClickEvent event) {
+			 final ListGridRecord profileRecord = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
+				
 				final FilterSchoolsRegionDistrictWindow regionDistrictWindow = new FilterSchoolsRegionDistrictWindow();
 				final String defaultValue = null;
 				ComboUtil.loadRegionCombo(regionDistrictWindow.getFilterRegionDistrict().getRegionCombo() , dispatcher, placeManager, defaultValue);
@@ -324,18 +304,59 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					@Override
 					public void onClick(ClickEvent event) {
 						if (regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo().getValueAsString() != null) {
+							final SelectProfileSchoolWindow profileSchoolWindow = new SelectProfileSchoolWindow();
+							
+							profileSchoolWindow.show();
 							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS_IN_DISTRICT);
+							map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_NOT_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE_DISTRICT);
+							map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID , profileRecord.getAttribute(SystemUserListGrid.ID));
 							map.put(RequestDelimeters.DISTRICT_ID, regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo().getValueAsString());
 							NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 								
 								@Override
 								public void onNetworkResult(RequestResult result) {
-									profilePermissionWindow.getSystemUserSchoolPane().getSchoolListGrid().addRecordsToGrid(result.getSchoolDTOs());
-									if (!result.getSchoolDTOs().isEmpty())
-										profilePermissionWindow.getSaveButton().enable();
+									profileSchoolWindow.getSchoolDistrictListGrid().addRecordsToGrid(result.getSchoolDTOs());
+									if(!result.getSchoolDTOs().isEmpty())
+										profileSchoolWindow.getAddSchoolsButton().enable();
 								}
 							});
+							
+							profileSchoolWindow.getAddSchoolsButton().addClickHandler(new ClickHandler() {
+								
+								@Override
+								public void onClick(ClickEvent event) {
+									if(profileSchoolWindow.getSchoolDistrictListGrid().anySelected()) {
+										
+										ListGridRecord[] records = profileSchoolWindow.getSchoolDistrictListGrid().getSelectedRecords();
+										List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
+										for (int i = 0; i < records.length; i++) {
+											ListGridRecord schoolRecord = records[i];
+										    schoolDTOs.add(new SchoolDTO(schoolRecord.getAttribute(SchoolListGrid.ID)));
+										}
+										
+										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+										map.put(NetworkDataUtil.ACTION	, RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
+										map.put(RequestConstant.DATA , schoolDTOs);
+										map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID , profileRecord.getAttribute(SystemUserListGrid.ID));
+										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+											
+											@Override
+											public void onNetworkResult(RequestResult result) {
+											 //close windows
+												getSchoolsBySystemUserProfile(profilePermissionWindow, profileRecord);
+												profilePermissionWindow.close();
+												regionDistrictWindow.close();
+												profileSchoolWindow.close();
+										
+											}
+										});
+									}else {
+										SC.say("Select school to add");
+									}
+								}
+							});
+							
+							
 						}else {
 							SC.say("Please select a district");
 						}

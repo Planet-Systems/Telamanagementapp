@@ -4,6 +4,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermPane;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;

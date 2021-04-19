@@ -71,6 +71,7 @@ public class RequestResult implements Result {
 	private List<SystemUserGroupSystemMenuDTO> systemUserGroupSystemMenuDTOs;
 
 	private List<SystemUserGroupDTO> systemUserGroupDTOs;
+	private SystemUserGroupDTO systemUserGroupDTO;
 
 	private List<SystemUserProfileDTO> systemUserProfileDTOs;
 	
@@ -276,6 +277,13 @@ public class RequestResult implements Result {
 	
 	
 	
+	
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, SystemUserGroupDTO systemUserGroupDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemUserGroupDTO = systemUserGroupDTO;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<SystemUserProfileSchoolDTO> systemUserProfileSchoolDTOs) {
@@ -442,6 +450,12 @@ public class RequestResult implements Result {
 
 	
 	
+	
+	
+
+	public SystemUserGroupDTO getSystemUserGroupDTO() {
+		return systemUserGroupDTO;
+	}
 
 	public List<SystemUserProfileSchoolDTO> getSystemUserProfileSchoolDTOs() {
 		return systemUserProfileSchoolDTOs;

@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gwt.user.client.ui.Tree;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.managementapp.client.presenter.region.RegionListGrid.RegionDataSource;
+import com.planetsystems.tela.managementapp.client.presenter.region.region.RegionListGrid.RegionDataSource;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateField;

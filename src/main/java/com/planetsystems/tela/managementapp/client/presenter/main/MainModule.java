@@ -36,7 +36,6 @@ public class MainModule extends AbstractPresenterModule {
           install(new StaffDailyTimetableModule());
           install(new StaffDailyAttendanceSupervisionModule());
           install(new TimeAttendanceSupervisionModule());
-          
     	bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
      
     }
