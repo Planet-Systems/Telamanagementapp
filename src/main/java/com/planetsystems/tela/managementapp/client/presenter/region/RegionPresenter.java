@@ -23,11 +23,21 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.AdminComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.DistrictListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.DistrictPane;
+import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.DistrictWindow;
+import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.FilterDistrictWindow;
+import com.planetsystems.tela.managementapp.client.presenter.region.region.RegionListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.region.region.RegionPane;
+import com.planetsystems.tela.managementapp.client.presenter.region.region.RegionWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupListgrid;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
@@ -91,6 +101,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 	@Override
 	protected void onBind() {
 		super.onBind();
+	
 		onTabSelected();
 		getAllRegions();
 		getAllDistricts();
@@ -363,8 +374,11 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	private void getAllRegions() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_REGION, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -537,7 +551,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	// District window
 	public void loadRegionCombo(final DistrictWindow window, final String defaultValue) {
-		ComboUtil.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
+		    ComboUtil.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
 	}
 
 	private void clearDistrictWindowFields(DistrictWindow window) {
@@ -584,8 +598,10 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	private void getAllDistricts() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_DISTRICT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

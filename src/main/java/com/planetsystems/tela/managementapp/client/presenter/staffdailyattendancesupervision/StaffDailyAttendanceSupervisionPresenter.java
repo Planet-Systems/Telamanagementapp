@@ -23,6 +23,7 @@ import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -168,7 +169,13 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 						map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 						map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
-						map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_IN_SCHOOL_DATE);
+
+						if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+							map.put(NetworkDataUtil.ACTION,
+									RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_IN_SCHOOL_DATE);
+						else
+							map.put(NetworkDataUtil.ACTION,
+									RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE);
 
 						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -326,7 +333,8 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					task.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					StaffDailyTimeTableDTO staffDailyTimeTableDTO = new StaffDailyTimeTableDTO();
-					staffDailyTimeTableDTO.setId(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID));
+					staffDailyTimeTableDTO
+							.setId(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID));
 					task.setStaffDailyTimeTableDTO(staffDailyTimeTableDTO);
 
 					task.setTeachingStatus("present");
@@ -341,10 +349,10 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.SAVE_STAFF_DAILY_TASK_SUPERVISIONS, supervisionDTO);
-				map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_STAFF_DAILY_TASK_SUPERVISIONS);
-				
+				map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_STAFF_DAILY_TASK_SUPERVISIONS);
+
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-					
+
 					@Override
 					public void onNetworkResult(RequestResult result) {
 						window.close();
@@ -519,7 +527,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.ID));
 		map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
 		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_FOR_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION);
+				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 

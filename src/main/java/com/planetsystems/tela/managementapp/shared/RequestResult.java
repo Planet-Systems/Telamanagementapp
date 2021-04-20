@@ -30,6 +30,7 @@ import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserProfileDTO;
+import com.planetsystems.tela.dto.SystemUserProfileSchoolDTO;
 import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
@@ -74,8 +75,11 @@ public class RequestResult implements Result {
 	private List<SystemUserGroupSystemMenuDTO> systemUserGroupSystemMenuDTOs;
 
 	private List<SystemUserGroupDTO> systemUserGroupDTOs;
+	private SystemUserGroupDTO systemUserGroupDTO;
 
 	private List<SystemUserProfileDTO> systemUserProfileDTOs;
+	
+	private List<SystemUserProfileSchoolDTO> systemUserProfileSchoolDTOs;
 
 	private DashboardSummaryDTO dashboardSummaryDTO;
 
@@ -300,6 +304,23 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.timeAttendanceSupervisionDTOs = timeAttendanceSupervisionDTOs;
 	}
+	
+	
+	
+	
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, SystemUserGroupDTO systemUserGroupDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemUserGroupDTO = systemUserGroupDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<SystemUserProfileSchoolDTO> systemUserProfileSchoolDTOs) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemUserProfileSchoolDTOs = systemUserProfileSchoolDTOs;
+	}
 
 	public RequestResult() {
 		super();
@@ -443,7 +464,15 @@ public class RequestResult implements Result {
 	public FilterDTO getFilterDto() {
 		return filterDto;
 	}
+	
+	public SystemUserGroupDTO getSystemUserGroupDTO() {
+		return systemUserGroupDTO;
+	}
 
+	public List<SystemUserProfileSchoolDTO> getSystemUserProfileSchoolDTOs() {
+		return systemUserProfileSchoolDTOs;
+	}
+ 
 	@Override
 	public String toString() {
 		return "RequestResult [systemErrorDTO=" + systemErrorDTO + "FEEDDTO " + systemFeedbackDTO + " ]";

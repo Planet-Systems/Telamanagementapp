@@ -27,11 +27,18 @@ import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInPane;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInWindow;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.FilterClockInWindow;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockout.ClockOutPane;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockout.FilterClockOutWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
@@ -67,7 +74,7 @@ public class StaffAttendancePresenter
 	public static final Type<RevealContentHandler<?>> SLOT_attendance = new Type<RevealContentHandler<?>>();
 
 	@Inject
-	private PlaceManager placeManager; 
+	private PlaceManager placeManager;
 
 	@Inject
 	private DispatchAsync dispatcher;
@@ -178,7 +185,6 @@ public class StaffAttendancePresenter
 
 	}
 
-
 	private void selectFilterClockOutOption(final MenuButton filter) {
 		final Menu menu = new Menu();
 		MenuItem basic = new MenuItem("Base Filter");
@@ -272,9 +278,9 @@ public class StaffAttendancePresenter
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_CLOCK_IN, dto);
 					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_CLOCK_IN);
-					
+
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-						
+
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							clearClockInWindowFields(window);
@@ -357,8 +363,8 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(),
-						dispatcher, placeManager, defaultValue);
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+						placeManager, defaultValue);
 			}
 		});
 	}
@@ -376,8 +382,10 @@ public class StaffAttendancePresenter
 
 	private void getAllStaffClockIn() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_CLOCK_IN, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_IN);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_IN);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -416,16 +424,15 @@ public class StaffAttendancePresenter
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_CLOCK_OUT, dto);
 					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_CLOCK_OUT);
-					
+
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-						
+
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
 							getAllStaffClockIn();
 						}
 					});
-
 
 				} else {
 					SC.say("Please Select A record to clockout");
@@ -437,8 +444,10 @@ public class StaffAttendancePresenter
 
 	private void getAllStaffClockOut() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_CLOCK_OUT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUT);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUT);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -552,7 +561,7 @@ public class StaffAttendancePresenter
 				dto.setDistrictDTO(new DistrictDTO(districtId));
 				dto.setSchoolDTO(new SchoolDTO(schoolId));
 				dto.setDate(date);
-				
+
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.FILTER_CLOCK_INS, dto);
 //				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
@@ -585,14 +594,14 @@ public class StaffAttendancePresenter
 				String districtId = window.getFilterClockOutPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterClockOutPane().getSchoolCombo().getValueAsString();
 				String date = dateFormat.format(window.getFilterClockOutPane().getClockinDateItem().getValueAsDate());
-                 
+
 				FilterDTO dto = new FilterDTO();
 				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
 				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
 				dto.setDistrictDTO(new DistrictDTO(districtId));
 				dto.setSchoolDTO(new SchoolDTO(schoolId));
 				dto.setDate(date);
-				
+
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 //				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
 //				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);

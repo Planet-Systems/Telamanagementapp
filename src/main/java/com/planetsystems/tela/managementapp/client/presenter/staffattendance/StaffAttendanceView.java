@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInPane;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockout.ClockOutPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;

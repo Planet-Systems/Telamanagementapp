@@ -27,11 +27,17 @@ import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.enrollment.StaffEnrollmentWindow;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.FilterStaffHeadCountWindow;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.FilterStaffWindow;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.SchoolStaffPane;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.SchoolStaffWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
@@ -166,7 +172,7 @@ public class StaffEnrollmentPresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				getView().getSchoolStaffPane().getStaffListGrid().setShowFilterEditor(true);
+				getView().getSchoolStaffPane().getSchoolStaffListGrid().setShowFilterEditor(true);
 			}
 		});
 
@@ -184,7 +190,6 @@ public class StaffEnrollmentPresenter
 		});
 
 	}
-
 
 	private void selectFilterStaffEnrollmentOption(final MenuButton filter) {
 		final Menu menu = new Menu();
@@ -224,7 +229,6 @@ public class StaffEnrollmentPresenter
 			}
 		});
 	}
-
 
 	//////////////////////
 
@@ -273,7 +277,7 @@ public class StaffEnrollmentPresenter
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_STAFF_ENROLLMENT, dto);
-					map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_STAFF_ENROLLMENT);
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_STAFF_ENROLLMENT);
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 						@Override
@@ -288,9 +292,9 @@ public class StaffEnrollmentPresenter
 					SC.warn("Please Fill all fields");
 				}
 
-		}
-	});
-		
+			}
+		});
+
 	}
 
 	private boolean checkIfNoStaffEnrollmentWindowFieldIsEmpty(StaffEnrollmentWindow window) {
@@ -298,13 +302,13 @@ public class StaffEnrollmentPresenter
 
 		if (window.getAcademicYearCombo().getValueAsString() == null)
 			flag = false;
-		
+
 		if (window.getAcademicTermCombo().getValueAsString() == null)
 			flag = false;
 
 		if (window.getDistrictCombo().getValueAsString() == null)
 			flag = false;
-		
+
 		if (window.getSchoolCombo().getValueAsString() == null)
 			flag = false;
 
@@ -336,13 +340,14 @@ public class StaffEnrollmentPresenter
 	private void loadAcademicYearCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
 	}
-	
+
 	private void loadAcademicTermCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo() , window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);	
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
+						window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
 			}
 		});
 	}
@@ -350,16 +355,17 @@ public class StaffEnrollmentPresenter
 	private void loadDistrictCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
-	
+
 	private void loadSchoolCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo() , window.getSchoolCombo(), dispatcher, placeManager, defaultValue);	
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+						placeManager, defaultValue);
 			}
 		});
-	
+
 	}
 
 	/////////////////////////////////////////////////// FILTER SCHOOL STAFF
@@ -473,8 +479,10 @@ public class StaffEnrollmentPresenter
 
 	private void getAllStaffEnrollments() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_STAFF_ENROLLMENT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_ENROLLMENT);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_ENROLLMENT);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_ENROLLMENTS_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -544,7 +552,7 @@ public class StaffEnrollmentPresenter
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_SCHOOL_STAFF, dto);
-					map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_SCHOOL_STAFF);
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_SCHOOL_STAFF);
 
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -599,7 +607,7 @@ public class StaffEnrollmentPresenter
 
 		if (window.getSchoolCombo().getValueAsString() == null)
 			flag = false;
-		
+
 		if (window.getDistrictCombo().getValueAsString() == null)
 			flag = false;
 
@@ -640,27 +648,31 @@ public class StaffEnrollmentPresenter
 	private void loadDistrictCombo(final SchoolStaffWindow window, final String defaultValue) {
 		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
-	
+
 	private void loadSchoolCombo(final SchoolStaffWindow window, final String defaultValue) {
 		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo() , window.getSchoolCombo(), dispatcher, placeManager, defaultValue);	
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+						placeManager, defaultValue);
 			}
 		});
 	}
 
 	private void getAllSchoolStaff() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_STAFF);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(NetworkDataUtil.ACTION ,RequestConstant.GET_SCHOOL_STAFF);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+		
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				getView().getSchoolStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+				getView().getSchoolStaffPane().getSchoolStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
 			}
 		});
 
@@ -688,7 +700,7 @@ public class StaffEnrollmentPresenter
 					@Override
 					public void onNetworkResult(RequestResult result) {
 						window.close();
-						getView().getSchoolStaffPane().getStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
+						getView().getSchoolStaffPane().getSchoolStaffListGrid().addRecordsToGrid(result.getSchoolStaffDTOs());
 					}
 				});
 

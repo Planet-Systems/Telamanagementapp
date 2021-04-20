@@ -5,6 +5,9 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupPane;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.menu.SystemMenuPane;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -23,6 +26,10 @@ class SystemUserView extends ViewImpl implements SystemUserPresenter.MyView {
 	
 	private TabSet tabSet;
 	
+	public static final String SYSTEM_USER_GROUPS = "System User Groups";
+	public static final String SYSTEM_USER_PROFILES = "System User Profiles";
+	public static final String SYSTEM_MENU_SETUP = "System User Menu Setup";
+	
     @Inject
     SystemUserView() {
     	panel = new VLayout();
@@ -33,16 +40,16 @@ class SystemUserView extends ViewImpl implements SystemUserPresenter.MyView {
 
     	Tab userRolePaneTab = new Tab();
 		userRolePaneTab.setPane(userGroupPane);
-		userRolePaneTab.setTitle("System user groups");
+		userRolePaneTab.setTitle(SYSTEM_USER_GROUPS);
 
 
 		Tab usersPaneTab = new Tab();
 		usersPaneTab.setPane(systemUserPane);
-		usersPaneTab.setTitle("System user details");
+		usersPaneTab.setTitle(SYSTEM_USER_PROFILES);
 		
 		Tab systemMenuPaneTab = new Tab();
 		systemMenuPaneTab.setPane(systemMenuPane);
-		systemMenuPaneTab.setTitle("System Menu Setup");
+		systemMenuPaneTab.setTitle(SYSTEM_MENU_SETUP);
 
 		tabSet = new TabSet();
 

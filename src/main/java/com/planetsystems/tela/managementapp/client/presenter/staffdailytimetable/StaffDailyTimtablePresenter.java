@@ -24,6 +24,7 @@ import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableLessonDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -174,8 +175,11 @@ public class StaffDailyTimtablePresenter
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+				if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
+				   map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
+					else
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
+						RequestConstant.GET_STAFF_DAILY_TIMETABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
 
 				
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -547,8 +551,12 @@ public class StaffDailyTimtablePresenter
 		map.put(RequestDelimeters.STAFF_DAILY_TIMETALE_ID,
 				record.getAttribute(StaffDailyTimetableListGrid.ID));
 		map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+		
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
+			map.put(NetworkDataUtil.ACTION , RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE);
+			else
 		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_FOR_STAFF_DATE_DAILY_TIMETABLE);
+				RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_DAILY_TIMETABLE_SCHOOL_STAFF_DATE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

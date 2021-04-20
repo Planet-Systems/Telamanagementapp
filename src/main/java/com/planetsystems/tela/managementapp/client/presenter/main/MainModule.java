@@ -21,6 +21,7 @@ import com.planetsystems.tela.managementapp.client.presenter.timeattendancesuper
 import com.planetsystems.tela.managementapp.client.presenter.timetable.TimeTableModule;
 
 public class MainModule extends AbstractPresenterModule {
+ 
 	@Override
 	protected void configure() {
 
@@ -45,5 +46,6 @@ public class MainModule extends AbstractPresenterModule {
 
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
 
-	}
+	} 
+ 
 }

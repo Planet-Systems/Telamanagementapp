@@ -1,5 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.login;
 
+import java.util.LinkedHashMap;
+
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,8 +19,11 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.AuthenticationDTO;
+import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
@@ -98,7 +103,8 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 											Cookies.setCookie(RequestConstant.AUTH_TOKEN , feedback.getToken());
 											Cookies.setCookie(RequestConstant.LOGED_IN , "true");
 											Cookies.setCookie(RequestConstant.USERNAME , dto.getUserName());
-
+											getLoggedInSystemUserGroup();
+											
 											PlaceRequest placeRequest = new PlaceRequest.Builder()
 													.nameToken(NameTokens.dashboard).build();
 
@@ -107,6 +113,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 										} else {
 											Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
 											Cookies.removeCookie(RequestConstant.LOGED_IN);
+											Cookies.removeCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
 											SC.warn("INFO", feedback.getMessage());
 										}
 
@@ -116,10 +123,28 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 
 								}
 
+							
+
 							});
 
 				}
 
+			}
+		});
+	}
+	
+	private void getLoggedInSystemUserGroup() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION, RequestConstant.LOGGED_SYSTEM_USER_GROUP);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				SystemUserGroupDTO systemUserGroupDTO = result.getSystemUserGroupDTO();
+				SC.say("GROUP "+systemUserGroupDTO.getName());
+				Cookies.setCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE , systemUserGroupDTO.getName());	
+				System.out.println("USER GROUP "+systemUserGroupDTO);
+				System.out.println(" GROUP NAME "+systemUserGroupDTO.getName());
 			}
 		});
 	}

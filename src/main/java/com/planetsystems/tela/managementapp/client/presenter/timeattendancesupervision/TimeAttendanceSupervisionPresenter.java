@@ -30,7 +30,7 @@ import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUti
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.ClockInListGrid;
+import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;

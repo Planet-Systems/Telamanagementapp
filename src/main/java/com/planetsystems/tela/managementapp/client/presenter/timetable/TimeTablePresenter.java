@@ -31,6 +31,7 @@ import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.managementapp.client.enums.LessonDay;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -593,8 +594,10 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	private void getAllTimeTables() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_TIME_TABLES, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLES);
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(NetworkDataUtil.ACTION , RequestConstant.GET_TIME_TABLES);
+			else 
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
