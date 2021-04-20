@@ -8,6 +8,7 @@ public class RequestConstant {
 	public static final String SYSTEM_TIME_TABLES = "TimeTable";
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
+	public static final String REPORTS = "Reports";
 
 
 	public static final String SYSTEM_ATTENDANCE = "Attendance";
@@ -23,6 +24,8 @@ public class RequestConstant {
 	public static final String GET_ACADEMIC_TERM = "GET_ACADEMIC_TERM";
 	public static final String GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR = "GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR";
 	public static final String FILTER_ACADEMIC_TERMS_BY_ACADEMIC_YEAR = "FILTER_ACADEMIC_TERMS_BY_ACADEMIC_YEAR";
+	public static final String ACTIVATE_ACADEMIC_TERM = "ACTIVATE_ACADEMIC_TERM";
+	public static final String DEACTIVATE_ACADEMIC_TERM = "DEACTIVATE_ACADEMIC_TERM";
 
 	public static final String SAVE_REGION = "SAVE_REGION";
 	public static final String UPDATE_REGION = "UPDATE_REGION";
@@ -183,6 +186,9 @@ public class RequestConstant {
 	public static final String GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_FOR_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION = "GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_FOR_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION";
 
 	public static final String SAVE_TIME_ATTENDANCE_SUPERVISION = "SAVE_TIME_ATTENDANCE_SUPERVISION";
+	
+	public static final String GET_DEFAULT_ENROLLMENT_DASHBOARD = "GET_DEFAULT_ENROLLMENT_DASHBOARD";
+	public static final String GET_DEFAULT_ATTENDANCE_DASHBOARD = "GET_DEFAULT_ATTENDANCE_DASHBOARD";
 
 
 

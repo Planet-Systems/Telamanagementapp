@@ -19,6 +19,8 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -80,7 +82,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 		MenuButton filterButton = new MenuButton("Filter");
 		MenuButton refreshButton = new MenuButton("Refresh");
-		getView().getControlsPane().addTitle("Dashboard");
+		getView().getControlsPane().addTitle("Dashboard: National Overview");
 		getView().getControlsPane().addMember(filterButton);
 		getView().getControlsPane().addMember(refreshButton);
 
@@ -261,7 +263,79 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	}
 
 	private void loadDashboard() {
-		OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_DEFAULT_ENROLLMENT_DASHBOARD, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane(),
+									result.getDashboardSummaryDTO());
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+
+	}
+
+	private void loadAttendanceDashboard() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_DEFAULT_ATTENDANCE_DASHBOARD, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							OverallAttendanceDashboardGenerator.getInstance().generateDashboard(
+									getView().getDashboardPane(), result.getAttendanceDashboardSummaryDTO());
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+
 	}
 
 	private void showFilter(final MenuButton button) {
@@ -287,7 +361,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 					@Override
 					public void onClick(MenuItemClickEvent event) {
 
-						OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+						loadDashboard();
 					}
 				});
 
@@ -296,8 +370,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 					@Override
 					public void onClick(MenuItemClickEvent event) {
 
-						OverallAttendanceDashboardGenerator.getInstance()
-								.generateDashboard(getView().getDashboardPane());
+						loadAttendanceDashboard();
 					}
 				});
 
@@ -328,7 +401,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 			@Override
 			public void onClick(ClickEvent event) {
-				OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+				loadDashboard();
 
 			}
 		});

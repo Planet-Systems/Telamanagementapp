@@ -21,6 +21,8 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.NavigationMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
+import com.planetsystems.tela.managementapp.client.menu.ReportsData;
+import com.planetsystems.tela.managementapp.client.menu.ReportsDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationData;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemAttendanceData;
@@ -271,7 +273,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 							if (!enrollemnt.isEmpty()) {
 
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
-										SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords()));
+										SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
 
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
 										new NavigationPaneClickHandler());
@@ -280,7 +282,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 							if (!attendance.isEmpty()) {
 
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
-										SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords()));
+										SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords(attendance)));
 
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
 										new NavigationPaneClickHandler());
@@ -290,7 +292,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 							if (!timetable.isEmpty()) {
 
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
-										SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords()));
+										SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords(timetable)));
 
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
 										new NavigationPaneClickHandler());
@@ -299,7 +301,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 							if (!systemusers.isEmpty()) {
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
-										SystemUserDataSource.getInstance(SystemUserData.getNewRecords()));
+										SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
 
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
 										new NavigationPaneClickHandler());
@@ -307,23 +309,27 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 							if (!generatereports.isEmpty()) {
 
+								getView().getNavigationPane().addSection(RequestConstant.REPORTS,
+										ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
+
+								getView().getNavigationPane().addRecordClickHandler(RequestConstant.REPORTS,
+										new NavigationPaneClickHandler());
 							}
 
-							/*
-							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&
-							 * timetable.isEmpty() && generatereports.isEmpty()) {
-							 * 
-							 * PlaceRequest placeRequest = new
-							 * PlaceRequest.Builder().nameToken(NameTokens.dashboard) .build();
-							 * 
-							 * placeManager.revealPlace(placeRequest);
-							 * 
-							 * } else {
-							 * 
-							 * placeManager.revealDefaultPlace();
-							 * 
-							 * }
-							 */
+							/*if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty()
+									&& timetable.isEmpty() && generatereports.isEmpty()) {
+
+								PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.dashboard)
+										.build();
+
+								placeManager.revealPlace(placeRequest);
+
+							} else {
+
+								placeManager.revealDefaultPlace();
+
+							}*/
+
 						} else {
 							SC.say("ERROR", "Unknow error");
 						}

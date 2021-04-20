@@ -227,6 +227,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_REGION, dto);
 					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_REGION);
+					
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 						@Override

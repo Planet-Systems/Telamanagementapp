@@ -65,9 +65,9 @@ public class OverallImpactDashboardGenerator {
 		layout2.addMember(row1); 
 		layout2.setMembersMargin(5);
 
-		/*DashboarTestWindow testWindow = new DashboarTestWindow();
+		/* DashboarTestWindow testWindow = new DashboarTestWindow();
 		testWindow.getLayout().setMembers(layout2);
-		testWindow.show(); */
+		testWindow.show();  */
 
 		dashboardPane.setMembers(layout2); 
 

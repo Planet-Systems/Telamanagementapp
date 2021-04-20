@@ -1,6 +1,8 @@
 package com.planetsystems.tela.managementapp.client.presenter.dashboard;
  
 
+import java.util.List;
+
 import org.moxieapps.gwt.highcharts.client.Chart;
 import org.moxieapps.gwt.highcharts.client.ChartSubtitle;
 import org.moxieapps.gwt.highcharts.client.ChartTitle;
@@ -19,7 +21,11 @@ import org.moxieapps.gwt.highcharts.client.plotOptions.ColumnPlotOptions;
 import org.moxieapps.gwt.highcharts.client.plotOptions.PiePlotOptions;
 import org.moxieapps.gwt.highcharts.client.plotOptions.PlotOptions;
 import org.moxieapps.gwt.highcharts.client.plotOptions.SeriesPlotOptions;
- 
+
+import com.google.gwt.core.client.GWT;
+import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
+import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
+import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
 import com.planetsystems.tela.managementapp.shared.UtilityManager;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -39,16 +45,16 @@ public class OverallCountDashboardGenerator {
 		return instance;
 	}
 
-	public void generateDashboard(DashboardPane dashboardPane) {
-		long totalSchools = 1580;
-		long totalTeachers = 12640;
-		long totalLearners = 474000;
+	public void generateDashboard(DashboardPane dashboardPane,final DashboardSummaryDTO dto) {
+		long totalSchools = dto.getShools();
+		long totalTeachers = dto.getTeachers();
+		long totalLearners = dto.getLearners();
 
 		VLayout col1 = new VLayout();
 		col1.addMember(
-				getCard("Total Number of Schools", UtilityManager.getInstance().formatCash(totalSchools), "#3ac47d"));
+				getCard("Number of Public Primary Schools", UtilityManager.getInstance().formatCash(totalSchools), "#3ac47d"));
 		col1.addMember(
-				getCard("Total Number of Teachers", UtilityManager.getInstance().formatCash(totalTeachers), "#f7b924"));
+				getCard("Number of Teachers on Payroll", UtilityManager.getInstance().formatCash(totalTeachers), "#f7b924"));
 		col1.addMember(
 				getCard("Total Number of Learners", UtilityManager.getInstance().formatCash(totalLearners), "#6495ED"));
 		col1.setAutoHeight();
@@ -57,22 +63,25 @@ public class OverallCountDashboardGenerator {
 		col1.setBorder("1px solid #CDCFCC");
 
 		VLayout chart1 = new VLayout();
-		chart1.addMember(learnerCountChart());
+		chart1.addMember(learnerCountChart(dto.getBoys(),dto.getGirls(),dto.getYear()+"-"+dto.getTerm()));
 
 		VLayout chart2 = new VLayout();
-		chart2.addMember(tearchersCountChart());
+		chart2.addMember(tearchersCountChart(dto.getMaleTeachers(),dto.getFemaleTeachers(),dto.getYear()+"-"+dto.getTerm()));
 		
 		VLayout chart3 = new VLayout();
-		chart3.addMember(teachersPerRegionChart());
+		GWT.log("getStaffEnrolled:: loading");
+		GWT.log("getStaffEnrolled:: "+dto.getStaffEnrolled().size());
+		
+		chart3.addMember(teachersPerRegionChart(dto.getStaffEnrolled()));
 		
 		VLayout chart4 = new VLayout();
-		chart4.addMember(teachersByRegionByGenderStackedChart());
+		chart4.addMember(teachersByRegionByGenderStackedChart(dto.getStaffEnrolledByGender()));
 		
 		VLayout chart5 = new VLayout();
-		chart5.addMember(learnersPerRegionChart());
+		chart5.addMember(learnersPerRegionChart(dto.getLearnsEnrolled()));
 		
 		VLayout chart6 = new VLayout();
-		chart6.addMember(learnersByRegionByGenderStackedChart());
+		chart6.addMember(learnersByRegionByGenderStackedChart(dto.getLearnsEnrolledByGender()));
 		  
 		HLayout col2 = new HLayout();
 		col2.addMember(chart1);
@@ -97,9 +106,9 @@ public class OverallCountDashboardGenerator {
 		layout2.addMember(row3);
 		layout2.setMembersMargin(5);
 
-		/*DashboarTestWindow testWindow = new DashboarTestWindow();
+		/* DashboarTestWindow testWindow = new DashboarTestWindow();
 		testWindow.getLayout().setMembers(layout2);
-		testWindow.show(); */
+		testWindow.show();*/  
 
 		dashboardPane.setMembers(layout2); 
 
@@ -110,7 +119,7 @@ public class OverallCountDashboardGenerator {
 		label.setPadding(2);
 		label.setAlign(Alignment.CENTER);
 		label.setValign(VerticalAlignment.CENTER);
-		label.setWrap(false);
+		label.setWrap(true);
 		label.setContents("<div style='box-sizing: border-box; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"
 				+ "background-color: #ffffff;padding: 2px;font-family: \"Lucida Grande\", \"Lucida Sans Unicode\", Arial, Helvetica, sans-serif; width:250px;'>"
 				+ "<h4 style='font-weight: bold; font-size: 1.0rem;font-color:#ADA4AC'>" + cardTitle + "</h4>"
@@ -125,10 +134,10 @@ public class OverallCountDashboardGenerator {
 		return layout;
 	}
 
-	public Chart learnerCountChart() {
+	public Chart learnerCountChart(long boys,long girls,String period) {
 
 		final Chart chart = new Chart().setType(Series.Type.PIE).setMargin(50, 0, 0, 0)
-				.setChartTitleText("Learner Enrollment by Sex").setChartSubtitleText("Year: 2021")
+				.setChartTitleText("Learner Enrollment by Sex").setChartSubtitleText("Year: "+period)
 				.setPlotBackgroundColor("none").setPlotBorderWidth(0).setPlotShadow(false)
 				.setToolTip(new ToolTip().setFormatter(new ToolTipFormatter() {
 					public String format(ToolTipData toolTipData) {
@@ -137,7 +146,7 @@ public class OverallCountDashboardGenerator {
 					}
 				}));
 
-		chart.addSeries(chart.createSeries().setName("2021")
+		chart.addSeries(chart.createSeries().setName(period)
 				.setPlotOptions(
 						new PiePlotOptions().setCenter(.5, .5).setInnerSize(.2).setPieDataLabels(new PieDataLabels()
 								.setEnabled(true).setColor("#000000").setFormatter(new DataLabelsFormatter() {
@@ -146,8 +155,8 @@ public class OverallCountDashboardGenerator {
 												+ dataLabelsData.getYAsDouble();
 									}
 								}).setConnectorColor("#000000")))
-				.setPoints(new Point[] { new Point("Boys", 45.0).setColor("#DAF7A6"),
-						new Point("Girls", 26.8).setColor("#FFC300") }));
+				.setPoints(new Point[] { new Point("Boys", boys).setColor("#DAF7A6"),
+						new Point("Girls", girls).setColor("#FFC300") }));
 
 		chart.setBorderWidth(1);
 		chart.setBorderColor("#CDCFCC");
@@ -156,10 +165,10 @@ public class OverallCountDashboardGenerator {
 		return chart;
 	}
 
-	public Chart tearchersCountChart() {
+	public Chart tearchersCountChart(long male,long female,String period) {
 
 		final Chart chart = new Chart().setType(Series.Type.PIE).setMargin(50, 0, 0, 0)
-				.setChartTitleText("Teacher Enrollment by Gender").setChartSubtitleText("Year: 2021")
+				.setChartTitleText("Number of Teachers by Gender").setChartSubtitleText("Year: "+period)
 				.setPlotBackgroundColor("none").setPlotBorderWidth(0).setPlotShadow(false)
 				.setToolTip(new ToolTip().setFormatter(new ToolTipFormatter() {
 					public String format(ToolTipData toolTipData) {
@@ -168,7 +177,7 @@ public class OverallCountDashboardGenerator {
 					}
 				}));
 
-		chart.addSeries(chart.createSeries().setName("2010")
+		chart.addSeries(chart.createSeries().setName(period)
 				.setPlotOptions(
 						new PiePlotOptions().setCenter(.5, .5).setInnerSize(.2).setPieDataLabels(new PieDataLabels()
 								.setEnabled(true).setColor("#000000").setFormatter(new DataLabelsFormatter() {
@@ -177,8 +186,8 @@ public class OverallCountDashboardGenerator {
 												+ dataLabelsData.getYAsDouble();
 									}
 								}).setConnectorColor("#000000")))
-				.setPoints(new Point[] { new Point("Male", 45.0).setColor("#FF5733"),
-						new Point("Female", 26.8).setColor("#C70039") }));
+				.setPoints(new Point[] { new Point("Male", male).setColor("#FF5733"),
+						new Point("Female", female).setColor("#C70039") }));
 
 		chart.setBorderWidth(1);
 		chart.setBorderColor("#CDCFCC");
@@ -187,9 +196,9 @@ public class OverallCountDashboardGenerator {
 		return chart;
 	}
 
-	private Chart teachersPerRegionChart() {
+	private Chart teachersPerRegionChart(List<DataOutPutDTO> staffEnrolled) {
 		Chart lineChart = new Chart().setType(Series.Type.BAR)
-				.setChartTitle(new ChartTitle().setText("Teacher Enrollment Per Region"))
+				.setChartTitle(new ChartTitle().setText("Number of Teachers Per Region"))
 				.setChartSubtitle(new ChartSubtitle().setText("Numbers")).setToolTip(new ToolTip().setEnabled(false));
 
 		lineChart.getYAxis().setAxisTitleText("Number of Teachers");
@@ -200,17 +209,21 @@ public class OverallCountDashboardGenerator {
 		lineChart.setBarPlotOptions(
 				new BarPlotOptions().setEnableMouseTracking(true).setDataLabels(new DataLabels().setEnabled(true))); 
 
-		String[] lables = { "Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
-				"Teso", "Acholi", "Elgon", "West Nile", "Bunyoro", "Buganda South", "KAMPALA" };
-		Number[] teachers = {10,30,40,30,20,37,28,54,100,37,64,36,50,47,41};
+		/*String[] lables = { "Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
+				"Teso", "Acholi", "Elgon", "West Nile", "Bunyoro", "Buganda South", "KAMPALA" };*/
+		/*Number[] teachers = {10,30,40,30,20,37,28,54,100,37,64,36,50,47,41};*/
 		//Number[] female = {20,35,21,40,30,39,46,50,87,80,41,36,50,30,41};
 
-		/*int counter = 0;
-		for (KeyValueSummaryDTO dto : list) {
-			lables[counter] = dto.getName();
-			points[counter] = dto.getValue();
+		String[] lables=new String[staffEnrolled.size()];
+		
+		Number[] teachers=new Number[staffEnrolled.size()];
+		
+		 int counter = 0;
+		for (DataOutPutDTO dto : staffEnrolled) {
+			lables[counter] = dto.getKey();
+			teachers[counter] = dto.getValue();
 			counter++;
-		}*/
+		} 
 
 		lineChart.getXAxis().setCategories(lables);
 		lineChart.addSeries(lineChart.createSeries().setName("Number of Teachers").setPoints(teachers)); 
@@ -224,10 +237,10 @@ public class OverallCountDashboardGenerator {
 		return lineChart;
 	} 
 	
-	private Chart teachersByRegionByGenderStackedChart() {
+	private Chart teachersByRegionByGenderStackedChart(List<DataOutPutByGenderDTO> list) {
 
 		final Chart chart = new Chart().setType(Series.Type.BAR)
-				.setChartTitleText("Teacher Enrollment by Region by Gender")
+				.setChartTitleText("Number of Teachers by Region by Gender")
 				.setSeriesPlotOptions(new SeriesPlotOptions().setStacking(PlotOptions.Stacking.NORMAL))
 				.setLegend(new Legend().setBackgroundColor("#FFFFFF").setReversed(true))
 				.setToolTip(new ToolTip().setFormatter(new ToolTipFormatter() {
@@ -238,40 +251,26 @@ public class OverallCountDashboardGenerator {
 				})).setColors("#FFC300", "#DAF7A6");
 
 		  
-			String[] lables = {"Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
+			/*String[] lables = {"Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
 					"Teso", "Acholi", "Elgon", "West Nile", "Bunyoro", "Buganda South", "KAMPALA"};
 			Number[] male = {10,30,40,30,20,37,28,54,100,37,64,36,50,47,41};
-			Number[] female = {20,35,21,40,30,39,46,50,87,80,41,36,50,30,41};
+			Number[] female = {20,35,21,40,30,39,46,50,87,80,41,36,50,30,41};*/
 
-			/*int counter = 0;
+			int counter = 0;
 			int validPointCount = 0;
 			int expiredPointCount = 0;
 
-			for (StackChartSummary summary : list) {
+			String[] lables =new String[list.size()];
+			Number[] male =new Number[list.size()];
+			Number[] female =new Number[list.size()];
+			
+			for (DataOutPutByGenderDTO dto : list) {
 
-				lables[counter] = summary.getLable();
-
-				if (summary.getPoints() != null) {
-
-					for (KeyValueSummaryDTO point : summary.getPoints()) {
-
-						if (point.getName().equalsIgnoreCase("Valid Permit")) {
-
-							validPoints[validPointCount] = point.getValue();
-							validPointCount++;
-
-						} else if (point.getName().equalsIgnoreCase("Expired Permit")) {
-
-							expiredPoints[expiredPointCount] = point.getValue();
-							expiredPointCount++;
-
-						}
-
-					}
-				}
-
+				lables[counter] = dto.getKey();
+				male[counter]=dto.getMale();
+				female[counter]=dto.getFemale();
 				counter++;
-			}*/
+			} 
 
 			chart.getXAxis().setCategories(lables);
 			chart.addSeries(chart.createSeries().setName("Male").setPoints(male));
@@ -292,7 +291,7 @@ public class OverallCountDashboardGenerator {
 	}
 	
 	
-	private Chart learnersPerRegionChart() {
+	private Chart learnersPerRegionChart(List<DataOutPutDTO> learnersEnrolled) {
 		Chart lineChart = new Chart().setType(Series.Type.COLUMN)
 				.setChartTitle(new ChartTitle().setText("Learner Enrollment by Region"))
 				.setChartSubtitle(new ChartSubtitle().setText("Numbers")).setToolTip(new ToolTip().setEnabled(true));
@@ -302,16 +301,20 @@ public class OverallCountDashboardGenerator {
 		lineChart.setColumnPlotOptions(
 				new ColumnPlotOptions().setEnableMouseTracking(true).setDataLabels(new DataLabels().setEnabled(true)));
 
-		String[] lables = { "Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
+		/*String[] lables = { "Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
 				"Teso", "Acholi", "Elgon", "West Nile", "Bunyoro", "Buganda South", "KAMPALA" };
-		Number[] learners = {10,30,40,30,20,37,28,54,100,37,64,36,50,47,41}; 
+		Number[] learners = {10,30,40,30,20,37,28,54,100,37,64,36,50,47,41}; */
 
-		/*int counter = 0;
-		for (KeyValueSummaryDTO dto : list) {
-			lables[counter] = dto.getName();
-			points[counter] = dto.getValue();
+		String[] lables=new String[learnersEnrolled.size()];
+		
+		Number[] learners =new Number[learnersEnrolled.size()];
+		
+		int counter = 0;
+		for (DataOutPutDTO dto : learnersEnrolled) {
+			lables[counter] = dto.getKey();
+			learners[counter] = dto.getValue();
 			counter++;
-		}*/
+		} 
 
 		lineChart.getXAxis().setCategories(lables);
 		lineChart.addSeries(lineChart.createSeries().setName("Number of Learners").setPoints(learners)); 
@@ -325,7 +328,7 @@ public class OverallCountDashboardGenerator {
 		return lineChart;
 	}
 	 
-	private Chart learnersByRegionByGenderStackedChart() {
+	private Chart learnersByRegionByGenderStackedChart(List<DataOutPutByGenderDTO> list) {
 
 		final Chart chart = new Chart().setType(Series.Type.COLUMN)
 				.setChartTitleText("Learner Enrollment by Region by Gender")
@@ -339,40 +342,25 @@ public class OverallCountDashboardGenerator {
 				})).setColors("#FFC300", "#DAF7A6");
 
 		  
-			String[] lables = {"Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
+			/*String[] lables = {"Buganda North", "Lango", "Bukedi", "Ankole", "Busoga", "Karamoja", "Kigezi", "Toro",
 					"Teso", "Acholi", "Elgon", "West Nile", "Bunyoro", "Buganda South", "KAMPALA"};
 			Number[] boys = {10,30,40,30,20,37,28,54,100,37,64,36,50,47,41};
-			Number[] girls = {20,35,21,40,30,39,46,50,87,80,41,36,50,30,41};
+			Number[] girls = {20,35,21,40,30,39,46,50,87,80,41,36,50,30,41};*/
 
-			/*int counter = 0;
+			String[] lables =new String[list.size()];
+			Number[] boys=new Number[list.size()];
+			Number[] girls=new Number[list.size()];
+			int counter = 0;
 			int validPointCount = 0;
 			int expiredPointCount = 0;
 
-			for (StackChartSummary summary : list) {
+			for (DataOutPutByGenderDTO dto : list) {
 
-				lables[counter] = summary.getLable();
-
-				if (summary.getPoints() != null) {
-
-					for (KeyValueSummaryDTO point : summary.getPoints()) {
-
-						if (point.getName().equalsIgnoreCase("Valid Permit")) {
-
-							validPoints[validPointCount] = point.getValue();
-							validPointCount++;
-
-						} else if (point.getName().equalsIgnoreCase("Expired Permit")) {
-
-							expiredPoints[expiredPointCount] = point.getValue();
-							expiredPointCount++;
-
-						}
-
-					}
-				}
-
+				lables[counter] = dto.getKey();
+				boys[counter]=dto.getMale();
+				girls[counter]=dto.getFemale();
 				counter++;
-			}*/
+			} 
 
 			chart.getXAxis().setCategories(lables);
 			chart.addSeries(chart.createSeries().setName("Boys").setPoints(boys));

@@ -22,7 +22,7 @@ public class AcademicYearPane extends VLayout {
 		listGrid = new AcademicYearListGrid();
 
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(listGrid);
 		this.addMember(layout);
 		

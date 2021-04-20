@@ -23,7 +23,7 @@ public class AcademicTermPane extends VLayout {
 		listGrid = new AcademicTermListGrid();
 
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(listGrid);
 		this.addMember(layout);
 	}

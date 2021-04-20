@@ -6,6 +6,9 @@ import com.planetsystems.tela.managementapp.client.presenter.dashboard.Dashboard
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.LearnerEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionModule;
+import com.planetsystems.tela.managementapp.client.presenter.reports.districtperformacereport.DistrictPerformaceReportModule;
+import com.planetsystems.tela.managementapp.client.presenter.reports.nationalperformace.NationalPerformaceModule;
+import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.SchoolPerformaceReportModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolCategoryModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
@@ -18,26 +21,29 @@ import com.planetsystems.tela.managementapp.client.presenter.timeattendancesuper
 import com.planetsystems.tela.managementapp.client.presenter.timetable.TimeTableModule;
 
 public class MainModule extends AbstractPresenterModule {
-    @Override
-    protected void configure() {
-     
-    	  install(new DashboardModule());
-          install(new AcademicYearModule());
-          install(new RegionModule());
-          install(new SchoolCategoryModule());
-          install(new SubjectCategoryModule());
-          install(new SchoolStaffModule());
-          install(new StaffEnrollmentModule());
-          install(new StaffAttendanceModule());
-          install(new LearnerAttendanceModule());
-          install(new LearnerEnrollmentModule());
-          install(new TimeTableModule());
-          install(new SystemUserModule());
-          install(new StaffDailyTimetableModule());
-          install(new StaffDailyAttendanceSupervisionModule());
-          install(new TimeAttendanceSupervisionModule());
-          
-    	bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
-     
-    }
+	@Override
+	protected void configure() {
+
+		install(new DashboardModule());
+		install(new AcademicYearModule());
+		install(new RegionModule());
+		install(new SchoolCategoryModule());
+		install(new SubjectCategoryModule());
+		install(new SchoolStaffModule());
+		install(new StaffEnrollmentModule());
+		install(new StaffAttendanceModule());
+		install(new LearnerAttendanceModule());
+		install(new LearnerEnrollmentModule());
+		install(new TimeTableModule());
+		install(new SystemUserModule());
+		install(new StaffDailyTimetableModule());
+		install(new StaffDailyAttendanceSupervisionModule());
+		install(new TimeAttendanceSupervisionModule());
+		install(new SchoolPerformaceReportModule());
+		install(new DistrictPerformaceReportModule());
+		install(new NationalPerformaceModule());
+
+		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
+
+	}
 }

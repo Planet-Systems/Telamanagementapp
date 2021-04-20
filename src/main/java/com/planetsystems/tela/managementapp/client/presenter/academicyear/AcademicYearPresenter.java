@@ -127,7 +127,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					buttons.add(editAcademicYearButton);
 					buttons.add(deleteAcademicYearButton);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Academic Years",buttons);
 
 					addAcademicYear(newAcademicYear);
 					deleteAcademicYear(deleteAcademicYearButton);
@@ -139,30 +139,29 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
+					MenuButton activate = new MenuButton("Activate");
+					MenuButton deactivate = new MenuButton("Deactivate");
 					MenuButton filter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
+					buttons.add(activate);
+					buttons.add(deactivate);
 					buttons.add(filter);
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Academic Terms",buttons);
 
 					addAcademicTerm(newButton);
 					editAcademicTerm(edit);
 					deleteAcademicTerm(delete);
-					selectFilterOption(filter);
+					selectFilterOption(filter); 
+					activateAcademicTerm(activate);
+					deactivateAcademicTerm(deactivate);
 
-				} else {
-					MenuButton newButton = new MenuButton("New");
-
-					MenuButton edit = new MenuButton("Edit");
-					MenuButton delete = new MenuButton("Delete");
-					MenuButton filter = new MenuButton("Filter");
-
+				} else { 
+					
 					List<MenuButton> buttons = new ArrayList<>();
-					buttons.add(newButton);
-					buttons.add(edit);
-					buttons.add(filter);
+					 
 					getView().getControlsPane().addMenuButtons(buttons);
 
 				}
@@ -571,6 +570,76 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
 								map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_ACADEMIC_TERM);
+
+								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+									@Override
+									public void onNetworkResult(RequestResult result) {
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+	
+	private void activateAcademicTerm(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicTermPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to activate the selected term", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicTermPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
+								map.put(NetworkDataUtil.ACTION, RequestConstant.ACTIVATE_ACADEMIC_TERM);
+
+								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+									@Override
+									public void onNetworkResult(RequestResult result) {
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+	
+	private void deactivateAcademicTerm(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicTermPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to deactivate the selected term", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicTermPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
+								map.put(NetworkDataUtil.ACTION, RequestConstant.DEACTIVATE_ACADEMIC_TERM);
 
 								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
