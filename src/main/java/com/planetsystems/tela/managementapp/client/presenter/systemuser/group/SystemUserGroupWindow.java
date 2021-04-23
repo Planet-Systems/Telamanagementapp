@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.systemuser.group;
   
 import com.planetsystems.tela.managementapp.client.widget.TextField;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -10,54 +11,57 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class UserGroupWindow extends Window {
+public class SystemUserGroupWindow extends Window {
 
-	private TextField roleCode;
-	private TextField roleName;
-	private TextField description;
-	private CheckboxItem defaultRole;
-	private CheckboxItem receiveAlerts;
+	private TextField codeField;
+	private TextField nameField;
+	private TextField descriptionField;
+	private CheckboxItem defaultRoleBox;
+	private CheckboxItem receiveAlertBox;
 	
-	private CheckboxItem administrativeRole;
+	private CheckboxItem administrativeRoleBox;
 
 	private IButton saveButton;
 	private IButton cancelButton;
 
-	public UserGroupWindow() {
+	public SystemUserGroupWindow() {
 		super();
-		roleCode = new TextField();
-		roleCode.setTitle("code");
+		codeField = new TextField();
+		codeField.setTitle("code");
 
-		roleName = new TextField();
-		roleName.setTitle("Name");
+		nameField = new TextField();
+		nameField.setTitle("Name");
 
-		description = new TextField();
-		description.setTitle("Description");
+		descriptionField = new TextField();
+		descriptionField.setTitle("Description");
 
-		defaultRole = new CheckboxItem();
-		defaultRole.setTitle("Is Default?");
+		defaultRoleBox = new CheckboxItem();
+		defaultRoleBox.setTitle("Is Default?");
 
-		receiveAlerts = new CheckboxItem();
-		receiveAlerts.setTitle("Receive Project activation Alerts?");
+		receiveAlertBox = new CheckboxItem();
+		receiveAlertBox.setTitle("Receive Project activation Alerts?");
 		
-		administrativeRole=new CheckboxItem();
-		administrativeRole.setTitle("Manage Data");
+		administrativeRoleBox=new CheckboxItem();
+		administrativeRoleBox.setTitle("Manage Data");
 		
-
 		saveButton = new IButton("Save");
-		cancelButton = new IButton("Cancel");
+		cancelButton = new IButton("Close");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(roleCode, roleName, description, defaultRole, receiveAlerts,administrativeRole);
+		form.setFields(codeField, nameField, descriptionField, defaultRoleBox, receiveAlertBox, administrativeRoleBox);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(saveButton, cancelButton);
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
+		buttonLayout.setAlign(Alignment.CENTER);
+		buttonLayout.setWidth("20%");
+		buttonLayout.setBackgroundColor("1px solid green");
+		buttonLayout.setMembersMargin(5);
 		buttonLayout.setAutoHeight();
-		buttonLayout.setWidth100();
 		buttonLayout.setMargin(5);
-		buttonLayout.setMembersMargin(4);
+		
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -66,7 +70,7 @@ public class UserGroupWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("45%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
 		this.setTitle("User Groups");
 		this.setIsModal(true);
@@ -87,36 +91,63 @@ public class UserGroupWindow extends Window {
 		});
 	}
 
-	public TextField getRoleCode() {
-		return roleCode;
+	public TextField getCodeField() {
+		return codeField;
 	}
 
-	public TextField getRoleName() {
-		return roleName;
+	public void setCodeField(TextField codeField) {
+		this.codeField = codeField;
 	}
 
-	public TextField getDescription() {
-		return description;
+	public TextField getNameField() {
+		return nameField;
+	}
+
+	public void setNameField(TextField nameField) {
+		this.nameField = nameField;
+	}
+
+	public TextField getDescriptionField() {
+		return descriptionField;
+	}
+
+	public void setDescriptionField(TextField descriptionField) {
+		this.descriptionField = descriptionField;
+	}
+
+	public CheckboxItem getDefaultRoleBox() {
+		return defaultRoleBox;
+	}
+
+	public void setDefaultRoleBox(CheckboxItem defaultRoleBox) {
+		this.defaultRoleBox = defaultRoleBox;
+	}
+
+	public CheckboxItem getReceiveAlertBox() {
+		return receiveAlertBox;
+	}
+
+	public void setReceiveAlertBox(CheckboxItem receiveAlertBox) {
+		this.receiveAlertBox = receiveAlertBox;
+	}
+
+	public CheckboxItem getAdministrativeRoleBox() {
+		return administrativeRoleBox;
+	}
+
+	public void setAdministrativeRoleBox(CheckboxItem administrativeRoleBox) {
+		this.administrativeRoleBox = administrativeRoleBox;
 	}
 
 	public IButton getSaveButton() {
 		return saveButton;
 	}
 
-	public CheckboxItem getDefaultRole() {
-		return defaultRole;
+	public void setSaveButton(IButton saveButton) {
+		this.saveButton = saveButton;
 	}
 
-	public CheckboxItem getReceiveAlerts() {
-		return receiveAlerts;
-	}
+	
 
-	public CheckboxItem getAdministrativeRole() {
-		return administrativeRole;
-	}
-
-	public IButton getCancelButton() {
-		return cancelButton;
-	}
 
 }

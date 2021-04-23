@@ -98,6 +98,7 @@ public class LoginPane extends VLayout {
 
 			
 			VLayout layout = new VLayout();
+			layout.setLayoutAlign(Alignment.CENTER);
 			layout.setMembersMargin(10);		
 			layout.setWidth100();
 			layout.setAutoHeight();

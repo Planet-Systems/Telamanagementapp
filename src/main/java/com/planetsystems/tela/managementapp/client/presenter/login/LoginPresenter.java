@@ -28,6 +28,7 @@ import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -135,7 +136,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 	
 	private void getLoggedInSystemUserGroup() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION, RequestConstant.LOGGED_SYSTEM_USER_GROUP);
+		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.LOGGEDIN_SYSTEM_USER_GROUPS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

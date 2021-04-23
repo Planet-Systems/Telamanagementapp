@@ -5,6 +5,7 @@ import java.util.List;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -17,7 +18,7 @@ public class SystemUserGroupSystemMenuListgrid extends SuperListGrid {
 	public static String SystemMenuId = "systemMenuId";
 	public static String SystemMenu = "systemMenu";
 	public static String SystemMenuItem = "systemMenuItem";
-	public static String Status = "status";
+	public static String SELECTED = "SELECTED";
 
 	public SystemUserGroupSystemMenuListgrid() {
 		super();
@@ -25,10 +26,10 @@ public class SystemUserGroupSystemMenuListgrid extends SuperListGrid {
 		ListGridField id = new ListGridField(ID, "id");
 		id.setHidden(true);
 
-		ListGridField systemUserGroupId = new ListGridField(SystemUserGroupId, "SystemUserGroup Id");
+		ListGridField systemUserGroupId = new ListGridField(SystemUserGroupId, "SystemUserGroupRequestConstant Id");
 		systemUserGroupId.setHidden(true);
 
-		ListGridField systemUserGroup = new ListGridField(SystemUserGroup, "SystemUserGroup");
+		ListGridField systemUserGroup = new ListGridField(SystemUserGroup, "SystemUserGroupRequestConstant");
 		systemUserGroup.setHidden(true);
 
 		ListGridField systemMenuId = new ListGridField(SystemMenuId, "SystemMenuId");
@@ -37,9 +38,9 @@ public class SystemUserGroupSystemMenuListgrid extends SuperListGrid {
 		ListGridField systemMenu = new ListGridField(SystemMenu, "System Menu");
 		ListGridField systemMenuItem = new ListGridField(SystemMenuItem, "System Menu Item");
 
-		ListGridField status = new ListGridField(Status, "Status");
-
+		ListGridField status = new ListGridField(SELECTED, "SELECTED");
 		status.setHidden(true);
+		
 		this.setSelectionType(SelectionStyle.SIMPLE);
 		this.setFields(id, systemUserGroupId, systemUserGroup, systemMenuId, systemMenu, systemMenuItem, status);
 		
@@ -63,7 +64,7 @@ public class SystemUserGroupSystemMenuListgrid extends SuperListGrid {
 			record.setAttribute(SystemMenuItem, dto.getSystemMenuDTO().getSubMenuItem());
 		}
 
-		record.setAttribute(Status, dto.isDisabled());
+		record.setAttribute(SELECTED, dto.isSelected());
 
 		return record;
 	}
@@ -73,7 +74,6 @@ public class SystemUserGroupSystemMenuListgrid extends SuperListGrid {
 		int row = 0;
 		for (SystemUserGroupSystemMenuDTO item : list) {
 			records[row] = addRowData(item);
-
 			row++;
 		}
 		this.setData(records);
@@ -81,9 +81,10 @@ public class SystemUserGroupSystemMenuListgrid extends SuperListGrid {
 
 	public void selectActiveRecords() {
 		for (ListGridRecord record : this.getRecords()) {
-			if (record.getAttributeAsBoolean(Status)) {
+			
+			if (record.getAttributeAsBoolean(SELECTED)) 
 				this.selectRecord(record);
-			}
+
 		}
 
 		this.redraw();
