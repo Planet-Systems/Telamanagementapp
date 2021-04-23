@@ -142,7 +142,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					editUserGroup(edit);
 					deletUserUserGroup(delete);
 					loadUserGroups();
-					loaSystemUserMenu(permissions);
+					loadSystemUserMenu(permissions);
 
 				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_USER_PROFILES)) {
 
@@ -1178,7 +1178,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		});
 	}
 
-	private void loaSystemUserMenu(final MenuButton button) {
+	private void loadSystemUserMenu(final MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
 			@Override
