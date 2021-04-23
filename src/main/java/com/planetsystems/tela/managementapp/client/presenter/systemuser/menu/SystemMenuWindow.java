@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.systemuser.menu;
  
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -12,8 +13,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class SystemMenuWindow extends Window {
 
-	private ComboBox navigationMenu;
-	private MultiComboBoxItem navigationMenuItem;
+	private ComboBox navigationMenuCombo;
+	private MultiComboBoxItem subMenuItemCombo;
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -21,23 +22,25 @@ public class SystemMenuWindow extends Window {
 	public SystemMenuWindow() {
 		super();
 
-		navigationMenu = new ComboBox();
-		navigationMenu.setTitle("Navigation Menu");
+		navigationMenuCombo = new ComboBox();
+		navigationMenuCombo.setTitle("Navigation Menu");
 
-		navigationMenuItem = new MultiComboBoxItem();
-		navigationMenuItem.setTitle("Menu Item");
+		subMenuItemCombo = new MultiComboBoxItem();
+		subMenuItemCombo.setTitle("Menu Item");
 
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(navigationMenu, navigationMenuItem);
+		form.setFields(navigationMenuCombo, subMenuItemCombo);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton, saveButton);
+		buttonLayout.setAlign(Alignment.CENTER);
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setWidth100();
 		buttonLayout.setMargin(5);
@@ -69,12 +72,15 @@ public class SystemMenuWindow extends Window {
 		});
 	}
 
-	public ComboBox getNavigationMenu() {
-		return navigationMenu;
+
+	
+	
+	public ComboBox getNavigationMenuCombo() {
+		return navigationMenuCombo;
 	}
 
-	public MultiComboBoxItem getNavigationMenuItem() {
-		return navigationMenuItem;
+	public MultiComboBoxItem getSubMenuItemCombo() {
+		return subMenuItemCombo;
 	}
 
 	public IButton getSaveButton() {

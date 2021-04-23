@@ -156,6 +156,7 @@ public class RequestConstant {
 	public static final String SAVE_USER_GROUP = "SAVE_USER_GROUP";
 	public static final String UPDATE_USER_GROUP = "UPDATE_USER_GROUP";
 	public static final String DELETE_USER_GROUP = "DELETE_USER_GROUP";
+	public static final String GET_USER_GROUP = "GET_USER_GROUP";
 
 	public static final String SAVE_USER_GROUP_SystemMENU = "SAVE_USER_GROUP_SystemMENU";
 	public static final String GET_USER_GROUP_SystemMENU = "GET_USER_GROUP_SystemMENU";
@@ -163,7 +164,7 @@ public class RequestConstant {
 	public static final String GET_LOGED_IN_USER_SYSTEM_MENUS = "GET_LOGED_IN_USER_SYSTEM_MENUS";
 	public static final String GET_LOGEDIN_USER_SystemMENU = "GET_LOGEDIN_USER_SystemMENU";
 
-	public static final String GET_USER_GROUP = "GET_USER_GROUP";
+
 
 	// time table lesson
 	public static final String SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE = "SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE";

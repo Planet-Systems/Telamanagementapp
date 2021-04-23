@@ -209,7 +209,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 			
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//grouping menus , wish it was j8+
+				//grouping menus , wish it was j8+ i would write better
 				List<String> systemConfig = new ArrayList<String>();
 				List<String> enrollemnt = new ArrayList<String>();
 				List<String> attendance = new ArrayList<String>();
@@ -303,6 +303,8 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		});
 	}
 
+
+	@Deprecated
 	private void loadSystemUserMenu() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();

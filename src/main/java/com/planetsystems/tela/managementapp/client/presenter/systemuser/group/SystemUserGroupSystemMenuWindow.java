@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.client.presenter.systemuser.group;
 
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -20,11 +21,13 @@ public class SystemUserGroupSystemMenuWindow extends Window {
 		listgrid = new SystemUserGroupSystemMenuListgrid();
 
 		saveButton = new IButton("Save");
-		cancelButton = new IButton("Cancel");
+		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton,saveButton);
+		buttonLayout.setLayoutAlign(Alignment.CENTER);
+		buttonLayout.setAlign(Alignment.CENTER);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setWidth100();
 		buttonLayout.setMargin(5);
@@ -38,7 +41,7 @@ public class SystemUserGroupSystemMenuWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("55%");
-		this.setHeight("70%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
 		this.setTitle("User group");
 		this.setIsModal(true);
