@@ -14,6 +14,7 @@ import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
+import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
@@ -21,6 +22,7 @@ import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
 
 public class ComboUtil {
 
@@ -1089,6 +1091,27 @@ public class ComboUtil {
 //			}
 //
 //		});
+	}
+
+	public static void loadSystemUserGroupCombo(final ComboBox systemUserGroupCombo, DispatchAsync dispatcher,
+			PlaceManager placeManager, final String defaultValue) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
+				for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
+					hashMap.put(dto.getId(), dto.getName());
+				}
+				systemUserGroupCombo.setValueMap(hashMap);
+				if (defaultValue != null) {
+					systemUserGroupCombo.setValue(defaultValue);
+				}
+			}
+		});
+		
 	}
 
 }

@@ -295,7 +295,11 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				}
 
 				if (!generatereports.isEmpty()) {
+					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
+							ReportsDataSource.getInstance(ReportsData.getNewRecords()));
 
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
+							new NavigationPaneClickHandler());
 				}
 					
 				
@@ -418,10 +422,10 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 							if (!generatereports.isEmpty()) {
 
-								getView().getNavigationPane().addSection(RequestConstant.REPORTS,
+								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
 										ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
 
-								getView().getNavigationPane().addRecordClickHandler(RequestConstant.REPORTS,
+								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
 										new NavigationPaneClickHandler());
 							}
 
