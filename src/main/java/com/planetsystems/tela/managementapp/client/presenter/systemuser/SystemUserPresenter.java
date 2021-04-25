@@ -50,7 +50,8 @@ import com.planetsystems.tela.managementapp.client.presenter.systemuser.menu.Sys
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.menu.SystemMenuWindow;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserPane;
-import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserProfileWindow;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -62,6 +63,7 @@ import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemMenuRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupSystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserProfileRequestConstant;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -145,7 +147,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
  
 					saveSystemUserGroup(newButton);
 					//editSystemUserGroup(edit);
-					//deletUserUserGroup(delete);
+					deletUserUserGroup(delete);
 					getAllSystemUserGroups();
 					
 					loadSystemUserMenu(permissions);
@@ -175,7 +177,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					// onUpdateButtonCLicked(edit);
 					// onDeleteButtonCLicked(delete);
 					// onDetailsButtonCLicked(details);
-					loadUserDetails();
+					getSystemUserProfiles();
 				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_MENU_SETUP)) {
 
 					MenuButton newButton = new MenuButton("New");
@@ -763,53 +765,67 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 			@Override
 			public void onClick(ClickEvent event) {
-				SystemUserWindow window = new SystemUserWindow();
+				SystemUserProfileWindow window = new SystemUserProfileWindow();
 				loadEnabledRadioGroupItem(window);
 				loadGenderComboBox(window);
 				loadUserGroupsCombo(window);
 				window.show();
-				saveSystemUser(window);
+				saveSystemUserProfile(window);
 			}
 
 		});
 
 	}
 
-	private void loadUserGroupsCombo(final SystemUserWindow window) {
+	private void loadUserGroupsCombo(final SystemUserProfileWindow window) {
+		
+		//ComboUtil.loadSystemUserGroupCombo(window.getSystemUserGroupCombo() , dispatcher, placeManager, null);
+		
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_USER_GROUP, map), new AsyncCallback<RequestResult>() {
-			public void onFailure(Throwable caught) {
-				System.out.println(caught.getMessage());
-
-				SC.clearPrompt();
-				SC.say("ERROR", caught.getMessage());
-			}
-
-			public void onSuccess(RequestResult result) {
-
-				SC.clearPrompt();
-
-				SessionManager.getInstance().manageSession(result, placeManager);
-				if (result != null) {
-
-					LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
-					for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
-						hashMap.put(dto.getId(), dto.getName());
-					}
-
-					window.getSystemUserGroup().setValueMap(hashMap);
-
-				} else {
-					SC.say("ERROR", "Unknow error");
+		map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
+				for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
+					hashMap.put(dto.getId(), dto.getName());
 				}
-
+				window.getSystemUserGroupCombo().setValueMap(hashMap);
 			}
 		});
+
+//		dispatcher.execute(new RequestAction(RequestConstant.GET_USER_GROUP, map), new AsyncCallback<RequestResult>() {
+//			public void onFailure(Throwable caught) {
+//				System.out.println(caught.getMessage());
+//
+//				SC.clearPrompt();
+//				SC.say("ERROR", caught.getMessage());
+//			}
+//
+//			public void onSuccess(RequestResult result) {
+//
+//				SC.clearPrompt();
+//
+//				SessionManager.getInstance().manageSession(result, placeManager);
+//				if (result != null) {
+//
+//					LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
+//					for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
+//						hashMap.put(dto.getId(), dto.getName());
+//					}
+//
+//					window.getSystemUserGroupCombo().setValueMap(hashMap);
+//
+//				} else {
+//					SC.say("ERROR", "Unknow error");
+//				}
+//
+//			}
+//		});
 	}
 
-	public void loadEnabledRadioGroupItem(SystemUserWindow window) {
+	public void loadEnabledRadioGroupItem(SystemUserProfileWindow window) {
 		Map<Boolean, String> valueMap = new LinkedHashMap<Boolean, String>();
 		valueMap.put(true, "Yes");
 		valueMap.put(false, "No");
@@ -817,7 +833,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		window.getEnabledRadioGroupItem().setValueMap(valueMap);
 	}
 
-	public void loadGenderComboBox(SystemUserWindow window) {
+	public void loadGenderComboBox(SystemUserProfileWindow window) {
 		Map<String, String> valueMap = new LinkedHashMap<String, String>();
 		valueMap.put("female", "Female");
 		valueMap.put("male", "Male");
@@ -825,7 +841,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		window.getGenderCombo().setValueMap(valueMap);
 	}
 
-	private void saveSystemUser(final SystemUserWindow window) {
+	private void saveSystemUserProfile(final SystemUserProfileWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -853,7 +869,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
 
 				SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
-				systemUserGroupDTO.setId(window.getSystemUserGroup().getValueAsString());
+				systemUserGroupDTO.setId(window.getSystemUserGroupCombo().getValueAsString());
 
 				dto.setSystemUserDTO(systemUserDTO);
 				dto.setSystemUserGroupDTO(systemUserGroupDTO);
@@ -862,9 +878,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				if (checkIfNoSystemUserWindowFieldIsEmpty(window)) {
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_SYSTEM_USER, dto);
-					map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_SYSTEM_USER);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					map.put(NetworkDataUtil.ACTION , SystemUserProfileRequestConstant.SAVE_SYSTEM_USER_PROFILE);
+					map.put(SystemUserProfileRequestConstant.DATA , dto);
 					SC.showPrompt("", "", new SwizimaLoader());
 
 						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -965,7 +980,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		
 	}
 
-	private void clearSystemUserWindowFields(SystemUserWindow window) {
+	private void clearSystemUserWindowFields(SystemUserProfileWindow window) {
 		window.getFirstNameField().clearValue();
 		window.getLastNameField().clearValue();
 		window.getPhoneNumberField().clearValue();
@@ -977,7 +992,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		window.getEnabledRadioGroupItem().clearValue();
 	}
 
-	protected boolean checkIfNoSystemUserWindowFieldIsEmpty(SystemUserWindow window) {
+	protected boolean checkIfNoSystemUserWindowFieldIsEmpty(SystemUserProfileWindow window) {
 		boolean flag = true;
 
 		if (window.getFirstNameField().getValueAsString() == null)
@@ -1004,43 +1019,51 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		return flag;
 	}
 
-	private void loadUserDetails() {
+	private void getSystemUserProfiles() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ALL_SYSTEM_USERS, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ALL_SYSTEM_USERS, map),
-				new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-
-						SessionManager.getInstance().manageSession(result, placeManager);
-
-						if (result != null) {
-
-							getView().getSystemUserPane().getSystemUserListGrid()
-									.addRecordsToGrid(result.getSystemUserProfileDTOs());
-
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-
-				});
+		map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.GET_SYSTEM_USER_PROFILES);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getSystemUserPane().getSystemUserListGrid()
+				.addRecordsToGrid(result.getSystemUserProfileDTOs());
+			}
+		});
+		
+//		SC.showPrompt("", "", new SwizimaLoader());
+//
+//		dispatcher.execute(new RequestAction(RequestConstant.GET_ALL_SYSTEM_USERS, map),
+//				new AsyncCallback<RequestResult>() {
+//
+//					@Override
+//					public void onFailure(Throwable caught) {
+//						System.out.println(caught.getMessage());
+//						SC.warn("ERROR", caught.getMessage());
+//						GWT.log("ERROR " + caught.getMessage());
+//						SC.clearPrompt();
+//
+//					}
+//
+//					@Override
+//					public void onSuccess(RequestResult result) {
+//
+//						SC.clearPrompt();
+//
+//						SessionManager.getInstance().manageSession(result, placeManager);
+//
+//						if (result != null) {
+//
+//							getView().getSystemUserPane().getSystemUserListGrid()
+//									.addRecordsToGrid(result.getSystemUserProfileDTOs());
+//
+//						} else {
+//							SC.warn("ERROR", "Unknow error");
+//						}
+//
+//					}
+//
+//				});
 
 	}
 

@@ -2,6 +2,8 @@ package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendan
 
 import java.util.List;
 
+import com.planetsystems.tela.dto.GeneralUserDetailDTO;
+import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
@@ -58,10 +60,16 @@ public class StaffDailyAttendanceTaskSupervisionListGrid extends SuperListGrid {
 			record.setAttribute(SUPERVISION_TIME,
 					supervisionTaskSupervisionDTO.getStaffDailyAttendanceSupervisionDTO().getSupervisionTime());
 
-			if (supervisionTaskSupervisionDTO.getStaffDailyAttendanceSupervisionDTO().getSupervisorDTO() != null)
-				record.setAttribute(SUPERVISIOR, supervisionTaskSupervisionDTO.getStaffDailyAttendanceSupervisionDTO()
-						.getSupervisorDTO().getUserName());
-			;
+			if (supervisionTaskSupervisionDTO.getStaffDailyAttendanceSupervisionDTO().getSupervisorDTO() != null) {
+				SchoolStaffDTO supervisorDto = supervisionTaskSupervisionDTO.getStaffDailyAttendanceSupervisionDTO()
+						.getSupervisorDTO();
+				GeneralUserDetailDTO supervisorDetailDTO = supervisorDto.getGeneralUserDetailDTO();
+				String fullName = supervisorDetailDTO.getFirstName().concat(" ").concat(supervisorDetailDTO.getLastName());
+				record.setAttribute(SUPERVISIOR, fullName);
+				record.setAttribute(SUPERVISIOR_ID, supervisorDto.getId());
+			}
+				
+			
 		}
 
 		return record;

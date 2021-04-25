@@ -59,6 +59,7 @@ import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemMenuRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupSystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserProfileRequestConstant;
 
 public class RequestActionHandler implements ActionHandler<RequestAction, RequestResult> {
 
@@ -3164,15 +3165,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			///////////////////////////////////
 
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SYSTEM_USER)
+			else if (action.getRequest().equalsIgnoreCase(SystemUserProfileRequestConstant.SAVE_SYSTEM_USER_PROFILE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				List<SystemUserProfileDTO> list = new ArrayList<SystemUserProfileDTO>();
+				List<SystemUserProfileDTO> profileDTOs = new ArrayList<SystemUserProfileDTO>();
 
 				SystemUserProfileDTO dto = (SystemUserProfileDTO) action.getRequestBody()
-						.get(RequestConstant.SAVE_SYSTEM_USER);
+						.get(SystemUserProfileRequestConstant.DATA);
 
 				Client client = ClientBuilder.newClient();
 
@@ -3196,19 +3197,21 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 							});
 
 					if (responseDto != null) {
-						list = responseDto.getData();
+						profileDTOs = responseDto.getData();
+						feedback.setResponse(responseDto.isStatus());
+						feedback.setMessage(responseDto.getMessage());
 					}
 
 				}
 
 				client.close();
-				return new RequestResult(feedback, list, null);
+				return new RequestResult(feedback, profileDTOs, null);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ALL_SYSTEM_USERS)
+			} else if (action.getRequest().equalsIgnoreCase(SystemUserProfileRequestConstant.GET_SYSTEM_USER_PROFILES)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				List<SystemUserProfileDTO> list = new ArrayList<SystemUserProfileDTO>();
+				List<SystemUserProfileDTO> systemUserProfileDTOs = new ArrayList<SystemUserProfileDTO>();
 
 				Client client = ClientBuilder.newClient();
 
@@ -3221,15 +3224,17 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(new GenericType<SystemResponseDTO<List<SystemUserProfileDTO>>>() {
 						});
 
-				list = responseDto.getData();
+				if (responseDto != null) {
+					systemUserProfileDTOs = responseDto.getData();	
+					feedback.setResponse(responseDto.isStatus());
+					feedback.setMessage(responseDto.getMessage());
+					 System.out.println("RESPONSE " + responseDto);
+					 System.out.println("RES DATA " + responseDto.getData());
+				}
 
-				// System.out.println("RESPONSE " + responseDto);
-				// System.out.println("RES DATA " + responseDto.getData());
-				feedback.setResponse(responseDto.isStatus());
-				feedback.setMessage(responseDto.getMessage());
 
 				client.close();
-				return new RequestResult(feedback, list, null);
+				return new RequestResult(feedback, systemUserProfileDTOs , null);
 
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_TIMETABLE_LESSONS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
@@ -4100,6 +4105,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				if (postResponseDTO != null) {
 					feedback = postResponseDTO.getData();
+					feedback.setMessage(postResponseDTO.getMessage());
+					feedback.setResponse(postResponseDTO.isStatus());
 				}
 
 				// SystemResponseDTO<List<SystemUserGroupDTO>> getResponseDTO =

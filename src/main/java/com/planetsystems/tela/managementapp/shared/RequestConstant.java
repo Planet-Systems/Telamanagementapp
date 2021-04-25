@@ -8,7 +8,7 @@ public class RequestConstant {
 	public static final String SYSTEM_TIME_TABLES = "TimeTable";
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
-	public static final String REPORTS = "Reports";
+	public static final String SYSTEM_REPORTS = "Reports";
 
 	public static final String SYSTEM_ATTENDANCE = "Attendance";
 
