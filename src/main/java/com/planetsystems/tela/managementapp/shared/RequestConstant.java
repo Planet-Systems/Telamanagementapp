@@ -189,6 +189,8 @@ public class RequestConstant {
 	public static final String MIGRATE_DATA = "MIGRATE_DATA";
 	public static final String MIGRATE_DATA_ATTENDACE = "MIGRATE_DATA_ATTENDACE";
 	public static final String MIGRATE_DATA_TIMETABLES = "MIGRATE_DATA_TIMETABLES";
+	
+	public static final String MIGRATE_DATA_SUBJECTS = "MIGRATE_DATA_SUBJECTS";
 
 	// daily supervision
 	public static final String SAVE_STAFF_DAILY_TASK_SUPERVISIONS = "SAVE_STAFF_DAILY_TASK_SUPERVISIONS";

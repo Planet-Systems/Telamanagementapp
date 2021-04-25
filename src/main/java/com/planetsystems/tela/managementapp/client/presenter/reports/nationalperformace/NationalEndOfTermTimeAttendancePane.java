@@ -1,27 +1,26 @@
-package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance;
+package com.planetsystems.tela.managementapp.client.presenter.reports.nationalperformace;
 
 import com.planetsystems.tela.managementapp.client.widget.PerformanceScale;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class SchoolEndOfTermTimeAttendancePane extends VLayout {
+public class NationalEndOfTermTimeAttendancePane extends VLayout {
 
-	private SchoolEndOfTermTimeAttendanceListgrid listgrid;
+	private NationalEndOfTermTimeAttendanceListgrid listgrid;
 	private PerformanceScale performanceScale;
 
-	public SchoolEndOfTermTimeAttendancePane() {
+	public NationalEndOfTermTimeAttendancePane() {
 		super();
 
-		listgrid = new SchoolEndOfTermTimeAttendanceListgrid();
+		listgrid = new NationalEndOfTermTimeAttendanceListgrid();
 		performanceScale=new PerformanceScale();
 
 		VLayout layout = new VLayout();
 		layout.addMember(listgrid);
 		layout.addMember(performanceScale);
-		
 		this.addMember(layout);
 	}
 
-	public SchoolEndOfTermTimeAttendanceListgrid getListgrid() {
+	public NationalEndOfTermTimeAttendanceListgrid getListgrid() {
 		return listgrid;
 	}
 

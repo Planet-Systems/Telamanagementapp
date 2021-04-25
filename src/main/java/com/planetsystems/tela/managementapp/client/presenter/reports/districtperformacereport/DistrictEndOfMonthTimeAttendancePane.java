@@ -3,14 +3,15 @@ package com.planetsystems.tela.managementapp.client.presenter.reports.districtpe
 import com.planetsystems.tela.managementapp.client.widget.PerformanceScale;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class DistrictEndOfWeekTimeAttendancePane extends VLayout {
-	private DistrictEndOfWeekTimeAttendanceListgrid listgrid;
+public class DistrictEndOfMonthTimeAttendancePane extends VLayout {
+
+	private DistrictEndOfMonthTimeAttendanceListgrid listgrid;
 	private PerformanceScale performanceScale;
 
-	public DistrictEndOfWeekTimeAttendancePane() {
+	public DistrictEndOfMonthTimeAttendancePane() {
 		super();
 
-		listgrid = new DistrictEndOfWeekTimeAttendanceListgrid();
+		listgrid = new DistrictEndOfMonthTimeAttendanceListgrid();
 		performanceScale=new PerformanceScale();
 
 		VLayout layout = new VLayout();
@@ -19,7 +20,7 @@ public class DistrictEndOfWeekTimeAttendancePane extends VLayout {
 		this.addMember(layout);
 	}
 
-	public DistrictEndOfWeekTimeAttendanceListgrid getListgrid() {
+	public DistrictEndOfMonthTimeAttendanceListgrid getListgrid() {
 		return listgrid;
 	}
 

@@ -22,6 +22,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 public class DistrictPerformaceReportPresenter
 		extends Presenter<DistrictPerformaceReportPresenter.MyView, DistrictPerformaceReportPresenter.MyProxy> {
@@ -48,7 +49,6 @@ public class DistrictPerformaceReportPresenter
 
 	protected void onBind() {
 		super.onBind();
-
 		loadMenuButtons();
 	}
 
@@ -76,16 +76,101 @@ public class DistrictPerformaceReportPresenter
 
 				final Menu menu = new Menu();
 
+				MenuItem dashboard = new MenuItem("Dashboard");
 				MenuItem item1 = new MenuItem("End of Week Time Attendance Reports");
 				MenuItem item2 = new MenuItem("End of Month Time Attendance Reports");
 				MenuItem item3 = new MenuItem("End of Term Time Attendance Reports");
 
-				menu.setItems(item1, item2, item3);
+				menu.setItems(dashboard, item1, item2, item3);
 
 				menu.showNextTo(button, "bottom");
 
+				item1.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						loadEndOfWeekTimeAttendance();
+
+					}
+				});
+
+				item2.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						loadEndOfMonthTimeAttendance();
+
+					}
+				});
+
+				item3.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						loadEndOfTermTimeAttendance();
+
+					}
+				});
+
 			}
 		});
+	}
+
+	private void loadEndOfWeekTimeAttendance() {
+		DistrictEndOfWeekTimeAttendancePane pane = new DistrictEndOfWeekTimeAttendancePane();
+
+		MenuButton filter = new MenuButton("Filter");
+		MenuButton refresh = new MenuButton("Refresh");
+		MenuButton export = new MenuButton("Export");
+
+		List<MenuButton> buttons = new ArrayList<>();
+		buttons.add(filter);
+		buttons.add(refresh);
+		buttons.add(export);
+
+		getView().getControlsPane().addMenuButtons("District End of Week Time Attendance Report", buttons);
+
+		showFilter(filter);
+
+		getView().getContentPane().setMembers(pane);
+	}
+
+	private void loadEndOfMonthTimeAttendance() {
+		DistrictEndOfMonthTimeAttendancePane pane = new DistrictEndOfMonthTimeAttendancePane();
+		MenuButton filter = new MenuButton("Filter");
+		MenuButton refresh = new MenuButton("Refresh");
+		MenuButton export = new MenuButton("Export");
+
+		List<MenuButton> buttons = new ArrayList<>();
+		buttons.add(filter);
+		buttons.add(refresh);
+		buttons.add(export);
+
+		getView().getControlsPane().addMenuButtons("District End of Month Time Attendance Report", buttons);
+
+		showFilter(filter);
+		getView().getContentPane().setMembers(pane);
+
+	}
+
+	private void loadEndOfTermTimeAttendance() {
+		DistrictEndOfTermTimeAttendancePane pane = new DistrictEndOfTermTimeAttendancePane();
+		MenuButton filter = new MenuButton("Filter");
+		MenuButton refresh = new MenuButton("Refresh");
+		MenuButton export = new MenuButton("Export");
+
+		List<MenuButton> buttons = new ArrayList<>();
+		buttons.add(filter);
+		buttons.add(refresh);
+		buttons.add(export);
+
+		getView().getControlsPane().addMenuButtons("District End of Term Time Attendance Report", buttons);
+
+		showFilter(filter);
+		getView().getContentPane().setMembers(pane);
 	}
 
 }

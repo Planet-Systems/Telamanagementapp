@@ -10,7 +10,7 @@ public class DashboardPane extends VLayout{
 	private IButton refreshButton;
 	private IButton importAttendaceButton;
 	private IButton importTimeTablesButton;
-	
+	private IButton importSubjects;
 	public DashboardPane() {
 		super();
 		HLayout buttonLayout = new HLayout();
@@ -24,9 +24,14 @@ public class DashboardPane extends VLayout{
 		importTimeTablesButton=new IButton();
 		importTimeTablesButton.setTitle("Import Timetable Data");
 		
+		importSubjects=new IButton();
+		importSubjects.setTitle("Import Subjects Data");
+		
+		
 		buttonLayout.addMember(refreshButton);
 		buttonLayout.addMember(importAttendaceButton);
 		buttonLayout.addMember(importTimeTablesButton);
+		buttonLayout.addMember(importSubjects);
 		buttonLayout.setMembersMargin(5); 
 		
 		
@@ -45,6 +50,10 @@ public class DashboardPane extends VLayout{
 
 	public IButton getImportTimeTablesButton() {
 		return importTimeTablesButton;
+	}
+
+	public IButton getImportSubjects() {
+		return importSubjects;
 	}
 
 
