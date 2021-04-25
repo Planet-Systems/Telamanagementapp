@@ -69,9 +69,11 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	protected void onBind() {
 		// TODO Auto-generated method stub
 		super.onBind();
-		migrateData();
-		migrateAttendanceData();
-		migrateTimeTablesData();
+		
+		getView().getDashboardPane().hideDataImport();
+		//migrateData();
+		//migrateAttendanceData();
+		//migrateTimeTablesData();
 
 		loadMenuButtons();
 

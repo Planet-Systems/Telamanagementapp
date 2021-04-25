@@ -34,6 +34,12 @@ public class DashboardPane extends VLayout{
 		this.setOverflow(Overflow.AUTO);
 		
 	}
+	
+	public void hideDataImport() {
+		refreshButton.hide();
+		importAttendaceButton.hide();
+		importTimeTablesButton.hide();
+	}
 
 	public IButton getRefreshButton() {
 		return refreshButton;
