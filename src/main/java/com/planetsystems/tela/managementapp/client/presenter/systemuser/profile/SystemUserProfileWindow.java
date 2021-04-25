@@ -16,7 +16,7 @@ import com.smartgwt.client.widgets.form.validator.MatchesFieldValidator;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class SystemUserWindow extends Window {
+public class SystemUserProfileWindow extends Window {
 
 	private TextItem firstNameField;
 	private TextItem lastNameField;
@@ -28,14 +28,14 @@ public class SystemUserWindow extends Window {
 	private TextItem nameAbbrevField;
 	private RadioGroupItem enabledRadioGroupItem;
 
-	private ComboBox systemUserGroup;
+	private ComboBox systemUserGroupCombo;
 
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	private IButton saveButton;
 	private IButton cancelButton;
 
-	public SystemUserWindow() {
+	public SystemUserProfileWindow() {
 
 		enabledRadioGroupItem = new RadioGroupItem();
 		enabledRadioGroupItem.setTitle("Is User Enabled");
@@ -88,12 +88,12 @@ public class SystemUserWindow extends Window {
 		genderCombo.setHint("Gender");
 		genderCombo.setShowHintInField(true);
 
-		systemUserGroup = new ComboBox();
-		systemUserGroup.setTitle("User Group");
+		systemUserGroupCombo = new ComboBox();
+		systemUserGroupCombo.setTitle("User Group");
 
 		DynamicForm dynamicForm = new DynamicForm();
 		dynamicForm.setFields(firstNameField, lastNameField, emailField, phoneNumberField, nationalIdField,
-				genderCombo, dobItem, systemUserGroup, enabledRadioGroupItem, nameAbbrevField);
+				genderCombo, dobItem, systemUserGroupCombo, enabledRadioGroupItem, nameAbbrevField);
 		dynamicForm.setNumCols(2);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
@@ -121,9 +121,9 @@ public class SystemUserWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("50%");
-		this.setHeight("70%");
+		this.setHeight("80%");
 		this.setAutoCenter(true);
-		this.setTitle("Create User");
+		this.setTitle("Create Profile");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		closeWindow(this);
@@ -182,8 +182,11 @@ public class SystemUserWindow extends Window {
 		return saveButton;
 	}
 
-	public ComboBox getSystemUserGroup() {
-		return systemUserGroup;
+	public ComboBox getSystemUserGroupCombo() {
+		return systemUserGroupCombo;
 	}
+
+
+	
 
 }
