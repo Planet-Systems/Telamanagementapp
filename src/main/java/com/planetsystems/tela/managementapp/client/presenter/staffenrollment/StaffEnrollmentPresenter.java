@@ -239,9 +239,11 @@ public class StaffEnrollmentPresenter
 			public void onClick(ClickEvent event) {
 				StaffEnrollmentWindow window = new StaffEnrollmentWindow();
 				setStaffTotal(window);
+				
 				loadAcademicYearCombo(window, null);
 				loadAcademicTermCombo(window, null);
 				loadDistrictCombo(window, null);
+				
 				loadSchoolCombo(window, null);
 				window.show();
 

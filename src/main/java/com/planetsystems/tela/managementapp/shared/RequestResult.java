@@ -39,6 +39,14 @@ import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
+import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.DistrictReportFilterDTO;
+import com.planetsystems.tela.dto.reports.NationalEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.NationalEndOfTermTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.NationalEndOfWeekTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
 
 public class RequestResult implements Result {
 
@@ -78,7 +86,7 @@ public class RequestResult implements Result {
 	private SystemUserGroupDTO systemUserGroupDTO;
 
 	private List<SystemUserProfileDTO> systemUserProfileDTOs;
-	
+
 	private List<SystemUserProfileSchoolDTO> systemUserProfileSchoolDTOs;
 
 	private DashboardSummaryDTO dashboardSummaryDTO;
@@ -91,10 +99,75 @@ public class RequestResult implements Result {
 
 	private AttendanceDashboardSummaryDTO attendanceDashboardSummaryDTO;
 
+	private List<DistrictEndOfWeekTimeAttendanceDTO> districtEndOfWeekTimeAttendanceDTOs;
+	private List<DistrictEndOfMonthTimeAttendanceDTO> districtEndOfMonthTimeAttendanceDTOs;
+	private List<DistrictEndOfTermTimeAttendanceDTO> districtEndOfTermTimeAttendanceDTOs;
+
+	private List<NationalEndOfWeekTimeAttendanceDTO> nationalEndOfWeekTimeAttendanceDTOs;
+	private List<NationalEndOfMonthTimeAttendanceDTO> nationalEndOfMonthTimeAttendanceDTOs;
+	private List<NationalEndOfTermTimeAttendanceDTO> nationalEndOfTermTimeAttendanceDTOs;
+
+	private DistrictReportFilterDTO districtReportFilterDTO;
+
+	private NationalReportFilterDTO nationalReportFilterDTO;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<NationalEndOfWeekTimeAttendanceDTO> nationalEndOfWeekTimeAttendanceDTOs,
+			NationalEndOfWeekTimeAttendanceDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.nationalEndOfWeekTimeAttendanceDTOs = nationalEndOfWeekTimeAttendanceDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<NationalEndOfMonthTimeAttendanceDTO> nationalEndOfMonthTimeAttendanceDTOs,
+			NationalEndOfMonthTimeAttendanceDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.nationalEndOfMonthTimeAttendanceDTOs = nationalEndOfMonthTimeAttendanceDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<NationalEndOfTermTimeAttendanceDTO> nationalEndOfTermTimeAttendanceDTOs,
+			NationalEndOfTermTimeAttendanceDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.nationalEndOfTermTimeAttendanceDTOs = nationalEndOfTermTimeAttendanceDTOs;
+	}
+
+	public RequestResult(DistrictReportFilterDTO districtReportFilterDTO) {
+		super();
+		this.districtReportFilterDTO = districtReportFilterDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<DistrictEndOfTermTimeAttendanceDTO> districtEndOfTermTimeAttendanceDTOs,
+			DistrictEndOfTermTimeAttendanceDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.districtEndOfTermTimeAttendanceDTOs = districtEndOfTermTimeAttendanceDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<DistrictEndOfMonthTimeAttendanceDTO> districtEndOfMonthTimeAttendanceDTOs,
+			DistrictEndOfMonthTimeAttendanceDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.districtEndOfMonthTimeAttendanceDTOs = districtEndOfMonthTimeAttendanceDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<DistrictEndOfWeekTimeAttendanceDTO> districtEndOfWeekTimeAttendanceDTOs,
+			DistrictEndOfWeekTimeAttendanceDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.districtEndOfWeekTimeAttendanceDTOs = districtEndOfWeekTimeAttendanceDTOs;
+	}
 
 	public RequestResult(AttendanceDashboardSummaryDTO attendanceDashboardSummaryDTO) {
 		super();
@@ -304,10 +377,6 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.timeAttendanceSupervisionDTOs = timeAttendanceSupervisionDTOs;
 	}
-	
-	
-	
-	
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, SystemUserGroupDTO systemUserGroupDTO) {
 		super();
@@ -464,7 +533,7 @@ public class RequestResult implements Result {
 	public FilterDTO getFilterDto() {
 		return filterDto;
 	}
-	
+
 	public SystemUserGroupDTO getSystemUserGroupDTO() {
 		return systemUserGroupDTO;
 	}
@@ -472,7 +541,7 @@ public class RequestResult implements Result {
 	public List<SystemUserProfileSchoolDTO> getSystemUserProfileSchoolDTOs() {
 		return systemUserProfileSchoolDTOs;
 	}
- 
+
 	@Override
 	public String toString() {
 		return "RequestResult [systemErrorDTO=" + systemErrorDTO + "FEEDDTO " + systemFeedbackDTO + " ]";
@@ -504,6 +573,38 @@ public class RequestResult implements Result {
 
 	public AttendanceDashboardSummaryDTO getAttendanceDashboardSummaryDTO() {
 		return attendanceDashboardSummaryDTO;
+	}
+
+	public List<DistrictEndOfWeekTimeAttendanceDTO> getDistrictEndOfWeekTimeAttendanceDTOs() {
+		return districtEndOfWeekTimeAttendanceDTOs;
+	}
+
+	public DistrictReportFilterDTO getDistrictReportFilterDTO() {
+		return districtReportFilterDTO;
+	}
+
+	public List<DistrictEndOfMonthTimeAttendanceDTO> getDistrictEndOfMonthTimeAttendanceDTOs() {
+		return districtEndOfMonthTimeAttendanceDTOs;
+	}
+
+	public List<DistrictEndOfTermTimeAttendanceDTO> getDistrictEndOfTermTimeAttendanceDTOs() {
+		return districtEndOfTermTimeAttendanceDTOs;
+	}
+
+	public List<NationalEndOfWeekTimeAttendanceDTO> getNationalEndOfWeekTimeAttendanceDTOs() {
+		return nationalEndOfWeekTimeAttendanceDTOs;
+	}
+
+	public List<NationalEndOfMonthTimeAttendanceDTO> getNationalEndOfMonthTimeAttendanceDTOs() {
+		return nationalEndOfMonthTimeAttendanceDTOs;
+	}
+
+	public List<NationalEndOfTermTimeAttendanceDTO> getNationalEndOfTermTimeAttendanceDTOs() {
+		return nationalEndOfTermTimeAttendanceDTOs;
+	}
+
+	public NationalReportFilterDTO getNationalReportFilterDTO() {
+		return nationalReportFilterDTO;
 	}
 
 }

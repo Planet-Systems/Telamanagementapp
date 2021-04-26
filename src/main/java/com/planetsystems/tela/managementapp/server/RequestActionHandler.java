@@ -52,6 +52,14 @@ import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
+import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.DistrictReportFilterDTO;
+import com.planetsystems.tela.dto.reports.NationalEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.NationalEndOfTermTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.NationalEndOfWeekTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
@@ -3225,16 +3233,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						});
 
 				if (responseDto != null) {
-					systemUserProfileDTOs = responseDto.getData();	
+					systemUserProfileDTOs = responseDto.getData();
 					feedback.setResponse(responseDto.isStatus());
 					feedback.setMessage(responseDto.getMessage());
-					 System.out.println("RESPONSE " + responseDto);
-					 System.out.println("RES DATA " + responseDto.getData());
+					System.out.println("RESPONSE " + responseDto);
+					System.out.println("RES DATA " + responseDto.getData());
 				}
 
-
 				client.close();
-				return new RequestResult(feedback, systemUserProfileDTOs , null);
+				return new RequestResult(feedback, systemUserProfileDTOs, null);
 
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_TIMETABLE_LESSONS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
@@ -3795,7 +3802,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				System.out.println("MIGRATE_DATA_SUBJECTS");
-				
+
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -4255,7 +4262,210 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, systemUserGroupDTO);
 
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfWeekTimeAttendance)) {
+
+				Client client = ClientBuilder.newClient();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.DistrictEndOfWeekTimeAttendance);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<DistrictEndOfWeekTimeAttendanceDTO> list = new ArrayList<DistrictEndOfWeekTimeAttendanceDTO>();
+
+				SystemResponseDTO<List<DistrictEndOfWeekTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("districtEndOfWeekTimeAttendance").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<List<DistrictEndOfWeekTimeAttendanceDTO>>>() {
+								});
+
+				if (responseDto != null) {
+					feedback.setMessage(responseDto.getMessage());
+					feedback.setResponse(responseDto.isStatus());
+
+					list = responseDto.getData();
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfMonthTimeAttendance)) {
+
+				Client client = ClientBuilder.newClient();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.DistrictEndOfMonthTimeAttendance);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<DistrictEndOfMonthTimeAttendanceDTO> list = new ArrayList<DistrictEndOfMonthTimeAttendanceDTO>();
+
+				SystemResponseDTO<List<DistrictEndOfMonthTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("districtEndOfMonthTimeAttendance").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<List<DistrictEndOfMonthTimeAttendanceDTO>>>() {
+								});
+
+				if (responseDto != null) {
+					feedback.setMessage(responseDto.getMessage());
+					feedback.setResponse(responseDto.isStatus());
+
+					list = responseDto.getData();
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfTermTimeAttendance)) {
+
+				Client client = ClientBuilder.newClient();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.DistrictEndOfTermTimeAttendance);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<DistrictEndOfTermTimeAttendanceDTO> list = new ArrayList<DistrictEndOfTermTimeAttendanceDTO>();
+
+				SystemResponseDTO<List<DistrictEndOfTermTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("districtEndOfTermTimeAttendance").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<List<DistrictEndOfTermTimeAttendanceDTO>>>() {
+								});
+
+				if (responseDto != null) {
+					feedback.setMessage(responseDto.getMessage());
+					feedback.setResponse(responseDto.isStatus());
+
+					list = responseDto.getData();
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfWeekTimeAttendance)) {
+
+				Client client = ClientBuilder.newClient();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.NationalEndOfWeekTimeAttendance);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<NationalEndOfWeekTimeAttendanceDTO> list = new ArrayList<NationalEndOfWeekTimeAttendanceDTO>();
+
+				SystemResponseDTO<List<NationalEndOfWeekTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("nationalEndOfWeekTimeAttendance").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<List<NationalEndOfWeekTimeAttendanceDTO>>>() {
+								});
+
+				if (responseDto != null) {
+					feedback.setMessage(responseDto.getMessage());
+					feedback.setResponse(responseDto.isStatus());
+
+					list = responseDto.getData();
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfMonthTimeAttendance)) {
+
+				Client client = ClientBuilder.newClient();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.NationalEndOfMonthTimeAttendance);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<NationalEndOfMonthTimeAttendanceDTO> list = new ArrayList<NationalEndOfMonthTimeAttendanceDTO>();
+
+				SystemResponseDTO<List<NationalEndOfMonthTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("nationalEndOfMonthTimeAttendance").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<List<NationalEndOfMonthTimeAttendanceDTO>>>() {
+								});
+
+				if (responseDto != null) {
+					feedback.setMessage(responseDto.getMessage());
+					feedback.setResponse(responseDto.isStatus());
+
+					list = responseDto.getData();
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfTermTimeAttendance)) {
+
+				Client client = ClientBuilder.newClient();
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.NationalEndOfTermTimeAttendance);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				List<NationalEndOfTermTimeAttendanceDTO> list = new ArrayList<NationalEndOfTermTimeAttendanceDTO>();
+
+				SystemResponseDTO<List<NationalEndOfTermTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("nationalEndOfTermTimeAttendance").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<List<NationalEndOfTermTimeAttendanceDTO>>>() {
+								});
+
+				if (responseDto != null) {
+					feedback.setMessage(responseDto.getMessage());
+					feedback.setResponse(responseDto.isStatus());
+
+					list = responseDto.getData();
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
 			}
 
 		} catch (ForbiddenException exception) {

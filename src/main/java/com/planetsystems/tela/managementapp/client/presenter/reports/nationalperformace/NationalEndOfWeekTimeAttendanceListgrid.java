@@ -60,8 +60,8 @@ public class NationalEndOfWeekTimeAttendanceListgrid extends SuperListGrid {
 			record.setAttribute(MON, "__");
 		}
 
-		if (dto.getTUE() != null) {
-			record.setAttribute(TUE, dto.getTUE());
+		if (dto.getTue() != null) {
+			record.setAttribute(TUE, dto.getTue());
 		} else {
 			record.setAttribute(TUE, "__");
 		}

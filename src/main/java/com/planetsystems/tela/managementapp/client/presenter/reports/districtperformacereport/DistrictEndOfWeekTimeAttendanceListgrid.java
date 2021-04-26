@@ -39,7 +39,7 @@ public class DistrictEndOfWeekTimeAttendanceListgrid extends SuperListGrid {
 		ListGridField total = new ListGridField(TOTAL, "Total");
 
 		ListGridField expected = new ListGridField(EXPECTED, "Expected");
-		ListGridField balance = new ListGridField(BALANCE, "Balance");
+		ListGridField balance = new ListGridField(BALANCE, "Variance");
 		ListGridField percent = new ListGridField(PERCENT, "Percent(%)");
 
 		this.setFields(employee, mon, tue, wed, thur, fri, sat, sun, total, expected, balance, percent);

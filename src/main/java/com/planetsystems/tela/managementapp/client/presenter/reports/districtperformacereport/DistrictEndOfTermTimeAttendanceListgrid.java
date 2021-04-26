@@ -30,7 +30,7 @@ public class DistrictEndOfTermTimeAttendanceListgrid extends SuperListGrid {
 		ListGridField total = new ListGridField(TOTAL, "Total");
 
 		ListGridField expected = new ListGridField(EXPECTED, "Expected");
-		ListGridField balance = new ListGridField(BALANCE, "Balance");
+		ListGridField balance = new ListGridField(BALANCE, "Variance");
 		ListGridField percent = new ListGridField(PERCENT, "Percent (%)");
 
 		this.setFields(school, month1, month2, month3, total, expected, balance, percent);
