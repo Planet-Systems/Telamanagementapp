@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance;
+package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.weekly;
 
 import com.smartgwt.client.widgets.layout.VLayout;
 

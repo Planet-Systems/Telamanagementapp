@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance;
+package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.daily;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ public class TeacherClockInSummaryListgrid extends SuperListGrid {
 
 	public TeacherClockInSummaryListgrid() {
 		super();
-		ListGridField employee = new ListGridField(STAFF, "Teacher");
-		employee.setHidden(true);
+		ListGridField staff = new ListGridField(STAFF, "Teacher");
+//		staff.setHidden(true);
 
 		ListGridField day = new ListGridField(DAY, "Day");
 		ListGridField date = new ListGridField(DATE, "Date");
@@ -38,7 +38,7 @@ public class TeacherClockInSummaryListgrid extends SuperListGrid {
 		ListGridField balance = new ListGridField(BALANCE, "Variance");
 		ListGridField percent = new ListGridField(PERCENT, "Percentage(%)");
 
-		this.setFields(employee, date, day, clockin, clockout, total, expected, balance, percent);
+		this.setFields(staff, date, day, clockin, clockout, total, expected, balance, percent);
 
 		this.setWrapHeaderTitles(true);
 		this.setHeaderHeight(50);
