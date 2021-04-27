@@ -34,27 +34,43 @@ public class AddSchoolWindow extends Window {
 		super();
 		schoolCode = new TextField();
 		schoolCode.setTitle("Code");
+		schoolCode.setHint("code");
+		schoolCode.setShowHintInField(true);
 
 		schoolName = new TextField();
 		schoolName.setTitle("Name");
+		schoolName.setHint("name");
+		schoolName.setShowHintInField(true);
 
 		schoolCategoryCombo = new ComboBox();
 		schoolCategoryCombo.setTitle("Category");
+		schoolCategoryCombo.setHint("category");
+		schoolCategoryCombo.setShowHintInField(true);
 
 		latitude = new TextField();
 		latitude.setTitle("Latitude");
+		latitude.setHint("latitude");
+		latitude.setShowHintInField(true);
 
 		longtitude = new TextField();
 		longtitude.setTitle("Longtitude");
+		longtitude.setHint("longtitude");
+		longtitude.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
 		districtCombo.setTitle("District");
+		districtCombo.setHint("district");
+		districtCombo.setShowHintInField(true);
 		
 		regionCombo = new ComboBox();
 		regionCombo.setTitle("Region");
+		regionCombo.setHint("region");
+		regionCombo.setShowHintInField(true);
 		
 		deviceNumber= new TextField();
 		deviceNumber.setTitle("Device Number");
+		deviceNumber.setHint("device number");
+		deviceNumber.setShowHintInField(true);
 	
 
 		saveButton = new IButton("Save");

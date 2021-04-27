@@ -22,9 +22,13 @@ public class RegionWindow extends Window {
 		super();
 		codeField = new TextField();
 		codeField.setTitle("Code");
+		codeField.setHint("code");
+		codeField.setShowHintInField(true);
 
 		nameField = new TextField();
 		nameField.setTitle("Name");
+		nameField.setHint("name");
+		nameField.setShowHintInField(true);
 	
 
 		saveButton = new IButton("Save");

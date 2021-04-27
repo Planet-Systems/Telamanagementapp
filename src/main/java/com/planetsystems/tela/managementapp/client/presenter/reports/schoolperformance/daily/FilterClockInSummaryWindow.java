@@ -13,7 +13,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class FilterClockInSummaryWindow extends Window  {
 
-	private IButton saveButton;
+	private IButton fetchButton;
 	private IButton cancelButton;
 	
 	private ComboBox academicYearCombo;
@@ -28,13 +28,13 @@ public class FilterClockInSummaryWindow extends Window  {
 	public FilterClockInSummaryWindow() {
 		super();
 
-		saveButton = new IButton("Fetch");
+		fetchButton = new IButton("Fetch");
 
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(cancelButton, saveButton);
+		buttonLayout.setMembers(cancelButton, fetchButton);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
@@ -81,11 +81,12 @@ public class FilterClockInSummaryWindow extends Window  {
 		
 				
 				
-		
-		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , schoolCombo , schoolStaffCombo , fromDateItem , toDateItem );
+		//toDateItem
+		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , schoolStaffCombo , schoolCombo , fromDateItem  );
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250" , "150", "250");
+		//, "150", "250"
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250" );
 		form.setCellPadding(10);
 		form.setNumCols(4);
 
@@ -115,8 +116,8 @@ public class FilterClockInSummaryWindow extends Window  {
 		});
 	}
 
-	public IButton getSaveButton() {
-		return saveButton;
+	public IButton getFetchButton() {
+		return fetchButton;
 	}
 
 	public ComboBox getAcademicYearCombo() {

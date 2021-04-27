@@ -39,6 +39,9 @@ import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 
 public class RequestResult implements Result {
 
@@ -89,6 +92,10 @@ public class RequestResult implements Result {
 	private List<DataOutPutByGenderDTO> staffEnrolledByGender;
 	private List<DataOutPutByGenderDTO> learnsEnrolledByGender;
 
+	private List<TeacherClockInSummaryDTO> teacherClockInSummaryDTOs;
+	List<SchoolEndOfWeekTimeAttendanceDTO> schoolEndOfWeekTimeAttendanceDTOs;
+	List<SchoolEndOfMonthTimeAttendanceDTO> schoolEndOfMonthTimeAttendanceDTOs;
+	
 	private AttendanceDashboardSummaryDTO attendanceDashboardSummaryDTO;
 
 	/**
@@ -341,6 +348,21 @@ public class RequestResult implements Result {
 		this.filterDto = filterDto;
 	}
 
+	public RequestResult(SystemFeedbackDTO feedback, List<TeacherClockInSummaryDTO> teacherClockInSummaryDTOs , TeacherClockInSummaryDTO dto) {
+	    this.systemFeedbackDTO = feedback;
+	    this.teacherClockInSummaryDTOs = teacherClockInSummaryDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO feedback, List<SchoolEndOfWeekTimeAttendanceDTO> list, SchoolEndOfWeekTimeAttendanceDTO dto) {
+		this.systemFeedbackDTO = feedback;
+		this.schoolEndOfWeekTimeAttendanceDTOs =  list;
+	}
+
+	public RequestResult(SystemFeedbackDTO feedback, List<SchoolEndOfMonthTimeAttendanceDTO> list, SchoolEndOfMonthTimeAttendanceDTO dto) {
+	   this.systemFeedbackDTO = feedback;
+	   this.schoolEndOfMonthTimeAttendanceDTOs = list;
+	}
+
 	public SystemFeedbackDTO getSystemFeedbackDTO() {
 		return systemFeedbackDTO;
 	}
@@ -505,5 +527,22 @@ public class RequestResult implements Result {
 	public AttendanceDashboardSummaryDTO getAttendanceDashboardSummaryDTO() {
 		return attendanceDashboardSummaryDTO;
 	}
+
+	public List<TeacherClockInSummaryDTO> getTeacherClockInSummaryDTOs() {
+		return teacherClockInSummaryDTOs;
+	}
+
+	public List<SchoolEndOfWeekTimeAttendanceDTO> getSchoolEndOfWeekTimeAttendanceDTOs() {
+		return schoolEndOfWeekTimeAttendanceDTOs;
+	}
+
+	public List<SchoolEndOfMonthTimeAttendanceDTO> getSchoolEndOfMonthTimeAttendanceDTOs() {
+		return schoolEndOfMonthTimeAttendanceDTOs;
+	}
+	
+	
+	
+	
+	
 
 }

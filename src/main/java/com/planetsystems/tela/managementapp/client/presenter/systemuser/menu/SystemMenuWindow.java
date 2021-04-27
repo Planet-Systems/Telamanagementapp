@@ -35,7 +35,9 @@ public class SystemMenuWindow extends Window {
 		DynamicForm form = new DynamicForm();
 		form.setFields(navigationMenuCombo, subMenuItemCombo);
 		form.setWrapItemTitles(false);
-		form.setMargin(10);
+		form.setCellPadding(8);
+		form.setColWidths("150", "250" , "150", "250" );
+
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton, saveButton);
@@ -52,7 +54,7 @@ public class SystemMenuWindow extends Window {
 
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("30%");
+		this.setWidth("40%");
 		this.setHeight("40%");
 		this.setAutoCenter(true);
 		this.setTitle("System Menu Setup");

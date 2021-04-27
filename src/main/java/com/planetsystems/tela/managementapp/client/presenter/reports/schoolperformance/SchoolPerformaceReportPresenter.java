@@ -10,7 +10,9 @@ import java.util.Locale;
 import org.apache.bcel.generic.NEW;
 
 import com.gargoylesoftware.htmlunit.javascript.host.Window;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -26,6 +28,8 @@ import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUti
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.OverallAttendanceImpactDashboardGenerator;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.OverallImpactDashboardGenerator;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.daily.FilterClockInSummaryWindow;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.daily.TeacherClockInSummaryPane;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.monthly.FilterMonthlyAttendanceSummaryWindow;
@@ -37,6 +41,10 @@ import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperfo
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
+import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestconstants.ReportsRequestConstant;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -49,6 +57,11 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 import java_cup.internal_error;
 
+import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.FilterDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.enums.WeekNumber;
 import com.planetsystems.tela.dto.enums.monthEnum;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -77,6 +90,9 @@ public class SchoolPerformaceReportPresenter
 	interface MyProxy extends ProxyPlace<SchoolPerformaceReportPresenter> {
 	}
 
+	DateTimeFormat dateTimeFormat = DateTimeFormat
+			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	
 	TeacherClockInSummaryPane clockInSummaryPane;
 	
@@ -167,12 +183,8 @@ public class SchoolPerformaceReportPresenter
 							}
 						});
 						
-						
-						
 						window.show();
-						
-//						loadTeacherClockInSummary();
-
+						getTeacherClockInSummary(window);
 					}
 				});
 
@@ -226,7 +238,7 @@ public class SchoolPerformaceReportPresenter
 						
 						
 						window.show();
-						loadSchoolEndOfWeekTimeAttendance();
+						loadSchoolEndOfWeekTimeAttendance(window , pane);
 
 					}
 				});
@@ -274,7 +286,7 @@ public class SchoolPerformaceReportPresenter
 						window.getMonthCombo().setValueMap(monthMap);
 						
 						window.show();
-						loadSchoolEndOfMonthTimeAttendance();
+						loadSchoolEndOfMonthTimeAttendance(window , pane);
 
 					}
 				});
@@ -303,20 +315,174 @@ public class SchoolPerformaceReportPresenter
 		});
 	}
 
-	private void loadTeacherClockInSummary() {
-		
+	private void getTeacherClockInSummary(final FilterClockInSummaryWindow window) {
+		window.getFetchButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if(checkIfAllFieldsNotEmpty(window)) {
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString());
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
+					AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					String fromDate = dateFormat.format(window.getFromDateItem().getValueAsDate());
+					String toDate = dateFormat.format(window.getToDateItem().getValueAsDate());
+					
+				  FilterDTO dto = new FilterDTO();
+				  dto.setAcademicTermDTO(academicTermDTO);
+				  dto.setSchoolStaffDTO(schoolStaffDTO);
+				  dto.setSchoolDTO(schoolDTO);
+				  dto.setFromDate(fromDate);
+				  dto.setToDate(toDate);
+				  
+				  LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.SAVE_REGION, dto);
+					map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.TeacherClockInSummaryREPORT);
+					map.put(ReportsRequestConstant.DATA , dto);
+				  
+				  NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+					
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						SC.say("SIZE "+result.getTeacherClockInSummaryDTOs().size());
+						clockInSummaryPane.getListgrid().addRecordsToGrid(result.getTeacherClockInSummaryDTOs());
+					}
+				});
+				  
+				  
+				}else {
+					SC.say("Fill the fields");
+				}
+		  
+			}
 
+			
+		});
 	}
-
-	@Deprecated
-	private void loadSchoolEndOfWeekTimeAttendance() {
-		
-	}
-
-	@Deprecated
-	private void loadSchoolEndOfMonthTimeAttendance() {
 	
 
+	private boolean checkIfAllFieldsNotEmpty(FilterClockInSummaryWindow window) {
+        boolean status = true;
+        if(window.getAcademicYearCombo().getValueAsString() == null) status = false;
+        if(window.getAcademicTermCombo().getValueAsString() == null) status = false;
+        if(window.getRegionCombo().getValueAsString() == null) status = false;
+        if(window.getDistrictCombo().getValueAsString() == null) status = false;
+        if(window.getSchoolCombo().getValueAsString() == null) status = false;
+        if(window.getSchoolStaffCombo().getValueAsString() == null) status = false;
+        if(window.getFromDateItem().getValueAsDate() == null) status = false;
+        //if(window.getToDateItem().getValueAsDate() == null) status = false;
+        
+		return status;
+	}
+	
+	
+	private boolean checkIfAllFieldsNotEmpty(FilterWeeklyAttendanceWindow window) {
+        boolean status = true;
+        if(window.getAcademicYearCombo().getValueAsString() == null) status = false;
+        if(window.getAcademicTermCombo().getValueAsString() == null) status = false;
+        if(window.getRegionCombo().getValueAsString() == null) status = false;
+        if(window.getDistrictCombo().getValueAsString() == null) status = false;
+        if(window.getSchoolCombo().getValueAsString() == null) status = false;
+        if(window.getMonthCombo().getValueAsString() == null) status = false;
+        if(window.getWeekCombo().getValueAsString() == null) status = false;
+        
+		return status;
+	}
+	
+	private boolean checkIfAllFieldsNotEmpty(FilterMonthlyAttendanceSummaryWindow window) {
+        boolean status = true;
+        if(window.getAcademicYearCombo().getValueAsString() == null) status = false;
+        if(window.getAcademicTermCombo().getValueAsString() == null) status = false;
+        if(window.getRegionCombo().getValueAsString() == null) status = false;
+        if(window.getDistrictCombo().getValueAsString() == null) status = false;
+        if(window.getSchoolCombo().getValueAsString() == null) status = false;
+        if(window.getMonthCombo().getValueAsString() == null) status = false;
+        
+		return status;
+	}
+	
+	
+
+	private void loadSchoolEndOfWeekTimeAttendance(final FilterWeeklyAttendanceWindow window , final SchoolEndOfWeekTimeAttendancePane pane) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if(checkIfAllFieldsNotEmpty(window)) {
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
+//					AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					AcademicYearDTO academicYearDTO = new AcademicYearDTO(window.getAcademicYearCombo().getValueAsString());
+					String month = window.getMonthCombo().getValueAsString();
+					String week = window.getWeekCombo().getValueAsString();
+					
+					
+				  FilterDTO dto = new FilterDTO();
+				  dto.setAcademicYearDTO(academicYearDTO);
+				  dto.setSchoolDTO(schoolDTO);
+				  dto.setMonth(month);
+				  dto.setWeek(week);
+					
+					 LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+						map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.SchoolEndOfWeekTimeAttendanceReport);
+						map.put(ReportsRequestConstant.DATA , dto);
+						
+						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+							
+							@Override
+							public void onNetworkResult(RequestResult result) {
+								SC.say("SIZE "+result.getSchoolEndOfWeekTimeAttendanceDTOs().size());
+//								GWT.log("ATTENDANCES "+result.getSchoolEndOfWeekTimeAttendanceDTOs());
+							  pane.getListgrid().addRecordsToGrid(result.getSchoolEndOfWeekTimeAttendanceDTOs());
+							}
+						});
+				}else {
+					SC.say("fill all fields");
+				}
+
+			}
+		});
+		
+	}
+
+
+	private void loadSchoolEndOfMonthTimeAttendance(final FilterMonthlyAttendanceSummaryWindow window , final SchoolEndOfMonthTimeAttendancePane pane ) {
+window.getSaveButton().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				if(checkIfAllFieldsNotEmpty(window)) {
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
+//					AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					AcademicYearDTO academicYearDTO = new AcademicYearDTO(window.getAcademicYearCombo().getValueAsString());
+					String month = window.getMonthCombo().getValueAsString();
+	
+
+				  FilterDTO dto = new FilterDTO();
+				  dto.setAcademicYearDTO(academicYearDTO);
+				  dto.setSchoolDTO(schoolDTO);
+				  dto.setMonth(month);
+			
+					
+					 LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+						map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.SchoolEndOfMonthTimeAttendanceREPORT);
+						map.put(ReportsRequestConstant.DATA , dto);
+						
+						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+							
+							@Override
+							public void onNetworkResult(RequestResult result) {
+								SC.say("SIZE "+result.getSchoolEndOfMonthTimeAttendanceDTOs().size());
+								GWT.log("MOnthly "+result.getSchoolEndOfMonthTimeAttendanceDTOs());
+							  //pane.getListgrid().addRecordsToGrid(result.getSchoolEndOfMonthTimeAttendanceDTOs());
+							}
+						});
+				}else {
+					SC.say("fill all fields");
+				}
+
+			}
+		});
+		
+		
 	}
 
 	private void SchoolEndOfTermTimeAttendance() {

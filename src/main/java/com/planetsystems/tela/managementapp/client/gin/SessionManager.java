@@ -1,23 +1,9 @@
 package com.planetsystems.tela.managementapp.client.gin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
-import com.planetsystems.tela.dto.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;

@@ -75,7 +75,7 @@ public class StaffEnrollmentWindow extends Window {
 		dynamicForm.setFields(academicYearCombo , academicTermCombo ,districtCombo , schoolCombo , totalMaleField , totalFemaleField , staffTotalField);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
-		dynamicForm.setColWidths("100","250");
+		dynamicForm.setColWidths("150","250" , "150","250" , "150","250" , "150","250" , "150","250" , "150","250" , "150","250");
 		dynamicForm.setCellPadding(10);
 		
 		
@@ -101,8 +101,8 @@ public class StaffEnrollmentWindow extends Window {
 		
 		
 		this.addItem(layout);
-		this.setWidth("45%");
-		this.setHeight("75%");
+		this.setWidth("50%");
+		this.setHeight("80%");
 		this.setAutoCenter(true);
 		this.setTitle("Staff Enrollment");
 		this.setIsModal(true);

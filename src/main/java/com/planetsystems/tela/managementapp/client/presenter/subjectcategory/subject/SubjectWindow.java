@@ -24,12 +24,18 @@ public class SubjectWindow extends Window {
 		super();
 		codeField = new TextField();
 		codeField.setTitle("Code");
+		codeField.setHint("code");
+		codeField.setShowHintInField(true);
 
 		nameField = new TextField();
 		nameField.setTitle("Subject");
+		nameField.setHint("subject");
+		nameField.setShowHintInField(true);
 
 		subjectCategoryCombo = new ComboBox();
 		subjectCategoryCombo.setTitle("Category");
+		subjectCategoryCombo.setHint("category");
+		subjectCategoryCombo.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
 		

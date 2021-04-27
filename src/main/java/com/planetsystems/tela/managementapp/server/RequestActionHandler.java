@@ -52,10 +52,15 @@ import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolTimeOnTaskSummaryDTO;
+import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestconstants.ReportsRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemMenuRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupSystemMenuRequestConstant;
@@ -3661,28 +3666,39 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(dashboardSummaryDTO);
 
 			}
-//
-//=======
-//				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
-//						.path("SystemUserProfileSchools")
-//						.path(profileId)
-//						.path("Schools")
-//						.request(MediaType.APPLICATION_JSON).headers(headers)
-//						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
-//								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
-//								});
-//
-//
-//				if (postResponseDTO != null) {
-//					feedback = postResponseDTO.getData();
-//				}
-//
-//				
-//
-//				client.close();
-//				return new RequestResult(feedback);
-//
-//			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				Client client = ClientBuilder.newClient();
+				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
+				
+				List<SchoolDTO> dtos =  (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.DATA);
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
+						.path("SystemUserProfileSchools")
+						.path(profileId)
+						.path("Schools")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dtos, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+					feedback.setMessage(postResponseDTO.getMessage());
+					feedback.setResponse(postResponseDTO.isStatus());
+				}
+
+				
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
 //			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS)
 //					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 //
@@ -3712,36 +3728,38 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 //
 //			}
 //			
-//			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE)
-//					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
-//
-//				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-//
-//				List<SchoolDTO> dtos =  (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.DATA);
-//				System.out.println("Handler profileSchool  "+dtos);
-//				Client client = ClientBuilder.newClient();
-//				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
-//				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-//				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
-//				headers.add(HttpHeaders.AUTHORIZATION, token);
-//
-//				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
-//						.path("SystemUserProfileSchools").path(profileId)
-//						.request(MediaType.APPLICATION_JSON).headers(headers)
-//						.put(Entity.entity(dtos , MediaType.APPLICATION_JSON),new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {});
-//
-//				if (deleteResponseDTO != null) {
-//					feedback = deleteResponseDTO.getData();
-//				}
-//
-//				
-//
-//				client.close();
-//				return new RequestResult(feedback);
-//
-//			}
-//			
-//>>>>>>> test
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<SchoolDTO> dtos =  (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.DATA);
+				System.out.println("Handler profileSchool  "+dtos);
+				Client client = ClientBuilder.newClient();
+				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
+						.path("SystemUserProfileSchools").path(profileId)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.put(Entity.entity(dtos , MediaType.APPLICATION_JSON),new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+					feedback.setMessage(deleteResponseDTO.getMessage());
+					feedback.setResponse(deleteResponseDTO.isStatus());
+				}
+
+				
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.MIGRATE_DATA)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
@@ -4234,6 +4252,105 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback , systemUserGroupDTO);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.TeacherClockInSummaryREPORT)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<TeacherClockInSummaryDTO> list = new ArrayList<TeacherClockInSummaryDTO>();
+				
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(ReportsRequestConstant.DATA);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<TeacherClockInSummaryDTO>> responseDto = client.target(API_LINK)
+						.path("Reports").path("TeacherClockInSummary")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto , MediaType.APPLICATION_JSON) , 
+								new GenericType<SystemResponseDTO<List<TeacherClockInSummaryDTO>>>() {
+						});
+
+				if (responseDto != null) {
+					list = responseDto.getData();
+					feedback.setResponse(true);
+					feedback.setMessage(responseDto.getMessage());
+					System.out.println("REPORT1  " + responseDto);
+					System.out.println("RESport1  " + responseDto.getData());
+				}
+			
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.SchoolEndOfWeekTimeAttendanceReport)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolEndOfWeekTimeAttendanceDTO> list = new ArrayList<SchoolEndOfWeekTimeAttendanceDTO>();
+				
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(ReportsRequestConstant.DATA);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SchoolEndOfWeekTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("Reports").path("SchoolEndOfWeekTimeAttendance")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto , MediaType.APPLICATION_JSON) , 
+								new GenericType<SystemResponseDTO<List<SchoolEndOfWeekTimeAttendanceDTO>>>() {
+						});
+
+				if (responseDto != null) {
+					list = responseDto.getData();
+					feedback.setResponse(true);
+					feedback.setMessage(responseDto.getMessage());
+					System.out.println("REPORT1  " + responseDto);
+					System.out.println("RESport1  " + responseDto.getData());
+				}
+			
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.SchoolEndOfMonthTimeAttendanceREPORT)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolEndOfMonthTimeAttendanceDTO> list = new ArrayList<SchoolEndOfMonthTimeAttendanceDTO>();
+				
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(ReportsRequestConstant.DATA);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SchoolEndOfMonthTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("Reports").path("SchoolEndOfMonthTimeAttendance")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto , MediaType.APPLICATION_JSON) , 
+								new GenericType<SystemResponseDTO<List<SchoolEndOfMonthTimeAttendanceDTO>>>() {
+						});
+
+				if (responseDto != null) {
+					list = responseDto.getData();
+					feedback.setResponse(true);
+					feedback.setMessage(responseDto.getMessage());
+					System.out.println("REPORT1  " + responseDto);
+					System.out.println("RESport1  " + responseDto.getData());
+				}
+			
+
+				client.close();
+				return new RequestResult(feedback, list, null);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}

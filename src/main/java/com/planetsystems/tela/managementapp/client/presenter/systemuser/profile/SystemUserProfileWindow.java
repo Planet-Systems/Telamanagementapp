@@ -39,9 +39,10 @@ public class SystemUserProfileWindow extends Window {
 
 		enabledRadioGroupItem = new RadioGroupItem();
 		enabledRadioGroupItem.setTitle("Is User Enabled");
-		enabledRadioGroupItem.setColSpan("*");
+//		enabledRadioGroupItem.setColSpan("*");
 		enabledRadioGroupItem.setDefaultValue(true);
 		enabledRadioGroupItem.setVertical(false);
+		
 
 		MatchesFieldValidator validator = new MatchesFieldValidator();
 		validator.setOtherField("confirmPassword");
@@ -91,14 +92,15 @@ public class SystemUserProfileWindow extends Window {
 		systemUserGroupCombo = new ComboBox();
 		systemUserGroupCombo.setTitle("User Group");
 
-		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(firstNameField, lastNameField, emailField, phoneNumberField, nationalIdField,
-				genderCombo, dobItem, systemUserGroupCombo, enabledRadioGroupItem, nameAbbrevField);
-		dynamicForm.setNumCols(2);
-		dynamicForm.setWrapItemTitles(false);
-		dynamicForm.setMargin(10);
-		dynamicForm.setCellPadding(8);
-		dynamicForm.setColWidths("120", "280");
+		//nameAbbrevField
+		DynamicForm form = new DynamicForm();
+		form.setFields(firstNameField, lastNameField, emailField, phoneNumberField, nationalIdField,
+				genderCombo, dobItem,  enabledRadioGroupItem , systemUserGroupCombo);
+		form.setNumCols(2);
+		form.setWrapItemTitles(false);
+		form.setCellPadding(8);
+		form.setNumCols(4);
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250");
 
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Close");
@@ -113,15 +115,15 @@ public class SystemUserProfileWindow extends Window {
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
-		layout.addMember(dynamicForm);
+		layout.addMember(form);
 		layout.addMember(buttonLayout);
 		layout.setMembersMargin(10);
 		layout.setMargin(10);
 
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("50%");
-		this.setHeight("80%");
+		this.setWidth("70%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
 		this.setTitle("Create Profile");
 		this.setIsModal(true);

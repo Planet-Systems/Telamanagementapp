@@ -50,10 +50,12 @@ public class SystemUserGroupWindow extends Window {
 		DynamicForm form = new DynamicForm();
 		form.setFields(codeField, nameField, descriptionField, defaultRoleBox, receiveAlertBox, administrativeRoleBox);
 		form.setWrapItemTitles(false);
-		form.setMargin(10);
+		form.setCellPadding(8);
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250");
+
 
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(saveButton, cancelButton);
+		buttonLayout.setMembers(cancelButton , saveButton);
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
 		buttonLayout.setAlign(Alignment.CENTER);
 		buttonLayout.setWidth("20%");

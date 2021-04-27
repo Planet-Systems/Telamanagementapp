@@ -57,7 +57,7 @@ public class AcademicTermWindow extends Window {
 		form.setMargin(10);
 		form.setAutoFocus(true);
 		
-		form.setColWidths("150","250");
+		form.setColWidths("150","250" , "150","250" , "150","250" , "150","250" , "150","250");
 		form.setCellPadding(10);
 		
 
@@ -76,8 +76,8 @@ public class AcademicTermWindow extends Window {
 		
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setWidth("50%");
+		this.setHeight("70%");
 		this.setAutoCenter(true);
 		this.setTitle("Timetable Lesson");
 		this.setIsModal(true);

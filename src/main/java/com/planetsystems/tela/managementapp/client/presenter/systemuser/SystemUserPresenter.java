@@ -29,7 +29,6 @@ import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserProfileDTO;
-import com.planetsystems.tela.dto.enums.SubMenuItemDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
@@ -39,9 +38,9 @@ import com.planetsystems.tela.managementapp.client.presenter.networkutil.Network
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupSystemMenuListgrid;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupSystemMenuWindow;
+import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupWindow;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupListgrid;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupPane;
-import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupWindow;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.manage.FilterSchoolsRegionDistrictWindow;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.manage.SelectProfileSchoolWindow;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.manage.SystemUserProfilePermissionWindow;
@@ -51,7 +50,6 @@ import com.planetsystems.tela.managementapp.client.presenter.systemuser.menu.Sys
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserPane;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.profile.SystemUserProfileWindow;
-import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -133,7 +131,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					
+
 					MenuButton permissions = new MenuButton("Permissions");
 
 					List<MenuButton> buttons = new ArrayList<>();
@@ -145,10 +143,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					getView().getControlsPane().addMenuButtons("System user groups", buttons);
 
 					saveSystemUserGroup(newButton);
-					//editSystemUserGroup(edit);
+					// editSystemUserGroup(edit);
 					deletUserUserGroup(delete);
 					getAllSystemUserGroups();
-					
+
 					loaSystemUserMenu(permissions);
 
 				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_USER_PROFILES)) {
@@ -165,9 +163,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					buttons.add(delete);
 					buttons.add(details);
 					buttons.add(permission);
-					
+
 					addSystemUserPermission(permission);
-					
 
 					getView().getControlsPane().addMenuButtons("System user details", buttons);
 
@@ -196,98 +193,101 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 		});
 	}
-	
-	////personal user permissions
+
+	//// personal user permissions
 	private void addSystemUserPermission(MenuButton permission) {
-      permission.addClickHandler(new ClickHandler() {
-		
-		@Override
-		public void onClick(ClickEvent event) {
-            if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
-            	final ListGridRecord profileRecord = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
-            	final SystemUserProfilePermissionWindow window = new SystemUserProfilePermissionWindow();
-            	
-            	window.setTitle("Add Permission to "+profileRecord.getAttribute(SystemUserListGrid.EMAIL));
-         
-            	getSchoolsBySystemUserProfile(window, profileRecord);
-            	
-            	
-    			window.show();	
-    			showFilterSchoolsRegionDistrictWindow(window);
-    			window.getSystemUserSchoolPane().getUserSchoolButton().addClickHandler(new ClickHandler() {
-					
-					@Override
-					public void onClick(ClickEvent event) {
-						getSchoolsBySystemUserProfile(window , profileRecord);
-					}
-				});
-    			
-    			window.getSystemUserSchoolPane().getDeleteButton().addClickHandler(new ClickHandler() {
-					
-					@Override
-					public void onClick(ClickEvent event) {
-						if (window.getSystemUserSchoolPane().getSchoolDistrictListGrid().anySelected()) {
-							SC.confirm("Are Sure to remove this schools ", new BooleanCallback() {
-								
-								@Override
-								public void execute(Boolean value) {
-									if (value) {
-										ListGridRecord[] records = window.getSystemUserSchoolPane().getSchoolDistrictListGrid().getSelectedRecords();
-										List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
-										for (int i = 0; i < records.length; i++) {
-											schoolDTOs.add(new SchoolDTO(records[i].getAttribute(SchoolListGrid.ID)));
-										}
-										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-										map.put(NetworkDataUtil.ACTION	, RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
-										map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID, profileRecord.getAttribute(SystemUserListGrid.ID));
-										map.put(RequestConstant.DATA , schoolDTOs);
-										
-										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-											public static final String GET_USER_GROUP = "GET_USER_GROUP";
-											@Override
-											public void onNetworkResult(RequestResult result) {
-												getSchoolsBySystemUserProfile(window, profileRecord);
-											}
-										});
-											
-									}
-								}
-							});
-	
-						}else {
-							SC.say("Select Schools to delete from your account");
+		permission.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
+					final ListGridRecord profileRecord = getView().getSystemUserPane().getSystemUserListGrid()
+							.getSelectedRecord();
+					final SystemUserProfilePermissionWindow window = new SystemUserProfilePermissionWindow();
+
+					window.setTitle("Add Permission to " + profileRecord.getAttribute(SystemUserListGrid.EMAIL));
+
+					getSchoolsBySystemUserProfile(window, profileRecord);
+
+					window.show();
+					showFilterSchoolsRegionDistrictWindow(window);
+					window.getSystemUserSchoolPane().getUserSchoolButton().addClickHandler(new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent event) {
+							getSchoolsBySystemUserProfile(window, profileRecord);
 						}
-					}
-				});
-    		
-			}else {
-				SC.say("Please a user to add permissions");
+					});
+
+					window.getSystemUserSchoolPane().getDeleteButton().addClickHandler(new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent event) {
+							if (window.getSystemUserSchoolPane().getSchoolDistrictListGrid().anySelected()) {
+								SC.confirm("Are Sure to remove this schools ", new BooleanCallback() {
+
+									@Override
+									public void execute(Boolean value) {
+										if (value) {
+											ListGridRecord[] records = window.getSystemUserSchoolPane()
+													.getSchoolDistrictListGrid().getSelectedRecords();
+											List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
+											for (int i = 0; i < records.length; i++) {
+												schoolDTOs
+														.add(new SchoolDTO(records[i].getAttribute(SchoolListGrid.ID)));
+											}
+											LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+											map.put(NetworkDataUtil.ACTION,
+													RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
+											map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID,
+													profileRecord.getAttribute(SystemUserListGrid.ID));
+											map.put(RequestConstant.DATA, schoolDTOs);
+
+											NetworkDataUtil.callNetwork(dispatcher, placeManager, map,	new NetworkResult() {
+												
+														@Override
+														public void onNetworkResult(RequestResult result) {
+															getSchoolsBySystemUserProfile(window, profileRecord);
+														}
+													});
+
+										}
+									}
+								});
+
+							} else {
+								SC.say("Select Schools to delete from your account");
+							}
+						}
+					});
+
+				} else {
+					SC.say("Please a user to add permissions");
+				}
+
 			}
-			
-		}
 
+		});
 
-	});
-		
 	}
 
-	
-	public void getSchoolsBySystemUserProfile(final SystemUserProfilePermissionWindow window , ListGridRecord profileRecord) {
+	public void getSchoolsBySystemUserProfile(final SystemUserProfilePermissionWindow window,
+			ListGridRecord profileRecord) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID, profileRecord.getAttributeAsObject(SystemUserListGrid.ID));
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
-			map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS);
-			else 
-		map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
+//		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+//			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
+//		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
+
 			@Override
 			public void onNetworkResult(RequestResult result) {
-			 window.getSystemUserSchoolPane().getSchoolDistrictListGrid().addRecordsToGrid(result.getSchoolDTOs());		
+				window.getSystemUserSchoolPane().getSchoolDistrictListGrid().addRecordsToGrid(result.getSchoolDTOs());
 			}
 		});
 	}
-	
+
 	private void editSystemUserGroup(MenuButton edit) {
 		edit.addClickHandler(new ClickHandler() {
 
@@ -297,106 +297,118 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				if (groupGridRecord.anySelected()) {
 					SystemUserGroupWindow window = new SystemUserGroupWindow();
 					onUpdateUserGroup(window);
-					loadFieldsToEdit(window , groupGridRecord.getSelectedRecord());
+					loadFieldsToEdit(window, groupGridRecord.getSelectedRecord());
 					window.show();
-				}else {
+				} else {
 					SC.say("Please Select group to edit");
 				}
-	
+
 			}
 		});
 	}
-	
-	
-	
-	private void showFilterSchoolsRegionDistrictWindow(final SystemUserProfilePermissionWindow profilePermissionWindow) {
+
+	private void showFilterSchoolsRegionDistrictWindow(
+			final SystemUserProfilePermissionWindow profilePermissionWindow) {
 		profilePermissionWindow.getSystemUserSchoolPane().getAddButton().addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
-			 final ListGridRecord profileRecord = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
-				
+				final ListGridRecord profileRecord = getView().getSystemUserPane().getSystemUserListGrid()
+						.getSelectedRecord();
+
 				final FilterSchoolsRegionDistrictWindow regionDistrictWindow = new FilterSchoolsRegionDistrictWindow();
 				final String defaultValue = null;
-				ComboUtil.loadRegionCombo(regionDistrictWindow.getFilterRegionDistrict().getRegionCombo() , dispatcher, placeManager, defaultValue);
+				ComboUtil.loadRegionCombo(regionDistrictWindow.getFilterRegionDistrict().getRegionCombo(), dispatcher,
+						placeManager, defaultValue);
 				regionDistrictWindow.getFilterRegionDistrict().getRegionCombo().addChangedHandler(new ChangedHandler() {
-					
+
 					@Override
 					public void onChanged(ChangedEvent event) {
-						ComboUtil.loadDistrictComboByRegion(regionDistrictWindow.getFilterRegionDistrict().getRegionCombo(), regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo(), dispatcher, placeManager, defaultValue);
+						ComboUtil.loadDistrictComboByRegion(
+								regionDistrictWindow.getFilterRegionDistrict().getRegionCombo(),
+								regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo(), dispatcher,
+								placeManager, defaultValue);
 					}
 				});
-				
+
 				regionDistrictWindow.getLoadSchoolsButton().addClickHandler(new ClickHandler() {
-					
+
 					@Override
 					public void onClick(ClickEvent event) {
-						if (regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo().getValueAsString() != null) {
+						if (regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo()
+								.getValueAsString() != null) {
 							final SelectProfileSchoolWindow profileSchoolWindow = new SelectProfileSchoolWindow();
-							
+
 							profileSchoolWindow.show();
 							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							map.put(NetworkDataUtil.ACTION	, RequestConstant.GET_NOT_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE_DISTRICT);
-							map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID , profileRecord.getAttribute(SystemUserListGrid.ID));
-							map.put(RequestDelimeters.DISTRICT_ID, regionDistrictWindow.getFilterRegionDistrict().getDistrictCombo().getValueAsString());
+							map.put(NetworkDataUtil.ACTION,
+									RequestConstant.GET_NOT_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE_DISTRICT);
+							map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID,
+									profileRecord.getAttribute(SystemUserListGrid.ID));
+							map.put(RequestDelimeters.DISTRICT_ID, regionDistrictWindow.getFilterRegionDistrict()
+									.getDistrictCombo().getValueAsString());
 							NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-								
+
 								@Override
 								public void onNetworkResult(RequestResult result) {
-									profileSchoolWindow.getSchoolDistrictListGrid().addRecordsToGrid(result.getSchoolDTOs());
-									if(!result.getSchoolDTOs().isEmpty())
+									profileSchoolWindow.getSchoolDistrictListGrid()
+											.addRecordsToGrid(result.getSchoolDTOs());
+									if (!result.getSchoolDTOs().isEmpty())
 										profileSchoolWindow.getAddSchoolsButton().enable();
 								}
 							});
+                           
+							//saving system user profile schools
 							
 							profileSchoolWindow.getAddSchoolsButton().addClickHandler(new ClickHandler() {
-								
+
 								@Override
 								public void onClick(ClickEvent event) {
-									if(profileSchoolWindow.getSchoolDistrictListGrid().anySelected()) {
-										
-										ListGridRecord[] records = profileSchoolWindow.getSchoolDistrictListGrid().getSelectedRecords();
+									if (profileSchoolWindow.getSchoolDistrictListGrid().anySelected()) {
+
+										ListGridRecord[] records = profileSchoolWindow.getSchoolDistrictListGrid()
+												.getSelectedRecords();
 										List<SchoolDTO> schoolDTOs = new ArrayList<SchoolDTO>();
 										for (int i = 0; i < records.length; i++) {
 											ListGridRecord schoolRecord = records[i];
-										    schoolDTOs.add(new SchoolDTO(schoolRecord.getAttribute(SchoolListGrid.ID)));
+											schoolDTOs.add(new SchoolDTO(schoolRecord.getAttribute(SchoolListGrid.ID)));
 										}
-										
+
 										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-										map.put(NetworkDataUtil.ACTION	, RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
-										map.put(RequestConstant.DATA , schoolDTOs);
-										map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID , profileRecord.getAttribute(SystemUserListGrid.ID));
+										map.put(NetworkDataUtil.ACTION,
+												RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
+										map.put(RequestConstant.DATA, schoolDTOs);
+										map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID,
+												profileRecord.getAttribute(SystemUserListGrid.ID));
 										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-											
+
 											@Override
 											public void onNetworkResult(RequestResult result) {
-											 //close windows
+												// close windows
 												getSchoolsBySystemUserProfile(profilePermissionWindow, profileRecord);
 												profilePermissionWindow.close();
 												regionDistrictWindow.close();
 												profileSchoolWindow.close();
-										
+
 											}
 										});
-									}else {
+									} else {
 										SC.say("Select school to add");
 									}
 								}
 							});
-							
-							
-						}else {
+
+						} else {
 							SC.say("Please select a district");
 						}
-						
+
 					}
 				});
-				
+
 				regionDistrictWindow.show();
 			}
 		});
 	}
-	
 
 	// Systems user groups setup
 
@@ -406,79 +418,84 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 			@Override
 			public void onClick(ClickEvent event) {
-	
+
 				final SystemUserGroupWindow window = new SystemUserGroupWindow();
-			
+
 				window.getSaveButton().addClickHandler(new ClickHandler() {
-					
+
 					@Override
 					public void onClick(ClickEvent event) {
-					 if (checkIfNoSystemUserGroupWindowFieldIsEmpty(window)) {
-						  SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
+						if (checkIfNoSystemUserGroupWindowFieldIsEmpty(window)) {
+							SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
 							systemUserGroupDTO.setCode(window.getCodeField().getValueAsString());
 
 							systemUserGroupDTO.setDescription(window.getDescriptionField().getValueAsString());
 							systemUserGroupDTO.setName(window.getNameField().getValueAsString());
 							systemUserGroupDTO.setDefaultGroup(window.getDefaultRoleBox().getValueAsBoolean());
 							systemUserGroupDTO.setReceiveAlerts(window.getReceiveAlertBox().getValueAsBoolean());
-							systemUserGroupDTO.setAdministrativeRole(window.getAdministrativeRoleBox().getValueAsBoolean());
-						 
-						 LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+							systemUserGroupDTO
+									.setAdministrativeRole(window.getAdministrativeRoleBox().getValueAsBoolean());
+
+							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 							map.put(SystemUserGroupRequestConstant.DATA, systemUserGroupDTO);
-							map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestConstant.SAVE_SYSTEM_USER_GROUP);
+							map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.SAVE_SYSTEM_USER_GROUP);
 							NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-								
+
 								@Override
 								public void onNetworkResult(RequestResult result) {
-						          clearSystemGroupWindow(window);
-						          SC.say(result.getSystemFeedbackDTO().getMessage());
-						          getAllSystemUserGroups();
+									clearSystemGroupWindow(window);
+									SC.say(result.getSystemFeedbackDTO().getMessage());
+									getAllSystemUserGroups();
 //									getView().getUserGroupPane().getListgrid()
 //									.addRecordsToGrid(result.getSystemUserGroupDTOs());
-								}				
+								}
 							});
-					}else {
-						SC.say("Please fill all the fields");
-					}	
-					
+						} else {
+							SC.say("Please fill all the fields");
+						}
+
 					}
 				});
-				
-				//onSaveUserGroup(window);
+
+				// onSaveUserGroup(window);
 				window.show();
 
 			}
 		});
 
 	}
-	
-	private boolean checkIfNoSystemUserGroupWindowFieldIsEmpty(SystemUserGroupWindow window) {
-	 	if (window.getNameField().getValueAsString() == null) return false;
-	 	
-	  	if (!window.getReceiveAlertBox().getValueAsBoolean()) return false; 
-	  	
-	  	if (window.getCodeField().getValueAsString() == null) return false;
-	  	
-	  	if (window.getDescriptionField().getValueAsString() == null) return false;
-	  	
-	  	if (!window.getDefaultRoleBox().getValueAsBoolean()) return false;
-	  	
-	  	if(!window.getAdministrativeRoleBox().getValueAsBoolean()) return false;
-	  	
-		return true;
-	}
-	
-	private void clearSystemGroupWindow(SystemUserGroupWindow window) {
-	  	window.getNameField().clearValue();
-	  	window.getReceiveAlertBox().clearValue();
-	  	window.getCodeField().clearValue();
-	  	window.getDescriptionField().clearValue();
-	  	window.getDefaultRoleBox().clearValue();
-	  	window.getAdministrativeRoleBox().clearValue();
-	}
-	
-	
 
+	private boolean checkIfNoSystemUserGroupWindowFieldIsEmpty(SystemUserGroupWindow window) {
+		boolean status = true;
+		if (window.getNameField().getValueAsString() == null)
+			status = false;
+
+		if (!window.getReceiveAlertBox().getValueAsBoolean())
+			status = false;
+
+		if (window.getCodeField().getValueAsString() == null)
+			status = false;
+
+		if (window.getDescriptionField().getValueAsString() == null)
+			status = false;
+
+		if (!window.getDefaultRoleBox().getValueAsBoolean())
+			status = false;
+
+		if (!window.getAdministrativeRoleBox().getValueAsBoolean())
+			status = false;
+
+		return status;
+	}
+
+	private void clearSystemGroupWindow(SystemUserGroupWindow window) {
+		window.getNameField().clearValue();
+		window.getReceiveAlertBox().clearValue();
+		window.getCodeField().clearValue();
+		window.getDescriptionField().clearValue();
+		window.getDefaultRoleBox().clearValue();
+		window.getAdministrativeRoleBox().clearValue();
+	}
 
 	private void deletUserUserGroup(final MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
@@ -491,7 +508,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		});
 	}
 
-	//@Deprecated
+	// @Deprecated
 //	private void onSaveUserGroup(final SystemUserGroupWindow window) {
 //		window.getSaveButton().addClickHandler(new ClickHandler() {
 //
@@ -553,15 +570,15 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 	private void getAllSystemUserGroups() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
+
 			@Override
 			public void onNetworkResult(RequestResult result) {
 				getView().getUserGroupPane().getListgrid().addRecordsToGrid(result.getSystemUserGroupDTOs());
 			}
 		});
-		
+
 //		dispatcher.execute(new RequestAction(RequestConstant.GET_USER_GROUP, map), new AsyncCallback<RequestResult>() {
 //			public void onFailure(Throwable caught) {
 //				System.out.println(caught.getMessage());
@@ -727,7 +744,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 	}
 
-	private void loadFieldsToEdit(final SystemUserGroupWindow window , ListGridRecord systemUserGroupRecord) {
+	private void loadFieldsToEdit(final SystemUserGroupWindow window, ListGridRecord systemUserGroupRecord) {
 
 		window.getCodeField().setValue(systemUserGroupRecord.getAttribute(UserGroupListgrid.CODE));
 		window.getDescriptionField().setValue(systemUserGroupRecord.getAttribute(UserGroupListgrid.Description));
@@ -777,13 +794,14 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	}
 
 	private void loadUserGroupsCombo(final SystemUserProfileWindow window) {
-		
-		//ComboUtil.loadSystemUserGroupCombo(window.getSystemUserGroupCombo() , dispatcher, placeManager, null);
-		
+
+		// ComboUtil.loadSystemUserGroupCombo(window.getSystemUserGroupCombo() ,
+		// dispatcher, placeManager, null);
+
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
+
 			@Override
 			public void onNetworkResult(RequestResult result) {
 				LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
@@ -845,138 +863,107 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 			@Override
 			public void onClick(ClickEvent event) {
+				if (checkIfProfileFieldsNotEmpty(window)) {
 
-				SystemUserProfileDTO dto = new SystemUserProfileDTO();
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					SystemUserProfileDTO dto = new SystemUserProfileDTO();
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				SystemUserDTO systemUserDTO = new SystemUserDTO();
-				systemUserDTO.setEnabled(Boolean.valueOf(window.getEnabledRadioGroupItem().getValueAsString()));
-				systemUserDTO.setUserName(window.getEmailField().getValueAsString());
-				systemUserDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
-				
-				 // dto.setPassword(window.getPasswordField().getValueAsString());
-			
+					SystemUserDTO systemUserDTO = new SystemUserDTO();
+					systemUserDTO.setEnabled(Boolean.valueOf(window.getEnabledRadioGroupItem().getValueAsString()));
+					systemUserDTO.setUserName(window.getEmailField().getValueAsString());
+					systemUserDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-				GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
-				generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
-				generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
-				generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
-				generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
-				generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
-				generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
-				generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
-				generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+					// dto.setPassword(window.getPasswordField().getValueAsString());
 
-				SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
-				systemUserGroupDTO.setId(window.getSystemUserGroupCombo().getValueAsString());
+					GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
+					generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+					generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+					generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
+					generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+					generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
+					generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
+					generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+					generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
 
-				dto.setSystemUserDTO(systemUserDTO);
-				dto.setSystemUserGroupDTO(systemUserGroupDTO);
-				dto.setGeneralUserDetailDTO(generalUserDetailDTO);
+					SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
+					systemUserGroupDTO.setId(window.getSystemUserGroupCombo().getValueAsString());
 
-				if (checkIfNoSystemUserWindowFieldIsEmpty(window)) {
 
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(NetworkDataUtil.ACTION , SystemUserProfileRequestConstant.SAVE_SYSTEM_USER_PROFILE);
-					map.put(SystemUserProfileRequestConstant.DATA , dto);
-					SC.showPrompt("", "", new SwizimaLoader());
+					dto.setSystemUserDTO(systemUserDTO);
+					dto.setSystemUserGroupDTO(systemUserGroupDTO);
+					dto.setGeneralUserDetailDTO(generalUserDetailDTO);
+
+					if (checkIfNoSystemUserWindowFieldIsEmpty(window)) {
+
+						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+						map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.SAVE_SYSTEM_USER_PROFILE);
+						map.put(SystemUserProfileRequestConstant.DATA, dto);
+						SC.showPrompt("", "", new SwizimaLoader());
 
 						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 							@Override
 							public void onNetworkResult(RequestResult result) {
 								clearSystemUserWindowFields(window);
+								window.close();
 								getAllSystemUserProfiles();
 							}
 						});
-						
-						
-					
-//					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SYSTEM_USER, map),
-//							new AsyncCallback<RequestResult>() {
-//
-//								public void onFailure(Throwable caught) {
-//
-//									SC.clearPrompt();
-//									System.out.println(caught.getMessage());
-//									SC.say("ERROR", caught.getMessage());
-//								}
-//
-//								public void onSuccess(RequestResult result) {
-//									SC.clearPrompt();
-//
-//									clearSystemUserWindowFields(window);
-//
-//									SessionManager.getInstance().manageSession(result, placeManager);
-//
-//									if (result != null) {
-//										SystemFeedbackDTO feedback = result.getSystemFeedbackDTO();
-//
-//										if (feedback.isResponse()) {
-//
-//											SC.say("Success", feedback.getMessage());
-//
-//											getView().getSystemUserPane().getSystemUserListGrid()
-//													.addRecordsToGrid(result.getSystemUserProfileDTOs());
-//
-//										} else {
-//											SC.warn("ERROR", feedback.getMessage());
-//										}
-//
-//									} else {
-//										SC.warn("ERROR", "Unknow error");
-//									}
-//
-//								}
-//
-//							});
-				} else {
-					SC.say("Please Fill all fields");
+					} 
+
+				}else {
+					SC.say("Fill all the fields");
 				}
-
-		
-
-			
-
-//			  GWT.log("USER "+dto);
-//			  if(confirmPassword(window)) {
-//				  if(checkIfNoSystemUserWindowFieldIsEmpty(window)) {
-//					  LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-//						map.put(RequestConstant.SAVE_SYSTEM_USER, dto);
-//						map.put(NetworkDataUtil.ACTION , RequestConstant.SAVE_SYSTEM_USER);
-//
-//						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-//
-//							@Override
-//							public void onNetworkResult(RequestResult result) {
-//								clearSystemUserWindowFields(window);
-//								getAllSystemUsers();
-//							}
-//						});
-//				  }else {
-//					  SC.say("Please Fill all fields");
-//				  }
-//
-//			  }else {
-//				  SC.say("Passwords don't match");
-//			  }
 
 			}
 		});
 	}
-	
+
+	private boolean checkIfProfileFieldsNotEmpty(SystemUserProfileWindow window) {
+		boolean status = true;
+
+		if (window.getFirstNameField().getValueAsString() == null)
+			status = false;
+
+		if (window.getLastNameField().getValueAsString() == null)
+			status = false;
+
+		if (window.getPhoneNumberField().getValueAsString() == null)
+			status = false;
+
+		if (window.getEmailField().getValueAsString() == null)
+			status = false;
+
+		if (window.getDobItem().getValueAsDate() == null)
+			status = false;
+
+		if (window.getNationalIdField().getValueAsString() == null)
+			status = false;
+
+		if (window.getGenderCombo().getValueAsString() == null)
+			status = false;
+
+		if (window.getSystemUserGroupCombo().getValueAsString() == null)
+			status = false;
+
+		// if(window.getNameAbbrevField().getValueAsString() == null) status = false;
+
+		return status;
+	}
+
 	private void getAllSystemUserProfiles() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION ,RequestConstant.GET_ALL_SYSTEM_USERS);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_ALL_SYSTEM_USERS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				getView().getSystemUserPane().getSystemUserListGrid().addRecordsToGrid(result.getSystemUserProfileDTOs());
+				getView().getSystemUserPane().getSystemUserListGrid()
+						.addRecordsToGrid(result.getSystemUserProfileDTOs());
 			}
 		});
-		
+
 	}
 
 	private void clearSystemUserWindowFields(SystemUserProfileWindow window) {
@@ -1022,14 +1009,14 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.GET_SYSTEM_USER_PROFILES);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
+
 			@Override
 			public void onNetworkResult(RequestResult result) {
 				getView().getSystemUserPane().getSystemUserListGrid()
-				.addRecordsToGrid(result.getSystemUserProfileDTOs());
+						.addRecordsToGrid(result.getSystemUserProfileDTOs());
 			}
 		});
-		
+
 //		SC.showPrompt("", "", new SwizimaLoader());
 //
 //		dispatcher.execute(new RequestAction(RequestConstant.GET_ALL_SYSTEM_USERS, map),
@@ -1098,27 +1085,25 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 	private void loadSubMenuItemsByNavigationMenu(final SystemMenuWindow window) {
 		window.getNavigationMenuCombo().addChangedHandler(new ChangedHandler() {
-			
+
 			@Override
 			public void onChanged(ChangedEvent event) {
 				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 				String navigationMenu = window.getNavigationMenuCombo().getValueAsString();
-				
-			    for(SystemMenuDTO systemMenuDTO : SystemMenuDTO.systemMenuDTOList()) {
-			    	if(systemMenuDTO.getNavigationMenu().equalsIgnoreCase(navigationMenu))
-			    		valueMap.put(systemMenuDTO.getSubMenuItem(),systemMenuDTO.getSubMenuItem());
-			    }
-			    window.getSubMenuItemCombo().setValueMap(valueMap);
+
+				for (SystemMenuDTO systemMenuDTO : SystemMenuDTO.systemMenuDTOList()) {
+					if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(navigationMenu))
+						valueMap.put(systemMenuDTO.getSubMenuItem(), systemMenuDTO.getSubMenuItem());
+				}
+				window.getSubMenuItemCombo().setValueMap(valueMap);
 			}
 		});
-		
 
 //		for (SubMenuItemDTO dto : SubMenuItemDTO.values()) {
 //			valueMap.put(dto.getSystemMenuItem(), dto.getSystemMenuItem());
 //
 //		}
 
-		
 	}
 
 	private void saveSystemMenu(final SystemMenuWindow window) {
@@ -1142,10 +1127,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(SystemMenuRequestConstant.DATA, dtos);
-					map.put(NetworkDataUtil.ACTION , SystemMenuRequestConstant.SAVE_SYSTEM_MENU);
-					
+					map.put(NetworkDataUtil.ACTION, SystemMenuRequestConstant.SAVE_SYSTEM_MENU);
+
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-						
+
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							SC.say(result.getSystemFeedbackDTO().getMessage());
@@ -1153,7 +1138,6 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 							window.close();
 						}
 					});
-					
 
 //					SC.showPrompt("", "", new SwizimaLoader());
 //
@@ -1199,13 +1183,13 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	private void loadSystemMenus() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION , SystemMenuRequestConstant.GET_SYSTEM_MENUS);
-	    NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
+		map.put(NetworkDataUtil.ACTION, SystemMenuRequestConstant.GET_SYSTEM_MENUS);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				GWT.log("RESULT SIZE "+result.getSystemMenuDTOs().size());
-				
+				GWT.log("RESULT SIZE " + result.getSystemMenuDTOs().size());
+
 				getView().getSystemMenuPane().getListgrid().addRecordsToGrid(result.getSystemMenuDTOs());
 			}
 		});
@@ -1344,13 +1328,14 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 			map.put(RequestDelimeters.SYSTEM_USER_GROUP_ID, userGroup.getId());
 			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-			map.put(NetworkDataUtil.ACTION, SystemUserGroupSystemMenuRequestConstant.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU);
+			map.put(NetworkDataUtil.ACTION,
+					SystemUserGroupSystemMenuRequestConstant.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU);
 			NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-				
+
 				@Override
 				public void onNetworkResult(RequestResult result) {
 					window.getListgrid().addRecordsToGrid(result.getSystemUserGroupSystemMenuDTOs());
-					window.getListgrid().selectActiveRecords();	
+					window.getListgrid().selectActiveRecords();
 				}
 			});
 
@@ -1382,7 +1367,6 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			SC.warn("ERROR", "Please select a group");
 		}
 
-		
 	}
 
 	private void saveSystemUserGroupSystemMenu(final SystemUserGroupSystemMenuWindow window) {
@@ -1398,34 +1382,32 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 				SystemUserGroupDTO userGroup = new SystemUserGroupDTO();
 				userGroup.setId(groupId);
-			
 
 				for (ListGridRecord record : window.getListgrid().getRecords()) {
 					if (window.getListgrid().isSelected(record)) {
-		
-                          /**
-                           * This item was not selected when the widget loaded
-                           * But not its selected
-                           * to be persisted
-                           */
-						if(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) == null) {
+
+						/**
+						 * This item was not selected when the widget loaded But not its selected to be
+						 * persisted
+						 */
+						if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) == null) {
 							SystemUserGroupSystemMenuDTO dto = new SystemUserGroupSystemMenuDTO();
 							SystemMenuDTO systemMenuDTO = new SystemMenuDTO();
 							systemMenuDTO.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
 							dto.setSystemMenuDTO(systemMenuDTO);
 							dto.setSystemUserGroupDTO(userGroup);
 							dto.setSelected(true);
-							
-						dtos.add(dto);
-						}	
-					}else {
+
+							dtos.add(dto);
+						}
+					} else {
 						/**
 						 * This item was once selected , but now user has unselected it
+						 * 
 						 * @param Id not null
-						 * @return
-						 * to be deleted
+						 * @return to be deleted
 						 */
-						if(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
+						if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
 							SystemUserGroupSystemMenuDTO dto = new SystemUserGroupSystemMenuDTO();
 							dto.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID));
 							SystemMenuDTO systemMenuDTO = new SystemMenuDTO();
@@ -1433,13 +1415,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 							dto.setSystemMenuDTO(systemMenuDTO);
 							dto.setSystemUserGroupDTO(userGroup);
 							dto.setSelected(false);
-							
-						   dtos.add(dto);
+
+							dtos.add(dto);
 						}
 					}
-					
-					
-					
 
 //					boolean selected = window.getListgrid().isSelected(record);
 //
@@ -1487,9 +1466,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(SystemUserGroupSystemMenuRequestConstant.DATA, dtos);
 //					map.put(RequestDelimeters.SYSTEM_USER_GROUP_ID, userGroup);
-					map.put(NetworkDataUtil.ACTION, SystemUserGroupSystemMenuRequestConstant.SAVE_USER_GROUP_SYSTEM_MENU);
+					map.put(NetworkDataUtil.ACTION,
+							SystemUserGroupSystemMenuRequestConstant.SAVE_USER_GROUP_SYSTEM_MENU);
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-						
+
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							getSelectedUnSelectedSystemUserGroupMenu(window);
@@ -1498,8 +1478,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 							window.close();
 						}
 					});
-					
-					
+
 //					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 //
 //					SC.showPrompt("", "", new SwizimaLoader());
