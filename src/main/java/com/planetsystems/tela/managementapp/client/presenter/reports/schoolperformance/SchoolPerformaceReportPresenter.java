@@ -146,7 +146,8 @@ public class SchoolPerformaceReportPresenter
 				item1.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 					@Override
-					public void onClick(MenuItemClickEvent event) {						
+					public void onClick(MenuItemClickEvent event) {	
+						getView().getContentPane().setMembers(clockInSummaryPane);
 						final FilterClockInSummaryWindow window = new FilterClockInSummaryWindow();
 						final String defaultValue = null;
 						ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
@@ -325,19 +326,19 @@ public class SchoolPerformaceReportPresenter
 					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
 					AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
 					String fromDate = dateFormat.format(window.getFromDateItem().getValueAsDate());
-					String toDate = dateFormat.format(window.getToDateItem().getValueAsDate());
-					
+//					String toDate = dateFormat.format(window.getToDateItem().getValueAsDate());
+				
 				  FilterDTO dto = new FilterDTO();
 				  dto.setAcademicTermDTO(academicTermDTO);
 				  dto.setSchoolStaffDTO(schoolStaffDTO);
 				  dto.setSchoolDTO(schoolDTO);
 				  dto.setFromDate(fromDate);
-				  dto.setToDate(toDate);
+//				  dto.setToDate(toDate);
 				  
 				  LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_REGION, dto);
 					map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.TeacherClockInSummaryREPORT);
 					map.put(ReportsRequestConstant.DATA , dto);
+			
 				  
 				  NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 					
@@ -391,7 +392,7 @@ public class SchoolPerformaceReportPresenter
 	private boolean checkIfAllFieldsNotEmpty(FilterMonthlyAttendanceSummaryWindow window) {
         boolean status = true;
         if(window.getAcademicYearCombo().getValueAsString() == null) status = false;
-        if(window.getAcademicTermCombo().getValueAsString() == null) status = false;
+        //if(window.getAcademicTermCombo().getValueAsString() == null) status = false;
         if(window.getRegionCombo().getValueAsString() == null) status = false;
         if(window.getDistrictCombo().getValueAsString() == null) status = false;
         if(window.getSchoolCombo().getValueAsString() == null) status = false;
@@ -470,9 +471,9 @@ window.getSaveButton().addClickHandler(new ClickHandler() {
 							
 							@Override
 							public void onNetworkResult(RequestResult result) {
-								SC.say("SIZE "+result.getSchoolEndOfMonthTimeAttendanceDTOs().size());
-								GWT.log("MOnthly "+result.getSchoolEndOfMonthTimeAttendanceDTOs());
-							  //pane.getListgrid().addRecordsToGrid(result.getSchoolEndOfMonthTimeAttendanceDTOs());
+							//	SC.say("SIZE "+result.getSchoolEndOfMonthTimeAttendanceDTOs().size());
+								//GWT.log("MOnthly "+result.getSchoolEndOfMonthTimeAttendanceDTOs());
+							  pane.getListgrid().addRecordsToGrid(result.getSchoolEndOfMonthTimeAttendanceDTOs());
 							}
 						});
 				}else {

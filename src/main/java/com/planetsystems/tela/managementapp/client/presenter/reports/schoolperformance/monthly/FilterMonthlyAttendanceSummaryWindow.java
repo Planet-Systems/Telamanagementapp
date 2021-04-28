@@ -70,11 +70,12 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 		monthCombo.setHint("month");
 		monthCombo.setShowHintInField(true);
 	
-		
-		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , monthCombo , schoolCombo);
+		//academicTermCombo
+		form.setFields(regionCombo , academicYearCombo  , districtCombo , monthCombo , schoolCombo);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250");
+//, "150", "250"
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" );
 		form.setCellPadding(10);
 		form.setNumCols(4);
 

@@ -4276,10 +4276,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				if (responseDto != null) {
 					list = responseDto.getData();
-					feedback.setResponse(true);
+					feedback.setResponse(responseDto.isStatus());
 					feedback.setMessage(responseDto.getMessage());
 					System.out.println("REPORT1  " + responseDto);
 					System.out.println("RESport1  " + responseDto.getData());
+				}else {
+					System.out.println("NULL RESPONSE");
 				}
 			
 
