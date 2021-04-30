@@ -97,6 +97,8 @@ public class RequestResult implements Result {
 	List<SchoolEndOfMonthTimeAttendanceDTO> schoolEndOfMonthTimeAttendanceDTOs;
 	
 	private AttendanceDashboardSummaryDTO attendanceDashboardSummaryDTO;
+	
+	private SystemUserProfileDTO systemUserProfileDTO;
 
 	/**
 	 * 
@@ -361,6 +363,17 @@ public class RequestResult implements Result {
 	public RequestResult(SystemFeedbackDTO feedback, List<SchoolEndOfMonthTimeAttendanceDTO> list, SchoolEndOfMonthTimeAttendanceDTO dto) {
 	   this.systemFeedbackDTO = feedback;
 	   this.schoolEndOfMonthTimeAttendanceDTOs = list;
+	}
+
+	public RequestResult(SystemFeedbackDTO feedback, SystemUserProfileDTO systemUserProfileDTO) {
+		this.systemFeedbackDTO = feedback;
+		this.systemUserProfileDTO = systemUserProfileDTO;
+	}
+	
+	
+
+	public SystemUserProfileDTO getSystemUserProfileDTO() {
+		return systemUserProfileDTO;
 	}
 
 	public SystemFeedbackDTO getSystemFeedbackDTO() {

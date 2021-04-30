@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 class LoginView extends ViewImpl implements LoginPresenter.MyView {
@@ -22,6 +23,7 @@ class LoginView extends ViewImpl implements LoginPresenter.MyView {
 		
 		VLayout centerLayout = new VLayout();
 		centerLayout.setLayoutAlign(Alignment.CENTER);
+		centerLayout.setLayoutAlign(VerticalAlignment.CENTER);
 		centerLayout.setWidth("50%");
 		centerLayout.setHeight("70%");
 		centerLayout.setMargin(50);

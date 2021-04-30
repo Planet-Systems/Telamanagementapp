@@ -344,7 +344,7 @@ public class SchoolPerformaceReportPresenter
 					
 					@Override
 					public void onNetworkResult(RequestResult result) {
-						SC.say("SIZE "+result.getTeacherClockInSummaryDTOs().size());
+						//SC.say("SIZE "+result.getTeacherClockInSummaryDTOs().size());
 						clockInSummaryPane.getListgrid().addRecordsToGrid(result.getTeacherClockInSummaryDTOs());
 					}
 				});
@@ -430,7 +430,7 @@ public class SchoolPerformaceReportPresenter
 							
 							@Override
 							public void onNetworkResult(RequestResult result) {
-								SC.say("SIZE "+result.getSchoolEndOfWeekTimeAttendanceDTOs().size());
+								//SC.say("SIZE "+result.getSchoolEndOfWeekTimeAttendanceDTOs().size());
 //								GWT.log("ATTENDANCES "+result.getSchoolEndOfWeekTimeAttendanceDTOs());
 							  pane.getListgrid().addRecordsToGrid(result.getSchoolEndOfWeekTimeAttendanceDTOs());
 							}

@@ -10,6 +10,7 @@ import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.login.LoginModule;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainModule;
+import com.planetsystems.tela.managementapp.client.presenter.profiledetail.ProfileDetailModule;
 /**
  * See more on setting up the PlaceManager on <a href="// See more on:
  * https://github.com/ArcBees/GWTP/wiki/PlaceManager">DefaultModule's >
@@ -23,6 +24,7 @@ public class ClientModule extends AbstractPresenterModule {
 		
 		install(new RpcDispatchAsyncModule());
 	    install(new MainModule());
+	    install(new ProfileDetailModule());
 	    install(new LoginModule());
 
 		// DefaultPlaceManager Places

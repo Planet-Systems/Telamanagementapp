@@ -2,6 +2,8 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String ProfileDetail = "ProfileDetail";
+
 	public static final String Reports = "Reports";
 
 	public static final String nationalperformace = "National Performance";
@@ -114,6 +116,10 @@ public class NameTokens {
 
 	public static String getReports() {
 		return Reports;
+	}
+
+	public static String getProfileDetail() {
+		return ProfileDetail;
 	}
 
 }

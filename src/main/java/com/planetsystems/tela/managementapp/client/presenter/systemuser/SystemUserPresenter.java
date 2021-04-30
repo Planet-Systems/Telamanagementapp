@@ -431,10 +431,14 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 							systemUserGroupDTO.setDescription(window.getDescriptionField().getValueAsString());
 							systemUserGroupDTO.setName(window.getNameField().getValueAsString());
-							systemUserGroupDTO.setDefaultGroup(window.getDefaultRoleBox().getValueAsBoolean());
-							systemUserGroupDTO.setReceiveAlerts(window.getReceiveAlertBox().getValueAsBoolean());
-							systemUserGroupDTO
-									.setAdministrativeRole(window.getAdministrativeRoleBox().getValueAsBoolean());
+							
+				
+							systemUserGroupDTO.setDefaultGroup(Boolean.parseBoolean(window.getDefaultRoleRadio().getValueAsString()));
+							
+		
+							systemUserGroupDTO.setReceiveAlerts(Boolean.parseBoolean(window.getReceiveAlertRadio().getValueAsString()));
+
+							systemUserGroupDTO.setAdministrativeRole(Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
 
 							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 							map.put(SystemUserGroupRequestConstant.DATA, systemUserGroupDTO);
@@ -446,8 +450,6 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 									clearSystemGroupWindow(window);
 									SC.say(result.getSystemFeedbackDTO().getMessage());
 									getAllSystemUserGroups();
-//									getView().getUserGroupPane().getListgrid()
-//									.addRecordsToGrid(result.getSystemUserGroupDTOs());
 								}
 							});
 						} else {
@@ -470,7 +472,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		if (window.getNameField().getValueAsString() == null)
 			status = false;
 
-		if (!window.getReceiveAlertBox().getValueAsBoolean())
+		if (window.getReceiveAlertRadio().getValueAsString() == null)
 			status = false;
 
 		if (window.getCodeField().getValueAsString() == null)
@@ -479,10 +481,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		if (window.getDescriptionField().getValueAsString() == null)
 			status = false;
 
-		if (!window.getDefaultRoleBox().getValueAsBoolean())
+		if (window.getDefaultRoleRadio().getValueAsString() == null)
 			status = false;
 
-		if (!window.getAdministrativeRoleBox().getValueAsBoolean())
+		if (window.getAdministrativeRoleRadio().getValueAsString() == null)
 			status = false;
 
 		return status;
@@ -490,11 +492,11 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 	private void clearSystemGroupWindow(SystemUserGroupWindow window) {
 		window.getNameField().clearValue();
-		window.getReceiveAlertBox().clearValue();
+		window.getReceiveAlertRadio().clearValue();
 		window.getCodeField().clearValue();
 		window.getDescriptionField().clearValue();
-		window.getDefaultRoleBox().clearValue();
-		window.getAdministrativeRoleBox().clearValue();
+		window.getDefaultRoleRadio().clearValue();
+		window.getAdministrativeRoleRadio().clearValue();
 	}
 
 	private void deletUserUserGroup(final MenuButton button) {
@@ -621,10 +623,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 				userGroup.setDescription(window.getDescriptionField().getValueAsString());
 				userGroup.setName(window.getNameField().getValueAsString());
-				userGroup.setDefaultGroup(window.getDefaultRoleBox().getValueAsBoolean());
-				userGroup.setReceiveAlerts(window.getReceiveAlertBox().getValueAsBoolean());
+				userGroup.setDefaultGroup(Boolean.parseBoolean(window.getDefaultRoleRadio().getValueAsString()));
+				userGroup.setReceiveAlerts(Boolean.parseBoolean(window.getReceiveAlertRadio().getValueAsString()));
 
-				userGroup.setAdministrativeRole(window.getAdministrativeRoleBox().getValueAsBoolean());
+				userGroup.setAdministrativeRole(Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
 
 				SC.showPrompt("", "", new SwizimaLoader());
 
@@ -753,13 +755,13 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		if (systemUserGroupRecord.getAttribute(UserGroupListgrid.DefaultRole) != null) {
 			String defualtRole = systemUserGroupRecord.getAttribute(UserGroupListgrid.DefaultRole);
 			if (defualtRole.equalsIgnoreCase("true")) {
-				window.getDefaultRoleBox().setValue(true);
+				window.getDefaultRoleRadio().setValue(true);
 			} else {
-				window.getDefaultRoleBox().setValue(false);
+				window.getDefaultRoleRadio().setValue(false);
 			}
 
 		} else {
-			window.getDefaultRoleBox().setValue(false);
+			window.getDefaultRoleRadio().setValue(false);
 		}
 
 		if (systemUserGroupRecord.getAttribute(UserGroupListgrid.ReceiveNotifications) != null) {
@@ -767,9 +769,9 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			String receiveAlerts = systemUserGroupRecord.getAttribute(UserGroupListgrid.ReceiveNotifications);
 
 			if (receiveAlerts.equalsIgnoreCase("true")) {
-				window.getReceiveAlertBox().setValue(true);
+				window.getReceiveAlertRadio().setValue(true);
 			} else {
-				window.getReceiveAlertBox().setValue(false);
+				window.getReceiveAlertRadio().setValue(false);
 			}
 
 		}
@@ -850,12 +852,13 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		window.getEnabledRadioGroupItem().setValueMap(valueMap);
 	}
 
+	@Deprecated
 	public void loadGenderComboBox(SystemUserProfileWindow window) {
 		Map<String, String> valueMap = new LinkedHashMap<String, String>();
 		valueMap.put("female", "Female");
 		valueMap.put("male", "Male");
 
-		window.getGenderCombo().setValueMap(valueMap);
+		//window.getGenderCombo().setValueMap(valueMap);
 	}
 
 	private void saveSystemUserProfile(final SystemUserProfileWindow window) {
@@ -863,27 +866,26 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (checkIfProfileFieldsNotEmpty(window)) {
+				if (checkIfNoSystemUserWindowFieldIsEmpty(window)) {
 
 					SystemUserProfileDTO dto = new SystemUserProfileDTO();
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-
 					SystemUserDTO systemUserDTO = new SystemUserDTO();
-					systemUserDTO.setEnabled(Boolean.valueOf(window.getEnabledRadioGroupItem().getValueAsString()));
+					systemUserDTO.setEnabled(Boolean.parseBoolean(window.getEnabledRadioGroupItem().getValueAsString()));
 					systemUserDTO.setUserName(window.getEmailField().getValueAsString());
 					systemUserDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					// dto.setPassword(window.getPasswordField().getValueAsString());
 
 					GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
-					generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
-					generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+//					generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+//					generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
 					generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
-					generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
-					generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
-					generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
-					generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
-					generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+//					generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+//					generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
+//					generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
+//					generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+//					generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
 
 					SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
 					systemUserGroupDTO.setId(window.getSystemUserGroupCombo().getValueAsString());
@@ -893,12 +895,9 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					dto.setSystemUserGroupDTO(systemUserGroupDTO);
 					dto.setGeneralUserDetailDTO(generalUserDetailDTO);
 
-					if (checkIfNoSystemUserWindowFieldIsEmpty(window)) {
-
 						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 						map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.SAVE_SYSTEM_USER_PROFILE);
 						map.put(SystemUserProfileRequestConstant.DATA, dto);
-						SC.showPrompt("", "", new SwizimaLoader());
 
 						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -909,7 +908,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 								getAllSystemUserProfiles();
 							}
 						});
-					} 
+				
 
 				}else {
 					SC.say("Fill all the fields");
@@ -919,29 +918,30 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		});
 	}
 
+	@Deprecated
 	private boolean checkIfProfileFieldsNotEmpty(SystemUserProfileWindow window) {
 		boolean status = true;
 
-		if (window.getFirstNameField().getValueAsString() == null)
-			status = false;
+//		if (window.getFirstNameField().getValueAsString() == null)
+//			status = false;
 
-		if (window.getLastNameField().getValueAsString() == null)
-			status = false;
+//		if (window.getLastNameField().getValueAsString() == null)
+//			status = false;
 
-		if (window.getPhoneNumberField().getValueAsString() == null)
-			status = false;
+//		if (window.getPhoneNumberField().getValueAsString() == null)
+//			status = false;
 
 		if (window.getEmailField().getValueAsString() == null)
 			status = false;
 
-		if (window.getDobItem().getValueAsDate() == null)
-			status = false;
+//		if (window.getDobItem().getValueAsDate() == null)
+//			status = false;
 
-		if (window.getNationalIdField().getValueAsString() == null)
-			status = false;
-
-		if (window.getGenderCombo().getValueAsString() == null)
-			status = false;
+//		if (window.getNationalIdField().getValueAsString() == null)
+//			status = false;
+//
+//		if (window.getGenderCombo().getValueAsString() == null)
+//			status = false;
 
 		if (window.getSystemUserGroupCombo().getValueAsString() == null)
 			status = false;
@@ -953,7 +953,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 	private void getAllSystemUserProfiles() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_ALL_SYSTEM_USERS);
+		map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.GET_SYSTEM_USER_PROFILES);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -967,40 +967,40 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	}
 
 	private void clearSystemUserWindowFields(SystemUserProfileWindow window) {
-		window.getFirstNameField().clearValue();
-		window.getLastNameField().clearValue();
-		window.getPhoneNumberField().clearValue();
+//		window.getFirstNameField().clearValue();
+//		window.getLastNameField().clearValue();
+//		window.getPhoneNumberField().clearValue();
 		window.getEmailField().clearValue();
-		window.getDobItem().clearValue();
-		window.getNationalIdField().clearValue();
-		window.getGenderCombo().clearValue();
-		window.getNameAbbrevField().clearValue();
+//		window.getDobItem().clearValue();
+//		window.getNationalIdField().clearValue();
+//		window.getGenderCombo().clearValue();
+//		window.getNameAbbrevField().clearValue();
 		window.getEnabledRadioGroupItem().clearValue();
 	}
 
 	protected boolean checkIfNoSystemUserWindowFieldIsEmpty(SystemUserProfileWindow window) {
 		boolean flag = true;
 
-		if (window.getFirstNameField().getValueAsString() == null)
-			flag = false;
-
-		if (window.getLastNameField().getValueAsString() == null)
-			flag = false;
-
-		if (window.getPhoneNumberField().getValueAsString() == null)
-			flag = false;
+//		if (window.getFirstNameField().getValueAsString() == null)
+//			flag = false;
+//
+//		if (window.getLastNameField().getValueAsString() == null)
+//			flag = false;
+//
+//		if (window.getPhoneNumberField().getValueAsString() == null)
+//			flag = false;
 
 		if (window.getEmailField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getDobItem().getValueAsDate() == null)
-			flag = false;
-
-		if (window.getNationalIdField().getValueAsString() == null)
-			flag = false;
-
-		if (window.getGenderCombo().getValueAsString() == null)
-			flag = false;
+//		if (window.getDobItem().getValueAsDate() == null)
+//			flag = false;
+//
+//		if (window.getNationalIdField().getValueAsString() == null)
+//			flag = false;
+//
+//		if (window.getGenderCombo().getValueAsString() == null)
+//			flag = false;
 
 		return flag;
 	}

@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### JWT CONFIG FILE ###
+!**/src/main/java/com/planetsystems/tela/api/security/JwtUtil.java
+
 ### STS ###
 .apt_generated
 .classpath

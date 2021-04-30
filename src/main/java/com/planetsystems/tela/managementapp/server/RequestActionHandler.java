@@ -3246,7 +3246,66 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, systemUserProfileDTOs , null);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_TIMETABLE_LESSONS)
+			}
+			else if (action.getRequest().equalsIgnoreCase(SystemUserProfileRequestConstant.GET_SYSTEM_USER_PROFILE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserProfileDTO systemUserProfileDTO = new SystemUserProfileDTO();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+	
+				SystemResponseDTO<SystemUserProfileDTO> responseDto = client.target(API_LINK)
+				.path("Logged")
+						.path("SystemUserProfile").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<SystemUserProfileDTO>>() {});
+
+				if (responseDto != null) {
+					systemUserProfileDTO = responseDto.getData();	
+					feedback.setResponse(responseDto.isStatus());
+					feedback.setMessage(responseDto.getMessage());
+					 System.out.println("RESPONSE " + responseDto);
+					 System.out.println("RES DATA " + responseDto.getData());
+				}
+
+
+				client.close();
+				return new RequestResult(feedback, systemUserProfileDTO);
+
+			}else if (action.getRequest().equalsIgnoreCase(SystemUserProfileRequestConstant.UPDATE_LOGGED_SYSTEM_USER_PROFILE_DETAILS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserProfileDTO dto = (SystemUserProfileDTO) action.getRequestBody().get(SystemUserProfileRequestConstant.DATA);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+	
+				SystemResponseDTO<SystemFeedbackDTO> responseDto = client.target(API_LINK)
+				.path("Logged")
+						.path("SystemUserProfile").request(MediaType.APPLICATION_JSON).headers(headers)
+						.put(Entity.entity(dto , MediaType.APPLICATION_JSON) ,new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {});
+
+				if (responseDto != null) {
+					feedback = responseDto.getData();	
+					 System.out.println("RESPONSE " + responseDto);
+					 System.out.println("RES DATA " + responseDto.getData());
+				}
+
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_STAFF_DAILY_TIMETABLE_LESSONS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();

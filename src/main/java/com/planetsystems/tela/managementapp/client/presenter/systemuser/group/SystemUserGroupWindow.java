@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.client.presenter.systemuser.group;
   
+import com.google.gwt.user.client.ui.Tree;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
@@ -8,6 +9,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -16,10 +18,10 @@ public class SystemUserGroupWindow extends Window {
 	private TextField codeField;
 	private TextField nameField;
 	private TextField descriptionField;
-	private CheckboxItem defaultRoleBox;
-	private CheckboxItem receiveAlertBox;
+	private RadioGroupItem defaultRoleRadio;
+	private RadioGroupItem receiveAlertRadio;
 	
-	private CheckboxItem administrativeRoleBox;
+	private RadioGroupItem administrativeRoleRadio;
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -35,20 +37,35 @@ public class SystemUserGroupWindow extends Window {
 		descriptionField = new TextField();
 		descriptionField.setTitle("Description");
 
-		defaultRoleBox = new CheckboxItem();
-		defaultRoleBox.setTitle("Is Default?");
-
-		receiveAlertBox = new CheckboxItem();
-		receiveAlertBox.setTitle("Receive Project activation Alerts?");
+		defaultRoleRadio = new RadioGroupItem();
+		defaultRoleRadio.setTitle("Is User Enabled");
+		defaultRoleRadio.setDefaultValue(false);
+		defaultRoleRadio.setValueMap("false" , "true");
+		defaultRoleRadio.setVertical(false);
 		
-		administrativeRoleBox=new CheckboxItem();
-		administrativeRoleBox.setTitle("Manage Data");
+		defaultRoleRadio = new RadioGroupItem();
+		defaultRoleRadio.setTitle("Is Default?");
+		defaultRoleRadio.setDefaultValue(false);
+		defaultRoleRadio.setVertical(false);
+		defaultRoleRadio.setValueMap("false" , "true");
+
+		receiveAlertRadio = new RadioGroupItem();
+		receiveAlertRadio.setTitle("Activation Alerts?");
+		receiveAlertRadio.setDefaultValue(false);
+		receiveAlertRadio.setVertical(false);
+		receiveAlertRadio.setValueMap("false" , "true");
+		
+		administrativeRoleRadio = new RadioGroupItem();
+		administrativeRoleRadio.setTitle("Manage Data");
+		administrativeRoleRadio.setDefaultValue(true);
+		administrativeRoleRadio.setVertical(false);
+		administrativeRoleRadio.setValueMap("true" , "false");
 		
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Close");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(codeField, nameField, descriptionField, defaultRoleBox, receiveAlertBox, administrativeRoleBox);
+		form.setFields(codeField, nameField, descriptionField, defaultRoleRadio, receiveAlertRadio, administrativeRoleRadio);
 		form.setWrapItemTitles(false);
 		form.setCellPadding(8);
 		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250");
@@ -71,8 +88,8 @@ public class SystemUserGroupWindow extends Window {
 
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setWidth("50%");
+		this.setHeight("70%");
 		this.setAutoCenter(true);
 		this.setTitle("User Groups");
 		this.setIsModal(true);
@@ -117,38 +134,24 @@ public class SystemUserGroupWindow extends Window {
 		this.descriptionField = descriptionField;
 	}
 
-	public CheckboxItem getDefaultRoleBox() {
-		return defaultRoleBox;
+	public RadioGroupItem getDefaultRoleRadio() {
+		return defaultRoleRadio;
 	}
 
-	public void setDefaultRoleBox(CheckboxItem defaultRoleBox) {
-		this.defaultRoleBox = defaultRoleBox;
+	public RadioGroupItem getReceiveAlertRadio() {
+		return receiveAlertRadio;
 	}
 
-	public CheckboxItem getReceiveAlertBox() {
-		return receiveAlertBox;
-	}
-
-	public void setReceiveAlertBox(CheckboxItem receiveAlertBox) {
-		this.receiveAlertBox = receiveAlertBox;
-	}
-
-	public CheckboxItem getAdministrativeRoleBox() {
-		return administrativeRoleBox;
-	}
-
-	public void setAdministrativeRoleBox(CheckboxItem administrativeRoleBox) {
-		this.administrativeRoleBox = administrativeRoleBox;
+	public RadioGroupItem getAdministrativeRoleRadio() {
+		return administrativeRoleRadio;
 	}
 
 	public IButton getSaveButton() {
 		return saveButton;
 	}
 
-	public void setSaveButton(IButton saveButton) {
-		this.saveButton = saveButton;
-	}
 
+	
 	
 
 
