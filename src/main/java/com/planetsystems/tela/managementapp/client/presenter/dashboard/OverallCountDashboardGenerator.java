@@ -110,7 +110,7 @@ public class OverallCountDashboardGenerator {
 		testWindow.getLayout().setMembers(layout2);
 		testWindow.show();*/  
 
-		//dashboardPane.setMembers(layout2); 
+		dashboardPane.setMembers(layout2); 
 
 	}
 

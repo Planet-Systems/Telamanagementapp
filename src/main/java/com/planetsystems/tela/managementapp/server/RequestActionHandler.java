@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
 import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
@@ -60,6 +61,10 @@ import com.planetsystems.tela.dto.reports.NationalEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
+import com.planetsystems.tela.dto.reports.ReportPreviewRequestDTO;
+import com.planetsystems.tela.dto.reports.outputs.DailyDistrictReport;
+import com.planetsystems.tela.dto.reports.outputs.DistrictTermReport;
+import com.planetsystems.tela.dto.reports.outputs.DistrictWeeklyReport;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
@@ -72,6 +77,7 @@ import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserPr
 public class RequestActionHandler implements ActionHandler<RequestAction, RequestResult> {
 
 	final String API_LINK = APIGateWay.getInstance().getApLink();
+	final String REPORT_GEN_API = APIGateWay.getInstance().getReportGeneratorLink();
 
 	@Inject
 	public RequestActionHandler() {
@@ -4363,8 +4369,154 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 
+			} 
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfWeekTimeAttendanceReport)) {
+
+				System.out.print("DistrictEndOfWeekTimeAttendanceReport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.DistrictEndOfWeekTimeAttendanceReport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+  
+				DailyDistrictReport responseDto = client.target(API_LINK).path("districtEndOfWeekTimeAttendanceReport")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), DailyDistrictReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("District  End of  Week Report -Time attendance");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("District  End of  Week Report -Time attendance");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
 			}
 			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfMonthTimeAttendanceReport)) {
+
+				System.out.print("DistrictEndOfMonthTimeAttendanceReport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.DistrictEndOfMonthTimeAttendanceReport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+  
+				DistrictWeeklyReport responseDto = client.target(API_LINK).path("districtEndOfMonthTimeAttendanceReport")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), DistrictWeeklyReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("District  End of  Month Report -003-Time attendance");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("District  End of  Month Report -003-Time attendance");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfTermTimeAttendanceReport)) {
+
+				System.out.print("DistrictEndOfTermTimeAttendanceReport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
+						.get(RequestConstant.DistrictEndOfTermTimeAttendanceReport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+  
+				DistrictTermReport responseDto = client.target(API_LINK).path("districtEndOfTermTimeAttendanceReport")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), DistrictTermReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("District  End of  Term Report -003-Time attendance");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("District  End of  Term Report -003-Time attendance");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfWeekTimeAttendance)) {
 
 				Client client = ClientBuilder.newClient();
@@ -4398,8 +4550,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 
-			}
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfMonthTimeAttendance)) {
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfMonthTimeAttendance)) {
 
 				Client client = ClientBuilder.newClient();
 
@@ -4432,8 +4583,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 
-			}
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfTermTimeAttendance)) {
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.NationalEndOfTermTimeAttendance)) {
 
 				Client client = ClientBuilder.newClient();
 

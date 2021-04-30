@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -17,6 +18,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictReportFilterDTO;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
@@ -28,6 +30,8 @@ import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.UtilityManager;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -72,6 +76,7 @@ public class DistrictPerformaceReportPresenter
 	protected void onBind() {
 		super.onBind();
 		loadMenuButtons();
+		loadDistrictDashboard();
 	}
 
 	private void loadMenuButtons() {
@@ -88,6 +93,11 @@ public class DistrictPerformaceReportPresenter
 
 		showFilter(filter);
 
+	}
+
+	private void loadDistrictDashboard() {
+		DashboardSummaryDTO dto = new DashboardSummaryDTO();
+		DistrictDashboard.getInstance().generateDashboard(getView().getContentPane(), dto);
 	}
 
 	private void showFilter(final MenuButton button) {
@@ -212,7 +222,7 @@ public class DistrictPerformaceReportPresenter
 
 	private void loadEndOfWeekTimeAttendance(final ReportFilterWindow window) {
 
-		DistrictReportFilterDTO dto = new DistrictReportFilterDTO();
+		final DistrictReportFilterDTO dto = new DistrictReportFilterDTO();
 
 		dto.setDistrict(window.getDistrict().getValueAsString());
 		dto.setTerm(window.getPeriod().getValueAsString());
@@ -243,6 +253,7 @@ public class DistrictPerformaceReportPresenter
 
 				showFilter(filter);
 
+				PreviewEndOfWeekTimeAttendance(export, dto);
 				pane.getListgrid().addRecordsToGrid(result.getDistrictEndOfWeekTimeAttendanceDTOs());
 
 				getView().getContentPane().setMembers(pane);
@@ -253,7 +264,7 @@ public class DistrictPerformaceReportPresenter
 
 	private void loadEndOfMonthTimeAttendance(final ReportFilterWindow window) {
 
-		DistrictReportFilterDTO dto = new DistrictReportFilterDTO();
+		final DistrictReportFilterDTO dto = new DistrictReportFilterDTO();
 
 		dto.setDistrict(window.getDistrict().getValueAsString());
 		dto.setTerm(window.getPeriod().getValueAsString());
@@ -283,6 +294,7 @@ public class DistrictPerformaceReportPresenter
 
 				showFilter(filter);
 
+				PreviewEndOfMonthTimeAttendance(export, dto);
 				pane.getListgrid().addRecordsToGrid(result.getDistrictEndOfMonthTimeAttendanceDTOs());
 
 				getView().getContentPane().setMembers(pane);
@@ -294,7 +306,7 @@ public class DistrictPerformaceReportPresenter
 
 	private void loadEndOfTermTimeAttendance(final ReportFilterWindow window) {
 
-		DistrictReportFilterDTO dto = new DistrictReportFilterDTO();
+		final DistrictReportFilterDTO dto = new DistrictReportFilterDTO();
 
 		dto.setDistrict(window.getDistrict().getValueAsString());
 		dto.setTerm(window.getPeriod().getValueAsString());
@@ -327,7 +339,87 @@ public class DistrictPerformaceReportPresenter
 
 				pane.getListgrid().addRecordsToGrid(result.getDistrictEndOfTermTimeAttendanceDTOs());
 
+				PreviewEndOfTermTimeAttendance(export, dto);
+
 				getView().getContentPane().setMembers(pane);
+			}
+		});
+
+	}
+
+	private void PreviewEndOfWeekTimeAttendance(MenuButton export, final DistrictReportFilterDTO dto) {
+
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.DistrictEndOfWeekTimeAttendanceReport, dto);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.DistrictEndOfWeekTimeAttendanceReport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+
+	}
+
+	private void PreviewEndOfMonthTimeAttendance(MenuButton export, final DistrictReportFilterDTO dto) {
+
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.DistrictEndOfMonthTimeAttendanceReport, dto);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.DistrictEndOfMonthTimeAttendanceReport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+
+	}
+
+	private void PreviewEndOfTermTimeAttendance(MenuButton export, final DistrictReportFilterDTO dto) {
+
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.DistrictEndOfTermTimeAttendanceReport, dto);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.DistrictEndOfTermTimeAttendanceReport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
 			}
 		});
 

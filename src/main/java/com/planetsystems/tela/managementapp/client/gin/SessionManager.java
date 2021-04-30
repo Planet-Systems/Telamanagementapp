@@ -45,7 +45,7 @@ public class SessionManager {
 			if (errorDTO != null) {
 				if (errorDTO.getMessage() != null && errorDTO.getErrorCode() != 0) {
 
-					GWT.log("result.getSystemError().getStatus(): " + errorDTO.getErrorCode());
+					//GWT.log("result.getSystemError().getStatus(): " + errorDTO.getErrorCode());
 
 					if (errorDTO.getErrorCode() == 403) {
 						// token expired and authentication issues

@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 class DistrictPerformaceReportView extends ViewImpl implements DistrictPerformaceReportPresenter.MyView {
@@ -22,6 +23,7 @@ class DistrictPerformaceReportView extends ViewImpl implements DistrictPerformac
 		panel = new VLayout();
 		controlsPane = new ControlsPane();
 		contentPane = new VLayout();
+		contentPane.setOverflow(Overflow.AUTO);
 
 		panel.addMember(controlsPane);
 		panel.addMember(contentPane);

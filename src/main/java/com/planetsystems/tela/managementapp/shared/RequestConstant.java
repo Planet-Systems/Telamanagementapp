@@ -8,7 +8,7 @@ public class RequestConstant {
 	public static final String SYSTEM_TIME_TABLES = "TimeTable";
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
-	public static final String SYSTEM_REPORTS = "Reports";
+	public static final String SYSTEM_REPORTS = "Supervision";
 
 	public static final String SYSTEM_ATTENDANCE = "Attendance";
 
@@ -221,6 +221,10 @@ public class RequestConstant {
 	public static final String DistrictEndOfWeekTimeAttendance = "DistrictEndOfWeekTimeAttendance";
 	public static final String DistrictEndOfMonthTimeAttendance = "DistrictEndOfMonthTimeAttendance";
 	public static final String DistrictEndOfTermTimeAttendance = "DistrictEndOfTermTimeAttendance";
+	
+	public static final String DistrictEndOfWeekTimeAttendanceReport = "DistrictEndOfWeekTimeAttendanceReport";
+	public static final String DistrictEndOfMonthTimeAttendanceReport  = "DistrictEndOfMonthTimeAttendanceReport";
+	public static final String DistrictEndOfTermTimeAttendanceReport  = "DistrictEndOfTermTimeAttendanceReport";
 
 	public static final String NationalEndOfWeekTimeAttendance = "NationalEndOfWeekTimeAttendance";
 	public static final String NationalEndOfMonthTimeAttendance = "NationalEndOfMonthTimeAttendance";

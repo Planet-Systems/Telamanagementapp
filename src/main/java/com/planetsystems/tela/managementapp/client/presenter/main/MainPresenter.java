@@ -257,7 +257,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				if (!enrollemnt.isEmpty()) {
 
 					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
-							SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords()));
+							SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
 
 					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
 							new NavigationPaneClickHandler());
@@ -267,7 +267,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				if (!attendance.isEmpty()) {
 
 					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
-							SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords()));
+							SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords(attendance)));
 
 					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
 							new NavigationPaneClickHandler());
@@ -278,7 +278,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				if (!timetable.isEmpty()) {
 
 					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
-							SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords()));
+							SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords(timetable)));
 
 					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
 							new NavigationPaneClickHandler());
@@ -288,7 +288,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				
 				if (!systemusers.isEmpty()) {
 					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
-							SystemUserDataSource.getInstance(SystemUserData.getNewRecords()));
+							SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
 
 					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
 							new NavigationPaneClickHandler());
@@ -296,7 +296,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 				if (!generatereports.isEmpty()) {
 					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
-							ReportsDataSource.getInstance(ReportsData.getNewRecords()));
+							ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
 
 					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
 							new NavigationPaneClickHandler());

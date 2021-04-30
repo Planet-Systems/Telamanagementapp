@@ -115,7 +115,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 											Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
 											Cookies.removeCookie(RequestConstant.LOGED_IN);
 											Cookies.removeCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
-											SC.warn("INFO", feedback.getMessage());
+											//SC.warn("INFO", feedback.getMessage());
 										}
 
 									} else {
@@ -142,7 +142,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 			@Override
 			public void onNetworkResult(RequestResult result) {
 				SystemUserGroupDTO systemUserGroupDTO = result.getSystemUserGroupDTO();
-				SC.say("GROUP "+systemUserGroupDTO.getName());
+				//SC.say("GROUP "+systemUserGroupDTO.getName());
 				Cookies.setCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE , systemUserGroupDTO.getName());	
 				System.out.println("USER GROUP "+systemUserGroupDTO);
 				System.out.println(" GROUP NAME "+systemUserGroupDTO.getName());
