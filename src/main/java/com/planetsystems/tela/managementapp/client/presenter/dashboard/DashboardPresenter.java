@@ -69,9 +69,12 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	protected void onBind() {
 		// TODO Auto-generated method stub
 		super.onBind();
-		migrateData();
-		migrateAttendanceData();
-		migrateTimeTablesData();
+
+		
+		getView().getDashboardPane().hideDataImport();
+		//migrateData();
+		//migrateAttendanceData();
+		//migrateTimeTablesData();
 
 		loadMenuButtons();
 
@@ -261,6 +264,64 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		});
 
 	}
+	
+	private void migrateSubjectsData() {
+		getView().getDashboardPane().getImportSubjects().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SC.ask("Confrim", "Are you sure you want to migrate Subjects data", new BooleanCallback() {
+
+					@Override
+					public void execute(Boolean value) {
+
+						if (value) {
+							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+							SC.showPrompt("", "", new SwizimaLoader());
+
+							dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_SUBJECTS, map),
+									new AsyncCallback<RequestResult>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											System.out.println(caught.getMessage());
+											SC.warn("ERROR", caught.getMessage());
+											GWT.log("ERROR " + caught.getMessage());
+											SC.clearPrompt();
+
+										}
+
+										@Override
+										public void onSuccess(RequestResult result) {
+
+											SC.clearPrompt();
+											SessionManager.getInstance().manageSession(result, placeManager);
+											if (result != null) {
+
+												if (result.getSystemFeedbackDTO() != null) {
+
+													SC.say(result.getSystemFeedbackDTO().getMessage());
+
+												}
+											} else {
+												SC.warn("ERROR", "Unknow error");
+											}
+
+										}
+									});
+						}
+
+					}
+				});
+
+			}
+		});
+
+	}
+
 
 	private void loadDashboard() {
 

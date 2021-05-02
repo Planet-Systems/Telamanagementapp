@@ -3,7 +3,8 @@ package com.planetsystems.tela.managementapp.shared;
 import java.util.List;
 
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.Window; 
+import com.google.gwt.user.client.Window;
+import com.planetsystems.tela.managementapp.client.widget.ReportDisplayWindow; 
 
 public class UtilityManager {
 
@@ -147,6 +148,13 @@ public class UtilityManager {
 		window.show();
 
 	}*/
+	
+	public  void preview(String url,String tittle) {
+
+		ReportDisplayWindow window = new ReportDisplayWindow(url, tittle);
+		window.show();
+
+	}
 	 
 
 }

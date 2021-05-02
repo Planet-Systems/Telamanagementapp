@@ -147,7 +147,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					deletUserUserGroup(delete);
 					getAllSystemUserGroups();
 
-					loaSystemUserMenu(permissions);
+					loadSystemUserMenu(permissions);
 
 				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_USER_PROFILES)) {
 
@@ -244,7 +244,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 											map.put(RequestConstant.DATA, schoolDTOs);
 
 											NetworkDataUtil.callNetwork(dispatcher, placeManager, map,	new NetworkResult() {
-												
+
 														@Override
 														public void onNetworkResult(RequestResult result) {
 															getSchoolsBySystemUserProfile(window, profileRecord);
@@ -357,9 +357,9 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 										profileSchoolWindow.getAddSchoolsButton().enable();
 								}
 							});
-                           
+
 							//saving system user profile schools
-							
+
 							profileSchoolWindow.getAddSchoolsButton().addClickHandler(new ClickHandler() {
 
 								@Override
@@ -431,11 +431,11 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 							systemUserGroupDTO.setDescription(window.getDescriptionField().getValueAsString());
 							systemUserGroupDTO.setName(window.getNameField().getValueAsString());
-							
-				
+
+
 							systemUserGroupDTO.setDefaultGroup(Boolean.parseBoolean(window.getDefaultRoleRadio().getValueAsString()));
-							
-		
+
+
 							systemUserGroupDTO.setReceiveAlerts(Boolean.parseBoolean(window.getReceiveAlertRadio().getValueAsString()));
 
 							systemUserGroupDTO.setAdministrativeRole(Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
@@ -908,7 +908,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 								getAllSystemUserProfiles();
 							}
 						});
-				
+
 
 				}else {
 					SC.say("Fill all the fields");
@@ -1300,7 +1300,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		});
 	}
 
-	private void loaSystemUserMenu(final MenuButton button) {
+	private void loadSystemUserMenu(final MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -1403,7 +1403,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					} else {
 						/**
 						 * This item was once selected , but now user has unselected it
-						 * 
+						 *
 						 * @param Id not null
 						 * @return to be deleted
 						 */

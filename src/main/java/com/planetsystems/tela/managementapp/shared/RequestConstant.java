@@ -8,7 +8,7 @@ public class RequestConstant {
 	public static final String SYSTEM_TIME_TABLES = "TimeTable";
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
-	public static final String SYSTEM_REPORTS = "Reports";
+	public static final String SYSTEM_REPORTS = "Supervision";
 
 	public static final String SYSTEM_ATTENDANCE = "Attendance";
 
@@ -164,8 +164,6 @@ public class RequestConstant {
 	public static final String GET_LOGED_IN_USER_SYSTEM_MENUS = "GET_LOGED_IN_USER_SYSTEM_MENUS";
 	public static final String GET_LOGEDIN_USER_SystemMENU = "GET_LOGEDIN_USER_SystemMENU";
 
-
-
 	// time table lesson
 	public static final String SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE = "SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE";
 	public static final String GET_TIME_TABLE_LESSONS_BY_TIME_TABLE = "GET_TIME_TABLE_LESSONS_BY_TIME_TABLE";
@@ -189,6 +187,8 @@ public class RequestConstant {
 	public static final String MIGRATE_DATA = "MIGRATE_DATA";
 	public static final String MIGRATE_DATA_ATTENDACE = "MIGRATE_DATA_ATTENDACE";
 	public static final String MIGRATE_DATA_TIMETABLES = "MIGRATE_DATA_TIMETABLES";
+
+	public static final String MIGRATE_DATA_SUBJECTS = "MIGRATE_DATA_SUBJECTS";
 
 	// daily supervision
 	public static final String SAVE_STAFF_DAILY_TASK_SUPERVISIONS = "SAVE_STAFF_DAILY_TASK_SUPERVISIONS";
@@ -217,5 +217,17 @@ public class RequestConstant {
 
 	public static final String LOGGED_SYSTEM_USER_GROUP = "LOGGED_SYSTEM_USER_GROUP";
 	public static final String LOGGED_IN_SYSTEM_USER_GROUP_COOKIE = "LOGGED_IN_SYSTEM_USER_GROUP_COOKIE";
+
+	public static final String DistrictEndOfWeekTimeAttendance = "DistrictEndOfWeekTimeAttendance";
+	public static final String DistrictEndOfMonthTimeAttendance = "DistrictEndOfMonthTimeAttendance";
+	public static final String DistrictEndOfTermTimeAttendance = "DistrictEndOfTermTimeAttendance";
+	
+	public static final String DistrictEndOfWeekTimeAttendanceReport = "DistrictEndOfWeekTimeAttendanceReport";
+	public static final String DistrictEndOfMonthTimeAttendanceReport  = "DistrictEndOfMonthTimeAttendanceReport";
+	public static final String DistrictEndOfTermTimeAttendanceReport  = "DistrictEndOfTermTimeAttendanceReport";
+
+	public static final String NationalEndOfWeekTimeAttendance = "NationalEndOfWeekTimeAttendance";
+	public static final String NationalEndOfMonthTimeAttendance = "NationalEndOfMonthTimeAttendance";
+	public static final String NationalEndOfTermTimeAttendance = "NationalEndOfTermTimeAttendance";
 
 }

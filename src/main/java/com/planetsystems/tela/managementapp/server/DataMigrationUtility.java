@@ -27,6 +27,7 @@ import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
+import com.planetsystems.tela.dto.AppDTO.StaffAttendanceImportDTO;
 
 public class DataMigrationUtility {
 
@@ -264,21 +265,18 @@ public class DataMigrationUtility {
 
 				for (AcademicTermDTO dto : academicTerms) {
 
-					System.out.println("AcademicTermDTO:: "+dto.getTerm());
-					
-					List<ClockInDTO> clockins = client.target(getDataApILink()).path("clockins").path(dto.getId())
+					System.out.println("AcademicTermDTO:: " + dto.getTerm());
+
+					List<StaffAttendanceImportDTO> clockins = client.target(getDataApILink()).path("clockins").path(dto.getId())
 							.request(MediaType.APPLICATION_JSON).headers(headers)
-							.get(new GenericType<List<ClockInDTO>>() {
+							.get(new GenericType<List<StaffAttendanceImportDTO>>() {
 							});
-					
-					
-					
 
 					if (clockins != null) {
 						if (!clockins.isEmpty()) {
-							
-							System.out.println("clockins AcademicTermDTO:: "+clockins.size());
-							
+
+							System.out.println("clockins AcademicTermDTO:: " + clockins.size());
+
 							SystemFeedbackDTO feedback14 = client.target(getApLink()).path("import").path("clockins")
 									.request(MediaType.APPLICATION_JSON).headers(headers)
 									.post(Entity.entity(clockins, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
@@ -334,6 +332,32 @@ public class DataMigrationUtility {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
+	}
+
+	public void migrateSubjects(MultivaluedMap<String, Object> headers) {
+
+		Client client = ClientBuilder.newClient();
+
+		List<SubjectCategoryDTO> subjetCategories = client.target(getDataApILink()).path("subjetCategories")
+				.request(MediaType.APPLICATION_JSON).headers(headers).get(new GenericType<List<SubjectCategoryDTO>>() {
+				});
+
+		SystemFeedbackDTO feedback8 = client.target(getApLink()).path("import").path("subjetCategories")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.post(Entity.entity(subjetCategories, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+		List<SubjectDTO> subjects = client.target(getDataApILink()).path("subjects").request(MediaType.APPLICATION_JSON)
+				.headers(headers).get(new GenericType<List<SubjectDTO>>() {
+				});
+
+		SystemFeedbackDTO feedback9 = client.target(getApLink()).path("import").path("subjects")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.post(Entity.entity(subjects, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+		System.out.println("feedback12:: " + feedback8.getMessage());
+		System.out.println("feedback13:: " + feedback9.getMessage());
+
+		client.close();
 	}
 
 }
