@@ -8,15 +8,6 @@ h1 {
 	text-align: center;
 }
 
-.activeLink{
-	background-color: blue;
-  	color: white;
-  	padding: 14px 25px;
-  	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-}
-
 .sendButton {
 	display: block;
 	font-size: 16pt;
@@ -127,19 +118,24 @@ h1 {
 }
 
 .login-form {
-	margin-left: 35%;
-	margin-right: 20%;
-	margin-top: 15%;
-	border: 2px solid #8BBC21;
+	    margin-left: 30%;    
+	/* margin-right: 10%; */
+	margin-top: 10%;
+	/* border: 1px solid #8BBC21; */
 	font-family: Roboto, sans-serif;
 	font-size: 20px;
 	line-height: 16px;
 	text-align: justify;
 	padding: 40px;
+	background-color:#383f45 ;
+	font-color:#ffffff;
+	/*  background: linear-gradient(45deg,  rgba(66, 183, 245,0.8) 0%,rgba(66, 245, 189,0.4) 100%); */
+	/*background-image: linear-gradient(147deg, #ffd000 0%, #FF8000 74%);*/
+	background-image: linear-gradient(147deg, #ffffff 0%, #ffffff 74%);
 }
 
 .login-form-button {
-	margin-left: 23%;
+	margin-left: 15%;
 	margin-top: 2%;
 }
 
@@ -155,6 +151,12 @@ h1 {
 .staff-button-margin {
 	margin-right: 20px;
 	margin-top: 20px
+}
+
+.crm-signup{ 
+	width:600px;
+	padding-left: 200px;
+	padding-right: 200px;
 }
 
 .menu-switcher {
@@ -2273,5 +2275,6 @@ html>body .gwt-DecoratedTabBar .gwt-TabBarItem-selected .tabTopRight {
   -webkit-border-radius: 0px;
   border-radius: 0px;
 } */
+
 
 
