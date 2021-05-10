@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.reports.nationalperformace;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -36,14 +37,14 @@ public class ReportFilterWindow extends Window {
 		toDate.setTitle("To");
 
 		saveButton = new IButton("Ok");
-		cancelButton = new IButton("Cancel");
+		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
 		form.setFields(year, period, fromDate, toDate);
 		form.setWrapItemTitles(false);
-		form.setMargin(10);
-		form.setColWidths(100, 250);
+		form.setPadding(10);
+		form.setColWidths(150, 250);
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton, saveButton);
@@ -51,6 +52,7 @@ public class ReportFilterWindow extends Window {
 		buttonLayout.setWidth100();
 		buttonLayout.setMargin(10);
 		buttonLayout.setMembersMargin(10);
+		buttonLayout.setAlign(Alignment.CENTER);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -58,8 +60,8 @@ public class ReportFilterWindow extends Window {
 
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("30%");
-		this.setHeight("40%");
+		this.setWidth("40%");
+		this.setHeight("50%");
 		this.setAutoCenter(true);
 		this.setTitle("Report Filter");
 		this.setIsModal(true);

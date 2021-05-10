@@ -11,7 +11,8 @@ public class FilterClockInPane extends HLayout {
 	private ComboBox schoolCombo;
 	private ComboBox academicYearCombo;
 	private ComboBox academicTermCombo;
-	private DateItem clockinDateItem;
+	private DateItem fromDateItem;
+	private DateItem toDateItem;
 
 	
 	public static final String DISTRICT_ID = "DISTRICT_ID";
@@ -43,16 +44,18 @@ public class FilterClockInPane extends HLayout {
 		academicTermCombo.setHint("Select A  Term");
 		academicTermCombo.setShowHintInField(true);
 		
-		clockinDateItem = new DateItem();
-		clockinDateItem.setTitle("Date");
+		fromDateItem = new DateItem();
+		fromDateItem.setTitle("From");
+		
+		toDateItem = new DateItem();
+		toDateItem.setTitle("To");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo , clockinDateItem);
+		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo , fromDateItem , toDateItem);
 		form.setWrapItemTitles(false);
-		form.setMargin(10);
 		form.setCellPadding(10);
 		form.setNumCols(2);
-		form.setColWidths("80" , "250");
+		form.setColWidths("150" , "250" , "150" , "250" , "150" , "250" , "150" , "250" , "150" , "250" , "150" , "250");
 	
 		
 		
@@ -82,8 +85,15 @@ public class FilterClockInPane extends HLayout {
 	}
 
 
-	public DateItem getClockinDateItem() {
-		return clockinDateItem;
+	public DateItem getFromDateItem() {
+		return fromDateItem;
 	}
+
+
+	public DateItem getToDateItem() {
+		return toDateItem;
+	}
+
+	
 
 }

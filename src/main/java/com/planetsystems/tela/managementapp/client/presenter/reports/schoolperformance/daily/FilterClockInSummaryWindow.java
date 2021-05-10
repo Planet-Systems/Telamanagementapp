@@ -82,13 +82,12 @@ public class FilterClockInSummaryWindow extends Window  {
 				
 				
 		//toDateItem
-		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , schoolStaffCombo , schoolCombo , fromDateItem  );
+		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , schoolStaffCombo , schoolCombo , fromDateItem , toDateItem  );
 		form.setWrapItemTitles(false);
-		form.setMargin(10);
-		//, "150", "250"
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250" );
+		
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250" , "150", "250" );
 		form.setCellPadding(10);
-		form.setNumCols(4);
+		form.setNumCols(2);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -96,8 +95,8 @@ public class FilterClockInSummaryWindow extends Window  {
 
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("70%");
-		this.setHeight("60%");
+		this.setWidth("40%");
+		this.setHeight("90%");
 		this.setAutoCenter(true);
 		this.setTitle("Teacher ClockIn Summary");
 		this.setIsModal(true);

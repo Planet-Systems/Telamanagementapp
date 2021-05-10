@@ -129,7 +129,7 @@ public class TimeAttendanceSupervisionPresenter
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					MenuButton filter = new MenuButton("Filter");
+					MenuButton filter = new MenuButton("View");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -149,7 +149,7 @@ public class TimeAttendanceSupervisionPresenter
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
-					MenuButton filter = new MenuButton("Filter");
+					MenuButton filter = new MenuButton("View");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);

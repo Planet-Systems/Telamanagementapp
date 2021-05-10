@@ -19,9 +19,11 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.AuthenticationDTO;
+import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.login.forgotpassword.ForgotPasswordWindow;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
@@ -29,6 +31,7 @@ import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
+import com.smartgwt.client.docs.Data;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -63,6 +66,40 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 	protected void onBind() {
 		super.onBind();
 		logoIn();
+		getView().getLoginPane().getForgotPasswordField().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				final ForgotPasswordWindow window = new ForgotPasswordWindow();
+				window.getSaveButton().addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+					String email = window.getEmailField().getValueAsString();
+					 if(email == null) {
+						SC.say("Enter your email"); 
+					 }else {
+						 LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+							map.put(NetworkDataUtil.ACTION , RequestConstant.RESET_PASSWORD );
+							AuthenticationDTO dto = new AuthenticationDTO();
+							dto.setUserName(email);
+							map.put(RequestConstant.DATA , dto);
+						 
+						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+							
+							@Override
+							public void onNetworkResult(RequestResult result) {
+								SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
+								SC.say(feedbackDTO.getMessage());
+								window.close();
+							}
+						});
+					}
+					}
+				});
+				window.show();
+			}
+		});
 	}
 
 	public void logoIn() {
@@ -115,7 +152,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 											Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
 											Cookies.removeCookie(RequestConstant.LOGED_IN);
 											Cookies.removeCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
-											//SC.warn("INFO", feedback.getMessage());
+											SC.warn("INFO", feedback.getMessage());
 										}
 
 									} else {

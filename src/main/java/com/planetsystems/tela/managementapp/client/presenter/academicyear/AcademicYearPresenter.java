@@ -148,7 +148,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton activate = new MenuButton("Activate");
 					MenuButton deactivate = new MenuButton("Deactivate");
-					MenuButton filter = new MenuButton("Filter");
+					MenuButton filter = new MenuButton("View");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);

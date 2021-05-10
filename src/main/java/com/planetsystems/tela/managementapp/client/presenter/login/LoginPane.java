@@ -17,7 +17,7 @@ public class LoginPane extends VLayout {
 	private TextField username;
 	private PasswordItem password;
 
-	private Label forgotPassword;
+	private Label forgotPasswordField;
 	
 	private Label signup;
 
@@ -51,10 +51,10 @@ public class LoginPane extends VLayout {
 			form.setCellPadding(10);
 			
 			
-			forgotPassword = new Label();
-			forgotPassword.setContents("Forgot password");
-			forgotPassword.setAutoHeight();
-			forgotPassword.setCursor(Cursor.HAND);
+			forgotPasswordField = new Label();
+			forgotPasswordField.setContents("Forgot password");
+			forgotPasswordField.setAutoHeight();
+			forgotPasswordField.setCursor(Cursor.HAND);
 	
 			
 			loginButton = new IButton();
@@ -62,7 +62,7 @@ public class LoginPane extends VLayout {
 			
 			HLayout buttonLayout = new HLayout();
 			buttonLayout.setMembersMargin(40);
-			buttonLayout.addMembers(loginButton , forgotPassword);
+			buttonLayout.addMembers(loginButton , forgotPasswordField);
 			buttonLayout.setAlign(Alignment.CENTER);		
 			buttonLayout.setAutoHeight();
 			buttonLayout.setAutoWidth();
@@ -103,8 +103,9 @@ public class LoginPane extends VLayout {
 		return password;
 	}
 
-	public Label getForgotPassword() {
-		return forgotPassword;
+
+	public Label getForgotPasswordField() {
+		return forgotPasswordField;
 	}
 
 	public Label getSignup() {

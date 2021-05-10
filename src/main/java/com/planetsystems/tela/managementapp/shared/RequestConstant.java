@@ -229,5 +229,6 @@ public class RequestConstant {
 	public static final String NationalEndOfWeekTimeAttendance = "NationalEndOfWeekTimeAttendance";
 	public static final String NationalEndOfMonthTimeAttendance = "NationalEndOfMonthTimeAttendance";
 	public static final String NationalEndOfTermTimeAttendance = "NationalEndOfTermTimeAttendance";
+	public static final String RESET_PASSWORD = "RESET_PASSWORD";
 
 }

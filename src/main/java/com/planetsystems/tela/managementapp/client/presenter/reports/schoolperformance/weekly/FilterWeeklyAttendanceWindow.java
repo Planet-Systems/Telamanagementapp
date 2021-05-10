@@ -83,10 +83,9 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 		
 		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , monthCombo, schoolCombo  , weekCombo );
 		form.setWrapItemTitles(false);
-		form.setMargin(10);
 		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250");
 		form.setCellPadding(10);
-		form.setNumCols(4);
+		form.setNumCols(2);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -94,8 +93,8 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("70%");
-		this.setHeight("60%");
+		this.setWidth("40%");
+		this.setHeight("80%");
 		this.setAutoCenter(true);
 		this.setTitle("Weekly ClockIn Summary");
 		this.setIsModal(true);

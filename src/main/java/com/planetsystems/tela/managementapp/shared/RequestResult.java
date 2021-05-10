@@ -40,6 +40,7 @@ import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
@@ -103,6 +104,7 @@ public class RequestResult implements Result {
 	private List<TeacherClockInSummaryDTO> teacherClockInSummaryDTOs;
 	List<SchoolEndOfWeekTimeAttendanceDTO> schoolEndOfWeekTimeAttendanceDTOs;
 	List<SchoolEndOfMonthTimeAttendanceDTO> schoolEndOfMonthTimeAttendanceDTOs;
+	List<SchoolEndOfTermTimeAttendanceDTO> schoolEndOfTermTimeAttendanceDTOs;
 
 	private AttendanceDashboardSummaryDTO attendanceDashboardSummaryDTO;
 
@@ -438,8 +440,17 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = feedback;
 		this.systemUserProfileDTO = systemUserProfileDTO;
 	}
+	
+	
 
 
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<SchoolEndOfTermTimeAttendanceDTO> schoolEndOfTermTimeAttendanceDTOs , SchoolEndOfTermTimeAttendanceDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.schoolEndOfTermTimeAttendanceDTOs = schoolEndOfTermTimeAttendanceDTOs;
+	}
 
 	public SystemUserProfileDTO getSystemUserProfileDTO() {
 		return systemUserProfileDTO;
@@ -659,4 +670,10 @@ public class RequestResult implements Result {
 		return nationalReportFilterDTO;
 	}
 
+	public List<SchoolEndOfTermTimeAttendanceDTO> getSchoolEndOfTermTimeAttendanceDTOs() {
+		return schoolEndOfTermTimeAttendanceDTOs;
+	}
+
+	
+	
 }

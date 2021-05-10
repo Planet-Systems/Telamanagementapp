@@ -22,7 +22,7 @@ public class FilterClockInWindow extends Window {
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 		
-		filterButton = new IButton("Filter");
+		filterButton = new IButton("Load");
 
 		
 		HLayout buttonLayout = new HLayout();

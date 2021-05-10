@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.monthly;
+package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.termly;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.types.Alignment;
@@ -11,7 +11,7 @@ import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class FilterMonthlyAttendanceSummaryWindow extends Window  {
+public class FilterTermlyAttendanceSummaryWindow extends Window  {
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -21,12 +21,11 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 	private ComboBox regionCombo;
 	private ComboBox districtCombo;
 	private ComboBox schoolCombo;
-	private ComboBox monthCombo;
 
-	public FilterMonthlyAttendanceSummaryWindow() {
+	public FilterTermlyAttendanceSummaryWindow() {
 		super();
 
-		saveButton = new IButton("Fetch");
+		saveButton = new IButton("Load");
 
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
@@ -64,18 +63,14 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 		schoolCombo.setTitle("School");
 		schoolCombo.setHint("School");
 		schoolCombo.setShowHintInField(true);
-		
-		monthCombo = new ComboBox();
-		monthCombo.setTitle("Month");
-		monthCombo.setHint("month");
-		monthCombo.setShowHintInField(true);
+
 	
 		//academicTermCombo
-		form.setFields(regionCombo , academicYearCombo  , districtCombo , monthCombo , schoolCombo);
+		form.setFields(academicYearCombo , academicTermCombo ,regionCombo , districtCombo  , schoolCombo);
 		form.setWrapItemTitles(false);
-		
+		form.setMargin(10);
 //, "150", "250"
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" );
+		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250"  );
 		form.setCellPadding(10);
 		form.setNumCols(2);
 
@@ -86,9 +81,9 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setHeight("70%");
 		this.setAutoCenter(true);
-		this.setTitle("Monthly ClockIn Summary");
+		this.setTitle("Termly ClockIn Summary");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);
@@ -128,12 +123,6 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 	public ComboBox getSchoolCombo() {
 		return schoolCombo;
 	}
-
-	public ComboBox getMonthCombo() {
-		return monthCombo;
-	}
-	
-	
 	
 
 }

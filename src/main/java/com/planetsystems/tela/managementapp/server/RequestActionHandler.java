@@ -33,6 +33,7 @@ import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.SmsSchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
@@ -54,6 +55,7 @@ import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolTimeOnTaskSummaryDTO;
 import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
@@ -74,6 +76,7 @@ import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestconstants.ReportsRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestconstants.SmsRequest;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemMenuRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupSystemMenuRequestConstant;
@@ -116,7 +119,33 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_ACADEMIC_YEAR)) {
+			}
+			if (action.getRequest().equalsIgnoreCase(RequestConstant.RESET_PASSWORD)) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.DATA);
+				System.out.print("DTO Email "+dto.getUserName());
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("ResetPassword")
+						.request(MediaType.APPLICATION_JSON).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				System.out.println("AUTH " + responseDTO);
+
+				if (responseDTO != null) {
+					System.out.println("LOGIN RESPONSE " + responseDTO.getData());
+					feedback = responseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_ACADEMIC_YEAR)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				AcademicYearDTO dto = (AcademicYearDTO) action.getRequestBody().get(RequestConstant.SAVE_ACADEMIC_YEAR);
@@ -4530,6 +4559,42 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
+			else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.SchoolEndOfTermTimeAttendanceReport)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolEndOfTermTimeAttendanceDTO> list = new ArrayList<SchoolEndOfTermTimeAttendanceDTO>();
+
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(ReportsRequestConstant.DATA);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SchoolEndOfTermTimeAttendanceDTO>> responseDto = client.target(API_LINK)
+						.path("Reports").path("SchoolEndOfTermTimeAttendance")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto , MediaType.APPLICATION_JSON) ,
+								new GenericType<SystemResponseDTO<List<SchoolEndOfTermTimeAttendanceDTO>>>() {
+						});
+
+				if (responseDto != null) {
+					list = responseDto.getData();
+					feedback.setResponse(true);
+					feedback.setMessage(responseDto.getMessage());
+					System.out.println("REPORT1  " + responseDto);
+					System.out.println("RESport1  " + responseDto.getData());
+				}
+
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfWeekTimeAttendance)) {
 
 				Client client = ClientBuilder.newClient();
@@ -4875,6 +4940,35 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
+
+			}else if (action.getRequest().equalsIgnoreCase(SmsRequest.SMS_STAFF)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				SmsSchoolStaffDTO dto = (SmsSchoolStaffDTO) action.getRequestBody()
+						.get(SmsRequest.DATA);
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("SmsSchoolStaff")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback.setMessage(postResponseDTO.getMessage());
+					feedback.setResponse(postResponseDTO.isStatus());
+					//feedback.setId(id);
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
 
 			}
 

@@ -23,6 +23,7 @@ import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
+import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 
 public class ComboUtil {
 
@@ -580,6 +581,36 @@ public class ComboUtil {
 				}
 			}
 		});
+	}
+		
+		
+		public static void loadSchoolStaffMultiComboBySchool(final ComboBox schoolCombo, final MultiComboBoxItem schoolStaffCombo,
+				final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
+
+			String schoolId = schoolCombo.getValueAsString();
+			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+			map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
+
+			NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+				@Override
+				public void onNetworkResult(RequestResult result) {
+					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+					for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+						valueMap.put(schoolStaffDTO.getId(), fullName);
+					}
+					schoolStaffCombo.setValueMap(valueMap);
+
+					if (defaultValue != null) {
+						schoolStaffCombo.setValue(defaultValue);
+					}
+				}
+			});
+		
 
 //		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 //

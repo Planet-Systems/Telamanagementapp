@@ -2,6 +2,8 @@ package com.planetsystems.tela.managementapp.client.presenter.dashboard;
 
 import java.util.LinkedHashMap;
 
+import org.apache.bcel.generic.NEW;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -16,6 +18,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
@@ -29,6 +32,7 @@ import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -49,6 +53,8 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		public DashboardPane getDashboardPane();
 
 		public ControlsPane getControlsPane();
+		
+		public IButton getMesssageBtn();
 	}
 
 	@ContentSlot
@@ -70,7 +76,16 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 		// TODO Auto-generated method stub
 		super.onBind();
 
-		
+		getView().getMesssageBtn().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				PlaceRequest placeRequest = new PlaceRequest.Builder()
+						.nameToken(NameTokens.SMSMESSAGING).build();
+
+				placeManager.revealPlace(placeRequest);
+			}
+		});
 		getView().getDashboardPane().hideDataImport();
 		//migrateData();
 		//migrateAttendanceData();

@@ -11,6 +11,7 @@ import com.planetsystems.tela.managementapp.client.presenter.reports.nationalper
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.SchoolPerformaceReportModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolCategoryModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffModule;
+import com.planetsystems.tela.managementapp.client.presenter.smsmessage.SmsMessageModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision.StaffDailyAttendanceSupervisionModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable.StaffDailyTimetableModule;
@@ -43,6 +44,7 @@ public class MainModule extends AbstractPresenterModule {
 		install(new SchoolPerformaceReportModule());
 		install(new DistrictPerformaceReportModule());
 		install(new NationalPerformaceModule());
+		install(new SmsMessageModule());
 
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
 
