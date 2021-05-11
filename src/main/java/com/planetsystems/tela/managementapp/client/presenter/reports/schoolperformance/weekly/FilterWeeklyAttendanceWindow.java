@@ -81,7 +81,7 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 				
 				
 		
-		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , monthCombo, schoolCombo  , weekCombo );
+		form.setFields(academicYearCombo , academicTermCombo ,regionCombo, districtCombo , schoolCombo, monthCombo  , weekCombo );
 		form.setWrapItemTitles(false);
 		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250");
 		form.setCellPadding(10);

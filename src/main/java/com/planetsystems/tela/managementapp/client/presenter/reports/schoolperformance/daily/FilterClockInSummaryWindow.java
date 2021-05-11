@@ -82,7 +82,7 @@ public class FilterClockInSummaryWindow extends Window  {
 				
 				
 		//toDateItem
-		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , schoolStaffCombo , schoolCombo , fromDateItem , toDateItem  );
+		form.setFields(academicYearCombo , academicTermCombo , regionCombo, districtCombo ,schoolCombo, schoolStaffCombo  , fromDateItem , toDateItem  );
 		form.setWrapItemTitles(false);
 		
 		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250" , "150", "250" );

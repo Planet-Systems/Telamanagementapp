@@ -97,7 +97,7 @@ public class SchoolPerformaceReportPresenter
 	}
 
 	private void loadMenuButtons() {
-		MenuButton filter = new MenuButton("Filter");
+		MenuButton filter = new MenuButton("View");
 		MenuButton refresh = new MenuButton("Refresh");
 		MenuButton export = new MenuButton("Export");
 
@@ -427,10 +427,11 @@ public class SchoolPerformaceReportPresenter
 
 			}
 
+			@Deprecated
 			private void loadTeacherClockInSummary() {
 				TeacherClockInSummaryPane pane = new TeacherClockInSummaryPane();
 
-				MenuButton filter = new MenuButton("Filter");
+				MenuButton filter = new MenuButton("View");
 				MenuButton refresh = new MenuButton("Refresh");
 				MenuButton export = new MenuButton("Export");
 
@@ -632,7 +633,7 @@ public class SchoolPerformaceReportPresenter
 	private void SchoolEndOfTermTimeAttendance() {
 		SchoolEndOfTermTimeAttendancePane pane = new SchoolEndOfTermTimeAttendancePane();
 
-		MenuButton filter = new MenuButton("Filter");
+		MenuButton filter = new MenuButton("Viiew");
 		MenuButton refresh = new MenuButton("Refresh");
 		MenuButton export = new MenuButton("Export");
 

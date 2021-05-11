@@ -15,28 +15,22 @@ class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	private LoginPane loginPane;
 	private static final String DEFAULT_MARGIN = "0px";
 
-    @Inject
-    LoginView( ) {
-    	panel = new VLayout();
+	@Inject
+	LoginView() {
+		panel = new VLayout();
 		loginPane = new LoginPane();
-		
-		
-		VLayout centerLayout = new VLayout();
-		centerLayout.setLayoutAlign(Alignment.CENTER);
-		centerLayout.setLayoutAlign(VerticalAlignment.CENTER);
-		centerLayout.setWidth("50%");
-		centerLayout.setHeight("70%");
-		centerLayout.setMargin(50);
-		centerLayout.addMember(loginPane);
 
-		panel.addMember(centerLayout);
+		panel.addMember(loginPane);
 		panel.setWidth100();
-		panel.setHeight("90%");
+		panel.setHeight("100%");
+		/*panel.setBackgroundColor("#f0f0f0");*/
+		panel.setBackgroundColor("#ffffff");
+		
+		
 		Window.enableScrolling(false);
 		Window.setMargin(DEFAULT_MARGIN);
-    }
-    
-    
+	}
+
 	public Widget asWidget() {
 		return panel;
 	}
@@ -44,6 +38,5 @@ class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	public LoginPane getLoginPane() {
 		return loginPane;
 	}
-    
-    
+
 }

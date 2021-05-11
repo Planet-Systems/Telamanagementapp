@@ -26,6 +26,7 @@ import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.UtilityManager;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -33,14 +34,14 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
-import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent; 
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.planetsystems.tela.dto.reports.DistrictReportFilterDTO;
 import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 
 public class NationalPerformacePresenter
 		extends Presenter<NationalPerformacePresenter.MyView, NationalPerformacePresenter.MyProxy> {
-	
-	
+
 	@Inject
 	private DispatchAsync dispatcher;
 
@@ -48,7 +49,7 @@ public class NationalPerformacePresenter
 	PlaceManager placeManager;
 
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
-	
+
 	interface MyView extends View {
 
 		public ControlsPane getControlsPane();
@@ -112,10 +113,10 @@ public class NationalPerformacePresenter
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
-						 
+
 						final ReportFilterWindow window = new ReportFilterWindow();
 						loadAcademicYearCombo(window, null);
-						loadAcademicTermCombo(window, null); 
+						loadAcademicTermCombo(window, null);
 
 						window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -128,8 +129,6 @@ public class NationalPerformacePresenter
 						});
 
 						window.show();
- 
-						 
 
 					}
 				});
@@ -141,7 +140,7 @@ public class NationalPerformacePresenter
 
 						final ReportFilterWindow window = new ReportFilterWindow();
 						loadAcademicYearCombo(window, null);
-						loadAcademicTermCombo(window, null); 
+						loadAcademicTermCombo(window, null);
 
 						window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -154,7 +153,6 @@ public class NationalPerformacePresenter
 						});
 
 						window.show();
-						 
 
 					}
 				});
@@ -166,7 +164,7 @@ public class NationalPerformacePresenter
 
 						final ReportFilterWindow window = new ReportFilterWindow();
 						loadAcademicYearCombo(window, null);
-						loadAcademicTermCombo(window, null); 
+						loadAcademicTermCombo(window, null);
 
 						window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -179,7 +177,6 @@ public class NationalPerformacePresenter
 						});
 
 						window.show();
-						 
 
 					}
 				});
@@ -187,8 +184,7 @@ public class NationalPerformacePresenter
 			}
 		});
 	}
-	
-	
+
 	private void loadAcademicYearCombo(final ReportFilterWindow window, final String defaultValue) {
 		ComboUtil.loadAcademicYearCombo(window.getYear(), dispatcher, placeManager, defaultValue);
 	}
@@ -205,9 +201,9 @@ public class NationalPerformacePresenter
 	}
 
 	private void loadEndOfWeekTimeAttendance(final ReportFilterWindow window) {
-		 
-		NationalReportFilterDTO dto = new NationalReportFilterDTO();
- 
+
+		final NationalReportFilterDTO dto = new NationalReportFilterDTO();
+
 		dto.setTerm(window.getPeriod().getValueAsString());
 		dto.setFromDate(dateFormat.format(window.getFromDate().getValueAsDate()));
 		dto.setToDate(dateFormat.format(window.getToDate().getValueAsDate()));
@@ -238,16 +234,18 @@ public class NationalPerformacePresenter
 
 				pane.getListgrid().addRecordsToGrid(result.getNationalEndOfWeekTimeAttendanceDTOs());
 
+				PreviewEndOfWeekTimeAttendance(export, dto);
+
 				getView().getContentPane().setMembers(pane);
 			}
 		});
- 
+
 	}
 
 	private void loadEndOfMonthTimeAttendance(final ReportFilterWindow window) {
-		 
-		NationalReportFilterDTO dto = new NationalReportFilterDTO();
-		 
+
+		final NationalReportFilterDTO dto = new NationalReportFilterDTO();
+
 		dto.setTerm(window.getPeriod().getValueAsString());
 		dto.setFromDate(dateFormat.format(window.getFromDate().getValueAsDate()));
 		dto.setToDate(dateFormat.format(window.getToDate().getValueAsDate()));
@@ -278,16 +276,18 @@ public class NationalPerformacePresenter
 
 				pane.getListgrid().addRecordsToGrid(result.getNationalEndOfMonthTimeAttendanceDTOs());
 
+				PreviewEndOfMonthTimeAttendance(export, dto);
+
 				getView().getContentPane().setMembers(pane);
 			}
 		});
-		 
+
 	}
 
 	private void loadEndOfTermTimeAttendance(final ReportFilterWindow window) {
-		
-		NationalReportFilterDTO dto = new NationalReportFilterDTO();
-		 
+
+		final NationalReportFilterDTO dto = new NationalReportFilterDTO();
+
 		dto.setTerm(window.getPeriod().getValueAsString());
 		dto.setFromDate(dateFormat.format(window.getFromDate().getValueAsDate()));
 		dto.setToDate(dateFormat.format(window.getToDate().getValueAsDate()));
@@ -318,10 +318,90 @@ public class NationalPerformacePresenter
 
 				pane.getListgrid().addRecordsToGrid(result.getNationalEndOfTermTimeAttendanceDTOs());
 
+				PreviewEndOfTermTimeAttendance(export, dto);
+
 				getView().getContentPane().setMembers(pane);
 			}
 		});
-		 
+
+	}
+
+	private void PreviewEndOfWeekTimeAttendance(MenuButton export, final NationalReportFilterDTO dto) {
+
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.NationalEndOfWeekTimeAttendanceReport, dto);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.NationalEndOfWeekTimeAttendanceReport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+
+	}
+
+	private void PreviewEndOfMonthTimeAttendance(MenuButton export, final NationalReportFilterDTO dto) {
+
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.NationalEndOfMonthTimeAttendanceReport, dto);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.NationalEndOfMonthTimeAttendanceReport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+
+	}
+
+	private void PreviewEndOfTermTimeAttendance(MenuButton export, final NationalReportFilterDTO dto) {
+
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.NationalEndOfTermTimeAttendanceReport, dto);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.NationalEndOfTermTimeAttendanceReport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+
 	}
 
 }
