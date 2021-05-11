@@ -35,6 +35,7 @@ import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperfo
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.monthly.SchoolEndOfMonthTimeAttendancePane;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.termly.FilterTermlyAttendanceSummaryWindow;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.termly.SchoolEndOfTermTimeAttendancePane;
+import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.timeontask.FilterSchoolTimeOnTaskSummaryWindow;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.timeontask.SchoolTimeOnTaskSummaryPane;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.weekly.FilterWeeklyAttendanceWindow;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.weekly.SchoolEndOfWeekTimeAttendancePane;
@@ -378,8 +379,96 @@ public class SchoolPerformaceReportPresenter
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
+						final SchoolTimeOnTaskSummaryPane pane = new SchoolTimeOnTaskSummaryPane();
 
-						loadSchoolTimeOnTaskSummary();
+						MenuButton filter = new MenuButton("Filter");
+						MenuButton refresh = new MenuButton("Refresh");
+						MenuButton export = new MenuButton("Export");
+
+						List<MenuButton> buttons = new ArrayList<>();
+						buttons.add(filter);
+						buttons.add(refresh);
+						buttons.add(export);
+
+						getView().getControlsPane().addMenuButtons("School Time On Task Reports", buttons);
+
+						showFilter(filter);
+						getView().getContentPane().setMembers(pane);
+						
+						final FilterSchoolTimeOnTaskSummaryWindow window = new FilterSchoolTimeOnTaskSummaryWindow();
+						window.show();
+						final String defaultValue = null;
+						ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
+						
+						window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+							
+							@Override
+							public void onChanged(ChangedEvent event) {
+							ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(), window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);;
+							}
+						});
+						
+						ComboUtil.loadRegionCombo(window.getRegionCombo(), dispatcher, placeManager, defaultValue);
+						
+						window.getRegionCombo().addChangedHandler(new ChangedHandler() {
+							
+							@Override
+							public void onChanged(ChangedEvent event) {
+							ComboUtil.loadDistrictComboByRegion(window.getRegionCombo(), window.getDistrictCombo(), dispatcher, placeManager, defaultValue);	
+							}
+						});
+						
+						
+						window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+							
+							@Override
+							public void onChanged(ChangedEvent event) {
+							ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher, placeManager, defaultValue);	
+							}
+						});
+						
+						window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+							
+							@Override
+							public void onChanged(ChangedEvent event) {
+							ComboUtil.loadSchoolStaffComboBySchool(window.getSchoolCombo(), window.getSchoolStaffCombo(), dispatcher, placeManager, defaultValue);;	
+							}
+						});
+						
+						window.getSaveButton().addClickHandler(new ClickHandler() {
+							
+							@Override
+							public void onClick(ClickEvent event) {
+							if (checkIfAllFieldsNotEmpty(window)) {
+								FilterDTO dto = new FilterDTO();
+								dto.setAcademicTermDTO(new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString()));
+								dto.setSchoolDTO(new SchoolDTO(window.getSchoolCombo().getValueAsString()));
+								dto.setSchoolStaffDTO(new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString()));
+								dto.setToDate(dateFormat.format(window.getToDateItem().getValueAsDate()));
+								dto.setFromDate(dateFormat.format(window.getFromDateItem().getValueAsDate()));
+								
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.SchoolTimeOnTaskSummary);
+								map.put(ReportsRequestConstant.DATA, dto);
+								
+								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+									
+									@Override
+									public void onNetworkResult(RequestResult result) {
+							         pane.getListgrid().addRecordsToGrid(result.getSchoolTimeOnTaskSummaryDTOs());
+									}
+								});	
+								
+								
+							}else {
+								SC.say("fill the fields");
+							}
+							}
+
+						
+						});
+						
+						
 
 					}
 				});
@@ -505,9 +594,31 @@ public class SchoolPerformaceReportPresenter
 			status = false;
 		if (window.getFromDateItem().getValueAsDate() == null)
 			status = false;
-		// if(window.getToDateItem().getValueAsDate() == null) status = false;
+		 if(window.getToDateItem().getValueAsDate() == null) status = false;
 
 		return status;
+	}
+	
+	private boolean checkIfAllFieldsNotEmpty(FilterSchoolTimeOnTaskSummaryWindow window) {
+		boolean status = true;
+		if (window.getAcademicYearCombo().getValueAsString() == null)
+			status = false;
+		if (window.getAcademicTermCombo().getValueAsString() == null)
+			status = false;
+		if (window.getRegionCombo().getValueAsString() == null)
+			status = false;
+		if (window.getDistrictCombo().getValueAsString() == null)
+			status = false;
+		if (window.getSchoolCombo().getValueAsString() == null)
+			status = false;
+		if (window.getSchoolStaffCombo().getValueAsString() == null)
+			status = false;
+		if (window.getFromDateItem().getValueAsDate() == null)
+			status = false;
+		 if(window.getToDateItem().getValueAsDate() == null) status = false;
+
+		return status;
+		
 	}
 
 	private boolean checkIfAllFieldsNotEmpty(FilterWeeklyAttendanceWindow window) {
@@ -648,6 +759,7 @@ public class SchoolPerformaceReportPresenter
 		getView().getContentPane().setMembers(pane);
 	}
 
+	@Deprecated
 	private void loadSchoolTimeOnTaskSummary() {
 		SchoolTimeOnTaskSummaryPane pane = new SchoolTimeOnTaskSummaryPane();
 

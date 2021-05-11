@@ -7,5 +7,7 @@ public interface ReportsRequestConstant {
 	String SchoolEndOfMonthTimeAttendanceREPORT = "SchoolEndOfMonthTimeAttendanceREPORT";
 	String DATA = "DATA";
 	String SchoolEndOfTermTimeAttendanceReport = "SchoolEndOfTermTimeAttendanceReport";
+	String SchoolTimeOnTaskSummary = "SchoolTimeOnTaskSummary";
+	
 	
 }

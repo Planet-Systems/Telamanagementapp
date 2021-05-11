@@ -4591,6 +4591,40 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
+			else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.SchoolTimeOnTaskSummary)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolTimeOnTaskSummaryDTO> list = new ArrayList<SchoolTimeOnTaskSummaryDTO>();
+
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(ReportsRequestConstant.DATA);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SchoolTimeOnTaskSummaryDTO>> responseDto = client.target(API_LINK)
+						.path("Reports").path("SchoolTimeOnTaskSummary")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto , MediaType.APPLICATION_JSON) ,
+								new GenericType<SystemResponseDTO<List<SchoolTimeOnTaskSummaryDTO>>>() {
+						});
+
+				if (responseDto != null) {
+					list = responseDto.getData();
+					feedback.setResponse(true);
+					feedback.setMessage(responseDto.getMessage());
+					System.out.println("REPORT1  " + responseDto);
+					System.out.println("RESport1  " + responseDto.getData());
+				}
+
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfWeekTimeAttendance)) {
 

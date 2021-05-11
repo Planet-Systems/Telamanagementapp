@@ -16,4 +16,10 @@ public class SchoolTimeOnTaskSummaryPane extends VLayout {
 		this.addMember(layout);
 	}
 
+	public SchoolTimeOnTaskSummaryListgrid getListgrid() {
+		return listgrid;
+	}
+	
+	
+
 }
