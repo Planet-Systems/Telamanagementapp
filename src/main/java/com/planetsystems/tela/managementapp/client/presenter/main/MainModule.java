@@ -10,7 +10,6 @@ import com.planetsystems.tela.managementapp.client.presenter.reports.districtper
 import com.planetsystems.tela.managementapp.client.presenter.reports.nationalperformace.NationalPerformaceModule;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.SchoolPerformaceReportModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolCategoryModule;
-import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffModule;
 import com.planetsystems.tela.managementapp.client.presenter.smsmessage.SmsMessageModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision.StaffDailyAttendanceSupervisionModule;
@@ -31,7 +30,6 @@ public class MainModule extends AbstractPresenterModule {
 		install(new RegionModule());
 		install(new SchoolCategoryModule());
 		install(new SubjectCategoryModule());
-		install(new SchoolStaffModule());
 		install(new StaffEnrollmentModule());
 		install(new StaffAttendanceModule());
 		install(new LearnerAttendanceModule());

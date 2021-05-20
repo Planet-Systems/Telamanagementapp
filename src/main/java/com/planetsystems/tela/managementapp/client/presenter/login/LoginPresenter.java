@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.client.presenter.login;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -90,6 +91,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 							public void onNetworkResult(RequestResult result) {
 								SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
 								SC.say(feedbackDTO.getMessage());
+								GWT.log("pwd "+feedbackDTO.getId());
 								window.close();
 							}
 						});

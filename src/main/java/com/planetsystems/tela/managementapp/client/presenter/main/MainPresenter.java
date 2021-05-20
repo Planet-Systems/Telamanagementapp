@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.gargoylesoftware.htmlunit.javascript.host.Window;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,7 +19,9 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.planetsystems.tela.dto.AuthenticationDTO;
 import com.planetsystems.tela.dto.NavigationMenuDTO;
+import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
@@ -35,6 +38,8 @@ import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableDataSourc
 import com.planetsystems.tela.managementapp.client.menu.SystemUserData;
 import com.planetsystems.tela.managementapp.client.menu.SystemUserDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearWindow;
+import com.planetsystems.tela.managementapp.client.presenter.login.changepassword.ChangePasswordWindow;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.MainStatusBar;
@@ -179,7 +184,49 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
-						// changePassword();
+				final ChangePasswordWindow window = new ChangePasswordWindow();
+					window.getChangeButton().addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent event) {
+	
+							if(checkIfFieldsAreFilled(window)) {
+								String old = window.getOldPasswordField().getValueAsString();
+								String newP =  window.getNewPasswordField().getValueAsString();
+								String comfirm = window.getComfirmPasswoField().getValueAsString();
+								
+								if (newP.equals(comfirm)) {
+									AuthenticationDTO dto = new AuthenticationDTO();
+									dto.setOldPassword(old);
+									dto.setPassword(newP);
+									dto.setUserName(userName);
+									
+									LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+									map.put(RequestConstant.DATA , dto);
+									map.put(NetworkDataUtil.ACTION, RequestConstant.CHANGE_PASSWORD);
+									
+
+									NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+										
+										@Override
+										public void onNetworkResult(RequestResult result) {
+											SC.say(result.getSystemFeedbackDTO().getMessage());
+											SessionManager.getInstance().logOut(placeManager);
+											window.close();
+										}
+									});
+								}else {
+									SC.say("Passwords donot match");
+								}
+							}else {
+								SC.say("fill all the fields");
+							}
+	
+							}
+	
+					});
+					
+					window.show();
 					}
 				});
 
@@ -212,6 +259,20 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		});
 
 	}
+	
+	
+	private boolean checkIfFieldsAreFilled(ChangePasswordWindow window) {
+		boolean flag = true;
+		if(window.getOldPasswordField().getValueAsString() == null) flag = false;
+		
+		if(window.getNewPasswordField().getValueAsString() == null) flag = false;
+		
+		if(window.getComfirmPasswoField().getValueAsString() == null) flag = false;
+								
+		return flag;
+	}
+	
+
 	
 	private void loadLoggedInSystemUserMenu() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();

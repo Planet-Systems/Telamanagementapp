@@ -563,14 +563,14 @@ public class SchoolCategoryPresenter
 				if (window.getSchoolCode().getValueAsString() == null)
 					flag = false;
 
-				if (window.getLatitude().getValueAsString() == null)
-					flag = false;
+//				if (window.getLatitude().getValueAsString() == null)
+//					flag = false;
+//
+//				if (window.getLongtitude().getValueAsString() == null)
+//					flag = false;
 
-				if (window.getLongtitude().getValueAsString() == null)
-					flag = false;
-
-				if (window.getDeviceNumber().getValueAsString() == null)
-					flag = false;
+//				if (window.getDeviceNumber().getValueAsString() == null)
+//					flag = false;
 
 				return flag;
 			}

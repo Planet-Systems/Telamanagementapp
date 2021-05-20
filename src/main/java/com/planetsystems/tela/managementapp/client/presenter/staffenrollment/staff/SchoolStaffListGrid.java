@@ -17,6 +17,8 @@ public class SchoolStaffListGrid extends SuperListGrid {
 	public static String REGISTERED = "registered";
 	public static String SCHOOL = "school";
 	public static String SCHOOL_ID = "schoolId";
+	public static String DISTRICT_ID = "districtId";
+	public static String DISTRICT = "district";
 
 	public static String FIRSTNAME = "firstName";
 	public static String LASTNAME = "lastName";
@@ -35,6 +37,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 
 		dataSource = SchoolStaffDataSource.getInstance();
 
+		
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
 
@@ -45,6 +48,12 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 
+		ListGridField districtField = new ListGridField(DISTRICT, "District");
+		///districtField.setHidden(true);
+		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
+		districtIdField.setHidden(true);
+
+		
 		ListGridField firstNameField = new ListGridField(FIRSTNAME, "First Name");
 		ListGridField lastNameField = new ListGridField(LASTNAME, "Last Name");
 		ListGridField phoneNumberField = new ListGridField(PHONE_NUMBER, "Phone Number");
@@ -54,8 +63,8 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField genderField = new ListGridField(GENDER, "Gender");
 		ListGridField nameAbrevField = new ListGridField(NAME_ABBREV, "Name Abbreviation");
 
-		this.setFields(idField, schoolIdField, staffCodeField, firstNameField, lastNameField, genderField,
-				phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField, schoolField, registeredField);
+		this.setFields(idField, schoolIdField , districtIdField, staffCodeField, firstNameField, lastNameField, genderField,
+				phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField, districtField, schoolField, registeredField);
 		this.setDataSource(dataSource);
 	}
 
@@ -66,20 +75,30 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		String registered = schoolStaffDTO.isRegistered() ? "Yes" : "NO";
 		record.setAttribute(REGISTERED, registered);
 
-		if (schoolStaffDTO.getSchoolDTO() != null) {
+		if (schoolStaffDTO.getSchoolDTO().getDistrictDTO() != null) {
 			record.setAttribute(SCHOOL_ID, schoolStaffDTO.getSchoolDTO().getId());
 			record.setAttribute(SCHOOL, schoolStaffDTO.getSchoolDTO().getName());
+			if(schoolStaffDTO.getSchoolDTO().getDistrictDTO() != null) {
+				record.setAttribute(DISTRICT_ID, schoolStaffDTO.getSchoolDTO().getDistrictDTO().getId());
+				record.setAttribute(DISTRICT, schoolStaffDTO.getSchoolDTO().getDistrictDTO().getName());	
+			}
+		
 		}
 
 		if (schoolStaffDTO.getGeneralUserDetailDTO() != null) {
-			GWT.log("DETAILS " + schoolStaffDTO.getGeneralUserDetailDTO());
 			record.setAttribute(FIRSTNAME, schoolStaffDTO.getGeneralUserDetailDTO().getFirstName());
 			record.setAttribute(LASTNAME, schoolStaffDTO.getGeneralUserDetailDTO().getLastName());
 			record.setAttribute(EMAIL, schoolStaffDTO.getGeneralUserDetailDTO().getEmail());
 			record.setAttribute(NAME_ABBREV, schoolStaffDTO.getGeneralUserDetailDTO().getNameAbbrev());
+			
+			if(schoolStaffDTO.getGeneralUserDetailDTO().getDob() != null)
 			record.setAttribute(DOB, schoolStaffDTO.getGeneralUserDetailDTO().getDob());
+			
 			record.setAttribute(NATIONAL_ID, schoolStaffDTO.getGeneralUserDetailDTO().getNationalId());
+			
+			if(schoolStaffDTO.getGeneralUserDetailDTO().getGender() != null)
 			record.setAttribute(GENDER, schoolStaffDTO.getGeneralUserDetailDTO().getGender());
+			
 			record.setAttribute(PHONE_NUMBER, schoolStaffDTO.getGeneralUserDetailDTO().getPhoneNumber());
 		}
 
