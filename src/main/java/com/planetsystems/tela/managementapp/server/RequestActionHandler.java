@@ -1314,7 +1314,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolclasses")
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("SchoolClasses")
 						.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
 						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 						});

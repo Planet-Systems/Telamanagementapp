@@ -181,7 +181,7 @@ public class SchoolCategoryPresenter
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
-					// buttons.add(delete);
+					buttons.add(delete);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
