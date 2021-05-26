@@ -42,6 +42,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -114,12 +115,37 @@ public class StaffDailyTimtablePresenter
 					getView().getControlsPane().addMenuButtons(buttons);
 					showCreateTab(newButton);
 					viewStaffDailyTimetableLessonTab(view);
+					
+					final String defaultValue = null;
 
 					ComboUtil.loadAcademicYearCombo(getView().getStaffDailyTimetablePane().getAcademicYearCombo(),
-							dispatcher, placeManager, null);
+							dispatcher, placeManager, defaultValue);
+					
+					getView().getStaffDailyTimetablePane().getAcademicYearCombo()
+					.addChangedHandler(new ChangedHandler() {
 
-					ComboUtil.loadDistrictCombo(getView().getStaffDailyTimetablePane().getDistrictCombo(), dispatcher,
-							placeManager, null);
+						@Override
+						public void onChanged(ChangedEvent event) {
+							ComboUtil.loadAcademicTermComboByAcademicYear(
+									getView().getStaffDailyTimetablePane().getAcademicYearCombo(),
+									getView().getStaffDailyTimetablePane().getAcademicTermCombo(), dispatcher,
+									placeManager, defaultValue);
+						}
+					});
+					
+					
+					
+
+					ComboUtil.loadRegionCombo(getView().getStaffDailyTimetablePane().getRegionCombo() , dispatcher, placeManager, defaultValue);
+					getView().getStaffDailyTimetablePane().getRegionCombo().addChangedHandler(new ChangedHandler() {
+						
+						@Override
+						public void onChanged(ChangedEvent event) {
+							ComboUtil.loadDistrictComboByRegion(getView().getStaffDailyTimetablePane().getRegionCombo() , 
+									getView().getStaffDailyTimetablePane().getDistrictCombo(), dispatcher, placeManager, defaultValue);
+						}
+					});
+				
 
 					getView().getStaffDailyTimetablePane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
@@ -132,17 +158,7 @@ public class StaffDailyTimtablePresenter
 						}
 					});
 
-					getView().getStaffDailyTimetablePane().getAcademicYearCombo()
-							.addChangedHandler(new ChangedHandler() {
-
-								@Override
-								public void onChanged(ChangedEvent event) {
-									ComboUtil.loadAcademicTermComboByAcademicYear(
-											getView().getStaffDailyTimetablePane().getAcademicYearCombo(),
-											getView().getStaffDailyTimetablePane().getAcademicTermCombo(), dispatcher,
-											placeManager, null);
-								}
-							});
+					
 
 					disableEnableStaffDailyAttendancePaneLoadLessonButton();
 					getStaffDailyTimetablesByAcademicYearTermDistrictSchoolDate();
@@ -174,7 +190,7 @@ public class StaffDailyTimtablePresenter
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate()));
 				if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
 				   map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
 					else
@@ -202,15 +218,16 @@ public class StaffDailyTimtablePresenter
 		final IButton button = getView().getStaffDailyTimetablePane().getLoadAttendanceButton();
 		final ComboBox termBox = getView().getStaffDailyTimetablePane().getAcademicTermCombo();
 		final ComboBox schoolBox = getView().getStaffDailyTimetablePane().getSchoolCombo();
-		final TextItem dayItem = getView().getStaffDailyTimetablePane().getDayField();
-
+		//final TextItem dayItem = getView().getStaffDailyTimetablePane().getDayField();
+        final DateItem lessonDay = getView().getStaffDailyTimetablePane().getLessonDayDateItem();
+		
 		termBox.addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 
 				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null
-						&& dayItem.getValueAsString() != null) {
+						&& lessonDay.getValueAsDate() != null) {
 					button.setDisabled(false);
 				} else {
 					button.setDisabled(true);
@@ -224,7 +241,7 @@ public class StaffDailyTimtablePresenter
 			public void onChanged(ChangedEvent event) {
 
 				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null
-						&& dayItem.getValueAsString() != null) {
+						&& lessonDay.getValueAsDate() != null) {
 					button.setDisabled(false);
 				} else {
 					button.setDisabled(true);

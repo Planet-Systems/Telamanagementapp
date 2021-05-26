@@ -80,6 +80,7 @@ import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestconstants.ReportsRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SmsRequest;
+import com.planetsystems.tela.managementapp.shared.requestconstants.StaffEnrollmentRequest;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemMenuRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupSystemMenuRequestConstant;
@@ -142,6 +143,39 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					System.out.println("LOGIN RESPONSE " + responseDTO.getData());
 					feedback = responseDTO.getData();
 				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+			if (action.getRequest().equalsIgnoreCase(RequestConstant.CHANGE_PASSWORD)) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.DATA);
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				System.out.print("DTO Email "+dto.getUserName());
+
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("ChangePassword")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+
+				System.out.println("AUTH " + responseDTO);
+
+				if (responseDTO != null) {
+					System.out.println("LOGIN RESPONSE " + responseDTO.getData());
+					feedback = responseDTO.getData();
+					feedback.setResponse(responseDTO.isStatus());
+				}
+				
 
 				client.close();
 				return new RequestResult(feedback);
@@ -1280,7 +1314,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolclasses")
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("SchoolClasses")
 						.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
 						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 						});
@@ -1697,12 +1731,13 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_SCHOOL_STAFF)
+			} else if (action.getRequest().equalsIgnoreCase(StaffEnrollmentRequest.UPDATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				SchoolStaffDTO dto = (SchoolStaffDTO) action.getRequestBody().get(RequestConstant.UPDATE_SCHOOL_STAFF);
+				SchoolStaffDTO dto = (SchoolStaffDTO) action.getRequestBody().get(StaffEnrollmentRequest.DATA);
+				String id = (String)action.getRequestBody().get(StaffEnrollmentRequest.ID);
 
 				Client client = ClientBuilder.newClient();
 
@@ -1710,8 +1745,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("schoolstaffs")
-						.path(dto.getId()).request(MediaType.APPLICATION_JSON).headers(headers)
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("SchoolStaff")
+						.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
 						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
@@ -1760,7 +1795,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("staffenrollments")
+				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("schoolstaffs")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
 						});
