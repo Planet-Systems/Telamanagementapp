@@ -54,7 +54,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 		public ControlsPane getControlsPane();
 		
-		public IButton getMesssageBtn();
+		//public IButton getMesssageBtn();
 	}
 
 	@ContentSlot
@@ -75,17 +75,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	protected void onBind() {
 		// TODO Auto-generated method stub
 		super.onBind();
-
-		getView().getMesssageBtn().addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				PlaceRequest placeRequest = new PlaceRequest.Builder()
-						.nameToken(NameTokens.SMSMESSAGING).build();
-
-				placeManager.revealPlace(placeRequest);
-			}
-		});
+ 
 		getView().getDashboardPane().hideDataImport();
 		//migrateData();
 		//migrateAttendanceData();
