@@ -9,8 +9,11 @@ public class RequestConstant {
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
 	public static final String SYSTEM_REPORTS = "Supervision";
-
 	public static final String SYSTEM_ATTENDANCE = "Attendance";
+
+	public static final String CURRICULUM_COVERAGE = "Curriculum Coverage";
+	public static final String INCENTIVES = "Incentives";
+	public static final String UTILITY_MANAGER = "Utility Manager";
 
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";
@@ -221,19 +224,19 @@ public class RequestConstant {
 	public static final String DistrictEndOfWeekTimeAttendance = "DistrictEndOfWeekTimeAttendance";
 	public static final String DistrictEndOfMonthTimeAttendance = "DistrictEndOfMonthTimeAttendance";
 	public static final String DistrictEndOfTermTimeAttendance = "DistrictEndOfTermTimeAttendance";
-	
+
 	public static final String DistrictEndOfWeekTimeAttendanceReport = "DistrictEndOfWeekTimeAttendanceReport";
-	public static final String DistrictEndOfMonthTimeAttendanceReport  = "DistrictEndOfMonthTimeAttendanceReport";
-	public static final String DistrictEndOfTermTimeAttendanceReport  = "DistrictEndOfTermTimeAttendanceReport";
+	public static final String DistrictEndOfMonthTimeAttendanceReport = "DistrictEndOfMonthTimeAttendanceReport";
+	public static final String DistrictEndOfTermTimeAttendanceReport = "DistrictEndOfTermTimeAttendanceReport";
 
 	public static final String NationalEndOfWeekTimeAttendance = "NationalEndOfWeekTimeAttendance";
 	public static final String NationalEndOfMonthTimeAttendance = "NationalEndOfMonthTimeAttendance";
 	public static final String NationalEndOfTermTimeAttendance = "NationalEndOfTermTimeAttendance";
 	public static final String RESET_PASSWORD = "RESET_PASSWORD";
 
-
 	public static final String NationalEndOfWeekTimeAttendanceReport = "NationalEndOfWeekTimeAttendanceReport";
-	public static final String NationalEndOfMonthTimeAttendanceReport  = "NationalEndOfMonthTimeAttendanceReport";
-	public static final String NationalEndOfTermTimeAttendanceReport  = "NationalEndOfTermTimeAttendanceReport";
+	public static final String NationalEndOfMonthTimeAttendanceReport = "NationalEndOfMonthTimeAttendanceReport";
+	public static final String NationalEndOfTermTimeAttendanceReport = "NationalEndOfTermTimeAttendanceReport";
+	public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
 
 }

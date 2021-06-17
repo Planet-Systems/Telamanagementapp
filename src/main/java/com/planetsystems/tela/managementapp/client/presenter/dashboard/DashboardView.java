@@ -13,8 +13,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 class DashboardView extends ViewImpl implements DashboardPresenter.MyView {
   
 	private VLayout panel;
-	private DashboardPane dashboardPane;
-	private IButton messsageBtn;
+	private DashboardPane dashboardPane; 
 	private static final String DEFAULT_MARGIN = "0px";
 	
 	private ControlsPane controlsPane;
@@ -25,10 +24,9 @@ class DashboardView extends ViewImpl implements DashboardPresenter.MyView {
     	controlsPane=new ControlsPane();
 		dashboardPane = new DashboardPane(); 
 		
-		messsageBtn = new IButton("Message");
 		 
-		panel.addMember(controlsPane);
-		panel.addMember(messsageBtn);
+		 
+		panel.addMember(controlsPane); 
 		panel.addMember(dashboardPane);
 		 
 		panel.setWidth100();
@@ -58,13 +56,7 @@ class DashboardView extends ViewImpl implements DashboardPresenter.MyView {
 	public ControlsPane getControlsPane() {
 		return controlsPane;
 	}
-
-	public IButton getMesssageBtn() {
-		return messsageBtn;
-	}
-	
-	
-	
+ 
 	
     
     

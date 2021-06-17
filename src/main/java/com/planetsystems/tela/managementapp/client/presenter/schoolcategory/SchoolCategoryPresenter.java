@@ -181,7 +181,7 @@ public class SchoolCategoryPresenter
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
-					// buttons.add(delete);
+					buttons.add(delete);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
@@ -563,14 +563,14 @@ public class SchoolCategoryPresenter
 				if (window.getSchoolCode().getValueAsString() == null)
 					flag = false;
 
-				if (window.getLatitude().getValueAsString() == null)
-					flag = false;
+//				if (window.getLatitude().getValueAsString() == null)
+//					flag = false;
+//
+//				if (window.getLongtitude().getValueAsString() == null)
+//					flag = false;
 
-				if (window.getLongtitude().getValueAsString() == null)
-					flag = false;
-
-				if (window.getDeviceNumber().getValueAsString() == null)
-					flag = false;
+//				if (window.getDeviceNumber().getValueAsString() == null)
+//					flag = false;
 
 				return flag;
 			}

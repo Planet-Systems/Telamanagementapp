@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.main;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicYearModule;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardModule;
+import com.planetsystems.tela.managementapp.client.presenter.devicemanager.DeviceManagerModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.LearnerEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionModule;
@@ -10,7 +11,6 @@ import com.planetsystems.tela.managementapp.client.presenter.reports.districtper
 import com.planetsystems.tela.managementapp.client.presenter.reports.nationalperformace.NationalPerformaceModule;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.SchoolPerformaceReportModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolCategoryModule;
-import com.planetsystems.tela.managementapp.client.presenter.schoolstaff.SchoolStaffModule;
 import com.planetsystems.tela.managementapp.client.presenter.smsmessage.SmsMessageModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision.StaffDailyAttendanceSupervisionModule;
@@ -31,7 +31,6 @@ public class MainModule extends AbstractPresenterModule {
 		install(new RegionModule());
 		install(new SchoolCategoryModule());
 		install(new SubjectCategoryModule());
-		install(new SchoolStaffModule());
 		install(new StaffEnrollmentModule());
 		install(new StaffAttendanceModule());
 		install(new LearnerAttendanceModule());
@@ -45,6 +44,9 @@ public class MainModule extends AbstractPresenterModule {
 		install(new DistrictPerformaceReportModule());
 		install(new NationalPerformaceModule());
 		install(new SmsMessageModule());
+		install(new DeviceManagerModule());
+		
+		
 
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
 

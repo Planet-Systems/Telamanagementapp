@@ -9,6 +9,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -17,7 +18,9 @@ public class StaffDailyTimetablePane extends VLayout {
 	private ComboBox schoolCombo;
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
-	private TextItem dayField;
+	private ComboBox regionCombo;
+//	private TextItem dayField;
+	private DateItem lessonDayDateItem;
 	private ComboBox academicTermCombo;
 	private IButton loadAttendanceButton;
 
@@ -93,6 +96,11 @@ public class StaffDailyTimetablePane extends VLayout {
 		academicTermCombo.setHint("AcademicTerm");
 		academicTermCombo.setShowHintInField(true);
 
+		regionCombo = new ComboBox();
+		regionCombo.setTitle("Region");
+		regionCombo.setHint("Region");
+		regionCombo.setShowHintInField(true);
+		
 		districtCombo = new ComboBox();
 		districtCombo.setTitle("District");
 		districtCombo.setHint("District");
@@ -103,11 +111,14 @@ public class StaffDailyTimetablePane extends VLayout {
 		schoolCombo.setHint("School");
 		schoolCombo.setShowHintInField(true);
 
-		dayField = new TextItem("Day");
-		dayField.setValue(dayFormat.format(new Date()));
-		dayField.disable();
-
-		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField);
+//		dayField = new TextItem("Day");
+//		dayField.setValue(dayFormat.format(new Date()));
+//		dayField.disable();
+        
+		lessonDayDateItem = new DateItem();
+		lessonDayDateItem.setTitle("Lesson Day");
+		
+		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , lessonDayDateItem , schoolCombo);
 
 		VLayout layout = new VLayout();
 		layout.addMember(form);
@@ -129,8 +140,13 @@ public class StaffDailyTimetablePane extends VLayout {
 		return academicYearCombo;
 	}
 
-	public TextItem getDayField() {
-		return dayField;
+
+	public ComboBox getRegionCombo() {
+		return regionCombo;
+	}
+
+	public DateItem getLessonDayDateItem() {
+		return lessonDayDateItem;
 	}
 
 	public ComboBox getAcademicTermCombo() {

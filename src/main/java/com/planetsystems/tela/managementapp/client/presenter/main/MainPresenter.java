@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.gargoylesoftware.htmlunit.javascript.host.Window;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,10 +19,16 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.planetsystems.tela.dto.AuthenticationDTO;
 import com.planetsystems.tela.dto.NavigationMenuDTO;
+import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
+import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageData;
+import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageDataSource;
+import com.planetsystems.tela.managementapp.client.menu.IncentivesData;
+import com.planetsystems.tela.managementapp.client.menu.IncentivesDataSource;
 import com.planetsystems.tela.managementapp.client.menu.ReportsData;
 import com.planetsystems.tela.managementapp.client.menu.ReportsDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationData;
@@ -34,7 +41,11 @@ import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableData;
 import com.planetsystems.tela.managementapp.client.menu.SystemTimeTableDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemUserData;
 import com.planetsystems.tela.managementapp.client.menu.SystemUserDataSource;
+import com.planetsystems.tela.managementapp.client.menu.UtilityManagerData;
+import com.planetsystems.tela.managementapp.client.menu.UtilityManagerDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearWindow;
+import com.planetsystems.tela.managementapp.client.presenter.login.changepassword.ChangePasswordWindow;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.MainStatusBar;
@@ -90,11 +101,9 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		super.onBind();
 		manageUserProfile(Cookies.getCookie(RequestConstant.USERNAME), "");
 		// loadMenu();
-		//loadSystemUserMenu();
+		// loadSystemUserMenu();
 		loadLoggedInSystemUserMenu();
 	}
-
-	
 
 	@Override
 	protected void onReset() {
@@ -179,7 +188,48 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
-						// changePassword();
+						final ChangePasswordWindow window = new ChangePasswordWindow();
+						window.getChangeButton().addClickHandler(new ClickHandler() {
+
+							@Override
+							public void onClick(ClickEvent event) {
+
+								if (checkIfFieldsAreFilled(window)) {
+									String old = window.getOldPasswordField().getValueAsString();
+									String newP = window.getNewPasswordField().getValueAsString();
+									String comfirm = window.getComfirmPasswoField().getValueAsString();
+
+									if (newP.equals(comfirm)) {
+										AuthenticationDTO dto = new AuthenticationDTO();
+										dto.setOldPassword(old);
+										dto.setPassword(newP);
+										dto.setUserName(userName);
+
+										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+										map.put(RequestConstant.DATA, dto);
+										map.put(NetworkDataUtil.ACTION, RequestConstant.CHANGE_PASSWORD);
+
+										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+											@Override
+											public void onNetworkResult(RequestResult result) {
+												SC.say(result.getSystemFeedbackDTO().getMessage());
+												SessionManager.getInstance().logOut(placeManager);
+												window.close();
+											}
+										});
+									} else {
+										SC.say("Passwords donot match");
+									}
+								} else {
+									SC.say("fill all the fields");
+								}
+
+							}
+
+						});
+
+						window.show();
 					}
 				});
 
@@ -191,20 +241,21 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 					}
 				});
-				
+
 				item4.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-					
+
 					@Override
 					public void onClick(MenuItemClickEvent event) {
 
-						PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.ProfileDetail).build();
+						PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.ProfileDetail)
+								.build();
 
 						placeManager.revealPlace(placeRequest);
 					}
 				});
 
 				MenuItemSeparator separator = new MenuItemSeparator();
-				menu.setItems(item1, item4 , item2, separator, item3);
+				menu.setItems(item1, item4, item2, separator, item3);
 
 				menu.showNextTo(getView().getMastHead().getUserProfile(), "bottom");
 
@@ -212,112 +263,143 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 		});
 
 	}
-	
+
+	private boolean checkIfFieldsAreFilled(ChangePasswordWindow window) {
+		boolean flag = true;
+		if (window.getOldPasswordField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getNewPasswordField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getComfirmPasswoField().getValueAsString() == null)
+			flag = false;
+
+		return flag;
+	}
+
 	private void loadLoggedInSystemUserMenu() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION ,RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
+
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//grouping menus , wish it was j8+ i would write better
+				// grouping menus , wish it was j8+ i would write better
 				List<String> systemConfig = new ArrayList<String>();
 				List<String> enrollemnt = new ArrayList<String>();
 				List<String> attendance = new ArrayList<String>();
 				List<String> timetable = new ArrayList<String>();
 				List<String> systemusers = new ArrayList<String>();
 				List<String> generatereports = new ArrayList<String>();
-				
+
 				if (result.getSystemMenuDTOs().isEmpty()) {
 					SC.say("You don have any menu");
-				}else {
-			
-				List<SystemMenuDTO> systemMenuDTOs = result.getSystemMenuDTOs();
-	
-				for (SystemMenuDTO systemMenuDTO : systemMenuDTOs) {
-					if(systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu()))
-						systemConfig.add(systemMenuDTO.getSubMenuItem());
-					
-					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu()))
-						enrollemnt.add(systemMenuDTO.getSubMenuItem());
-					
-					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu()))
-						attendance.add(systemMenuDTO.getSubMenuItem());
-					
-					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu()))
-						systemusers.add(systemMenuDTO.getSubMenuItem());
-					
-					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu()))
-						timetable.add(systemMenuDTO.getSubMenuItem());
-					
-					else if (systemMenuDTO.getNavigationMenu().equalsIgnoreCase(NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu()))
-						generatereports.add(systemMenuDTO.getSubMenuItem());
-						
-				}
-				
-				
-				if (!systemConfig.isEmpty()) {
-					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
-							SystemAdministrationDataSource
-									.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
-					getView().getNavigationPane().addRecordClickHandler(
-							RequestConstant.SYSTEM_CONFIGURATION, new NavigationPaneClickHandler());
-				}
-				
-				
-				if (!enrollemnt.isEmpty()) {
+				} else {
 
-					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
-							SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
+					List<SystemMenuDTO> systemMenuDTOs = result.getSystemMenuDTOs();
 
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
+					for (SystemMenuDTO systemMenuDTO : systemMenuDTOs) {
+
+						if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu()))
+							systemConfig.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu()))
+							enrollemnt.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu()))
+							attendance.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu()))
+							systemusers.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu()))
+							timetable.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu()))
+							generatereports.add(systemMenuDTO.getSubMenuItem());
+
+					}
+
+					if (!systemConfig.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
+								SystemAdministrationDataSource
+										.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_CONFIGURATION,
+								new NavigationPaneClickHandler());
+					}
+
+					if (!enrollemnt.isEmpty()) {
+
+						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
+								SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
+								new NavigationPaneClickHandler());
+					}
+
+					if (!attendance.isEmpty()) {
+
+						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
+								SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords(attendance)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
+								new NavigationPaneClickHandler());
+
+					}
+
+					if (!timetable.isEmpty()) {
+
+						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
+								SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords(timetable)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
+								new NavigationPaneClickHandler());
+
+					}
+
+					if (!systemusers.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
+								SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
+								new NavigationPaneClickHandler());
+					}
+
+					if (!generatereports.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
+								ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
+								new NavigationPaneClickHandler());
+					}
+
+					//Need to customize it
+					getView().getNavigationPane().addSection(RequestConstant.CURRICULUM_COVERAGE,
+							CurriculumCoverageDataSource.getInstance(CurriculumCoverageData.getNewRecords()));
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.CURRICULUM_COVERAGE,
 							new NavigationPaneClickHandler());
-				}
-				
-				
-				if (!attendance.isEmpty()) {
 
-					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
-							SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords(attendance)));
+					getView().getNavigationPane().addSection(RequestConstant.INCENTIVES,
+							IncentivesDataSource.getInstance(IncentivesData.getNewRecords()));
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.INCENTIVES,
+							new NavigationPaneClickHandler());
 
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
+					getView().getNavigationPane().addSection(RequestConstant.UTILITY_MANAGER,
+							UtilityManagerDataSource.getInstance(UtilityManagerData.getNewRecords()));
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.UTILITY_MANAGER,
 							new NavigationPaneClickHandler());
 
 				}
-				
-				
-				if (!timetable.isEmpty()) {
-
-					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
-							SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords(timetable)));
-
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
-							new NavigationPaneClickHandler());
-
-				}
-				
-				
-				if (!systemusers.isEmpty()) {
-					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
-							SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
-
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
-							new NavigationPaneClickHandler());
-				}
-
-				if (!generatereports.isEmpty()) {
-					getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
-							ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
-
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
-							new NavigationPaneClickHandler());
-				}
-					
-				
-				}}
+			}
 		});
 	}
-
 
 	@Deprecated
 	private void loadSystemUserMenu() {
@@ -397,7 +479,8 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 							if (!enrollemnt.isEmpty()) {
 
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
-										SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
+										SystemEnrollmentDataSource
+												.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
 
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
 										new NavigationPaneClickHandler());
@@ -406,7 +489,8 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 							if (!attendance.isEmpty()) {
 
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
-										SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords(attendance)));
+										SystemAttendanceDataSource
+												.getInstance(SystemAttendanceData.getNewRecords(attendance)));
 
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
 										new NavigationPaneClickHandler());
@@ -416,7 +500,8 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 							if (!timetable.isEmpty()) {
 
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
-										SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords(timetable)));
+										SystemTimeTableDataSource
+												.getInstance(SystemTimeTableData.getNewRecords(timetable)));
 
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
 										new NavigationPaneClickHandler());
@@ -440,19 +525,21 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 										new NavigationPaneClickHandler());
 							}
 
-							/*if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty()
-									&& timetable.isEmpty() && generatereports.isEmpty()) {
-
-								PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.dashboard)
-										.build();
-
-								placeManager.revealPlace(placeRequest);
-
-							} else {
-
-								placeManager.revealDefaultPlace();
-
-							}*/
+							/*
+							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&
+							 * timetable.isEmpty() && generatereports.isEmpty()) {
+							 * 
+							 * PlaceRequest placeRequest = new
+							 * PlaceRequest.Builder().nameToken(NameTokens.dashboard) .build();
+							 * 
+							 * placeManager.revealPlace(placeRequest);
+							 * 
+							 * } else {
+							 * 
+							 * placeManager.revealDefaultPlace();
+							 * 
+							 * }
+							 */
 
 						} else {
 							SC.say("ERROR", "Unknow error");

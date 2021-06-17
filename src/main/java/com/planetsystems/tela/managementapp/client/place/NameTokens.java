@@ -2,11 +2,13 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String devicemanager = "Device Manager";
+
 	public static final String SmsSystemUser = "SmsSystemUser";
 
 	public static final String SmsStaff = "SmsStaff";
 
-	public static final String SMSMESSAGING = "SMSMESSAGING";
+	public static final String SMSMESSAGING = "SMS Manager";
 
 	public static final String ProfileDetail = "ProfileDetail";
 
@@ -140,5 +142,8 @@ public class NameTokens {
 		return SmsSystemUser;
 	}
 
+	public static String getDevicemanager() {
+		return devicemanager;
+	}
 
 }

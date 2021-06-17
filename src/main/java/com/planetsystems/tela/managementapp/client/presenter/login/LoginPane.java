@@ -24,27 +24,27 @@ public class LoginPane extends VLayout {
 	public LoginPane() {
 		super();
 
-		Img desLogo = new Img("logo-2.png");
-		desLogo.setWidth(300);
+		/*Img desLogo = new Img("logo-2.png");*/
+		Img desLogo = new Img("des_logo.jpg");
+		desLogo.setWidth(100);
 		desLogo.setHeight(100);
 		desLogo.setTooltip("DIRECTORATE OF EDUCATION STANDARDS");
 		desLogo.setLayoutAlign(Alignment.CENTER);
 		desLogo.setAlign(Alignment.CENTER);
 
 		username = new TextField();
-		username.setTitle("<span style='color:#000000;font-weight: 600;'>UserName</span>");
+		username.setTitle("<span style='color:#ffffff;font-weight: 600;'>UserName</span>");
 		username.setHint("Username");
 		username.setShowHintInField(true);
 		username.setWidth("*");
 		username.setHeight(30);
 
 		password = new PasswordItem();
-		password.setTitle("<span style='color:#000000;font-weight: 600;'>Password</span>");
+		password.setTitle("<span style='color:#ffffff;font-weight: 600;'>Password</span>");
 		password.setHint("Password");
 		password.setShowHintInField(true);
 		password.setWidth("*");
 		password.setHeight(30);
-
 
 		DynamicForm form = new DynamicForm();
 		form.setFields(username, password);
@@ -54,22 +54,19 @@ public class LoginPane extends VLayout {
 		form.setCellPadding(10);
 
 		forgotPasswordField = new Label();
-		forgotPasswordField.setContents("<span style='color:#000000;font-weight: 600;'>Forgot password</span>");
+		forgotPasswordField.setContents("<span style='color:#ffffff;font-weight: 600;'>Forgot password</span>");
 		forgotPasswordField.setAutoHeight();
 		forgotPasswordField.setCursor(Cursor.HAND);
 
 		loginButton = new IButton();
 		loginButton.setTitle("Login");
 
-
 		signup = new Label();
-		signup.setContents("<span style='color:#000000;font-weight: 600;'>If you don't have an account? SignUp</span>");
+		signup.setContents("<span style='color:#ffffff;font-weight: 600;'>If you don't have an account? SignUp</span>");
 		signup.setAutoHeight();
 		signup.setPadding(5);
 		signup.setCursor(Cursor.HAND);
 		signup.setAlign(Alignment.CENTER);
-
-
 
 		HLayout loginbuttonLayout = new HLayout();
 		loginbuttonLayout.addMember(loginButton);
@@ -82,7 +79,6 @@ public class LoginPane extends VLayout {
 		otherbuttonLayout.setAutoHeight();
 		otherbuttonLayout.setAutoWidth();
 
-
 		VLayout buttonLayout = new VLayout();
 		buttonLayout.addMember(loginbuttonLayout);
 		buttonLayout.addMember(otherbuttonLayout);
@@ -90,7 +86,6 @@ public class LoginPane extends VLayout {
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMembersMargin(10);
-
 
 		VLayout layout = new VLayout();
 		layout.addMember(desLogo);
@@ -102,10 +97,8 @@ public class LoginPane extends VLayout {
 
 		this.addMember(layout);
 		this.setOverflow(Overflow.AUTO);
-		/*this.setBackgroundColor("#f0f0f0");*/
-		this.setBackgroundColor("#ffffff");
-
-
+		this.setBackgroundColor("#f0f0f0");
+		/* this.setBackgroundColor("#ffffff"); */
 
 	}
 
@@ -124,7 +117,6 @@ public class LoginPane extends VLayout {
 	public Label getForgotPasswordField() {
 		return forgotPasswordField;
 	}
-
 
 	public Label getSignup() {
 		return signup;

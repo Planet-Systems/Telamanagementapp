@@ -23,10 +23,9 @@ class LoginView extends ViewImpl implements LoginPresenter.MyView {
 		panel.addMember(loginPane);
 		panel.setWidth100();
 		panel.setHeight("100%");
-		/*panel.setBackgroundColor("#f0f0f0");*/
-		panel.setBackgroundColor("#ffffff");
-		
-		
+		panel.setBackgroundColor("#f0f0f0");
+		/* panel.setBackgroundColor("#ffffff"); */
+
 		Window.enableScrolling(false);
 		Window.setMargin(DEFAULT_MARGIN);
 	}

@@ -52,7 +52,7 @@ public class SchoolStaffWindow extends Window {
 		
 		emailField = new TextItem();
 		emailField.setTitle("Email");
-		emailField.setHint("LastName");
+		emailField.setHint("email");
 		emailField.setShowHintInField(true);
 
 		dobItem = new DateItem();
@@ -130,7 +130,7 @@ public class SchoolStaffWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("60%");
-		this.setHeight("60%");
+		this.setHeight("70%");
 		this.setAutoCenter(true);
 		this.setTitle("School Staff");
 		this.setIsModal(true);
