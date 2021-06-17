@@ -4252,7 +4252,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				
 				System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS TOKEN " + token);
+				
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
@@ -4277,6 +4279,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						System.out.println("GET_LOGEDIN_USER_SystemMENU getData is null");
 					}
 
+				}else {
+					System.out.println("GET_LOGEDIN_USER_SystemMENU list DATA IS NULL");
 				}
 
 				client.close();

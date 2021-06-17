@@ -80,7 +80,7 @@ public class DistrictPerformaceReportPresenter
 	}
 
 	private void loadMenuButtons() {
-		MenuButton filter = new MenuButton("Filter");
+		MenuButton filter = new MenuButton("View");
 		MenuButton refresh = new MenuButton("Refresh");
 		MenuButton export = new MenuButton("Export");
 
@@ -109,11 +109,16 @@ public class DistrictPerformaceReportPresenter
 				final Menu menu = new Menu();
 
 				MenuItem dashboard = new MenuItem("Dashboard");
-				MenuItem item1 = new MenuItem("End of Week Time Attendance Reports");
-				MenuItem item2 = new MenuItem("End of Month Time Attendance Reports");
-				MenuItem item3 = new MenuItem("End of Term Time Attendance Reports");
+				MenuItem item1 = new MenuItem("End of Week Teacher Time Attendance Report");
+				MenuItem item2 = new MenuItem("End of Month Teacher Time Attendance Report");
+				MenuItem item3 = new MenuItem("End of Term Teacher Time Attendance Report");
+				MenuItem item4 = new MenuItem("Number of Teachers Report"); 
+				MenuItem item5 = new MenuItem("End of Week Learner Attendance Report");
+				MenuItem item6 = new MenuItem("End of Month Learner Attendance Report");
+				MenuItem item7 = new MenuItem("End of Term Learner Attendance Report");
+				MenuItem item8 = new MenuItem("Learner Enrollment Report");
 
-				menu.setItems(dashboard, item1, item2, item3);
+				menu.setItems(dashboard, item1, item2, item3,item4,item5,item6,item7,item8);
 
 				menu.showNextTo(button, "bottom");
 

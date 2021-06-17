@@ -277,6 +277,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 					}
 				}
 			});
+            
 			ComboUtil.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
 		 window.show();
 		 

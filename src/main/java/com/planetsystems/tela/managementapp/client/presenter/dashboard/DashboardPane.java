@@ -31,8 +31,6 @@ public class DashboardPane extends VLayout{
 		
 
 		
-		
-		
 		buttonLayout.addMember(refreshButton);
 		buttonLayout.addMember(importAttendaceButton);
 		buttonLayout.addMember(importTimeTablesButton);
@@ -49,6 +47,7 @@ public class DashboardPane extends VLayout{
 		refreshButton.hide();
 		importAttendaceButton.hide();
 		importTimeTablesButton.hide();
+		importSubjects.hide();
 	}
 
 	public IButton getRefreshButton() {
