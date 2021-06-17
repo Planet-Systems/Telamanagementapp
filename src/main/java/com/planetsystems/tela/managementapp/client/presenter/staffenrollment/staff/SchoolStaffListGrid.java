@@ -19,6 +19,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 	public static String SCHOOL_ID = "schoolId";
 	public static String DISTRICT_ID = "districtId";
 	public static String DISTRICT = "district";
+	
 
 	public static String FIRSTNAME = "firstName";
 	public static String LASTNAME = "lastName";
@@ -28,6 +29,8 @@ public class SchoolStaffListGrid extends SuperListGrid {
 	public static String NATIONAL_ID = "nationalId";
 	public static String GENDER = "gender";
 	public static String NAME_ABBREV = "nameAbbrev";
+	
+	public static String STAFF_TYPE = "STAFF_TYPE";
 
 
 	SchoolStaffDataSource dataSource;
@@ -42,6 +45,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		idField.setHidden(true);
 
 		ListGridField staffCodeField = new ListGridField(STAFF_CODE, "Pin Code");
+		ListGridField staffTypeField = new ListGridField(STAFF_TYPE, "Staff Type");
 		ListGridField registeredField = new ListGridField(REGISTERED, "Registerd");
 
 		ListGridField schoolField = new ListGridField(SCHOOL, "School");
@@ -63,7 +67,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField genderField = new ListGridField(GENDER, "Gender");
 		ListGridField nameAbrevField = new ListGridField(NAME_ABBREV, "Name Abbreviation");
 
-		this.setFields(idField, schoolIdField , districtIdField, staffCodeField, firstNameField, lastNameField, genderField,
+		this.setFields(idField, schoolIdField , districtIdField, staffCodeField, firstNameField, lastNameField,staffTypeField , genderField,
 				phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField, districtField, schoolField, registeredField);
 		this.setDataSource(dataSource);
 	}
@@ -74,6 +78,8 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		record.setAttribute(STAFF_CODE, schoolStaffDTO.getStaffCode());
 		String registered = schoolStaffDTO.isRegistered() ? "Yes" : "NO";
 		record.setAttribute(REGISTERED, registered);
+		
+		record.setAttribute(STAFF_TYPE, schoolStaffDTO.getStaffType());
 
 		if (schoolStaffDTO.getSchoolDTO().getDistrictDTO() != null) {
 			record.setAttribute(SCHOOL_ID, schoolStaffDTO.getSchoolDTO().getId());
