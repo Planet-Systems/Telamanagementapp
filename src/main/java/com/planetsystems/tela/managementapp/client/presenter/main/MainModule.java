@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.main;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicYearModule;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardModule;
+import com.planetsystems.tela.managementapp.client.presenter.devicemanager.DeviceManagerModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.LearnerEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionModule;
@@ -43,6 +44,9 @@ public class MainModule extends AbstractPresenterModule {
 		install(new DistrictPerformaceReportModule());
 		install(new NationalPerformaceModule());
 		install(new SmsMessageModule());
+		install(new DeviceManagerModule());
+		
+		
 
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
 
