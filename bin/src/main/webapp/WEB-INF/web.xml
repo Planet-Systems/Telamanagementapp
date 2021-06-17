@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>greetServlet</servlet-name>
+		<servlet-class>com.planetsystems.tela.managementapp.server.GreetingServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>greetServlet</servlet-name>
+		<url-pattern>/Webclient/greet</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- RPC Dispatch communication configuration -->
+	<listener>
+		<listener-class>com.planetsystems.tela.managementapp.server.guice.GuiceServletConfig</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>guiceFilter</filter-name>
+		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>guiceFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>Tela.html</welcome-file>
+	</welcome-file-list>
+
+</web-app>

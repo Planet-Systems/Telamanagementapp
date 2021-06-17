@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="Tela">
+  <!-- Inherit our applications main module.                      -->
+  <inherits name='com.planetsystems.tela.managementapp.Tela' />
+
+  <!-- Specify the path to any remote services.                   -->
+  <servlet path="/Tela/greet" class="com.planetsystems.tela.managementapp.server.GreetingServiceImpl" />
+
+</module>
