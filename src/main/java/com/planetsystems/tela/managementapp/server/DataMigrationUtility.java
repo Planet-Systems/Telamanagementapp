@@ -26,8 +26,8 @@ import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.AppDTO.StaffAttendanceImportDTO;
+import com.planetsystems.tela.dto.response.SystemFeedbackDTO;
 
 public class DataMigrationUtility {
 

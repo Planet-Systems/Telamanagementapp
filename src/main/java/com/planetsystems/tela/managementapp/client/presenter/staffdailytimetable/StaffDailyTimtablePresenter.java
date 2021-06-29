@@ -77,7 +77,7 @@ public class StaffDailyTimtablePresenter
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
 	DateTimeFormat timeFormat = DateTimeFormat.getFormat(DatePattern.HOUR_MINUTE_SECONDS.getPattern());
 
-	@NameToken(NameTokens.StaffDailyTask)
+	@NameToken(NameTokens.StaffDailyTimetableLessons)
 	@ProxyStandard
 	interface MyProxy extends ProxyPlace<StaffDailyTimtablePresenter> {
 	}

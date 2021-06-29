@@ -2,7 +2,7 @@ package com.planetsystems.tela.managementapp.client.menu;
 
 import java.util.List;
 
-import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.dto.enums.SubMenuItem;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class UtilityManagerData {
@@ -27,9 +27,13 @@ public class UtilityManagerData {
 
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] {
-				createRecord("", "application_form" , NameTokens.dashboard),
-				createRecord("", "application_form" , NameTokens.devicemanager),
-				createRecord("", "application_form" , NameTokens.SMSMESSAGING)
+//				createRecord("", "application_form" , NameTokens.dashboard),
+//				createRecord("", "application_form" , NameTokens.devicemanager),
+//				createRecord("", "application_form" , NameTokens.SMSMESSAGING)
+				
+				createRecord("", "application_form" , SubMenuItem.DASHBOARD.getSystemMenuItem()),
+				createRecord("", "application_form" , SubMenuItem.DEVICE_MANAGER.getSystemMenuItem()),
+				createRecord("", "application_form" , SubMenuItem.SMS_MANAGER.getSystemMenuItem()),
 		};
 
 	}

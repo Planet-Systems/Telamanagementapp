@@ -351,6 +351,7 @@ public class SchoolPerformaceReportPresenter
 							@Override
 							public void onClick(ClickEvent event) {
 						     FilterDTO dto = new FilterDTO();
+						     
 						     AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
 						     SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
 						     

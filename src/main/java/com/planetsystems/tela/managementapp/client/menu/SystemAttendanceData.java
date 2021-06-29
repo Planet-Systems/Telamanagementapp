@@ -5,6 +5,7 @@ package com.planetsystems.tela.managementapp.client.menu;
 
 import java.util.List;
 
+import com.planetsystems.tela.dto.enums.SubMenuItem;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -30,10 +31,20 @@ public class SystemAttendanceData {
 
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] {
-				createRecord("", "application_form", NameTokens.staffAttendance),
-				createRecord("", "application_form", NameTokens.learnerAttendance),
-				createRecord("", "application_form", NameTokens.StaffDailyTask),
-				createRecord("", "application_form", NameTokens.StaffDailyAttendanceSuperVision),
+				/*
+				 * Since Name Tokens Are Same as SubMenuItem , 
+				 * for Readability have replaces to SubMenuItem
+				 */
+//				createRecord("", "application_form", NameTokens.staffAttendance),
+//				createRecord("", "application_form", NameTokens.learnerAttendance),
+//				createRecord("", "application_form", NameTokens.StaffDailyTimetableLessons),
+//				createRecord("", "application_form", NameTokens.StaffDailyAttendanceSuperVision),
+				createRecord("", "application_form", SubMenuItem.STAFF_ATTENDANCE.getSystemMenuItem()),
+				createRecord("", "application_form", SubMenuItem.LEARNER_ATTENDANCE.getSystemMenuItem()),
+				createRecord("", "application_form", SubMenuItem.STAFF_DAILY_TIMETABLE_LESSONS.getSystemMenuItem()),
+				createRecord("", "application_form", SubMenuItem.STAFF_DAILY_ATTENDANCE_SUPERVISION.getSystemMenuItem()),
+				
+				
 	
 
 		};

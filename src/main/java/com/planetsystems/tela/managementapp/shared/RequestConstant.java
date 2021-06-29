@@ -1,19 +1,33 @@
 package com.planetsystems.tela.managementapp.shared;
 
 public class RequestConstant {
+	
+	@Deprecated
 	public static final String SYSTEM_CONFIGURATION = "System Configuration";
+	@Deprecated
 	public static final String SYSTEM_ENROLLMENT = "Enrollment";
+	@Deprecated
 	public static final String SYSTEM_SETTINGS = "Setting";
+	@Deprecated
 	public static final String SYSTEM_USERS = "System Users";
+	@Deprecated
 	public static final String SYSTEM_TIME_TABLES = "TimeTable";
+	@Deprecated
+	public static final String SYSTEM_REPORTS = "Reports";
+	@Deprecated
+	public static final String SYSTEM_ATTENDANCE = "Attendance";
+	@Deprecated
+	public static final String CURRICULUM_COVERAGE = "Curriculum Coverage";
+	@Deprecated
+	public static final String INCENTIVES = "Incentives";
+	@Deprecated
+	public static final String UTILITY_MANAGER = "Utility Manager";
+
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
-	public static final String SYSTEM_REPORTS = "Supervision";
-	public static final String SYSTEM_ATTENDANCE = "Attendance";
 
-	public static final String CURRICULUM_COVERAGE = "Curriculum Coverage";
-	public static final String INCENTIVES = "Incentives";
-	public static final String UTILITY_MANAGER = "Utility Manager";
+
+	
 
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";

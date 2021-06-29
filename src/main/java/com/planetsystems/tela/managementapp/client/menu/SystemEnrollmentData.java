@@ -5,6 +5,7 @@ package com.planetsystems.tela.managementapp.client.menu;
 
 import java.util.List;
 
+import com.planetsystems.tela.dto.enums.SubMenuItem;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.smartgwt.client.widgets.grid.ListGridRecord; 
 
@@ -32,8 +33,13 @@ public class SystemEnrollmentData {
 
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] {
-				createRecord("", "application_form" , NameTokens.schoolStaff),
-				createRecord("", "application_form" , NameTokens.learnerEnrollment),
+//				createRecord("", "application_form" , NameTokens.schoolStaff),
+//				createRecord("", "application_form" , NameTokens.learnerEnrollment),
+				
+				createRecord("", "application_form" , SubMenuItem.STAFF_ENROLLMENT.getSystemMenuItem()),
+				createRecord("", "application_form" , SubMenuItem.LEARNER_ENROLLMENT.getSystemMenuItem()),
+				
+				
 
 		};
 

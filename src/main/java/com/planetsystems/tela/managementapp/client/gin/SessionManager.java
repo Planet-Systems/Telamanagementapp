@@ -3,7 +3,7 @@ package com.planetsystems.tela.managementapp.client.gin;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.planetsystems.tela.dto.SystemErrorDTO;
+import com.planetsystems.tela.dto.response.SystemErrorDTO;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;

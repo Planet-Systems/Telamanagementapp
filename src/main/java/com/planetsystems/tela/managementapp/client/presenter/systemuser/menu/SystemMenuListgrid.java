@@ -38,7 +38,7 @@ public class SystemMenuListgrid extends SuperListGrid {
 		record.setAttribute(ID, dto.getId());
 		record.setAttribute(NavigationMenu, dto.getNavigationMenu());
 		record.setAttribute(SystemMenuItem, dto.getSubMenuItem());
-		record.setAttribute(Status, dto.getActivativationSatus());
+		record.setAttribute(Status, dto.getActivationStatus());
 
 		return record;
 	}

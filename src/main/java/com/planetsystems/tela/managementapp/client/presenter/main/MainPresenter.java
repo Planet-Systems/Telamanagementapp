@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Window;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -20,10 +19,10 @@ import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.AuthenticationDTO;
-import com.planetsystems.tela.dto.NavigationMenuDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
+import com.planetsystems.tela.dto.enums.NavigationMenu;
+import com.planetsystems.tela.dto.enums.SubMenuItem;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageData;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageDataSource;
@@ -44,7 +43,6 @@ import com.planetsystems.tela.managementapp.client.menu.SystemUserDataSource;
 import com.planetsystems.tela.managementapp.client.menu.UtilityManagerData;
 import com.planetsystems.tela.managementapp.client.menu.UtilityManagerDataSource;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
-import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearWindow;
 import com.planetsystems.tela.managementapp.client.presenter.login.changepassword.ChangePasswordWindow;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
@@ -285,269 +283,294 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				// grouping menus , wish it was j8+ i would write better
+				/*
+				 * These are root menus list
+				 */
 				List<String> systemConfig = new ArrayList<String>();
-				List<String> enrollemnt = new ArrayList<String>();
+				List<String> enrollment = new ArrayList<String>();
 				List<String> attendance = new ArrayList<String>();
 				List<String> timetable = new ArrayList<String>();
 				List<String> systemusers = new ArrayList<String>();
-				List<String> generatereports = new ArrayList<String>();
+				List<String> supervisions = new ArrayList<String>();
+				List<String> generateReports = new ArrayList<String>();
+				List<String> curriculumCoverage = new ArrayList<String>();
+				List<String> incentives = new ArrayList<String>();
+				List<String> utilityManager = new ArrayList<String>();
+	
 
 				if (result.getSystemMenuDTOs().isEmpty()) {
-					SC.say("You don have any menu");
+					SC.say("You dont have any menu");
 				} else {
-
+                     // Create root system menus
+					
 					List<SystemMenuDTO> systemMenuDTOs = result.getSystemMenuDTOs();
 
 					for (SystemMenuDTO systemMenuDTO : systemMenuDTOs) {
-
+ 
 						if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu()))
+								.equalsIgnoreCase(NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu()))
 							systemConfig.add(systemMenuDTO.getSubMenuItem());
 
 						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu()))
-							enrollemnt.add(systemMenuDTO.getSubMenuItem());
+								.equalsIgnoreCase(NavigationMenu.ENROLLMENT.getNavigationMenu()))
+							enrollment.add(systemMenuDTO.getSubMenuItem());
 
 						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu()))
+								.equalsIgnoreCase(NavigationMenu.ATTENDANCE.getNavigationMenu()))
 							attendance.add(systemMenuDTO.getSubMenuItem());
 
 						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu()))
+								.equalsIgnoreCase(NavigationMenu.SYSTEM_USERS.getNavigationMenu()))
 							systemusers.add(systemMenuDTO.getSubMenuItem());
 
 						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu()))
+								.equalsIgnoreCase(NavigationMenu.TIMETABLE.getNavigationMenu()))
 							timetable.add(systemMenuDTO.getSubMenuItem());
+						
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenu.SUPERVISION.getNavigationMenu()))
+							supervisions.add(systemMenuDTO.getSubMenuItem());
 
 						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu()))
-							generatereports.add(systemMenuDTO.getSubMenuItem());
+								.equalsIgnoreCase(NavigationMenu.GENERATE_REPORTS.getNavigationMenu()))
+							generateReports.add(systemMenuDTO.getSubMenuItem());
+						
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu()))
+							curriculumCoverage.add(systemMenuDTO.getSubMenuItem());
+						
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenu.INCENTIVES.getNavigationMenu()))
+							incentives.add(systemMenuDTO.getSubMenuItem());
+						
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenu.UTILITY_MANAGER.getNavigationMenu()))
+							utilityManager.add(systemMenuDTO.getSubMenuItem());
 
 					}
 
+					///Adding sub menus
 					if (!systemConfig.isEmpty()) {
-						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
+						getView().getNavigationPane().addSection(NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu(),
 								SystemAdministrationDataSource
 										.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
-						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_CONFIGURATION,
+						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu(),
 								new NavigationPaneClickHandler());
 					}
 
-					if (!enrollemnt.isEmpty()) {
+					if (!enrollment.isEmpty()) {
 
-						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
-								SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
+						getView().getNavigationPane().addSection(NavigationMenu.ENROLLMENT.getNavigationMenu(),
+								SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollment)));
 
-						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
+						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.ENROLLMENT.getNavigationMenu(),
 								new NavigationPaneClickHandler());
 					}
 
 					if (!attendance.isEmpty()) {
 
-						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
+						getView().getNavigationPane().addSection(NavigationMenu.ATTENDANCE.getNavigationMenu(),
 								SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords(attendance)));
 
-						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
+						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.ATTENDANCE.getNavigationMenu(),
 								new NavigationPaneClickHandler());
 
 					}
 
 					if (!timetable.isEmpty()) {
 
-						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
+						getView().getNavigationPane().addSection(NavigationMenu.TIMETABLE.getNavigationMenu(),
 								SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords(timetable)));
 
-						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
+						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.TIMETABLE.getNavigationMenu(),
 								new NavigationPaneClickHandler());
 
 					}
 
 					if (!systemusers.isEmpty()) {
-						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
+						getView().getNavigationPane().addSection(NavigationMenu.SYSTEM_USERS.getNavigationMenu(),
 								SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
 
-						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
+						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.SYSTEM_USERS.getNavigationMenu(),
 								new NavigationPaneClickHandler());
 					}
 
-					if (!generatereports.isEmpty()) {
-						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
-								ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
+					if (!generateReports.isEmpty()) {
+						getView().getNavigationPane().addSection(NavigationMenu.GENERATE_REPORTS.getNavigationMenu(),
+								ReportsDataSource.getInstance(ReportsData.getNewRecords(generateReports)));
 
-						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
+						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.GENERATE_REPORTS.getNavigationMenu(),
 								new NavigationPaneClickHandler());
 					}
 
 					//Need to customize it
-					getView().getNavigationPane().addSection(RequestConstant.CURRICULUM_COVERAGE,
+					getView().getNavigationPane().addSection(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu(),
 							CurriculumCoverageDataSource.getInstance(CurriculumCoverageData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.CURRICULUM_COVERAGE,
+					getView().getNavigationPane().addRecordClickHandler(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu(),
 							new NavigationPaneClickHandler());
 
-					getView().getNavigationPane().addSection(RequestConstant.INCENTIVES,
+					getView().getNavigationPane().addSection(NavigationMenu.INCENTIVES.getNavigationMenu(),
 							IncentivesDataSource.getInstance(IncentivesData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.INCENTIVES,
+					getView().getNavigationPane().addRecordClickHandler(NavigationMenu.INCENTIVES.getNavigationMenu(),
 							new NavigationPaneClickHandler());
 
-					getView().getNavigationPane().addSection(RequestConstant.UTILITY_MANAGER,
+					getView().getNavigationPane().addSection(NavigationMenu.UTILITY_MANAGER.getNavigationMenu(),
 							UtilityManagerDataSource.getInstance(UtilityManagerData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.UTILITY_MANAGER,
+					getView().getNavigationPane().addRecordClickHandler(NavigationMenu.UTILITY_MANAGER.getNavigationMenu(),
 							new NavigationPaneClickHandler());
 
 				}
 			}
 		});
 	}
-
-	@Deprecated
-	private void loadSystemUserMenu() {
-
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-
-		dispatcher.execute(new RequestAction(RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS, map),
-				new AsyncCallback<RequestResult>() {
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.say("ERROR", caught.getMessage());
-						SC.clearPrompt();
-					}
-
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							List<String> systemConfig = new ArrayList<String>();
-							List<String> enrollemnt = new ArrayList<String>();
-							List<String> attendance = new ArrayList<String>();
-							List<String> timetable = new ArrayList<String>();
-							List<String> systemusers = new ArrayList<String>();
-							List<String> generatereports = new ArrayList<String>();
-
-							List<SystemUserGroupSystemMenuDTO> list = result.getSystemUserGroupSystemMenuDTOs();
-
-							for (SystemUserGroupSystemMenuDTO dto : list) {
-								if (dto.getSystemMenuDTO() != null) {
-									if (dto.getSystemMenuDTO().getNavigationMenu() != null) {
-										if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
-												NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu())) {
-
-											systemConfig.add(dto.getSystemMenuDTO().getSubMenuItem());
-
-										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-												.equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu())) {
-
-											enrollemnt.add(dto.getSystemMenuDTO().getSubMenuItem());
-
-										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-												.equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu())) {
-
-											attendance.add(dto.getSystemMenuDTO().getSubMenuItem());
-
-										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-												.equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu())) {
-
-											timetable.add(dto.getSystemMenuDTO().getSubMenuItem());
-
-										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-												.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu())) {
-
-											systemusers.add(dto.getSystemMenuDTO().getSubMenuItem());
-
-										} else if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
-												NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu())) {
-
-											generatereports.add(dto.getSystemMenuDTO().getSubMenuItem());
-										}
-									}
-								}
-							}
-
-							if (!systemConfig.isEmpty()) {
-								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
-										SystemAdministrationDataSource
-												.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
-								getView().getNavigationPane().addRecordClickHandler(
-										RequestConstant.SYSTEM_CONFIGURATION, new NavigationPaneClickHandler());
-							}
-
-							if (!enrollemnt.isEmpty()) {
-
-								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
-										SystemEnrollmentDataSource
-												.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
-
-								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
-										new NavigationPaneClickHandler());
-							}
-
-							if (!attendance.isEmpty()) {
-
-								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
-										SystemAttendanceDataSource
-												.getInstance(SystemAttendanceData.getNewRecords(attendance)));
-
-								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
-										new NavigationPaneClickHandler());
-
-							}
-
-							if (!timetable.isEmpty()) {
-
-								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
-										SystemTimeTableDataSource
-												.getInstance(SystemTimeTableData.getNewRecords(timetable)));
-
-								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
-										new NavigationPaneClickHandler());
-
-							}
-
-							if (!systemusers.isEmpty()) {
-								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
-										SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
-
-								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
-										new NavigationPaneClickHandler());
-							}
-
-							if (!generatereports.isEmpty()) {
-
-								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
-										ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
-
-								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
-										new NavigationPaneClickHandler());
-							}
-
-							/*
-							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&
-							 * timetable.isEmpty() && generatereports.isEmpty()) {
-							 * 
-							 * PlaceRequest placeRequest = new
-							 * PlaceRequest.Builder().nameToken(NameTokens.dashboard) .build();
-							 * 
-							 * placeManager.revealPlace(placeRequest);
-							 * 
-							 * } else {
-							 * 
-							 * placeManager.revealDefaultPlace();
-							 * 
-							 * }
-							 */
-
-						} else {
-							SC.say("ERROR", "Unknow error");
-						}
-
-					}
-				});
-
-	}
+//
+//	@Deprecated
+//	private void loadSystemUserMenu() {
+//
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+//
+//		dispatcher.execute(new RequestAction(RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS, map),
+//				new AsyncCallback<RequestResult>() {
+//					public void onFailure(Throwable caught) {
+//						System.out.println(caught.getMessage());
+//						SC.say("ERROR", caught.getMessage());
+//						SC.clearPrompt();
+//					}
+//
+//					public void onSuccess(RequestResult result) {
+//
+//						SC.clearPrompt();
+//
+//						SessionManager.getInstance().manageSession(result, placeManager);
+//						if (result != null) {
+//
+//							List<String> systemConfig = new ArrayList<String>();
+//							List<String> enrollemnt = new ArrayList<String>();
+//							List<String> attendance = new ArrayList<String>();
+//							List<String> timetable = new ArrayList<String>();
+//							List<String> systemusers = new ArrayList<String>();
+//							List<String> generatereports = new ArrayList<String>();
+//
+//							List<SystemUserGroupSystemMenuDTO> list = result.getSystemUserGroupSystemMenuDTOs();
+//
+//							for (SystemUserGroupSystemMenuDTO dto : list) {
+//								if (dto.getSystemMenuDTO() != null) {
+//									if (dto.getSystemMenuDTO().getNavigationMenu() != null) {
+//										if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
+//												NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu())) {
+//
+//											systemConfig.add(dto.getSystemMenuDTO().getSubMenuItem());
+//
+//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+//												.equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu())) {
+//
+//											enrollemnt.add(dto.getSystemMenuDTO().getSubMenuItem());
+//
+//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+//												.equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu())) {
+//
+//											attendance.add(dto.getSystemMenuDTO().getSubMenuItem());
+//
+//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+//												.equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu())) {
+//
+//											timetable.add(dto.getSystemMenuDTO().getSubMenuItem());
+//
+//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
+//												.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu())) {
+//
+//											systemusers.add(dto.getSystemMenuDTO().getSubMenuItem());
+//
+//										} else if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
+//												NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu())) {
+//
+//											generatereports.add(dto.getSystemMenuDTO().getSubMenuItem());
+//										}
+//									}
+//								}
+//							}
+//
+//							if (!systemConfig.isEmpty()) {
+//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
+//										SystemAdministrationDataSource
+//												.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
+//								getView().getNavigationPane().addRecordClickHandler(
+//										RequestConstant.SYSTEM_CONFIGURATION, new NavigationPaneClickHandler());
+//							}
+//
+//							if (!enrollemnt.isEmpty()) {
+//
+//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
+//										SystemEnrollmentDataSource
+//												.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
+//
+//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
+//										new NavigationPaneClickHandler());
+//							}
+//
+//							if (!attendance.isEmpty()) {
+//
+//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
+//										SystemAttendanceDataSource
+//												.getInstance(SystemAttendanceData.getNewRecords(attendance)));
+//
+//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
+//										new NavigationPaneClickHandler());
+//
+//							}
+//
+//							if (!timetable.isEmpty()) {
+//
+//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
+//										SystemTimeTableDataSource
+//												.getInstance(SystemTimeTableData.getNewRecords(timetable)));
+//
+//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
+//										new NavigationPaneClickHandler());
+//
+//							}
+//
+//							if (!systemusers.isEmpty()) {
+//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
+//										SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
+//
+//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
+//										new NavigationPaneClickHandler());
+//							}
+//
+//							if (!generatereports.isEmpty()) {
+//
+//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
+//										ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
+//
+//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
+//										new NavigationPaneClickHandler());
+//							}
+//
+//							/*
+//							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&
+//							 * timetable.isEmpty() && generatereports.isEmpty()) {
+//							 * 
+//							 * PlaceRequest placeRequest = new
+//							 * PlaceRequest.Builder().nameToken(NameTokens.dashboard) .build();
+//							 * 
+//							 * placeManager.revealPlace(placeRequest);
+//							 * 
+//							 * } else {
+//							 * 
+//							 * placeManager.revealDefaultPlace();
+//							 * 
+//							 * }
+//							 */
+//
+//						} else {
+//							SC.say("ERROR", "Unknow error");
+//						}
+//
+//					}
+//				});
+//
+//	}
 
 }

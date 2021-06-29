@@ -1,5 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.login;
 
+import java.util.LinkedHashMap;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
@@ -18,9 +20,9 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.AuthenticationDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
-import com.planetsystems.tela.dto.TokenFeedbackDTO;
+import com.planetsystems.tela.dto.response.SystemFeedbackDTO;
+import com.planetsystems.tela.dto.response.TokenFeedbackDTO;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.login.forgotpassword.ForgotPasswordWindow;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
@@ -33,8 +35,6 @@ import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGr
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-
-import java.util.LinkedHashMap;
 
 public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
 	interface MyView extends View {
