@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.shared.requestconstants;
+package com.planetsystems.tela.managementapp.shared.requestcommands;
 
 public interface SystemUserProfileRequestConstant {
 	String SAVE_SYSTEM_USER_PROFILE = "SAVE_SYSTEM_USER_PROFILE";

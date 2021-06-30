@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.shared.requestconstants;
+package com.planetsystems.tela.managementapp.shared.requestcommands;
 
 public interface SystemMenuRequestConstant {
 	String SAVE_SYSTEM_MENU = "SAVE_SYSTEM_MENU";

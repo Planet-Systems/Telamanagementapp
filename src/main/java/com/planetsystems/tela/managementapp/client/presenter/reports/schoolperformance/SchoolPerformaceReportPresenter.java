@@ -43,7 +43,7 @@ import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.planetsystems.tela.managementapp.shared.requestconstants.ReportsRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.ReportsRequestConstant;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;

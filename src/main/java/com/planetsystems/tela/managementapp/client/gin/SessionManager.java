@@ -3,7 +3,11 @@ package com.planetsystems.tela.managementapp.client.gin;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.response.SystemErrorDTO;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
+import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
@@ -23,6 +27,55 @@ public class SessionManager {
 		return instance;
 	}
 
+	public void manageSession(final MyRequestResult result, final PlaceManager placeManager) {
+
+		if (result != null) {
+			SystemResponseDTO<Integer> errorDTO = result.getResponseInteger();
+
+			if (errorDTO != null) {
+				if (errorDTO.getMessage() != null && errorDTO.getData() != 0) {
+
+					//GWT.log("result.getSystemError().getStatus(): " + errorDTO.getErrorCode());
+
+					if (errorDTO.getData() == 403) {
+						// token expired and authentication issues
+
+						final Dialog dialogProperties = new Dialog();
+						dialogProperties.setShowCloseButton(false);
+						dialogProperties.setCanDrag(false);
+
+						SC.warn("ERROR", errorDTO.getMessage(), new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+
+								if (value) {
+									logOut(placeManager);
+								}
+
+							}
+						}, dialogProperties);
+
+					} else if (errorDTO.getData() == 8082) {
+						GWT.log("ERROR " + errorDTO.getMessage());
+						// processing exception
+						SC.warn("ERROR:8082 ", errorDTO.getMessage());
+
+					} else if (errorDTO.getData() == 500) {
+						GWT.log("ERROR " + errorDTO.getMessage());
+						SC.warn("ERROR:500 ", errorDTO.getMessage());
+					} else {
+						GWT.log("ERROR " + errorDTO.getMessage());
+						// exception
+						SC.warn("ERROR:Unknown", errorDTO.getMessage());
+					}
+				}
+			}
+		}
+	}
+
+	
+	@Deprecated
 	public void manageSession(final RequestResult result, final PlaceManager placeManager) {
 
 		if (result != null) {
@@ -55,21 +108,23 @@ public class SessionManager {
 					} else if (errorDTO.getErrorCode() == 8082) {
 						GWT.log("ERROR " + errorDTO.getMessage());
 						// processing exception
-						SC.warn("ERROR ", errorDTO.getMessage());
+						SC.warn("ERROR:8082 ", errorDTO.getMessage());
 
 					} else if (errorDTO.getErrorCode() == 500) {
 						GWT.log("ERROR " + errorDTO.getMessage());
-						SC.warn("ERROR ", errorDTO.getMessage());
+						SC.warn("ERROR:500 ", errorDTO.getMessage());
 					} else {
 						GWT.log("ERROR " + errorDTO.getMessage());
 						// exception
-						SC.warn("ERROR", errorDTO.getMessage());
+						SC.warn("ERROR:Unknown", errorDTO.getMessage());
 					}
 				}
 			}
 		}
 	}
 
+	
+	
 	public String getLoginToken() {
 		return "Bearer " + Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 	}
@@ -78,7 +133,9 @@ public class SessionManager {
 		Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
 		Cookies.removeCookie(RequestConstant.LOGED_IN);
 		Cookies.removeCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
-		placeManager.revealCurrentPlace();
+		PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.login)
+				.build();
+		placeManager.revealPlace(placeRequest);
 	}
 
 	public String getLoggedInUserGroup() {

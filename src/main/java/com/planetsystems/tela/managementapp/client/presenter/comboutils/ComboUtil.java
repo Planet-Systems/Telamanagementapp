@@ -22,7 +22,7 @@ import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 
 public class ComboUtil {
@@ -1127,7 +1127,7 @@ public class ComboUtil {
 	public static void loadSystemUserGroupCombo(final ComboBox systemUserGroupCombo, DispatchAsync dispatcher,
 			PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestCommand.GET_SYSTEM_USER_GROUPS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 			
 			@Override

@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.shared.requestconstants;
+package com.planetsystems.tela.managementapp.shared.requestcommands;
 
 public interface CrudRequest {
 

@@ -26,10 +26,10 @@ import com.planetsystems.tela.managementapp.client.presenter.networkutil.Network
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.smsmessage.smsstaff.SchoolStaffPane;
 import com.planetsystems.tela.managementapp.client.presenter.smsmessage.smssystemuser.SystemUserPane;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SmsRequest;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SmsRequest;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;

@@ -1,15 +1,23 @@
 package com.planetsystems.tela.managementapp.shared;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import com.gwtplatform.dispatch.rpc.shared.UnsecuredActionImpl;
 import com.planetsystems.tela.dto.AuthenticationDTO;
 
-public class RequestAction extends UnsecuredActionImpl<RequestResult>{
+public class RequestAction extends UnsecuredActionImpl<RequestResult> implements Serializable{
 	private String request;
 	private Map<String, Object> requestBody;
 	private AuthenticationDTO authenticationDTO;
 //	private String token;
+	/*
+	 * request key 
+	 * 
+	 * action
+	 * 
+	 */
+	
 	
 	public RequestAction() {
 		super();
@@ -42,13 +50,5 @@ public class RequestAction extends UnsecuredActionImpl<RequestResult>{
 		return authenticationDTO;
 	}
 
-//	public String getToken() {
-//		return token;
-//	}
-	
-	
-	
-	
-	
 
 }

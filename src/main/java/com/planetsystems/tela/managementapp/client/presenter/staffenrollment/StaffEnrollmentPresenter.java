@@ -47,7 +47,7 @@ import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.planetsystems.tela.managementapp.shared.requestconstants.StaffEnrollmentRequest;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffEnrollmentRequest;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;

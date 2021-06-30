@@ -58,10 +58,10 @@ import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemMenuRequestConstant;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupSystemMenuRequestConstant;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserProfileRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserProfileRequestConstant;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -441,8 +441,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 							systemUserGroupDTO.setAdministrativeRole(Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
 
 							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							map.put(SystemUserGroupRequestConstant.DATA, systemUserGroupDTO);
-							map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.SAVE_SYSTEM_USER_GROUP);
+							map.put(SystemUserGroupRequestCommand.DATA, systemUserGroupDTO);
+							map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestCommand.SAVE_SYSTEM_USER_GROUP);
 							NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 								@Override
@@ -572,7 +572,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 	private void getAllSystemUserGroups() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestCommand.GET_SYSTEM_USER_GROUPS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -801,7 +801,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		// dispatcher, placeManager, null);
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestCommand.GET_SYSTEM_USER_GROUPS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

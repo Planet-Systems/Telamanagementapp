@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
@@ -50,11 +51,6 @@ import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
-import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
-import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
-import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
-import com.planetsystems.tela.dto.reports.SchoolTimeOnTaskSummaryDTO;
-import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
@@ -64,6 +60,11 @@ import com.planetsystems.tela.dto.reports.NationalEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
 import com.planetsystems.tela.dto.reports.ReportPreviewRequestDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
+import com.planetsystems.tela.dto.reports.SchoolTimeOnTaskSummaryDTO;
+import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 import com.planetsystems.tela.dto.reports.outputs.DailyDistrictReport;
 import com.planetsystems.tela.dto.reports.outputs.DistrictTermReport;
 import com.planetsystems.tela.dto.reports.outputs.DistrictWeeklyReport;
@@ -78,18 +79,20 @@ import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.planetsystems.tela.managementapp.shared.requestconstants.ReportsRequestConstant;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SmsRequest;
-import com.planetsystems.tela.managementapp.shared.requestconstants.StaffEnrollmentRequest;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemMenuRequestConstant;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupSystemMenuRequestConstant;
-import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserProfileRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.ReportsRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SmsRequest;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffEnrollmentRequest;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserProfileRequestConstant;
 
 public class RequestActionHandler implements ActionHandler<RequestAction, RequestResult> {
 
 	final String API_LINK = APIGateWay.getInstance().getApLink();
 	final String REPORT_GEN_API = APIGateWay.getInstance().getReportGeneratorLink();
+	
+	ObjectMapper mapper = new ObjectMapper();
 
 	@Inject
 	public RequestActionHandler() {
@@ -101,27 +104,29 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 		try {
 			if (action.getRequest().equalsIgnoreCase(RequestConstant.LOGIN)) {
-				TokenFeedbackDTO feedback = new TokenFeedbackDTO();
+				//SystemFeedbackDto<String> feedback = new SystemFeedbackDto<String>();
 
-				AuthenticationDTO dto = action.getAuthenticationDTO();
-
-				Client client = ClientBuilder.newClient();
-
-				SystemResponseDTO<TokenFeedbackDTO> loginResponseDTO = client.target(API_LINK).path("authenticate")
-						.request(MediaType.APPLICATION_JSON).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
-								new GenericType<SystemResponseDTO<TokenFeedbackDTO>>() {
-								});
-
-				System.out.println("AUTH " + loginResponseDTO);
-
-				if (loginResponseDTO != null) {
-					System.out.println("LOGIN RESPONSE " + loginResponseDTO.getData());
-					feedback = loginResponseDTO.getData();
-				}
-
-				client.close();
-				return new RequestResult(feedback);
-
+				//TokenFeedbackDTO feedback = new TokenFeedbackDTO();
+//				AuthenticationDTO dto = action.getAuthenticationDTO();
+//
+//				Client client = ClientBuilder.newClient();
+//
+//				SystemResponseDTO<TokenFeedbackDTO> loginResponseDTO = client.target(API_LINK).path("authenticate")
+//						.request(MediaType.APPLICATION_JSON).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+//								new GenericType<SystemResponseDTO<TokenFeedbackDTO>>() {
+//								});
+//
+//				System.out.println("AUTH " + loginResponseDTO);
+//
+//				if (loginResponseDTO != null) {
+//					System.out.println("LOGIN RESPONSE " + loginResponseDTO.getData());
+//					feedback = loginResponseDTO.getData();
+//				}
+//
+//				client.close();
+				
+				
+				return new RequestResult(new TokenFeedbackDTO());
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 			if (action.getRequest().equalsIgnoreCase(RequestConstant.RESET_PASSWORD)) {
@@ -4322,12 +4327,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				return new RequestResult(feedback, list, null);
 
-			} else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestConstant.SAVE_SYSTEM_USER_GROUP)) {
+			} else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestCommand.SAVE_SYSTEM_USER_GROUP)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				SystemUserGroupDTO dto = (SystemUserGroupDTO) action.getRequestBody()
-						.get(SystemUserGroupRequestConstant.DATA);
+						.get(SystemUserGroupRequestCommand.DATA);
 
 				// List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
 
@@ -4364,12 +4369,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
-			else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestConstant.UPDATE_SYSTEM_USER_GROUP)) {
+			else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestCommand.UPDATE_SYSTEM_USER_GROUP)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				SystemUserGroupDTO dto = (SystemUserGroupDTO) action.getRequestBody()
-						.get(SystemUserGroupRequestConstant.DATA);
+						.get(SystemUserGroupRequestCommand.DATA);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
@@ -4399,12 +4404,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			} else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestConstant.DELETE_SYSTEM_USER_GROUP)) {
+			} else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestCommand.DELETE_SYSTEM_USER_GROUP)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				SystemUserGroupDTO dto = (SystemUserGroupDTO) action.getRequestBody()
-						.get(SystemUserGroupRequestConstant.DATA);
+						.get(SystemUserGroupRequestCommand.DATA);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
@@ -4437,7 +4442,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			} else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS)) {
+			} else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestCommand.GET_SYSTEM_USER_GROUPS)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
@@ -4468,7 +4473,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
-			else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestConstant.LOGGEDIN_SYSTEM_USER_GROUPS)) {
+			else if (action.getRequest().equalsIgnoreCase(SystemUserGroupRequestCommand.LOGGEDIN_SYSTEM_USER_GROUP)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				// List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();

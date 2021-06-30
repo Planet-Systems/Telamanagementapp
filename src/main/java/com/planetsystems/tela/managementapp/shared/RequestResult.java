@@ -43,6 +43,7 @@ import com.planetsystems.tela.dto.reports.SchoolTimeOnTaskSummaryDTO;
 import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 import com.planetsystems.tela.dto.response.SystemErrorDTO;
 import com.planetsystems.tela.dto.response.SystemFeedbackDTO;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.dto.response.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
@@ -54,11 +55,17 @@ import com.planetsystems.tela.dto.reports.NationalEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
 
 public class RequestResult implements Result {
+	
+	//private SystemResponseDto systemResponseDto;
 
 	private SystemFeedbackDTO systemFeedbackDTO;
 	private TokenFeedbackDTO tokenFeedbackDTO;
-	private FilterDTO filterDto;
 	private SystemErrorDTO systemErrorDTO;
+	
+SystemResponseDTO<String> systemResponseDTO;
+	
+	
+	private FilterDTO filterDto;
 	private List<AcademicYearDTO> academicYearDTOs;
 	private List<AcademicTermDTO> academicTermDTOs;
 	private List<RegionDto> regionDtos;
@@ -128,6 +135,32 @@ public class RequestResult implements Result {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	
+	
+	
+	
+	public RequestResult(SystemResponseDTO<String> systemResponseDTO) {
+		super();
+		this.systemResponseDTO = systemResponseDTO;
+	}
+	
+	
+	
+
+	public SystemResponseDTO<String> getSystemResponseDTO() {
+		return systemResponseDTO;
+	}
+
+
+
+
+	public void setSystemResponseDTO(SystemResponseDTO<String> systemResponseDTO) {
+		this.systemResponseDTO = systemResponseDTO;
+	}
+
+
+
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<NationalEndOfWeekTimeAttendanceDTO> nationalEndOfWeekTimeAttendanceDTOs,
@@ -417,6 +450,8 @@ public class RequestResult implements Result {
 	public RequestResult() {
 		super();
 	}
+	
+
 
 	public RequestResult(TokenFeedbackDTO tokenFeedbackDTO) {
 		super();
@@ -455,8 +490,9 @@ public class RequestResult implements Result {
 	
 	
 
+	
 
-
+	
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<SchoolEndOfTermTimeAttendanceDTO> schoolEndOfTermTimeAttendanceDTOs , SchoolEndOfTermTimeAttendanceDTO dto) {
 		super();
@@ -600,11 +636,6 @@ public class RequestResult implements Result {
 		return systemUserProfileSchoolDTOs;
 	}
 
-	@Override
-	public String toString() {
-		return "RequestResult [systemErrorDTO=" + systemErrorDTO + "FEEDDTO " + systemFeedbackDTO + " ]";
-	}
-
 	public DashboardSummaryDTO getDashboardSummaryDTO() {
 		return dashboardSummaryDTO;
 	}
@@ -687,6 +718,17 @@ public class RequestResult implements Result {
 		return schoolEndOfTermTimeAttendanceDTOs;
 	}
 
+//	public RequestResult(SystemResponseDto systemResponseDto) {
+//		super();
+//		this.systemResponseDto = systemResponseDto;
+//	}
+//
+//	public SystemResponseDto getSystemResponseDto() {
+//		return systemResponseDto;
+//	}
+
+	
+	
 	
 	
 }
