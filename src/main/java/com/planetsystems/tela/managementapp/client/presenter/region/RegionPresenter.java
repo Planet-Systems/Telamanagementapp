@@ -22,14 +22,17 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.RegionDto;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
-import com.planetsystems.tela.managementapp.client.presenter.comboutils.AdminComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.DistrictListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.DistrictPane;
 import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.DistrictWindow;
@@ -37,13 +40,15 @@ import com.planetsystems.tela.managementapp.client.presenter.region.dirstrict.Fi
 import com.planetsystems.tela.managementapp.client.presenter.region.region.RegionListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.region.region.RegionPane;
 import com.planetsystems.tela.managementapp.client.presenter.region.region.RegionWindow;
-import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.UserGroupListgrid;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -101,10 +106,10 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 	@Override
 	protected void onBind() {
 		super.onBind();
-	
+
 		onTabSelected();
-		getAllRegions();
-		getAllDistricts();
+		getAllRegions2();
+		getAllDistricts2();
 	}
 
 	@Override
@@ -125,7 +130,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 				if (selectedTab.equalsIgnoreCase(RegionView.REGION_TAB_TITLE)) {
 					getView().getDistrictPane().getListGrid().setShowFilterEditor(false);
-					
+
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -137,7 +142,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addRegion(newButton);
-					deleteRegion(delete);
+					deleteRegion2(delete);
 					editRegion(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(RegionView.DISTRICT_TAB_TITLE)) {
@@ -153,7 +158,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addDistrict(newButton);
-					deleteDistrict(delete);
+					deleteDistrict2(delete);
 					editDistrict(edit);
 					selectFilterOption(filter);
 
@@ -217,12 +222,13 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 			public void onClick(ClickEvent event) {
 				RegionWindow window = new RegionWindow();
 				window.show();
-				saveRegion(window);
+				saveRegion2(window);
 
 			}
 		});
 	}
 
+	@Deprecated
 	private void saveRegion(final RegionWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -238,7 +244,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_REGION, dto);
 					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_REGION);
-					
+
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 						@Override
@@ -285,7 +291,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					RegionWindow window = new RegionWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
-					updateRegion(window);
+					updateRegion2(window);
 					window.show();
 
 				} else {
@@ -297,6 +303,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	}
 
+	@Deprecated
 	private void updateRegion(final RegionWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -338,6 +345,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 		window.getNameField().setValue(record.getAttribute(RegionListGrid.NAME));
 	}
 
+	@Deprecated
 	private void deleteRegion(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -372,6 +380,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	}
 
+	@Deprecated
 	private void getAllRegions() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
@@ -397,8 +406,8 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 			public void onClick(ClickEvent event) {
 				DistrictWindow window = new DistrictWindow();
 				loadRolledOutCombo(window, null);
-				loadRegionCombo(window, null);
-				saveDistrict(window);
+				loadRegionCombo2(window, null);
+				saveDistrict2(window);
 				window.show();
 
 			}
@@ -406,6 +415,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	}
 
+	@Deprecated
 	private void saveDistrict(final DistrictWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -475,8 +485,8 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				if (getView().getDistrictPane().getListGrid().anySelected()) {
 					DistrictWindow window = new DistrictWindow();
 					window.getSaveButton().setTitle("Update");
-					loadFieldsToEdit(window);
-					updateDistrict(window);
+					loadFieldsToEdit2(window);
+					updateDistrict2(window);
 					window.show();
 				} else {
 					SC.say("INFO: Select a record to update");
@@ -486,6 +496,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	}
 
+	@Deprecated
 	private void loadFieldsToEdit(DistrictWindow window) {
 		ListGridRecord record = getView().getDistrictPane().getListGrid().getSelectedRecord();
 		window.getDistrictCode().setValue(record.getAttribute(DistrictListGrid.CODE));
@@ -498,6 +509,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	}
 
+	@Deprecated
 	private void updateDistrict(final DistrictWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -550,8 +562,9 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 	}
 
 	// District window
+	@Deprecated
 	public void loadRegionCombo(final DistrictWindow window, final String defaultValue) {
-		    ComboUtil.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
+		ComboUtil.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
 	}
 
 	private void clearDistrictWindowFields(DistrictWindow window) {
@@ -561,6 +574,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 		window.getRegion().clearValue();
 	}
 
+	@Deprecated
 	private void deleteDistrict(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -596,6 +610,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 	}
 
+	@Deprecated
 	private void getAllDistricts() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
@@ -634,4 +649,351 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 		});
 
 	}
+
+	/////////////////////////////////////////////////////////// NEW
+
+	private void saveRegion2(final RegionWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoRegionWindowFieldIsEmpty(window)) {
+					RegionDto dto = new RegionDto();
+					dto.setName(window.getNameField().getValueAsString());
+					dto.setCode(window.getCodeField().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, RegionDistrictCommands.SAVE_REGION);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+
+							if (result != null) {
+								SystemResponseDTO<RegionDto> responseDTO = result.getRegionResponse();
+								if (responseDTO.isStatus()) {
+									clearRegionWindowFields(window);
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllRegions();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+
+							}
+
+						}
+					});
+				} else {
+					SC.warn("Please fill all fields");
+				}
+
+			}
+
+		});
+
+	}
+
+	private void getAllRegions2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+			map.put(MyRequestAction.COMMAND, RegionDistrictCommands.GET_ALL_REGIONS);
+		else
+			map.put(MyRequestAction.COMMAND, RegionDistrictCommands.GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+
+				if (result != null) {
+					SystemResponseDTO<List<RegionDto>> responseDTO = result.getRegionResponseList();
+					if (responseDTO.isStatus()) {
+						getView().getRegionPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+
+				}
+
+			}
+		});
+	}
+
+	private void deleteRegion2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getRegionPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getRegionPane().getListGrid().getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.REGION_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, RegionDistrictCommands.DELETE_REGION);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												getAllRegions2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+
+										}
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+
+	private void updateRegion2(final RegionWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				ListGridRecord record = getView().getRegionPane().getListGrid().getSelectedRecord();
+
+				RegionDto dto = new RegionDto();
+				dto.setId(record.getAttribute(RegionListGrid.ID));
+				dto.setName(window.getNameField().getValueAsString());
+				dto.setCode(window.getCodeField().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, RegionDistrictCommands.UPDATE_REGION);
+
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<RegionDto> responseDTO = result.getRegionResponse();
+							if (responseDTO.isStatus()) {
+								clearRegionWindowFields(window);
+								window.close();
+								SC.say("SUCCESS", responseDTO.getMessage());
+								getAllRegions2();
+							} else {
+								SC.say(responseDTO.getMessage());
+							}
+
+						}
+
+					}
+				});
+			}
+		});
+
+	}
+
+	//////////////////////////////////////////////////////////////////// NEW
+
+	private void saveDistrict2(final DistrictWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoDistrictWindowFieldIsEmpty(window)) {
+					DistrictDTO dto = new DistrictDTO();
+					dto.setCode(window.getDistrictCode().getValueAsString());
+					dto.setName(window.getDistrictName().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					dto.setRolledOut(Boolean.parseBoolean(window.getRolledOut().getValueAsString()));
+
+					RegionDto regionDto = new RegionDto();
+					regionDto.setId(window.getRegion().getValueAsString());
+
+					dto.setRegion(regionDto);
+
+					GWT.log("Dis " + dto);
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, RegionDistrictCommands.SAVE_DISTRICT);
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+
+							if (result != null) {
+								SystemResponseDTO<DistrictDTO> responseDTO = result.getDistrictResponse();
+								if (responseDTO.isStatus()) {
+									clearDistrictWindowFields(window);
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllDistricts2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+
+							}
+						}
+					});
+
+				} else {
+					SC.warn("Please fill all fields");
+				}
+
+			}
+
+		});
+	}
+
+	private void getAllDistricts2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+			map.put(MyRequestAction.COMMAND, RegionDistrictCommands.GET_ALL_DISTRICTS);
+		else
+			map.put(MyRequestAction.COMMAND, RegionDistrictCommands.GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<DistrictDTO>> responseDTO = result.getDistrictResponseList();
+					if (responseDTO.isStatus()) {
+						getView().getDistrictPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+
+			}
+		});
+	}
+
+	private void deleteDistrict2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getRegionPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getRegionPane().getListGrid().getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.DISTRICT_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, RegionDistrictCommands.DELETE_DISTRICT);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												SC.say("SUCCESS", responseDTO.getMessage());
+												getAllDistricts2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+										}
+			
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+	
+	
+	private void updateDistrict2(final DistrictWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGridRecord record = getView().getDistrictPane().getListGrid().getSelectedRecord();
+
+				DistrictDTO dto = new DistrictDTO();
+				dto.setId(record.getAttribute(DistrictListGrid.ID));
+				dto.setCode(window.getDistrictCode().getValueAsString());
+				dto.setName(window.getDistrictName().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				dto.setRolledOut(Boolean.parseBoolean(window.getRolledOut().getValueAsString()));
+
+				RegionDto regionDto = new RegionDto();
+				regionDto.setId(window.getRegion().getValueAsString());
+
+				dto.setRegion(regionDto);
+
+				GWT.log("reg " + regionDto.getId() + " roll " + dto.isRolledOut());
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, RegionDistrictCommands.UPDATE_DISTRICT);
+
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<DistrictDTO> responseDTO = result.getDistrictResponse();
+							if (responseDTO.isStatus()) {
+								clearDistrictWindowFields(window);
+								window.close();
+								SC.say("SUCCESS", responseDTO.getMessage());
+								getAllDistricts2();
+							} else {
+								SC.say(responseDTO.getMessage());
+							}
+						}
+			
+						
+					}
+				});
+			}
+		});
+	}
+
+	
+	private void loadFieldsToEdit2(DistrictWindow window) {
+		ListGridRecord record = getView().getDistrictPane().getListGrid().getSelectedRecord();
+		window.getDistrictCode().setValue(record.getAttribute(DistrictListGrid.CODE));
+		window.getDistrictName().setValue(record.getAttribute(DistrictListGrid.NAME));
+		window.getRegion().setValue(record.getAttribute(DistrictListGrid.REGION));
+		window.getRolledOut().setValue(record.getAttribute(DistrictListGrid.ROLLEDOUT));
+
+		loadRolledOutCombo(window, record.getAttribute(DistrictListGrid.ROLLEDOUT_STATUS));
+		loadRegionCombo2(window, record.getAttribute(DistrictListGrid.REGION_ID));
+
+	}
+	
+	public void loadRegionCombo2(final DistrictWindow window, final String defaultValue) {
+		ComboUtil2.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
+	}
+
 }

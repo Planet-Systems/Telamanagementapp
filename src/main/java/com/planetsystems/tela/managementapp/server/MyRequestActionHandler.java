@@ -6,19 +6,18 @@ import javax.ws.rs.ProcessingException;
 import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
 import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
-import com.planetsystems.tela.dto.response.SystemErrorDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
-import com.planetsystems.tela.dto.response.TokenFeedbackDTO;
-import com.planetsystems.tela.managementapp.server.handlers.AcademicYearTermPresenterHandler;
+import com.planetsystems.tela.managementapp.server.handlers.AcademicYearTermHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler;
+import com.planetsystems.tela.managementapp.server.handlers.RegionDistrictHandler;
+import com.planetsystems.tela.managementapp.server.handlers.SchoolCatergoryClassHandler;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
-import com.planetsystems.tela.managementapp.shared.RequestConstant;
-import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
 
@@ -56,23 +55,200 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 			
 			case AcademicYearTermCommand.SAVE_YEAR:
 				MyRequestResult result6 = new MyRequestResult();
-				result6.setAcademicYearResponse(AcademicYearTermPresenterHandler.saveAcademicYear(action));
+				result6.setAcademicYearResponse(AcademicYearTermHandler.saveAcademicYear(action));
 				return result6;
 				
 			case AcademicYearTermCommand.GET_ALL_YEARS:
 				MyRequestResult result7 = new MyRequestResult();
-				result7.setAcademicYearResponseList(AcademicYearTermPresenterHandler.getAcademicYears(action));
+				result7.setAcademicYearResponseList(AcademicYearTermHandler.getAcademicYears(action));
 				return result7;
+				
+			case AcademicYearTermCommand.GET_YEAR_BY_ID:
+				MyRequestResult result17 = new MyRequestResult();
+				result17.setAcademicYearResponseList(AcademicYearTermHandler.getAcademicYears(action));
+				return result17;
 				
 			case AcademicYearTermCommand.DELETE_YEAR:
 				MyRequestResult result8 = new MyRequestResult();
-				result8.setResponseText(AcademicYearTermPresenterHandler.deleteAcademicYear(action));
+				result8.setResponseText(AcademicYearTermHandler.deleteAcademicYear(action));
 				return result8;
 				
 			case AcademicYearTermCommand.UPDATE_YEAR:
 				MyRequestResult result9 = new MyRequestResult();
-				result9.setAcademicYearResponse(AcademicYearTermPresenterHandler.updateAcademicYear(action));
+				result9.setAcademicYearResponse(AcademicYearTermHandler.updateAcademicYear(action));
 				return result9;
+				
+			case AcademicYearTermCommand.SAVE_TERM:
+				MyRequestResult result10 = new MyRequestResult();
+				result10.setAcademicTermResponse(AcademicYearTermHandler.saveAcademicTerm(action));
+				return result10;
+				
+			case AcademicYearTermCommand.GET_ALL_TERMS:
+				MyRequestResult result11 = new MyRequestResult();
+				result11.setAcademicTermResponseList(AcademicYearTermHandler.getAcademicTerms(action));
+				return result11;
+				
+			case AcademicYearTermCommand.GET_TERM_BY_ID:
+				MyRequestResult result18 = new MyRequestResult();
+				result18.setAcademicTermResponseList(AcademicYearTermHandler.getAcademicTerms(action));
+				return result18;
+				
+				
+			case AcademicYearTermCommand.DELETE_TERM:
+				MyRequestResult result12 = new MyRequestResult();
+				result12.setResponseText(AcademicYearTermHandler.deleteAcademicTerm(action));
+				return result12;
+				
+			case AcademicYearTermCommand.UPDATE_TERM:
+				MyRequestResult result13 = new MyRequestResult();
+				result13.setAcademicTermResponse(AcademicYearTermHandler.updateAcademicTerm(action));
+				return result13;
+				
+			case AcademicYearTermCommand.GET_ALL_TERMS_BY_YEAR:
+				MyRequestResult result14 = new MyRequestResult();
+				result14.setAcademicTermResponseList(AcademicYearTermHandler.getAcademicTermByYear(action));
+				return result14;
+				
+			case AcademicYearTermCommand.ACTIVATE_TERM:
+				MyRequestResult result15 = new MyRequestResult();
+				result15.setAcademicTermResponse(AcademicYearTermHandler.activateAcademicTerm(action));
+				return result15;
+				
+			case AcademicYearTermCommand.DEACTIVATE_TERM:
+				MyRequestResult result16 = new MyRequestResult();
+				result16.setAcademicTermResponse(AcademicYearTermHandler.deactivateAcademicTerm(action));
+				return result16;
+				
+			case RegionDistrictCommands.SAVE_REGION:
+				MyRequestResult result19 = new MyRequestResult();
+				result19.setRegionResponse(RegionDistrictHandler.saveRegion(action));
+				return result19;
+				
+			case RegionDistrictCommands.GET_ALL_REGIONS:
+				MyRequestResult result20 = new MyRequestResult();
+				result20.setRegionResponseList(RegionDistrictHandler.getRegions(action));
+				return result20;
+				
+			case RegionDistrictCommands.GET_REGION_BY_ID:
+				MyRequestResult result21 = new MyRequestResult();
+				result21.setRegionResponse(RegionDistrictHandler.getRegionById(action));
+				return result21;
+				
+			case RegionDistrictCommands.DELETE_REGION:
+				MyRequestResult result22 = new MyRequestResult();
+				result22.setResponseText(RegionDistrictHandler.deleteRegion(action));;
+				return result22;
+				
+			case RegionDistrictCommands.UPDATE_REGION:
+				MyRequestResult result23 = new MyRequestResult();
+				result23.setRegionResponse(RegionDistrictHandler.updateRegion(action));
+				return result23;
+				
+			case RegionDistrictCommands.SAVE_DISTRICT:
+				MyRequestResult result24 = new MyRequestResult();
+				result24.setDistrictResponse(RegionDistrictHandler.saveDistrict(action));
+				return result24;
+				
+			case RegionDistrictCommands.GET_ALL_DISTRICTS:
+				MyRequestResult result25 = new MyRequestResult();
+				result25.setDistrictResponseList(RegionDistrictHandler.getDistricts(action));
+				return result25;
+				
+			case RegionDistrictCommands.GET_DISTRICT_BY_ID:
+				MyRequestResult result26 = new MyRequestResult();
+				result26.setDistrictResponse(RegionDistrictHandler.getDistrictById(action));
+				return result26;
+				
+			case RegionDistrictCommands.DELETE_DISTRICT:
+				MyRequestResult result27 = new MyRequestResult();
+				result27.setResponseText(RegionDistrictHandler.deleteDistrict(action));;
+				return result27;
+				
+			case RegionDistrictCommands.UPDATE_DISTRICT:
+				MyRequestResult result28 = new MyRequestResult();
+				result28.setDistrictResponse(RegionDistrictHandler.updateDistrict(action));
+				return result28;
+				
+			case RegionDistrictCommands.GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result29 = new MyRequestResult();
+				result29.setRegionResponseList(RegionDistrictHandler.getAllRegionsBySystemUserProfileSchools(action));
+				return result29;
+				
+			case RegionDistrictCommands.GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result30 = new MyRequestResult();
+				result30.setDistrictResponseList(RegionDistrictHandler.getAllDistrictsBySystemUserProfileSchools(action));
+				return result30;
+				
+			case SchoolCategoryClassCommand.SAVE_SCHOOL_CATEGORY:
+				MyRequestResult result31 = new MyRequestResult();
+				result31.setSchoolCategoryResponse(SchoolCatergoryClassHandler.saveSchoolCategory(action));
+				return result31;
+				
+			case SchoolCategoryClassCommand.GET_ALL_SCHOOL_CATEGORYS:
+				MyRequestResult result32 = new MyRequestResult();
+				result32.setSchoolCategoryResponseList(SchoolCatergoryClassHandler.getSchoolCategorys(action));
+				return result32;
+				
+			case SchoolCategoryClassCommand.GET_SCHOOL_CATEGORY_BY_ID:
+				MyRequestResult result33 = new MyRequestResult();
+				result33.setSchoolCategoryResponse(SchoolCatergoryClassHandler.getSchoolCategoryById(action));;
+				return result33;
+				
+			case SchoolCategoryClassCommand.DELETE_SCHOOL_CATEGORY:
+				MyRequestResult result34 = new MyRequestResult();
+				result34.setResponseText(SchoolCatergoryClassHandler.deleteSchoolCategory(action));
+				return result34;
+				
+			case SchoolCategoryClassCommand.UPDATE_SCHOOL_CATEGORY:
+				MyRequestResult result35 = new MyRequestResult();
+				result35.setSchoolCategoryResponse(SchoolCatergoryClassHandler.updateSchoolCategory(action));;
+				return result35;
+				
+			case SchoolCategoryClassCommand.GET_SCHOOL_CATEGORIES_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result36 = new MyRequestResult();
+				result36.setSchoolCategoryResponseList(SchoolCatergoryClassHandler.getAllSchoolCategoriesByLoggedSystemUserProfileSchools(action));;
+				return result36;
+				
+			case SchoolCategoryClassCommand.SAVE_SCHOOL:
+				MyRequestResult result37 = new MyRequestResult();
+				result37.setSchoolResponse(SchoolCatergoryClassHandler.saveSchool(action));
+				return result37;
+				
+			case SchoolCategoryClassCommand.GET_ALL_SCHOOLS:
+				MyRequestResult result38 = new MyRequestResult();
+				result38.setSchoolResponseList(SchoolCatergoryClassHandler.getSchools(action));
+				return result38;
+				
+			case SchoolCategoryClassCommand.GET_SCHOOL_BY_ID:
+				MyRequestResult result39 = new MyRequestResult();
+				result39.setSchoolResponse(SchoolCatergoryClassHandler.getSchoolById(action));
+				return result39;
+				
+			case SchoolCategoryClassCommand.GET_ALL_SCHOOLS_BY_SCHOOL_CATEGORY:
+				MyRequestResult result40 = new MyRequestResult();
+				result40.setSchoolResponseList(SchoolCatergoryClassHandler.getSchoolsByCategory(action));
+				return result40;
+				
+			case SchoolCategoryClassCommand.GET_ALL_SCHOOLS_BY_SCHOOL_DISTRICT:
+				MyRequestResult result41 = new MyRequestResult();
+				result41.setSchoolResponseList(SchoolCatergoryClassHandler.getSchoolsByDistrict(action));
+				return result41;
+				
+			case SchoolCategoryClassCommand.DELETE_SCHOOL:
+				MyRequestResult result42 = new MyRequestResult();
+				result42.setResponseText(SchoolCatergoryClassHandler.deleteSchool(action));
+				return result42;
+				
+			case SchoolCategoryClassCommand.UPDATE_SCHOOL:
+				MyRequestResult result43 = new MyRequestResult();
+				result43.setSchoolResponse(SchoolCatergoryClassHandler.updateSchool(action));
+				return result43;
+				
+			case SchoolCategoryClassCommand.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result44 = new MyRequestResult();
+				result44.setSchoolResponseList(SchoolCatergoryClassHandler.getAllSchoolsByLoggedSystemUserProfileSchools(action));;
+				return result44;
+				
 				
 
 			default:
@@ -108,15 +284,11 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 
 	@Override
 	public Class<MyRequestAction> getActionType() {
-		// TODO Auto-generated method stub
 		return MyRequestAction.class;
 	}
 
 	@Override
-	public void undo(MyRequestAction action, MyRequestResult result, ExecutionContext context) throws ActionException {
-		// TODO Auto-generated method stub
-
-	}
+	public void undo(MyRequestAction action, MyRequestResult result, ExecutionContext context) throws ActionException {	}
 
 	private SystemResponseDTO<Integer> createError(String message, int code) {
 		SystemResponseDTO<Integer> systemErrorDTO = new SystemResponseDTO<Integer>();

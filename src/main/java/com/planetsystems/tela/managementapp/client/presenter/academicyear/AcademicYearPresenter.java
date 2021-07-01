@@ -109,7 +109,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		super.onBind();
 		onTabSelected();
 		getAllAcademicYears2();
-		getAllAcademicTerms();
+		getAllAcademicTerms2();
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_YEAR_TAB_TITLE)) {
 					getView().getAcademicTermPane().getListGrid().setShowFilterEditor(false);
-					
+
 					MenuButton editAcademicYearButton = new MenuButton("Edit");
 					MenuButton deleteAcademicYearButton = new MenuButton("Delete");
 					MenuButton newAcademicYear = new MenuButton("New");
@@ -140,7 +140,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					buttons.add(editAcademicYearButton);
 					buttons.add(deleteAcademicYearButton);
 
-					getView().getControlsPane().addMenuButtons("Academic Years",buttons);
+					getView().getControlsPane().addMenuButtons("Academic Years", buttons);
 
 					addAcademicYear(newAcademicYear);
 					deleteAcademicYear2(deleteAcademicYearButton);
@@ -162,19 +162,19 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					buttons.add(activate);
 					buttons.add(deactivate);
 					buttons.add(filter);
-					getView().getControlsPane().addMenuButtons("Academic Terms",buttons);
+					getView().getControlsPane().addMenuButtons("Academic Terms", buttons);
 
 					addAcademicTerm(newButton);
 					editAcademicTerm(edit);
-					deleteAcademicTerm(delete);
-					selectFilterOption(filter); 
-					activateAcademicTerm(activate);
-					deactivateAcademicTerm(deactivate);
+					deleteAcademicTerm2(delete);
+					selectFilterOption(filter);
+					activateAcademicTerm2(activate);
+					deactivateAcademicTerm2(deactivate);
 
-				} else { 
-					
+				} else {
+
 					List<MenuButton> buttons = new ArrayList<>();
-					 
+
 					getView().getControlsPane().addMenuButtons(buttons);
 
 				}
@@ -242,9 +242,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 	}
 
-
-	
-	
 	@Deprecated
 	public void saveAcademicYear(final AcademicYearWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
@@ -299,8 +296,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		return flag;
 	}
 
-	
-	
 	private void editAcademicYear(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -403,7 +398,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	}
 
-	
 	@Deprecated
 	public void getAllAcademicYears() {
 
@@ -427,6 +421,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	}
 
 	// add academic term window
+	@Deprecated
 	public void loadAcademicYearCombo(final AcademicTermWindow window, final String defaultValue) {
 		ComboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, defaultValue);
 	}
@@ -440,13 +435,14 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onClick(ClickEvent event) {
 				AcademicTermWindow window = new AcademicTermWindow();
-				loadAcademicYearCombo(window, null);
-				saveAcademicTerm(window);
+				ComboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, null);
+				saveAcademicTerm2(window);
 				window.show();
 			}
 		});
 	}
 
+	@Deprecated
 	public void saveAcademicTerm(final AcademicTermWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -527,7 +523,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					AcademicTermWindow window = new AcademicTermWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
-					updateAcademicTerm(window);
+					updateAcademicTerm2(window);
 					window.show();
 				} else {
 					SC.warn("ERROR", "Please select record to edit");
@@ -537,6 +533,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 	}
 
+	@Deprecated
 	public void updateAcademicTerm(final AcademicTermWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -577,6 +574,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 	}
 
+	@Deprecated
 	private void deleteAcademicTerm(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -611,7 +609,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 
 	}
-	
+
+	@Deprecated
 	private void activateAcademicTerm(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -646,7 +645,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 
 	}
-	
+
+	@Deprecated
 	private void deactivateAcademicTerm(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -682,6 +682,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	}
 
+	@Deprecated
 	public void loadFieldsToEdit(final AcademicTermWindow window) {
 
 		ListGridRecord record = getView().getAcademicTermPane().getListGrid().getSelectedRecord();
@@ -694,7 +695,9 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		loadAcademicYearCombo(window, record.getAttribute(AcademicTermListGrid.YEAR_ID));
 
 	}
+	
 
+	@Deprecated
 	public void getAllAcademicTerms() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_ACADEMIC_TERM, null);
@@ -730,8 +733,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 
 	}
-	
-	///////////////////////////new
+
+	/////////////////////////// new
 	public void saveAcademicYear2(final AcademicYearWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -746,12 +749,12 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-					 LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-						map.put(MyRequestAction.DATA, dto);
-						map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.SAVE_YEAR);
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.SAVE_YEAR);
 
 					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-						
+
 						@Override
 						public void onNetworkResult(MyRequestResult result) {
 							if (result != null) {
@@ -769,7 +772,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 	}
 
-	
 	public void getAllAcademicYears2() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -780,14 +782,13 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			public void onNetworkResult(MyRequestResult result) {
 				if (result != null) {
 					SystemResponseDTO<List<AcademicYearDTO>> responseDTO = result.getAcademicYearResponseList();
-					getView().getAcademicYearPane().getListGrid().addRecordsToGrid(responseDTO.getData());	
+					getView().getAcademicYearPane().getListGrid().addRecordsToGrid(responseDTO.getData());
 				}
-			
+
 			}
 		});
 	}
-	
-	
+
 	private void deleteAcademicYear2(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -806,17 +807,17 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
 								map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.DELETE_YEAR);
-								
+
 								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 									@Override
 									public void onNetworkResult(MyRequestResult result) {
-										if(result != null) {
+										if (result != null) {
 											SystemResponseDTO<String> responseDTO = result.getResponseText();
 											SC.say("SUCCESS", responseDTO.getMessage());
-											getAllAcademicYears2();	
+											getAllAcademicYears2();
 										}
-										
+
 									}
 								});
 							}
@@ -830,7 +831,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	}
 
-	
 	private void updateAcademicYear2(final AcademicYearWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -855,11 +855,11 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					public void onNetworkResult(MyRequestResult result) {
 						if (result != null) {
 							SystemResponseDTO<AcademicYearDTO> responseDTO = result.getAcademicYearResponse();
-							if(responseDTO.isStatus()) {
+							if (responseDTO.isStatus()) {
 								clearAcademicYearWindowFields(window);
 								window.show();
 								getAllAcademicYears2();
-							}else {
+							} else {
 								SC.say("INFO", responseDTO.getMessage());
 							}
 						}
@@ -869,6 +869,278 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 
 	}
+
+	//////////////// new term
+	public void saveAcademicTerm2(final AcademicTermWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoAcademicTermWindowFieldIsEmpty(window)) {
+					AcademicTermDTO dto = new AcademicTermDTO();
+					dto.setCode(window.getTermCodeField().getValueAsString());
+					dto.setStartDate(dateFormat.format(window.getStartDateItem().getValueAsDate()));
+					dto.setEndDate(dateFormat.format(window.getEndDateItem().getValueAsDate()));
+					dto.setTerm(window.getTermNameField().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					AcademicYearDTO yearDto = new AcademicYearDTO();
+					yearDto.setId(window.getYearComboBox().getValueAsString());
+
+					dto.setAcademicYearDTO(yearDto);
+					GWT.log("ID" + yearDto.getId());
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.SAVE_TERM);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
+								if (responseDTO.isStatus()) {
+									clearAcademicTermWindowFields(window);
+									SC.say("INFO", responseDTO.getMessage());
+									getAllAcademicTerms2();
+								} else {
+									SC.say("INFO", responseDTO.getMessage());
+								}
+							}
+
+						}
+					});
+				} else {
+					SC.warn("Please fill all fields");
+				}
+
+			}
+		});
+	}
+
+	public void getAllAcademicTerms2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.GET_ALL_TERMS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<AcademicTermDTO>> responseDTO = result.getAcademicTermResponseList();
+					if (responseDTO.isStatus()) {
+						if (responseDTO.getData() != null) {
+							getView().getAcademicTermPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+						}
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+
+			}
+		});
+	}
+
+	private void deleteAcademicTerm2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicTermPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicTermPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.DELETE_TERM);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												SC.say("INFO", responseDTO.getMessage());
+											} else {
+												SC.say("INFO", responseDTO.getMessage());
+											}
+
+										}
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+
+	public void updateAcademicTerm2(final AcademicTermWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				ListGridRecord record = getView().getAcademicTermPane().getListGrid().getSelectedRecord();
+
+				AcademicTermDTO dto = new AcademicTermDTO();
+
+				dto.setId(record.getAttribute(AcademicTermListGrid.ID));
+				dto.setCode(window.getTermCodeField().getValueAsString());
+				dto.setStartDate(dateFormat.format(window.getStartDateItem().getValueAsDate()));
+				dto.setEndDate(dateFormat.format(window.getEndDateItem().getValueAsDate()));
+				dto.setTerm(window.getTermNameField().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				AcademicYearDTO yearDTO = new AcademicYearDTO();
+				yearDTO.setId(window.getYearComboBox().getValueAsString());
+
+				dto.setAcademicYearDTO(yearDTO);
+				GWT.log("ID" + yearDTO.getId());
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.UPDATE_TERM);
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
+							if(responseDTO.isStatus()) {
+								window.close();
+								clearAcademicTermWindowFields(window);
+								SC.say("SUCCESS", responseDTO.getMessage());
+								getAllAcademicTerms2();
+							}else {
+								SC.say("INFO", responseDTO.getMessage());
+							}
+							
+						}
+					}
+				});
+			}
+		});
+	}
 	
 	
+	private void activateAcademicTerm2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicTermPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to activate the selected term", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicTermPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.ACTIVATE_TERM);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if(result != null) {
+											SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
+											
+											if(responseDTO.isStatus()) {
+												SC.say("INFO", responseDTO.getMessage());
+												getAllAcademicTerms2();
+											}else {
+												SC.say("INFO", responseDTO.getMessage());	
+											}
+										}
+									
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+	
+	
+	
+	private void deactivateAcademicTerm2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicTermPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to deactivate the selected term", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicTermPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.DEACTIVATE_TERM);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if(result != null) {
+											SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
+											
+											if(responseDTO.isStatus()) {
+												SC.say("SUCCESS", responseDTO.getMessage());
+												getAllAcademicTerms2();
+											}else {
+												SC.say("INFO", responseDTO.getMessage());	
+											}
+										}
+										
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+	
+	
+	public void loadFieldsToUpdate(final AcademicTermWindow window) {
+
+		ListGridRecord record = getView().getAcademicTermPane().getListGrid().getSelectedRecord();
+
+		window.getTermCodeField().setValue(record.getAttribute(AcademicTermListGrid.CODE));
+		window.getTermNameField().setValue(record.getAttribute(AcademicTermListGrid.NAME));
+		window.getStartDateItem().setValue(record.getAttribute(AcademicTermListGrid.START_DATE));
+		window.getEndDateItem().setValue(record.getAttribute(AcademicTermListGrid.END_DATE));
+
+		ComboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, record.getAttribute(AcademicTermListGrid.YEAR_ID));
+	}
+
+	
+	
+	
+
 }

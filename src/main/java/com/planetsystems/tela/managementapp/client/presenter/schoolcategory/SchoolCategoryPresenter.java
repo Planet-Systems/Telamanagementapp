@@ -26,6 +26,7 @@ import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -34,7 +35,9 @@ import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.Fil
 import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterYearTermDistrictSchool;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.AddSchoolWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.FilterSchoolWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolListGrid;
@@ -49,9 +52,12 @@ import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.scho
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -114,7 +120,7 @@ public class SchoolCategoryPresenter
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllSchoolCategories();
+		getAllSchoolCategories2();
 		getAllSchoolClasses();
 	}
 
@@ -148,7 +154,7 @@ public class SchoolCategoryPresenter
 					getView().getControlsPane().addMenuButtons(buttons);
 
 					addSchoolCategory(newButton);
-					deleteSchoolCategory(delete);
+					deleteSchoolCategory2(delete);
 					editSchoolCategory(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_TAB_TITLE)) {
@@ -166,9 +172,9 @@ public class SchoolCategoryPresenter
 					getView().getControlsPane().addMenuButtons(buttons);
 
 					addSchool(newButton);
-					deleteSchool(delete);
+					deleteSchool2(delete);
 					editSchool(edit);
-					getAllSchools();
+					getAllSchools2();
 					selectFilterSchoolOption(filter);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CLASSES_TAB_TITLE)) {
@@ -293,7 +299,7 @@ public class SchoolCategoryPresenter
 			public void onClick(ClickEvent event) {
 				SchoolCategoryWindow window = new SchoolCategoryWindow();
 				window.show();
-				saveSchoolCategory(window);
+				saveSchoolCategory2(window);
 			}
 		});
 
@@ -304,6 +310,7 @@ public class SchoolCategoryPresenter
 		window.getCategoryName().clearValue();
 	}
 
+	@Deprecated
 	private void saveSchoolCategory(final SchoolCategoryWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -351,6 +358,8 @@ public class SchoolCategoryPresenter
 		return flag;
 	}
 
+	
+
 	private void editSchoolCategory(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -360,7 +369,7 @@ public class SchoolCategoryPresenter
 					SchoolCategoryWindow window = new SchoolCategoryWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
-					updateSchCategory(window);
+					updateSchCategory2(window);
 					window.show();
 
 				} else {
@@ -378,6 +387,7 @@ public class SchoolCategoryPresenter
 		window.getCategoryName().setValue(record.getAttribute(SchoolCategoryListGrid.NAME));
 	}
 
+	@Deprecated
 	private void updateSchCategory(final SchoolCategoryWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -409,6 +419,7 @@ public class SchoolCategoryPresenter
 
 	}
 
+	@Deprecated
 	private void deleteSchoolCategory(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -447,6 +458,7 @@ public class SchoolCategoryPresenter
 
 	}
 
+	@Deprecated
 	private void getAllSchoolCategories() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
@@ -475,7 +487,7 @@ public class SchoolCategoryPresenter
 				loadRegionCombo(window, null);
 				loadSchoolCategoryCombo(window, null);
 				loadDistrictComboByRegion(window, null);
-				saveSchool(window);
+				saveSchool2(window);
 			}
 
 		});
@@ -501,6 +513,7 @@ public class SchoolCategoryPresenter
 		ComboUtil.loadSchoolCategoryCombo(window.getSchoolCategoryCombo(), dispatcher, placeManager, defaultValue);
 	}
 
+	@Deprecated
 	private void saveSchool(final AddSchoolWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -544,37 +557,37 @@ public class SchoolCategoryPresenter
 				}
 
 			}
-
-			private boolean checkIfNoSchoolWindowFieldIsEmpty(AddSchoolWindow window) {
-				boolean flag = true;
-
-				if (window.getSchoolName().getValueAsString() == null)
-					flag = false;
-
-				if (window.getSchoolCategoryCombo().getValueAsString() == null)
-					flag = false;
-
-				if (window.getDistrictCombo().getValueAsString() == null)
-					flag = false;
-
-				if (window.getRegionCombo().getValueAsString() == null)
-					flag = false;
-
-				if (window.getSchoolCode().getValueAsString() == null)
-					flag = false;
-
-//				if (window.getLatitude().getValueAsString() == null)
-//					flag = false;
-//
-//				if (window.getLongtitude().getValueAsString() == null)
-//					flag = false;
-
-//				if (window.getDeviceNumber().getValueAsString() == null)
-//					flag = false;
-
-				return flag;
-			}
 		});
+	}
+	
+	private boolean checkIfNoSchoolWindowFieldIsEmpty(AddSchoolWindow window) {
+		boolean flag = true;
+
+		if (window.getSchoolName().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolCategoryCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getDistrictCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getRegionCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolCode().getValueAsString() == null)
+			flag = false;
+
+//		if (window.getLatitude().getValueAsString() == null)
+//			flag = false;
+//
+//		if (window.getLongtitude().getValueAsString() == null)
+//			flag = false;
+
+//		if (window.getDeviceNumber().getValueAsString() == null)
+//			flag = false;
+
+		return flag;
 	}
 
 	private void editSchool(MenuButton button) {
@@ -586,7 +599,7 @@ public class SchoolCategoryPresenter
 					AddSchoolWindow window = new AddSchoolWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
-					updateSchool(window);
+					updateSchool2(window);
 					window.show();
 
 				} else {
@@ -613,6 +626,8 @@ public class SchoolCategoryPresenter
 
 	}
 
+	
+	@Deprecated
 	private void updateSchool(final AddSchoolWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -695,6 +710,8 @@ public class SchoolCategoryPresenter
 		window.getDistrictCombo().clearValue();
 	}
 
+	
+	@Deprecated
 	private void deleteSchool(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -731,6 +748,8 @@ public class SchoolCategoryPresenter
 
 	}
 
+	
+	@Deprecated
 	private void getAllSchools() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
@@ -1105,5 +1124,368 @@ public class SchoolCategoryPresenter
 			}
 		});
 	}
+	
+	
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////NEW
+	
+	private void saveSchoolCategory2(final SchoolCategoryWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoSchoolCategoryWindowFieldIsEmpty(window)) {
+					SchoolCategoryDTO dto = new SchoolCategoryDTO();
+					dto.setCode(window.getCategoryCode().getValueAsString());
+					dto.setName(window.getCategoryName().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.SAVE_SCHOOL_CATEGORY);
+					
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							
+							if (result != null) {
+								SystemResponseDTO<SchoolCategoryDTO> responseDTO = result.getSchoolCategoryResponse();
+								if (responseDTO.isStatus()) {
+									clearSchoolCategoryWindowFields(window);
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllSchoolCategories2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+							
+
+						}
+					});
+
+				} else {
+					SC.warn("Please fill all the fields");
+				}
+
+			}
+
+		});
+
+	}
+	
+	
+	
+	
+	private void getAllSchoolCategories2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CATEGORYS);
+		else
+			map.put(MyRequestAction.COMMAND , SchoolCategoryClassCommand.GET_SCHOOL_CATEGORIES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolCategoryDTO>> responseDTO = result.getSchoolCategoryResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
+							getView().getSchoolCategoryPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+				
+			}
+		});
+	}
+	
+	
+	
+	@Deprecated
+	private void deleteSchoolCategory2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSchoolCategoryPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getSchoolCategoryPane().getListGrid()
+										.getSelectedRecord();
+
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.SCHOOL_CATEGORY_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.DELETE_SCHOOL_CATEGORY);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												SC.say("SUCCESS", responseDTO.getMessage());
+												getAllSchoolCategories2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+										}
+										
+										
+									}
+								});
+
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+	
+	
+	private void updateSchCategory2(final SchoolCategoryWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGridRecord record = getView().getSchoolCategoryPane().getListGrid().getSelectedRecord();
+
+				SchoolCategoryDTO dto = new SchoolCategoryDTO();
+				dto.setId(record.getAttribute(SchoolCategoryListGrid.ID));
+				dto.setCode(window.getCategoryCode().getValueAsString());
+				dto.setName(window.getCategoryName().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.UPDATE_SCHOOL_CATEGORY);
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<SchoolCategoryDTO> responseDTO = result.getSchoolCategoryResponse();
+							if (responseDTO.isStatus()) {
+								clearSchoolCategoryWindowFields(window);
+								window.close();
+								SC.say("SUCCESS", responseDTO.getMessage());
+								getAllSchoolCategories2();
+							} else {
+								SC.say(responseDTO.getMessage());
+							}
+						}
+						
+						
+					}
+				});
+			}
+		});
+
+	}
+	
+	
+	
+	////////////////////SCHOOL
+	
+	private void saveSchool2(final AddSchoolWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoSchoolWindowFieldIsEmpty(window)) {
+
+					SchoolDTO dto = new SchoolDTO();
+					dto.setCode(window.getSchoolCode().getValueAsString());
+					dto.setLatitude(window.getLatitude().getValueAsString());
+					dto.setLongitude(window.getLongtitude().getValueAsString());
+					dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
+					dto.setName(window.getSchoolName().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					
+					SC.say(dto.getName());
+
+					SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
+					schoolCategoryDTO.setId(window.getSchoolCategoryCombo().getValueAsString());
+					dto.setSchoolCategoryDTO(schoolCategoryDTO);
+
+					DistrictDTO districtDTO = new DistrictDTO();
+					districtDTO.setId(window.getDistrictCombo().getValueAsString());
+					dto.setDistrictDTO(districtDTO);
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.SAVE_SCHOOL);
+
+//					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+//
+//						@Override
+//						public void onNetworkResult(MyRequestResult result) {
+//							if (result != null) {
+//								SystemResponseDTO<SchoolCategoryDTO> responseDTO = result.getSchoolCategoryResponse();
+//								if (responseDTO.isStatus()) {
+//									clearSchoolWindowFields(window);
+//									SC.say("SUCCESS", responseDTO.getMessage());
+//									getAllSchools2();
+//								} else {
+//									SC.say(responseDTO.getMessage());
+//								}
+//							}
+//						}
+//					});
+
+				} else {
+					SC.warn("Please fill all the fields");
+				}
+
+			}
+		});
+	}
+	
+	
+	private void getAllSchools2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOLS);
+		else
+			map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+		
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolDTO>> responseDTO = result.getSchoolResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
+						getView().getSchoolPane().getListGrid().addRecordsToGrid(responseDTO.getData());;
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+				
+				
+			}
+		});
+	}
+	
+	
+	
+	private void deleteSchool2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSchoolPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getSchoolPane().getListGrid().getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.SCHOOL_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.DELETE_SCHOOL);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if (result != null) {
+											SystemResponseDTO<List<SchoolDTO>> responseDTO = result.getSchoolResponseList();
+											if (responseDTO.isStatus()) {
+												SC.say("SUCCESS", responseDTO.getMessage());
+												getAllSchools2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+										}
+	
+									}
+								});
+
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+
+	
+	
+	private void updateSchool2(final AddSchoolWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				ListGridRecord record = getView().getSchoolPane().getListGrid().getSelectedRecord();
+
+				SchoolDTO dto = new SchoolDTO();
+				dto.setId(record.getAttribute(SchoolListGrid.ID));
+				dto.setCode(window.getSchoolCode().getValueAsString());
+				dto.setLatitude(window.getLatitude().getValueAsString());
+				dto.setLongitude(window.getLongtitude().getValueAsString());
+				dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
+				dto.setName(window.getSchoolName().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
+				schoolCategoryDTO.setId(window.getSchoolCategoryCombo().getValueAsString());
+				dto.setSchoolCategoryDTO(schoolCategoryDTO);
+
+				DistrictDTO districtDTO = new DistrictDTO();
+				districtDTO.setId(window.getDistrictCombo().getValueAsString());
+				dto.setDistrictDTO(districtDTO);
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.UPDATE_SCHOOL);
+
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<List<SchoolDTO>> responseDTO = result.getSchoolResponseList();
+							if (responseDTO.isStatus()) {
+								clearSchoolWindowFields(window);
+								window.close();
+								getAllSchools2();
+							} else {
+								SC.say(responseDTO.getMessage());
+							}
+						}
+
+					}
+				});
+			}
+		});
+	}
+
+	
+	
+	
+	
+	
+	
 
 }
