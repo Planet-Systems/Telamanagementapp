@@ -34,7 +34,7 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 
 			case SystemUserGroupRequestCommand.LOGGEDIN_SYSTEM_USER_GROUP:
 				MyRequestResult result2 = new MyRequestResult();
-				result2.setSystemUserGroupResponseDTO(LoginPresenterHandler.loggedUserGroup(action));
+				result2.setSystemUserGroupResponse(LoginPresenterHandler.loggedUserGroup(action));
 				return result2;
 				
 			case AuthRequestCommand.RESET_PASSWORD:
@@ -49,7 +49,7 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				
 			case SystemUserGroupSystemMenuCommand.LOGGED_USER_SYSTEM_MENU:
 				MyRequestResult result5 = new MyRequestResult();
-				//result4.setResponseText(MainPresenterHandler.loggedUserSystemMenus(action));
+				result5.setSystemMenuResponseList(MainPresenterHandler.loggedUserSystemMenus(action));
 				return result5;
 				
 

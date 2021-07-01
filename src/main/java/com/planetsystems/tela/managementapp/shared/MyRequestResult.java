@@ -1,8 +1,9 @@
 package com.planetsystems.tela.managementapp.shared;
 
-import java.awt.List;
+import java.util.List;
 
 import com.gwtplatform.dispatch.rpc.shared.Result;
+import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.response.SystemErrorDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
@@ -13,8 +14,10 @@ public class MyRequestResult implements Result {
 
 	SystemResponseDTO<String> responseText;
 	SystemResponseDTO<Integer> responseInteger;
-	SystemResponseDTO<SystemUserGroupDTO> systemUserGroupResponseDTO;
-//	SystemResponseDTO<List> responseList;
+	SystemResponseDTO<SystemUserGroupDTO> systemUserGroupResponse;
+	SystemResponseDTO<List<SystemMenuDTO>> SystemMenuResponseList;
+	
+	
 
 
 
@@ -24,9 +27,13 @@ public class MyRequestResult implements Result {
 
 
 
+
+
 	public SystemResponseDTO<String> getResponseText() {
 		return responseText;
 	}
+
+
 
 
 
@@ -36,9 +43,13 @@ public class MyRequestResult implements Result {
 
 
 
+
+
 	public SystemResponseDTO<Integer> getResponseInteger() {
 		return responseInteger;
 	}
+
+
 
 
 
@@ -48,15 +59,37 @@ public class MyRequestResult implements Result {
 
 
 
-	public SystemResponseDTO<SystemUserGroupDTO> getSystemUserGroupResponseDTO() {
-		return systemUserGroupResponseDTO;
+
+
+	public SystemResponseDTO<SystemUserGroupDTO> getSystemUserGroupResponse() {
+		return systemUserGroupResponse;
 	}
 
 
 
-	public void setSystemUserGroupResponseDTO(SystemResponseDTO<SystemUserGroupDTO> systemUserGroupResponseDTO) {
-		this.systemUserGroupResponseDTO = systemUserGroupResponseDTO;
+
+
+	public void setSystemUserGroupResponse(SystemResponseDTO<SystemUserGroupDTO> systemUserGroupResponse) {
+		this.systemUserGroupResponse = systemUserGroupResponse;
 	}
+
+
+
+
+
+	public SystemResponseDTO<List<SystemMenuDTO>> getSystemMenuResponseList() {
+		return SystemMenuResponseList;
+	}
+
+
+
+
+
+	public void setSystemMenuResponseList(SystemResponseDTO<List<SystemMenuDTO>> systemMenuResponseList) {
+		SystemMenuResponseList = systemMenuResponseList;
+	}
+
+
 	
 	
 

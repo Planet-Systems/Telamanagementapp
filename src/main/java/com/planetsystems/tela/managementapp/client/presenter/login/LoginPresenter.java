@@ -318,7 +318,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 			public void onNetworkResult(MyRequestResult result) {
 				GWT.log("response "+result);
 				if(result != null) {
-					SystemResponseDTO<SystemUserGroupDTO> response = result.getSystemUserGroupResponseDTO();
+					SystemResponseDTO<SystemUserGroupDTO> response = result.getSystemUserGroupResponse();
 					SystemUserGroupDTO systemUserGroupDTO = response.getData();
 					//SC.say("GROUP "+systemUserGroupDTO.getName() , "status "+response.isStatus() +" MESSAGE "+response.getMessage());
 					Cookies.setCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE , systemUserGroupDTO.getName());	

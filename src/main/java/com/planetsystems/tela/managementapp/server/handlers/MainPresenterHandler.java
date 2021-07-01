@@ -41,6 +41,7 @@ public class MainPresenterHandler implements IsSerializable {
 				.get(new GenericType<SystemResponseDTO<List<SystemMenuDTO>>>() {
 				});
 		client.close();
+		System.out.println("SystemMenuDTOs RES " + responseDTO);
 
 		return responseDTO;
 	}

@@ -59,6 +59,7 @@ import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
@@ -212,28 +213,28 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 										map.put(MyRequestAction.DATA, dto);
 										map.put(MyRequestAction.COMMAND, AuthRequestCommand.CHANGE_PASSWORD);
-									
 
-										NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-											
-											@Override
-											public void onNetworkResult(MyRequestResult result) {	
-												
-												SystemResponseDTO<String> response = result.getResponseText();
-												GWT.log("CHANGE PWD "+response);
-												if(!response.isStatus()) {
-													window.close();
-													SC.say(response.getMessage());
-													
-												}else {
-													window.close();
-													SC.say(response.getMessage());
-													SessionManager.getInstance().logOut(placeManager);		
-												}
-										
-											}
-										});
-										
+										NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map,
+												new NetworkResult2() {
+
+													@Override
+													public void onNetworkResult(MyRequestResult result) {
+
+														SystemResponseDTO<String> response = result.getResponseText();
+														GWT.log("CHANGE PWD " + response);
+														if (!response.isStatus()) {
+															window.close();
+															SC.say(response.getMessage());
+
+														} else {
+															window.close();
+															SC.say(response.getMessage());
+															SessionManager.getInstance().logOut(placeManager);
+														}
+
+													}
+												});
+
 									} else {
 										SC.say("Passwords donot match");
 									}
@@ -296,151 +297,159 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 
 	private void loadLoggedInSystemUserMenu() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS);
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+		map.put(MyRequestAction.COMMAND, SystemUserGroupSystemMenuCommand.LOGGED_USER_SYSTEM_MENU);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
-			public void onNetworkResult(RequestResult result) {
-				/*
-				 * These are root menus list
-				 */
-				List<String> systemConfig = new ArrayList<String>();
-				List<String> enrollment = new ArrayList<String>();
-				List<String> attendance = new ArrayList<String>();
-				List<String> timetable = new ArrayList<String>();
-				List<String> systemusers = new ArrayList<String>();
-				List<String> supervisions = new ArrayList<String>();
-				List<String> generateReports = new ArrayList<String>();
-				List<String> curriculumCoverage = new ArrayList<String>();
-				List<String> incentives = new ArrayList<String>();
-				List<String> utilityManager = new ArrayList<String>();
-	
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SystemMenuDTO>> responseDTO = result.getSystemMenuResponseList();
+					/*
+					 * These are root menus list
+					 */
+					List<String> systemConfig = new ArrayList<String>();
+					List<String> enrollment = new ArrayList<String>();
+					List<String> attendance = new ArrayList<String>();
+					List<String> timetable = new ArrayList<String>();
+					List<String> systemusers = new ArrayList<String>();
+					List<String> supervisions = new ArrayList<String>();
+					List<String> generateReports = new ArrayList<String>();
+					List<String> curriculumCoverage = new ArrayList<String>();
+					List<String> incentives = new ArrayList<String>();
+					List<String> utilityManager = new ArrayList<String>();
 
-				if (result.getSystemMenuDTOs().isEmpty()) {
-					SC.say("You dont have any menu");
-				} else {
-                     // Create root system menus
-					
-					List<SystemMenuDTO> systemMenuDTOs = result.getSystemMenuDTOs();
+					if (responseDTO.getData().isEmpty()) {
+						SC.say("You dont have any menu");
+					} else {
+						// Create root system menus
 
-					for (SystemMenuDTO systemMenuDTO : systemMenuDTOs) {
- 
-						if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu()))
-							systemConfig.add(systemMenuDTO.getSubMenuItem());
+						for (SystemMenuDTO systemMenuDTO : responseDTO.getData()) {
 
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.ENROLLMENT.getNavigationMenu()))
-							enrollment.add(systemMenuDTO.getSubMenuItem());
+							if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu()))
+								systemConfig.add(systemMenuDTO.getSubMenuItem());
 
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.ATTENDANCE.getNavigationMenu()))
-							attendance.add(systemMenuDTO.getSubMenuItem());
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.ENROLLMENT.getNavigationMenu()))
+								enrollment.add(systemMenuDTO.getSubMenuItem());
 
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.SYSTEM_USERS.getNavigationMenu()))
-							systemusers.add(systemMenuDTO.getSubMenuItem());
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.ATTENDANCE.getNavigationMenu()))
+								attendance.add(systemMenuDTO.getSubMenuItem());
 
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.TIMETABLE.getNavigationMenu()))
-							timetable.add(systemMenuDTO.getSubMenuItem());
-						
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.SUPERVISION.getNavigationMenu()))
-							supervisions.add(systemMenuDTO.getSubMenuItem());
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.SYSTEM_USERS.getNavigationMenu()))
+								systemusers.add(systemMenuDTO.getSubMenuItem());
 
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.GENERATE_REPORTS.getNavigationMenu()))
-							generateReports.add(systemMenuDTO.getSubMenuItem());
-						
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu()))
-							curriculumCoverage.add(systemMenuDTO.getSubMenuItem());
-						
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.INCENTIVES.getNavigationMenu()))
-							incentives.add(systemMenuDTO.getSubMenuItem());
-						
-						else if (systemMenuDTO.getNavigationMenu()
-								.equalsIgnoreCase(NavigationMenu.UTILITY_MANAGER.getNavigationMenu()))
-							utilityManager.add(systemMenuDTO.getSubMenuItem());
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.TIMETABLE.getNavigationMenu()))
+								timetable.add(systemMenuDTO.getSubMenuItem());
 
-					}
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.SUPERVISION.getNavigationMenu()))
+								supervisions.add(systemMenuDTO.getSubMenuItem());
 
-					///Adding sub menus
-					if (!systemConfig.isEmpty()) {
-						getView().getNavigationPane().addSection(NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu(),
-								SystemAdministrationDataSource
-										.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
-						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu(),
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.GENERATE_REPORTS.getNavigationMenu()))
+								generateReports.add(systemMenuDTO.getSubMenuItem());
+
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu()))
+								curriculumCoverage.add(systemMenuDTO.getSubMenuItem());
+
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.INCENTIVES.getNavigationMenu()))
+								incentives.add(systemMenuDTO.getSubMenuItem());
+
+							else if (systemMenuDTO.getNavigationMenu()
+									.equalsIgnoreCase(NavigationMenu.UTILITY_MANAGER.getNavigationMenu()))
+								utilityManager.add(systemMenuDTO.getSubMenuItem());
+
+						}
+
+						/// Adding sub menus
+						if (!systemConfig.isEmpty()) {
+							getView().getNavigationPane().addSection(
+									NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu(),
+									SystemAdministrationDataSource
+											.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
+							getView().getNavigationPane().addRecordClickHandler(
+									NavigationMenu.SYSTEM_CONFIGURATION.getNavigationMenu(),
+									new NavigationPaneClickHandler());
+						}
+
+						if (!enrollment.isEmpty()) {
+
+							getView().getNavigationPane().addSection(NavigationMenu.ENROLLMENT.getNavigationMenu(),
+									SystemEnrollmentDataSource
+											.getInstance(SystemEnrollmentData.getNewRecords(enrollment)));
+
+							getView().getNavigationPane().addRecordClickHandler(
+									NavigationMenu.ENROLLMENT.getNavigationMenu(), new NavigationPaneClickHandler());
+						}
+
+						if (!attendance.isEmpty()) {
+
+							getView().getNavigationPane().addSection(NavigationMenu.ATTENDANCE.getNavigationMenu(),
+									SystemAttendanceDataSource
+											.getInstance(SystemAttendanceData.getNewRecords(attendance)));
+
+							getView().getNavigationPane().addRecordClickHandler(
+									NavigationMenu.ATTENDANCE.getNavigationMenu(), new NavigationPaneClickHandler());
+
+						}
+
+						if (!timetable.isEmpty()) {
+
+							getView().getNavigationPane().addSection(NavigationMenu.TIMETABLE.getNavigationMenu(),
+									SystemTimeTableDataSource
+											.getInstance(SystemTimeTableData.getNewRecords(timetable)));
+
+							getView().getNavigationPane().addRecordClickHandler(
+									NavigationMenu.TIMETABLE.getNavigationMenu(), new NavigationPaneClickHandler());
+
+						}
+
+						if (!systemusers.isEmpty()) {
+							getView().getNavigationPane().addSection(NavigationMenu.SYSTEM_USERS.getNavigationMenu(),
+									SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
+
+							getView().getNavigationPane().addRecordClickHandler(
+									NavigationMenu.SYSTEM_USERS.getNavigationMenu(), new NavigationPaneClickHandler());
+						}
+
+						if (!generateReports.isEmpty()) {
+							getView().getNavigationPane().addSection(
+									NavigationMenu.GENERATE_REPORTS.getNavigationMenu(),
+									ReportsDataSource.getInstance(ReportsData.getNewRecords(generateReports)));
+
+							getView().getNavigationPane().addRecordClickHandler(
+									NavigationMenu.GENERATE_REPORTS.getNavigationMenu(),
+									new NavigationPaneClickHandler());
+						}
+
+						// Need to customize it
+						getView().getNavigationPane().addSection(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu(),
+								CurriculumCoverageDataSource.getInstance(CurriculumCoverageData.getNewRecords()));
+						getView().getNavigationPane().addRecordClickHandler(
+								NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu(),
 								new NavigationPaneClickHandler());
-					}
 
-					if (!enrollment.isEmpty()) {
+						getView().getNavigationPane().addSection(NavigationMenu.INCENTIVES.getNavigationMenu(),
+								IncentivesDataSource.getInstance(IncentivesData.getNewRecords()));
+						getView().getNavigationPane().addRecordClickHandler(
+								NavigationMenu.INCENTIVES.getNavigationMenu(), new NavigationPaneClickHandler());
 
-						getView().getNavigationPane().addSection(NavigationMenu.ENROLLMENT.getNavigationMenu(),
-								SystemEnrollmentDataSource.getInstance(SystemEnrollmentData.getNewRecords(enrollment)));
-
-						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.ENROLLMENT.getNavigationMenu(),
-								new NavigationPaneClickHandler());
-					}
-
-					if (!attendance.isEmpty()) {
-
-						getView().getNavigationPane().addSection(NavigationMenu.ATTENDANCE.getNavigationMenu(),
-								SystemAttendanceDataSource.getInstance(SystemAttendanceData.getNewRecords(attendance)));
-
-						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.ATTENDANCE.getNavigationMenu(),
-								new NavigationPaneClickHandler());
+						getView().getNavigationPane().addSection(NavigationMenu.UTILITY_MANAGER.getNavigationMenu(),
+								UtilityManagerDataSource.getInstance(UtilityManagerData.getNewRecords()));
+						getView().getNavigationPane().addRecordClickHandler(
+								NavigationMenu.UTILITY_MANAGER.getNavigationMenu(), new NavigationPaneClickHandler());
 
 					}
-
-					if (!timetable.isEmpty()) {
-
-						getView().getNavigationPane().addSection(NavigationMenu.TIMETABLE.getNavigationMenu(),
-								SystemTimeTableDataSource.getInstance(SystemTimeTableData.getNewRecords(timetable)));
-
-						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.TIMETABLE.getNavigationMenu(),
-								new NavigationPaneClickHandler());
-
-					}
-
-					if (!systemusers.isEmpty()) {
-						getView().getNavigationPane().addSection(NavigationMenu.SYSTEM_USERS.getNavigationMenu(),
-								SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
-
-						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.SYSTEM_USERS.getNavigationMenu(),
-								new NavigationPaneClickHandler());
-					}
-
-					if (!generateReports.isEmpty()) {
-						getView().getNavigationPane().addSection(NavigationMenu.GENERATE_REPORTS.getNavigationMenu(),
-								ReportsDataSource.getInstance(ReportsData.getNewRecords(generateReports)));
-
-						getView().getNavigationPane().addRecordClickHandler(NavigationMenu.GENERATE_REPORTS.getNavigationMenu(),
-								new NavigationPaneClickHandler());
-					}
-
-					//Need to customize it
-					getView().getNavigationPane().addSection(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu(),
-							CurriculumCoverageDataSource.getInstance(CurriculumCoverageData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(NavigationMenu.CURRICULUM_COVERAGE.getNavigationMenu(),
-							new NavigationPaneClickHandler());
-
-					getView().getNavigationPane().addSection(NavigationMenu.INCENTIVES.getNavigationMenu(),
-							IncentivesDataSource.getInstance(IncentivesData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(NavigationMenu.INCENTIVES.getNavigationMenu(),
-							new NavigationPaneClickHandler());
-
-					getView().getNavigationPane().addSection(NavigationMenu.UTILITY_MANAGER.getNavigationMenu(),
-							UtilityManagerDataSource.getInstance(UtilityManagerData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(NavigationMenu.UTILITY_MANAGER.getNavigationMenu(),
-							new NavigationPaneClickHandler());
-
 				}
 			}
 		});
 	}
-
 
 }
