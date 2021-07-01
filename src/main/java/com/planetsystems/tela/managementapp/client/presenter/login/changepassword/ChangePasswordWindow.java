@@ -12,8 +12,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class ChangePasswordWindow extends Window {
 	private PasswordItem oldPasswordField;
-	private PasswordItem newPasswordField;
 	private PasswordItem comfirmPasswoField;
+	private PasswordItem newPasswordField;
 
 	private IButton changeButton;
 	private IButton cancelButton;
@@ -23,16 +23,16 @@ public class ChangePasswordWindow extends Window {
 		oldPasswordField.setTitle("Old Password");
 		oldPasswordField.setHint("old password");
 		oldPasswordField.setShowHintInField(true);
-
-		newPasswordField = new PasswordItem();
-		newPasswordField.setTitle("New password");
-		newPasswordField.setHint("new password");
-		newPasswordField.setShowHintInField(true);
 		
 		comfirmPasswoField = new PasswordItem();
 		comfirmPasswoField.setTitle("Comfirm password");
 		comfirmPasswoField.setHint("confirm password");
 		comfirmPasswoField.setShowHintInField(true);
+		
+		newPasswordField = new PasswordItem();
+		newPasswordField.setTitle("New password");
+		newPasswordField.setHint("new password");
+		newPasswordField.setShowHintInField(true);
 		
 
 		changeButton = new IButton("Change Password");
@@ -41,7 +41,7 @@ public class ChangePasswordWindow extends Window {
 		cancelButton.setBaseStyle("cancel-button");
 		
 		DynamicForm form = new DynamicForm();
-		form.setFields(oldPasswordField, newPasswordField  , comfirmPasswoField);
+		form.setFields(oldPasswordField , newPasswordField , comfirmPasswoField );
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setColWidths("150","250");
@@ -64,7 +64,7 @@ public class ChangePasswordWindow extends Window {
 		this.setWidth("40%");
 		this.setHeight("50%");
 		this.setAutoCenter(true);
-		this.setTitle("Region");
+		this.setTitle("Change Password");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

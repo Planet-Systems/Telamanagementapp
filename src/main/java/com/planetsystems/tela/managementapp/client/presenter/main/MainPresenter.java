@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,6 +24,7 @@ import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.enums.NavigationMenu;
 import com.planetsystems.tela.dto.enums.SubMenuItem;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageData;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageDataSource;
@@ -45,13 +47,18 @@ import com.planetsystems.tela.managementapp.client.menu.UtilityManagerDataSource
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.login.changepassword.ChangePasswordWindow;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.widget.MainStatusBar;
 import com.planetsystems.tela.managementapp.client.widget.Masthead;
 import com.planetsystems.tela.managementapp.client.widget.NavigationPane;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;
@@ -201,21 +208,32 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 										AuthenticationDTO dto = new AuthenticationDTO();
 										dto.setOldPassword(old);
 										dto.setPassword(newP);
-										dto.setUserName(userName);
 
 										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-										map.put(RequestConstant.DATA, dto);
-										map.put(NetworkDataUtil.ACTION, RequestConstant.CHANGE_PASSWORD);
+										map.put(MyRequestAction.DATA, dto);
+										map.put(MyRequestAction.COMMAND, AuthRequestCommand.CHANGE_PASSWORD);
+									
 
-										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
+										NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+											
 											@Override
-											public void onNetworkResult(RequestResult result) {
-												SC.say(result.getSystemFeedbackDTO().getMessage());
-												SessionManager.getInstance().logOut(placeManager);
-												window.close();
+											public void onNetworkResult(MyRequestResult result) {	
+												
+												SystemResponseDTO<String> response = result.getResponseText();
+												GWT.log("CHANGE PWD "+response);
+												if(!response.isStatus()) {
+													window.close();
+													SC.say(response.getMessage());
+													
+												}else {
+													window.close();
+													SC.say(response.getMessage());
+													SessionManager.getInstance().logOut(placeManager);		
+												}
+										
 											}
 										});
+										
 									} else {
 										SC.say("Passwords donot match");
 									}
@@ -423,154 +441,6 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 			}
 		});
 	}
-//
-//	@Deprecated
-//	private void loadSystemUserMenu() {
-//
-//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS, map),
-//				new AsyncCallback<RequestResult>() {
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.say("ERROR", caught.getMessage());
-//						SC.clearPrompt();
-//					}
-//
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							List<String> systemConfig = new ArrayList<String>();
-//							List<String> enrollemnt = new ArrayList<String>();
-//							List<String> attendance = new ArrayList<String>();
-//							List<String> timetable = new ArrayList<String>();
-//							List<String> systemusers = new ArrayList<String>();
-//							List<String> generatereports = new ArrayList<String>();
-//
-//							List<SystemUserGroupSystemMenuDTO> list = result.getSystemUserGroupSystemMenuDTOs();
-//
-//							for (SystemUserGroupSystemMenuDTO dto : list) {
-//								if (dto.getSystemMenuDTO() != null) {
-//									if (dto.getSystemMenuDTO().getNavigationMenu() != null) {
-//										if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
-//												NavigationMenuDTO.SYSTEM_CONFIGURATION.getNavigationMenu())) {
-//
-//											systemConfig.add(dto.getSystemMenuDTO().getSubMenuItem());
-//
-//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-//												.equalsIgnoreCase(NavigationMenuDTO.ENROLLMENT.getNavigationMenu())) {
-//
-//											enrollemnt.add(dto.getSystemMenuDTO().getSubMenuItem());
-//
-//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-//												.equalsIgnoreCase(NavigationMenuDTO.ATTENDANCE.getNavigationMenu())) {
-//
-//											attendance.add(dto.getSystemMenuDTO().getSubMenuItem());
-//
-//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-//												.equalsIgnoreCase(NavigationMenuDTO.TIMETABLE.getNavigationMenu())) {
-//
-//											timetable.add(dto.getSystemMenuDTO().getSubMenuItem());
-//
-//										} else if (dto.getSystemMenuDTO().getNavigationMenu()
-//												.equalsIgnoreCase(NavigationMenuDTO.SYSTEM_USERS.getNavigationMenu())) {
-//
-//											systemusers.add(dto.getSystemMenuDTO().getSubMenuItem());
-//
-//										} else if (dto.getSystemMenuDTO().getNavigationMenu().equalsIgnoreCase(
-//												NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu())) {
-//
-//											generatereports.add(dto.getSystemMenuDTO().getSubMenuItem());
-//										}
-//									}
-//								}
-//							}
-//
-//							if (!systemConfig.isEmpty()) {
-//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_CONFIGURATION,
-//										SystemAdministrationDataSource
-//												.getInstance(SystemAdministrationData.getNewRecords(systemConfig)));
-//								getView().getNavigationPane().addRecordClickHandler(
-//										RequestConstant.SYSTEM_CONFIGURATION, new NavigationPaneClickHandler());
-//							}
-//
-//							if (!enrollemnt.isEmpty()) {
-//
-//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ENROLLMENT,
-//										SystemEnrollmentDataSource
-//												.getInstance(SystemEnrollmentData.getNewRecords(enrollemnt)));
-//
-//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ENROLLMENT,
-//										new NavigationPaneClickHandler());
-//							}
-//
-//							if (!attendance.isEmpty()) {
-//
-//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_ATTENDANCE,
-//										SystemAttendanceDataSource
-//												.getInstance(SystemAttendanceData.getNewRecords(attendance)));
-//
-//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_ATTENDANCE,
-//										new NavigationPaneClickHandler());
-//
-//							}
-//
-//							if (!timetable.isEmpty()) {
-//
-//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_TIME_TABLES,
-//										SystemTimeTableDataSource
-//												.getInstance(SystemTimeTableData.getNewRecords(timetable)));
-//
-//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
-//										new NavigationPaneClickHandler());
-//
-//							}
-//
-//							if (!systemusers.isEmpty()) {
-//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_USERS,
-//										SystemUserDataSource.getInstance(SystemUserData.getNewRecords(systemusers)));
-//
-//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
-//										new NavigationPaneClickHandler());
-//							}
-//
-//							if (!generatereports.isEmpty()) {
-//
-//								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
-//										ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
-//
-//								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
-//										new NavigationPaneClickHandler());
-//							}
-//
-//							/*
-//							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&
-//							 * timetable.isEmpty() && generatereports.isEmpty()) {
-//							 * 
-//							 * PlaceRequest placeRequest = new
-//							 * PlaceRequest.Builder().nameToken(NameTokens.dashboard) .build();
-//							 * 
-//							 * placeManager.revealPlace(placeRequest);
-//							 * 
-//							 * } else {
-//							 * 
-//							 * placeManager.revealDefaultPlace();
-//							 * 
-//							 * }
-//							 */
-//
-//						} else {
-//							SC.say("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
-//
-//	}
+
 
 }

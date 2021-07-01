@@ -10,6 +10,7 @@ import com.planetsystems.tela.dto.response.SystemErrorDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.dto.response.TokenFeedbackDTO;
 import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandler;
+import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
@@ -17,6 +18,7 @@ import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
 
 public class MyRequestActionHandler implements ActionHandler<MyRequestAction, MyRequestResult> {
 
@@ -39,6 +41,17 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result3 = new MyRequestResult();
 				result3.setResponseText(LoginPresenterHandler.resetPassword(action));
 				return result3;
+				
+			case AuthRequestCommand.CHANGE_PASSWORD:
+				MyRequestResult result4 = new MyRequestResult();
+				result4.setResponseText(MainPresenterHandler.changePassword(action));
+				return result4;
+				
+			case SystemUserGroupSystemMenuCommand.LOGGED_USER_SYSTEM_MENU:
+				MyRequestResult result5 = new MyRequestResult();
+				//result4.setResponseText(MainPresenterHandler.loggedUserSystemMenus(action));
+				return result5;
+				
 
 			default:
 				System.out.println("UNKNOWN COMMAND");

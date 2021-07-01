@@ -1,5 +1,7 @@
 package com.planetsystems.tela.managementapp.shared;
 
+import java.awt.List;
+
 import com.gwtplatform.dispatch.rpc.shared.Result;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.response.SystemErrorDTO;
@@ -12,6 +14,7 @@ public class MyRequestResult implements Result {
 	SystemResponseDTO<String> responseText;
 	SystemResponseDTO<Integer> responseInteger;
 	SystemResponseDTO<SystemUserGroupDTO> systemUserGroupResponseDTO;
+//	SystemResponseDTO<List> responseList;
 
 
 

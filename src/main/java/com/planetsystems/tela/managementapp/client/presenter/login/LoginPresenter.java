@@ -200,7 +200,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 									Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
 									Cookies.removeCookie(RequestConstant.LOGED_IN);
 									Cookies.removeCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
-									SC.warn("INFO", responseDTO.getData());
+									SC.warn("INFO", responseDTO.getMessage());
 								}
 
 							} else {

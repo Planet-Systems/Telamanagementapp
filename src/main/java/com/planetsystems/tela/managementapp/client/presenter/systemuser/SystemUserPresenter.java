@@ -60,7 +60,7 @@ import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
-import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserProfileRequestConstant;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -1329,7 +1329,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			map.put(RequestDelimeters.SYSTEM_USER_GROUP_ID, userGroup.getId());
 			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 			map.put(NetworkDataUtil.ACTION,
-					SystemUserGroupSystemMenuRequestConstant.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU);
+					SystemUserGroupSystemMenuCommand.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU);
 			NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 				@Override
@@ -1464,10 +1464,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				if (!dtos.isEmpty()) {
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(SystemUserGroupSystemMenuRequestConstant.DATA, dtos);
+					map.put(SystemUserGroupSystemMenuCommand.DATA, dtos);
 //					map.put(RequestDelimeters.SYSTEM_USER_GROUP_ID, userGroup);
 					map.put(NetworkDataUtil.ACTION,
-							SystemUserGroupSystemMenuRequestConstant.SAVE_USER_GROUP_SYSTEM_MENU);
+							SystemUserGroupSystemMenuCommand.SAVE_USER_GROUP_SYSTEM_MENU);
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 						@Override

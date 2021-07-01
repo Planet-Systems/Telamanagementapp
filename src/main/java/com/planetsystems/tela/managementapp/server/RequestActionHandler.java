@@ -84,7 +84,7 @@ import com.planetsystems.tela.managementapp.shared.requestcommands.SmsRequest;
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffEnrollmentRequest;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
-import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserProfileRequestConstant;
 
 public class RequestActionHandler implements ActionHandler<RequestAction, RequestResult> {
@@ -4170,7 +4170,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, systemMenuDTOs, null);
 
 			} else if (action.getRequest()
-					.equalsIgnoreCase(SystemUserGroupSystemMenuRequestConstant.SAVE_USER_GROUP_SYSTEM_MENU)) {
+					.equalsIgnoreCase(SystemUserGroupSystemMenuCommand.SAVE_USER_GROUP_SYSTEM_MENU)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				System.out.println("Entry SAVE_USER_GROUP_SystemMENU: ");
@@ -4180,7 +4180,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				@SuppressWarnings("unchecked")
 				List<SystemUserGroupSystemMenuDTO> dtos = (List<SystemUserGroupSystemMenuDTO>) action.getRequestBody()
-						.get(SystemUserGroupSystemMenuRequestConstant.DATA);
+						.get(SystemUserGroupSystemMenuCommand.DATA);
 
 				if (dtos != null) {
 
@@ -4219,7 +4219,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			} else if (action.getRequest().equalsIgnoreCase(
-					SystemUserGroupSystemMenuRequestConstant.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU)) {
+					SystemUserGroupSystemMenuCommand.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU)) {
 
 				System.out.println("GET_USER_GROUP_SystemMENU");
 
