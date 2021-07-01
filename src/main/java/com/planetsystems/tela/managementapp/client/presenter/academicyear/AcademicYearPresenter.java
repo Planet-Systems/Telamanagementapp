@@ -21,6 +21,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermListGrid;
@@ -33,13 +34,18 @@ import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.A
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -102,7 +108,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllAcademicYears();
+		getAllAcademicYears2();
 		getAllAcademicTerms();
 	}
 
@@ -137,7 +143,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					getView().getControlsPane().addMenuButtons("Academic Years",buttons);
 
 					addAcademicYear(newAcademicYear);
-					deleteAcademicYear(deleteAcademicYearButton);
+					deleteAcademicYear2(deleteAcademicYearButton);
 					editAcademicYear(editAcademicYearButton);
 
 				} else if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_TERM_TAB_TITLE)) {
@@ -230,12 +236,16 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onClick(ClickEvent event) {
 				AcademicYearWindow window = new AcademicYearWindow();
-				saveAcademicYear(window);
+				saveAcademicYear2(window);
 				window.show();
 			}
 		});
 	}
 
+
+	
+	
+	@Deprecated
 	public void saveAcademicYear(final AcademicYearWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -289,6 +299,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		return flag;
 	}
 
+	
+	
 	private void editAcademicYear(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -299,7 +311,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					AcademicYearWindow window = new AcademicYearWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
-					updateAcademicYear(window);
+					updateAcademicYear2(window);
 					window.show();
 				} else {
 					SC.warn("Please check record to update");
@@ -319,6 +331,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	}
 
+	@Deprecated
 	private void updateAcademicYear(final AcademicYearWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -352,6 +365,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	}
 
+	@Deprecated
 	private void deleteAcademicYear(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -389,6 +403,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 	}
 
+	
+	@Deprecated
 	public void getAllAcademicYears() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -714,5 +730,145 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 
 	}
+	
+	///////////////////////////new
+	public void saveAcademicYear2(final AcademicYearWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
 
+			@Override
+			public void onClick(ClickEvent event) {
+				AcademicYearDTO dto = new AcademicYearDTO();
+
+				if (checkIfNoAcademicYearWindowFieldIsEmpty(window)) {
+					dto.setName(window.getYearName().getValueAsString());
+					dto.setCode(window.getYearCode().getValueAsString());
+					dto.setStartDate(dateFormat.format(window.getStartDate().getValueAsDate()));
+					dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					 LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+						map.put(MyRequestAction.DATA, dto);
+						map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.SAVE_YEAR);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+						
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								clearAcademicYearWindowFields(window);
+								getAllAcademicYears2();
+							}
+						}
+					});
+				} else {
+					SC.say("Fill all fields");
+				}
+
+			}
+
+		});
+	}
+
+	
+	public void getAllAcademicYears2() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.GET_ALL_YEARS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<AcademicYearDTO>> responseDTO = result.getAcademicYearResponseList();
+					getView().getAcademicYearPane().getListGrid().addRecordsToGrid(responseDTO.getData());	
+				}
+			
+			}
+		});
+	}
+	
+	
+	private void deleteAcademicYear2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicYearPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicYearPane().getListGrid()
+										.getSelectedRecord();
+
+								String id = record.getAttributeAsString(AcademicYearListGrid.ID);
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
+								map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.DELETE_YEAR);
+								
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if(result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											SC.say("SUCCESS", responseDTO.getMessage());
+											getAllAcademicYears2();	
+										}
+										
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+
+	
+	private void updateAcademicYear2(final AcademicYearWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				AcademicYearDTO dto = new AcademicYearDTO();
+				ListGridRecord record = getView().getAcademicYearPane().getListGrid().getSelectedRecord();
+				dto.setId(record.getAttribute(AcademicYearListGrid.ID));
+				dto.setName(window.getYearName().getValueAsString());
+				dto.setCode(window.getYearCode().getValueAsString());
+				dto.setStartDate(dateFormat.format(window.getStartDate().getValueAsDate()));
+				dto.setEndDate(dateFormat.format(window.getEndDate().getValueAsDate()));
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.UPDATE_YEAR);
+
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<AcademicYearDTO> responseDTO = result.getAcademicYearResponse();
+							if(responseDTO.isStatus()) {
+								clearAcademicYearWindowFields(window);
+								window.show();
+								getAllAcademicYears2();
+							}else {
+								SC.say("INFO", responseDTO.getMessage());
+							}
+						}
+					}
+				});
+			}
+		});
+
+	}
+	
+	
 }

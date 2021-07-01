@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.shared;
 import java.util.List;
 
 import com.gwtplatform.dispatch.rpc.shared.Result;
+import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.response.SystemErrorDTO;
@@ -16,6 +17,8 @@ public class MyRequestResult implements Result {
 	SystemResponseDTO<Integer> responseInteger;
 	SystemResponseDTO<SystemUserGroupDTO> systemUserGroupResponse;
 	SystemResponseDTO<List<SystemMenuDTO>> SystemMenuResponseList;
+	SystemResponseDTO<AcademicYearDTO> academicYearResponse;
+	SystemResponseDTO<List<AcademicYearDTO>> academicYearResponseList;
 	
 	
 
@@ -89,6 +92,40 @@ public class MyRequestResult implements Result {
 		SystemMenuResponseList = systemMenuResponseList;
 	}
 
+
+
+
+
+	public SystemResponseDTO<AcademicYearDTO> getAcademicYearResponse() {
+		return academicYearResponse;
+	}
+
+
+
+
+
+	public void setAcademicYearResponse(SystemResponseDTO<AcademicYearDTO> academicYearResponse) {
+		this.academicYearResponse = academicYearResponse;
+	}
+
+
+
+
+
+	public SystemResponseDTO<List<AcademicYearDTO>> getAcademicYearResponseList() {
+		return academicYearResponseList;
+	}
+
+
+
+
+
+	public void setAcademicYearResponseList(SystemResponseDTO<List<AcademicYearDTO>> academicYearResponseList) {
+		this.academicYearResponseList = academicYearResponseList;
+	}
+
+	
+	
 
 	
 	

@@ -9,6 +9,7 @@ import com.gwtplatform.dispatch.shared.ActionException;
 import com.planetsystems.tela.dto.response.SystemErrorDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.dto.response.TokenFeedbackDTO;
+import com.planetsystems.tela.managementapp.server.handlers.AcademicYearTermPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
@@ -16,6 +17,7 @@ import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
@@ -51,6 +53,26 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result5 = new MyRequestResult();
 				result5.setSystemMenuResponseList(MainPresenterHandler.loggedUserSystemMenus(action));
 				return result5;
+			
+			case AcademicYearTermCommand.SAVE_YEAR:
+				MyRequestResult result6 = new MyRequestResult();
+				result6.setAcademicYearResponse(AcademicYearTermPresenterHandler.saveAcademicYear(action));
+				return result6;
+				
+			case AcademicYearTermCommand.GET_ALL_YEARS:
+				MyRequestResult result7 = new MyRequestResult();
+				result7.setAcademicYearResponseList(AcademicYearTermPresenterHandler.getAcademicYears(action));
+				return result7;
+				
+			case AcademicYearTermCommand.DELETE_YEAR:
+				MyRequestResult result8 = new MyRequestResult();
+				result8.setResponseText(AcademicYearTermPresenterHandler.deleteAcademicYear(action));
+				return result8;
+				
+			case AcademicYearTermCommand.UPDATE_YEAR:
+				MyRequestResult result9 = new MyRequestResult();
+				result9.setAcademicYearResponse(AcademicYearTermPresenterHandler.updateAcademicYear(action));
+				return result9;
 				
 
 			default:
