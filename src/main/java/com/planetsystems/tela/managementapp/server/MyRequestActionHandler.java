@@ -12,12 +12,14 @@ import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandle
 import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.RegionDistrictHandler;
 import com.planetsystems.tela.managementapp.server.handlers.SchoolCatergoryClassHandler;
+import com.planetsystems.tela.managementapp.server.handlers.SubjectCategoryHandler;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
 
@@ -248,6 +250,98 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result44 = new MyRequestResult();
 				result44.setSchoolResponseList(SchoolCatergoryClassHandler.getAllSchoolsByLoggedSystemUserProfileSchools(action));;
 				return result44;
+				
+			case SchoolCategoryClassCommand.SAVE_SCHOOL_CLASS:
+				MyRequestResult result45 = new MyRequestResult();
+				result45.setSchoolClassResponse(SchoolCatergoryClassHandler.saveSchoolClass(action));
+				return result45;
+				
+			case SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES:
+				MyRequestResult result46 = new MyRequestResult();
+				result46.setSchoolClassResponseList(SchoolCatergoryClassHandler.getSchoolClassses(action));
+				return result46;
+				
+			case SchoolCategoryClassCommand.GET_SCHOOL_CLASS_BY_ID:
+				MyRequestResult result47 = new MyRequestResult();
+				result47.setSchoolClassResponse(SchoolCatergoryClassHandler.getSchoolClassById(action));
+				return result47;
+				
+			case SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES_BY_SCHOOL:
+				MyRequestResult result48 = new MyRequestResult();
+				result48.setSchoolClassResponseList(SchoolCatergoryClassHandler.getSchoolClassesBySchool(action));
+				return result48;
+		
+				
+			case SchoolCategoryClassCommand.DELETE_SCHOOL_CLASS:
+				MyRequestResult result49 = new MyRequestResult();
+				result49.setResponseText(SchoolCatergoryClassHandler.deleteSchoolClass(action));
+				return result49;
+				
+			case SchoolCategoryClassCommand.UPDATE_SCHOOL_CLASS:
+				MyRequestResult result50 = new MyRequestResult();
+				result50.setSchoolClassResponse(SchoolCatergoryClassHandler.updateSchoolClass(action));
+				return result50;
+				
+			case SchoolCategoryClassCommand.GET_SCHOOL_CLASSES_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result51 = new MyRequestResult();
+				result51.setSchoolClassResponseList(SchoolCatergoryClassHandler.getAllClassesByLoggedSystemUserProfileSchools(action));;
+				return result51;
+				
+			case SubjectCategoryCommand.SAVE_SUBJECT_CATEGORY:
+				MyRequestResult result52 = new MyRequestResult();
+				result52.setSubjectCategoryResponse(SubjectCategoryHandler.saveSubjectCategory(action));
+				return result52;
+				
+			case SubjectCategoryCommand.GET_ALL_SUBJECT_CATEGORYS:
+				MyRequestResult result53 = new MyRequestResult();
+				result53.setSubjectCategoryResponseList(SubjectCategoryHandler.getSubjectCategorys(action));
+				return result53;
+				
+			case SubjectCategoryCommand.GET_SUBJECT_CATEGORY_BY_ID:
+				MyRequestResult result54 = new MyRequestResult();
+				result54.setSubjectCategoryResponse(SubjectCategoryHandler.getSubjectCategoryById(action));
+				return result54;
+				
+			case SubjectCategoryCommand.DELETE_SUBJECT_CATEGORY:
+				MyRequestResult result55 = new MyRequestResult();
+				result55.setResponseText(SubjectCategoryHandler.deleteSubjectCategory(action));
+				return result55;
+				
+			case SubjectCategoryCommand.UPDATE_SUBJECT_CATEGORY:
+				MyRequestResult result56 = new MyRequestResult();
+				result56.setSubjectCategoryResponse(SubjectCategoryHandler.updateSubjectCategory(action));
+				return result56;
+				
+			case SubjectCategoryCommand.SAVE_SUBJECT:
+				MyRequestResult result57 = new MyRequestResult();
+				result57.setSubjectResponse(SubjectCategoryHandler.saveSubject(action));
+				return result57;
+				
+			case SubjectCategoryCommand.GET_ALL_SUBJECTS:
+				MyRequestResult result58 = new MyRequestResult();
+				result58.setSubjectResponseList(SubjectCategoryHandler.getSubjects(action));
+				return result58;
+				
+			case SubjectCategoryCommand.GET_SUBJECT_BY_ID:
+				MyRequestResult result59 = new MyRequestResult();
+				result59.setSubjectResponse(SubjectCategoryHandler.getSubjectById(action));
+				return result59;
+				
+				
+			case SubjectCategoryCommand.DELETE_SUBJECT:
+				MyRequestResult result60 = new MyRequestResult();
+				result60.setResponseText(SubjectCategoryHandler.deleteSubject(action));
+				return result60;
+				
+			case SubjectCategoryCommand.UPDATE_SUBJECT:
+				MyRequestResult result61 = new MyRequestResult();
+				result61.setSubjectResponse(SubjectCategoryHandler.updateSubject(action));
+				return result61;
+				
+			case SubjectCategoryCommand.GET_ALL_SUBJECTS_BY_SUBJECT_CATEGORY:
+				MyRequestResult result62 = new MyRequestResult();
+				result62.setSubjectResponseList(SubjectCategoryHandler.getSubjectBySubjectCategory(action));
+				return result62;
 				
 				
 

@@ -12,6 +12,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
@@ -297,6 +298,142 @@ public static SystemResponseDTO<SchoolDTO> saveSchool(MyRequestAction action){
 		System.out.println("GET  CATEGORIES BY PROFILE SCCHOOLS: " + responseDTO);
 		
 		return responseDTO;
+	}
+	
+	
+	////SCHOOL CLASS
+	
+	
+public static SystemResponseDTO<SchoolClassDTO> saveSchoolClass(MyRequestAction action){
+		
+		SchoolClassDTO dto = (SchoolClassDTO) action.getRequestBody().get(MyRequestAction.DATA);
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<SchoolClassDTO> responseDTO = client.target(ApiResourceUtil.API_LINK).path("schoolClasses")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+						new GenericType<SystemResponseDTO<SchoolClassDTO>>() {
+						});
+
+		client.close();
+		System.out.println("SAVE SCHOOL CLASS " + responseDTO);
+		return responseDTO;
+	}
+	
+	
+	public static SystemResponseDTO<List<SchoolClassDTO>> getSchoolClassses(MyRequestAction action){
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("schoolClasses")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
+				});
+
+		client.close();
+		System.out.println("GET ALL SCHOOL CLASS " + responseDto);
+		return responseDto;
+	}
+	
+	public static SystemResponseDTO<SchoolClassDTO> getSchoolClassById(MyRequestAction action){
+		String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CLASS_ID);
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<SchoolClassDTO> responseDto = client.target(ApiResourceUtil.API_LINK).path("schoolClasses")
+				.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
+				.get(new GenericType<SystemResponseDTO<SchoolClassDTO>>() {
+				});
+
+		client.close();
+		System.out.println("GET  SCHOOL CLASS BY ID " + responseDto);
+		return responseDto;
+	}
+	
+	public static SystemResponseDTO<List<SchoolClassDTO>> getSchoolClassesBySchool(MyRequestAction action){
+		String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("schools")
+				.path(id).path("schoolClasses").request(MediaType.APPLICATION_JSON).headers(headers)
+				.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
+				});
+
+		client.close();
+		System.out.println("GET  SCHOOL CLASS BY SCHOOL " + responseDto);
+		return responseDto;
+	}
+	
+	
+	public static SystemResponseDTO<String> deleteSchoolClass(MyRequestAction action){
+		String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CLASS_ID);
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<String> responseDto = client.target(ApiResourceUtil.API_LINK).path("schoolClasses")
+				.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
+				.delete(new GenericType<SystemResponseDTO<String>>() {
+				});
+
+		client.close();
+		System.out.println("DELETE  SCHOOL CLASS " + responseDto);
+		return responseDto;
+	}
+	
+	
+	public static SystemResponseDTO<SchoolClassDTO> updateSchoolClass(MyRequestAction action){
+
+		SchoolClassDTO dto = (SchoolClassDTO) action.getRequestBody().get(MyRequestAction.DATA);
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<SchoolClassDTO> responseDTO = client.target(ApiResourceUtil.API_LINK).path("schoolClasses")
+				.path(dto.getId()).request(MediaType.APPLICATION_JSON).headers(headers)
+				.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
+						new GenericType<SystemResponseDTO<SchoolClassDTO>>() {
+						});
+		client.close();
+		System.out.println("UPDATE  SCHOOL CLASS " + responseDTO);
+		return responseDTO;
+	}
+
+
+	public static SystemResponseDTO<List<SchoolClassDTO>> getAllClassesByLoggedSystemUserProfileSchools(
+			MyRequestAction action) {
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("schoolClassesByLoggedSystemUserProfile")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
+				});
+
+		client.close();
+		System.out.println("GET ALL SCHOOL CLASS BY PROFILE CSHOOLS " + responseDto);
+		return responseDto;
 	}
 	
 	

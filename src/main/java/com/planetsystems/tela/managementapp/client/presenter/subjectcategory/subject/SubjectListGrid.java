@@ -43,9 +43,9 @@ public class SubjectListGrid extends SuperListGrid {
 		record.setAttribute(CODE, subjectDTO.getCode());
 		record.setAttribute(NAME, subjectDTO.getName());
 		
-		if (subjectDTO.getSubjectCategory() != null) {
-			record.setAttribute(SUBJECT_CATEGORY, subjectDTO.getSubjectCategory().getName());
-			record.setAttribute(SUBJECT_CATEGORY_ID, subjectDTO.getSubjectCategory().getId());
+		if (subjectDTO.getSubjectCategoryDTO() != null) {
+			record.setAttribute(SUBJECT_CATEGORY, subjectDTO.getSubjectCategoryDTO().getName());
+			record.setAttribute(SUBJECT_CATEGORY_ID, subjectDTO.getSubjectCategoryDTO().getId());
 		}
 
 		return record;

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.inject.Inject;
@@ -18,15 +19,20 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.schoolclass.SchoolClassListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.category.SubjectCategoryListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.category.SubjectCategoryPane;
@@ -38,9 +44,12 @@ import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.sub
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -98,8 +107,8 @@ public class SubjectCategoryPresenter
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllSubjectCategories();
-		getAllSubjects();
+		getAllSubjectCategories2();
+		getAllSubjects2();
 	}
 
 	@Override
@@ -132,7 +141,7 @@ public class SubjectCategoryPresenter
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addSubjectCategory(newButton);
-					deleteSubjectCategory(delete);
+					deleteSubjectCategory2(delete);
 					editSubjectCategory(edit);
 
 				} else if (selectedTab.equalsIgnoreCase(SubjectCategoryView.SUBJECT_TAB_TITLE)) {
@@ -150,7 +159,7 @@ public class SubjectCategoryPresenter
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addSubject(newButton);
-					deleteSubject(delete);
+					deleteSubject2(delete);
 					editSubject(edit);
 					selectFilterSubjectOption(filter);
 				} else {
@@ -209,7 +218,7 @@ public class SubjectCategoryPresenter
 			public void onClick(ClickEvent event) {
 				SubjectCategoryWindow window = new SubjectCategoryWindow();
 				window.show();
-				saveSubjectCategory(window);
+				saveSubjectCategory2(window);
 
 			}
 		});
@@ -220,6 +229,7 @@ public class SubjectCategoryPresenter
 		window.getNameField().clearValue();
 	}
 
+	@Deprecated
 	private void saveSubjectCategory(final SubjectCategoryWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -276,7 +286,7 @@ public class SubjectCategoryPresenter
 					SubjectCategoryWindow window = new SubjectCategoryWindow();
 					window.getSaveButton().setTitle("Update");
 					loadFieldsToEdit(window);
-					updateSubjectCategory(window);
+					updateSubjectCategory2(window);
 					window.show();
 				} else {
 					SC.say("INFO: please select record to update");
@@ -286,6 +296,7 @@ public class SubjectCategoryPresenter
 
 	}
 
+	@Deprecated
 	private void updateSubjectCategory(final SubjectCategoryWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -324,7 +335,10 @@ public class SubjectCategoryPresenter
 		window.getCodeField().setValue(record.getAttribute(SchoolClassListGrid.CODE));
 		window.getNameField().setValue(record.getAttribute(SchoolClassListGrid.NAME));
 	}
+	
+	
 
+	@Deprecated
 	private void deleteSubjectCategory(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -361,6 +375,7 @@ public class SubjectCategoryPresenter
 
 	}
 
+	@Deprecated
 	private void getAllSubjectCategories() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SUBJECT_CATEGORY, null);
@@ -389,20 +404,30 @@ public class SubjectCategoryPresenter
 			public void onClick(ClickEvent event) {
 				SubjectWindow window = new SubjectWindow();
 				window.show();
-				loadSubjectCategoryCombo(window, null);
-				saveSubject(window);
+				loadSubjectCategoryCombo2(window, null);
+				saveSubject2(window);
 
 			}
 		});
 	}
 
+	@Deprecated
 	private void loadSubjectCategoryCombo(final SubjectWindow window, final String defaultValue) {
 		ComboUtil.loadSubjectCategoryCombo(window.getSubjectCategoryCombo(), dispatcher, placeManager, defaultValue);
 	}
+	
+	private void loadSubjectCategoryCombo2(final SubjectWindow window, final String defaultValue) {
+		ComboUtil2.loadSubjectCategoryCombo(window.getSubjectCategoryCombo(), dispatcher, placeManager, defaultValue);
+	}
 
+
+	@Deprecated
 	private void loadFilterSubjectCategoryCombo(final FilterSubjectWindow window) {
-		ComboUtil.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo(), dispatcher, placeManager,
-				null);
+		ComboUtil.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo(), dispatcher, placeManager,null);
+	}
+	
+	private void loadFilterSubjectCategoryCombo2(final FilterSubjectWindow window) {
+		ComboUtil2.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo(), dispatcher, placeManager,null);
 	}
 
 	public void clearSubjectWindowFields(SubjectWindow window) {
@@ -411,6 +436,8 @@ public class SubjectCategoryPresenter
 		window.getSubjectCategoryCombo().clearValue();
 	}
 
+	
+	@Deprecated
 	private void saveSubject(final SubjectWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -423,9 +450,9 @@ public class SubjectCategoryPresenter
 					dto.setCode(window.getCodeField().getValueAsString());
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-					SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
-					subjectCategory.setId(window.getSubjectCategoryCombo().getValueAsString());
-					dto.setSubjectCategory(subjectCategory);
+					SubjectCategoryDTO categoryDTO = new SubjectCategoryDTO();
+					categoryDTO.setId(window.getSubjectCategoryCombo().getValueAsString());
+					dto.setSubjectCategoryDTO(categoryDTO);
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_SUBJECT, dto);
@@ -471,8 +498,8 @@ public class SubjectCategoryPresenter
 				if (getView().getSubjectPane().getListGrid().anySelected()) {
 					SubjectWindow window = new SubjectWindow();
 					window.getSaveButton().setTitle("Update");
-					loadFieldsToEdit(window);
-					updateSubject(window);
+					loadFieldsToEdit2(window);
+					updateSubject2(window);
 					window.show();
 				} else {
 					SC.say("INFO: Select a record to update");
@@ -482,6 +509,8 @@ public class SubjectCategoryPresenter
 
 	}
 
+	
+	@Deprecated
 	private void loadFieldsToEdit(SubjectWindow window) {
 		ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
 
@@ -491,7 +520,20 @@ public class SubjectCategoryPresenter
 
 		loadSubjectCategoryCombo(window, record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY_ID));
 	}
+	
+	private void loadFieldsToEdit2(SubjectWindow window) {
+		ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
 
+		window.getSubjectCategoryCombo().setValue(record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY));
+		window.getCodeField().setValue(record.getAttribute(SubjectListGrid.CODE));
+		window.getNameField().setValue(record.getAttribute(SubjectListGrid.NAME));
+
+		loadSubjectCategoryCombo2(window, record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY_ID));
+	}
+
+
+	
+	@Deprecated
 	private void updateSubject(final SubjectWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -505,9 +547,9 @@ public class SubjectCategoryPresenter
 				dto.setCode(window.getCodeField().getValueAsString());
 				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
-				SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
-				subjectCategory.setId(window.getSubjectCategoryCombo().getValueAsString());
-				dto.setSubjectCategory(subjectCategory);
+				SubjectCategoryDTO categoryDTO = new SubjectCategoryDTO();
+				categoryDTO.setId(window.getSubjectCategoryCombo().getValueAsString());
+				dto.setSubjectCategoryDTO(categoryDTO);
 
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -528,6 +570,8 @@ public class SubjectCategoryPresenter
 		});
 	}
 
+	
+	@Deprecated
 	private void deleteSubject(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -567,6 +611,7 @@ public class SubjectCategoryPresenter
 
 	}
 
+	@Deprecated
 	private void getAllSubjects() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.GET_SUBJECT, null);
@@ -607,5 +652,337 @@ public class SubjectCategoryPresenter
 		});
 
 	}
+	
+	
+	
+	//////////////////////////////////////////////////////////////////NEW
+	
+	private void saveSubjectCategory2(final SubjectCategoryWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoSubjectCategoryWindowFieldIsEmpty(window)) {
+					SubjectCategoryDTO dto = new SubjectCategoryDTO();
+					dto.setName(window.getNameField().getValueAsString());
+					dto.setCode(window.getCodeField().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.SAVE_SUBJECT_CATEGORY);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<SubjectCategoryDTO> responseDTO = result.getSubjectCategoryResponse();
+								if (responseDTO.isStatus()) {
+									clearSubjectCategoryWindowFields(window);
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllSubjectCategories2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+
+							}
+				
+						}
+					});
+
+				} else {
+					SC.say("Please fill all fields");
+				}
+
+			}
+
+		});
+	}
+	
+	
+	
+	private void getAllSubjectCategories2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.GET_ALL_SUBJECT_CATEGORYS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SubjectCategoryDTO>> responseDTO = result.getSubjectCategoryResponseList();
+					if (responseDTO.isStatus()) {
+						getView().getSubCategoryPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+
+				}
+
+			}
+		});
+	}
+	
+	
+	
+	private void deleteSubjectCategory2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSubCategoryPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getSubCategoryPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.SUBJECT_CATEGORY_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.DELETE_SUBJECT_CATEGORY);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												SC.say(responseDTO.getMessage());
+												getAllSubjectCategories2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+
+										}
+									}
+								});
+
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+
+	
+	
+	
+	private void updateSubjectCategory2(final SubjectCategoryWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGridRecord record = getView().getSubCategoryPane().getListGrid().getSelectedRecord();
+
+				SubjectCategoryDTO dto = new SubjectCategoryDTO();
+				dto.setName(window.getNameField().getValueAsString());
+				dto.setCode(window.getCodeField().getValueAsString());
+				dto.setId(record.getAttribute(SubjectCategoryListGrid.ID));
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.UPDATE_SUBJECT_CATEGORY);
+
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<SubjectCategoryDTO> responseDTO = result.getSubjectCategoryResponse();
+							if (responseDTO.isStatus()) {
+								clearSubjectCategoryWindowFields(window);
+								window.close();
+								getAllSubjectCategories2();
+							} else {
+								SC.say(responseDTO.getMessage());
+							}
+
+						}
+					}
+				});
+
+			}
+		});
+
+	}
+
+	
+	private void saveSubject2(final SubjectWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoSubjectWindowFieldIsEmpty(window)) {
+					SubjectDTO dto = new SubjectDTO();
+					dto.setName(window.getNameField().getValueAsString());
+					dto.setCode(window.getCodeField().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					dto.setSubjectCategoryDTO(new SubjectCategoryDTO(window.getSubjectCategoryCombo().getValueAsString()));
+					
+					GWT.log("DTO "+dto.getSubjectCategoryDTO().getId());
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.SAVE_SUBJECT);
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<SubjectDTO> responseDTO = result.getSubjectResponse();
+								if (responseDTO.isStatus()) {
+									clearSubjectWindowFields(window);
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllSubjects2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+
+							}
+						}
+					});
+
+				} else {
+					SC.warn("Please fill all fields");
+				}
+
+			}
+
+		});
+	}
+	
+	
+	private void getAllSubjects2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.GET_ALL_SUBJECTS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SubjectDTO>> responseDTO = result.getSubjectResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
+						getView().getSubjectPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+
+				}
+				
+				
+			}
+		});
+	}
+	
+	
+	
+	private void deleteSubject2(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSubjectPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
+								// SC.say("Id "+record.getAttributeAsString("id")+" Name
+								// "+record.getAttributeAsString("name"));
+
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.SUBJECT_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.DELETE_SUBJECT);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												SC.say("SUCCESS", responseDTO.getMessage());
+												getAllSubjects2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+
+										}
+
+									}
+								});
+
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+	
+	
+	
+	private void updateSubject2(final SubjectWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
+
+				SubjectDTO dto = new SubjectDTO();
+				dto.setId(record.getAttribute(SubjectListGrid.ID));
+				dto.setName(window.getNameField().getValueAsString());
+				dto.setCode(window.getCodeField().getValueAsString());
+				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+
+				SubjectCategoryDTO subjectCategory = new SubjectCategoryDTO();
+				subjectCategory.setId(window.getSubjectCategoryCombo().getValueAsString());
+				dto.setSubjectCategoryDTO(subjectCategory);
+
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.UPDATE_SUBJECT);
+
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<SubjectDTO> responseDTO = result.getSubjectResponse();
+							if (responseDTO.isStatus()) {
+								clearSubjectWindowFields(window);
+								window.clear();
+								getAllSubjects2();
+							} else {
+								SC.say(responseDTO.getMessage());
+							}
+
+						}
+					
+					}
+				});
+
+			}
+		});
+	}
+
+	
 
 }
