@@ -11,6 +11,8 @@ import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.StaffEnrollmentDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
@@ -61,6 +63,11 @@ public class MyRequestResult implements Result {
 	
 	SystemResponseDTO<List<LearnerEnrollmentDTO>> learnerEnrollmentResponseList;
 	SystemResponseDTO<LearnerEnrollmentDTO> learnerEnrollmentResponse;
+	
+	SystemResponseDTO<List<StaffEnrollmentDto>> staffEnrollmentResponseList;
+	SystemResponseDTO<StaffEnrollmentDto> staffEnrollmentResponse;
+	SystemResponseDTO<List<SchoolStaffDTO>> schoolStaffResponseList;
+	SystemResponseDTO<SchoolStaffDTO> schoolStaffResponse;
 	
 	
 
@@ -277,6 +284,43 @@ public class MyRequestResult implements Result {
 		this.learnerEnrollmentResponse = learnerEnrollmentResponse;
 	}
 
+	public SystemResponseDTO<List<StaffEnrollmentDto>> getStaffEnrollmentResponseList() {
+		return staffEnrollmentResponseList;
+	}
+
+	public void setStaffEnrollmentResponseList(SystemResponseDTO<List<StaffEnrollmentDto>> staffEnrollmentResponseList) {
+		this.staffEnrollmentResponseList = staffEnrollmentResponseList;
+	}
+
+	public SystemResponseDTO<StaffEnrollmentDto> getStaffEnrollmentResponse() {
+		return staffEnrollmentResponse;
+	}
+
+	public void setStaffEnrollmentResponse(SystemResponseDTO<StaffEnrollmentDto> staffEnrollmentResponse) {
+		this.staffEnrollmentResponse = staffEnrollmentResponse;
+	}
+
+	public SystemResponseDTO<List<SchoolStaffDTO>> getSchoolStaffResponseList() {
+		return schoolStaffResponseList;
+	}
+
+	public void setSchoolStaffResponseList(SystemResponseDTO<List<SchoolStaffDTO>> schoolStaffResponseList) {
+		this.schoolStaffResponseList = schoolStaffResponseList;
+	}
+
+	public SystemResponseDTO<SchoolStaffDTO> getSchoolStaffResponse() {
+		return schoolStaffResponse;
+	}
+
+	public void setSchoolStaffResponse(SystemResponseDTO<SchoolStaffDTO> schoolStaffResponse) {
+		this.schoolStaffResponse = schoolStaffResponse;
+	}
+
+
+	
+	
+	
+	
 	
 	
 	

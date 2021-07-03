@@ -13,6 +13,7 @@ import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandle
 import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.RegionDistrictHandler;
 import com.planetsystems.tela.managementapp.server.handlers.SchoolCatergoryClassHandler;
+import com.planetsystems.tela.managementapp.server.handlers.SchoolStaffEnrollmentHandler;
 import com.planetsystems.tela.managementapp.server.handlers.SubjectCategoryHandler;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
@@ -21,6 +22,7 @@ import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCo
 import com.planetsystems.tela.managementapp.shared.requestcommands.LearnerEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolStaffEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
@@ -379,6 +381,76 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result69 = new MyRequestResult();
 				result69.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollmentsByAcademicTermSchool(action));
 				return result69;
+				
+			case SchoolStaffEnrollmentCommand.SAVE_STAFF_ENROLLMENT:
+				MyRequestResult result70 = new MyRequestResult();
+				result70.setStaffEnrollmentResponse(SchoolStaffEnrollmentHandler.saveStaffEnrollment(action));
+				return result70;
+				
+			case SchoolStaffEnrollmentCommand.GET_ALL_STAFF_ENROLLMENTS:
+				MyRequestResult result71 = new MyRequestResult();
+				result71.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.getStaffEnrollments(action));
+				return result71;
+				
+			case SchoolStaffEnrollmentCommand.GET_STAFF_ENROLLMENT_BY_ID:
+				MyRequestResult result72 = new MyRequestResult();
+				result72.setStaffEnrollmentResponse(SchoolStaffEnrollmentHandler.getStaffEnrollmentById(action));
+				return result72;
+				
+			case SchoolStaffEnrollmentCommand.DELETE_STAFF_ENROLLMENT:
+				MyRequestResult result73 = new MyRequestResult();
+				result73.setResponseText(SchoolStaffEnrollmentHandler.deleteStaffEnrollment(action));
+				return result73;
+				
+			case SchoolStaffEnrollmentCommand.UPDATE_STAFF_ENROLLMENT:
+				MyRequestResult result74 = new MyRequestResult();
+				result74.setStaffEnrollmentResponse(SchoolStaffEnrollmentHandler.updateStaffEnrollment(action));
+				return result74;
+				
+			case SchoolStaffEnrollmentCommand.GET_STAFF_ENROLLMENTS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result75 = new MyRequestResult();
+				result75.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.getStaffEnrollmentsByLoggedSystemUserProfileSchools(action));
+				return result75;
+				
+			case SchoolStaffEnrollmentCommand.GET_STAFF_ENROLLMENTS_BY_ACADEMIC_TERM_SCHOOL:
+				MyRequestResult result76 = new MyRequestResult();
+				result76.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.getStaffEnrollments(action));
+				return result76;
+				
+			case SchoolStaffEnrollmentCommand.SAVE_SCHOOL_STAFF:
+				MyRequestResult result77 = new MyRequestResult();
+				result77.setSchoolStaffResponse(SchoolStaffEnrollmentHandler.saveSchoolStaff(action));
+				return result77;
+				
+			case SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS:
+				MyRequestResult result78 = new MyRequestResult();
+				result78.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffs(action));
+				return result78;
+				
+			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFF_BY_ID:
+				MyRequestResult result79 = new MyRequestResult();
+				result79.setSchoolStaffResponse(SchoolStaffEnrollmentHandler.getSchoolStaffById(action));
+				return result79;
+				
+			case SchoolStaffEnrollmentCommand.DELETE_SCHOOL_STAFF:
+				MyRequestResult result80 = new MyRequestResult();
+				result80.setResponseText(SchoolStaffEnrollmentHandler.deleteSchoolStaff(action));
+				return result80;
+				
+			case SchoolStaffEnrollmentCommand.UPDATE_SCHOOL_STAFF:
+				MyRequestResult result81 = new MyRequestResult();
+				result81.setSchoolStaffResponse(SchoolStaffEnrollmentHandler.updateSchoolStaff(action));
+				return result81;
+				
+			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result82 = new MyRequestResult();
+				result82.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffsByLoggedSystemUserProfileSchools(action));
+				return result82;
+				
+			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFFS_BY_ACADEMIC_TERM_SCHOOL:
+				MyRequestResult result83 = new MyRequestResult();
+				result83.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffs(action));
+				return result83;
 				
 				
 				

@@ -21,6 +21,7 @@ public class SchoolStaffWindow extends Window {
 	    private DateItem dobItem;
 	    private TextItem nationalIdField;
 	    private ComboBox genderCombo;
+	    private ComboBox staffTypeCombo;
 	    private TextItem nameAbrevField;
 	    private TextItem codeField;
 	    private ComboBox registeredCombo;
@@ -78,6 +79,11 @@ public class SchoolStaffWindow extends Window {
 		genderCombo.setHint("Gender");
 		genderCombo.setShowHintInField(true);
 		
+		staffTypeCombo = new ComboBox();
+		staffTypeCombo.setTitle("StaffType");
+		staffTypeCombo.setHint("staff type");
+		staffTypeCombo.setShowHintInField(true);
+		
 		registeredCombo = new ComboBox();
 		registeredCombo.setTitle("Registered");
 		registeredCombo.setHint("Registered");
@@ -96,7 +102,7 @@ public class SchoolStaffWindow extends Window {
 		districtCombo.setShowHintInField(true);
 		
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(firstNameField , lastNameField , nameAbrevField , emailField , nationalIdField , phoneNumberField , codeField , districtCombo , genderCombo , schoolCombo , dobItem , registeredCombo);
+		dynamicForm.setFields(firstNameField , lastNameField , nameAbrevField , emailField , nationalIdField , phoneNumberField , codeField , districtCombo , genderCombo , schoolCombo , dobItem , registeredCombo , staffTypeCombo);
 		dynamicForm.setNumCols(4);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
@@ -205,6 +211,12 @@ public class SchoolStaffWindow extends Window {
 	public IButton getCancelButton() {
 		return cancelButton;
 	}
+
+	public ComboBox getStaffTypeCombo() {
+		return staffTypeCombo;
+	}
+	
+	
 
 	
 	

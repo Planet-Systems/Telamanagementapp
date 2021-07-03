@@ -27,14 +27,18 @@ import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermWindow;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.enrollment.StaffEnrollmentWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.FilterStaffHeadCountWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.FilterStaffWindow;
@@ -44,10 +48,15 @@ import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.sta
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolStaffEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffEnrollmentRequest;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -101,7 +110,7 @@ public class StaffEnrollmentPresenter
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllStaffEnrollments();
+		getAllStaffEnrollments2();
 
 	}
 
@@ -114,7 +123,7 @@ public class StaffEnrollmentPresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.STAFF_ENROLLMENT)) {
-					getAllStaffEnrollments();
+					getAllStaffEnrollments2();
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -128,10 +137,12 @@ public class StaffEnrollmentPresenter
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addStaffEnrollment(newButton);
+					deleteStaffEnrollment(delete);
+					
 					selectFilterStaffEnrollmentOption(filter);
 
 				} else if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.TEACHER_LIST)) {
-					getAllSchoolStaff();
+					getAllSchoolStaff2();
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -146,6 +157,7 @@ public class StaffEnrollmentPresenter
 					getView().getControlsPane().addMenuButtons(buttons);
 					addSchoolStaff(newButton);
 					editSchoolStaff(edit);
+					deleteSchoolStaff(delete);
 					selectFilterOption(filter);
 
 				} else {
@@ -154,6 +166,10 @@ public class StaffEnrollmentPresenter
 				}
 
 			}
+
+			
+
+			
 
 
 		});
@@ -231,6 +247,7 @@ public class StaffEnrollmentPresenter
 		loadDistrictCombo(window, record.getAttribute(SchoolStaffListGrid.DISTRICT_ID));
    		loadSchoolCombo(window, SchoolStaffListGrid.SCHOOL_ID);
 		loadGenderCombo(window, record.getAttribute(SchoolStaffListGrid.GENDER));
+		loadStaffTypeCombo(window, record.getAttribute(SchoolStaffListGrid.STAFF_TYPE));
 		loadRegisteredCombo(window, record.getAttribute(SchoolStaffListGrid.REGISTERED));
 
 	}
@@ -338,14 +355,14 @@ public class StaffEnrollmentPresenter
 				StaffEnrollmentWindow window = new StaffEnrollmentWindow();
 				setStaffTotal(window);
 				
-				loadAcademicYearCombo(window, null);
-				loadAcademicTermCombo(window, null);
-				loadDistrictCombo(window, null);
+				loadAcademicYearCombo2(window, null);
+				loadAcademicTermCombo2(window, null);
+				loadDistrictCombo2(window, null);
 				
-				loadSchoolCombo(window, null);
+				loadSchoolCombo2(window, null);
 				window.show();
 
-				saveStaffEnrollment(window);
+				saveStaffEnrollment2(window);
 
 			}
 
@@ -353,6 +370,8 @@ public class StaffEnrollmentPresenter
 
 	}
 
+	
+	@Deprecated
 	private void saveStaffEnrollment(final StaffEnrollmentWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -437,10 +456,17 @@ public class StaffEnrollmentPresenter
 
 	///////////////////////////////////////// COMBOS
 
+	@Deprecated
 	private void loadAcademicYearCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
 	}
+	
+	private void loadAcademicYearCombo2(final StaffEnrollmentWindow window, final String defaultValue) {
+		ComboUtil2.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
+	}
+	
 
+	@Deprecated
 	private void loadAcademicTermCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
@@ -451,17 +477,49 @@ public class StaffEnrollmentPresenter
 			}
 		});
 	}
+	
+	private void loadAcademicTermCombo2(final StaffEnrollmentWindow window, final String defaultValue) {
+		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil2.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
+						window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+			}
+		});
+	}
+	
+	
+
+	@Deprecated
 	private void loadDistrictCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
 
+	private void loadDistrictCombo2(final StaffEnrollmentWindow window, final String defaultValue) {
+		ComboUtil2.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+	}
+	
+	
+	@Deprecated
 	private void loadSchoolCombo(final StaffEnrollmentWindow window, final String defaultValue) {
 		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+						placeManager, defaultValue);
+			}
+		});
+
+	}
+	
+	private void loadSchoolCombo2(final StaffEnrollmentWindow window, final String defaultValue) {
+		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil2.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
 						placeManager, defaultValue);
 			}
 		});
@@ -577,6 +635,7 @@ public class StaffEnrollmentPresenter
 
 	}
 
+	@Deprecated
 	private void getAllStaffEnrollments() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
@@ -602,11 +661,13 @@ public class StaffEnrollmentPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				SchoolStaffWindow window = new SchoolStaffWindow();
-				loadGenderCombo(window, null);
-				loadRegisteredCombo(window, null);
-				loadDistrictCombo(window, null);
-				loadSchoolCombo(window, null);
-				saveSchoolStaff(window);
+				final String defaultValue = null;
+				loadGenderCombo(window, defaultValue);
+				loadStaffTypeCombo(window, defaultValue);
+				loadRegisteredCombo(window, defaultValue);
+				loadDistrictCombo(window, defaultValue);
+				loadSchoolCombo(window, defaultValue);
+				saveSchoolStaff2(window);
 				window.show();
 
 			}
@@ -615,6 +676,7 @@ public class StaffEnrollmentPresenter
 
 	}
 
+	@Deprecated
 	private void saveSchoolStaff(final SchoolStaffWindow window) {
 		window.getSaveButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
@@ -695,6 +757,9 @@ public class StaffEnrollmentPresenter
 
 		if (window.getGenderCombo().getValueAsString() == null)
 			flag = false;
+		
+		if (window.getStaffTypeCombo().getValueAsString() == null)
+			flag = false;
 
 		if (window.getNameAbrevField().getValueAsString() == null)
 			flag = false;
@@ -723,6 +788,7 @@ public class StaffEnrollmentPresenter
 		window.getDobItem().clearValue();
 		window.getNationalIdField().clearValue();
 		window.getGenderCombo().clearValue();
+		window.getStaffTypeCombo().clearValue();
 		window.getNameAbrevField().clearValue();
 		window.getCodeField().clearValue();
 		window.getRegisteredCombo().clearValue();
@@ -731,11 +797,23 @@ public class StaffEnrollmentPresenter
 
 	private void loadGenderCombo(final SchoolStaffWindow window, final String defaultValue) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-		valueMap.put("female", "Female");
-		valueMap.put("male", "Male");
+		valueMap.put("Female", "Female");
+		valueMap.put("Male", "Male");
 		window.getGenderCombo().setValueMap(valueMap);
 		if (defaultValue != null) {
 			window.getGenderCombo().setValue(defaultValue);
+		}
+	}
+	
+	private void loadStaffTypeCombo(final SchoolStaffWindow window, final String defaultValue) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		valueMap.put("Teacher", "Teacher");
+		valueMap.put("Head Teacher", "Head teacher");
+		valueMap.put("Deputy HeadTeacher", "Deputy head teacher");
+		valueMap.put("Smc", "Smc");
+		window.getStaffTypeCombo().setValueMap(valueMap);
+		if (defaultValue != null) {
+			window.getStaffTypeCombo().setValue(defaultValue);
 		}
 	}
 
@@ -765,6 +843,7 @@ public class StaffEnrollmentPresenter
 		});
 	}
 
+	@Deprecated
 	private void getAllSchoolStaff() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
@@ -848,5 +927,278 @@ public class StaffEnrollmentPresenter
 			}
 		});
 	}
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////NEW NEW
+	
+	private void saveStaffEnrollment2(final StaffEnrollmentWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (checkIfNoStaffEnrollmentWindowFieldIsEmpty(window)) {
+					StaffEnrollmentDto dto = new StaffEnrollmentDto();
+					dto.setTotalFemale(Long.valueOf(window.getTotalFemaleField().getValueAsString()));
+					dto.setTotalMale(Long.valueOf(window.getTotalMaleField().getValueAsString()));
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					dto.setAcademicTermDTO(academicTermDTO);
+					// dto.setId(id);
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
+					dto.setSchoolDTO(schoolDTO);
+
+					GWT.log("DTO " + dto);
+					GWT.log("term " + dto.getAcademicTermDTO().getId());
+					GWT.log("DTO " + dto.getSchoolDTO().getId());
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.SAVE_STAFF_ENROLLMENT);
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<StaffEnrollmentDto> responseDTO = result.getStaffEnrollmentResponse();
+								if (responseDTO.isStatus()) {
+									clearStaffEnrollmentWindowFields(window);
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllStaffEnrollments2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+		
+						}
+					});
+
+				} else {
+					SC.warn("Please Fill all fields");
+				}
+
+			}
+		});
+
+	}
+	
+	
+	
+	private void getAllStaffEnrollments2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.DATA , new FilterDTO());
+		
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_STAFF_ENROLLMENTS);
+		else
+			map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_STAFF_ENROLLMENTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<StaffEnrollmentDto>> responseDTO = result.getStaffEnrollmentResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
+						getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+				
+			}
+		});
+
+	}
+
+	
+	private void deleteStaffEnrollment(MenuButton delete) {
+		delete.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getStaffEnrollmentPane().getStaffEnrollmentListGrid().getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.STAFF_ENROLLMENT_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.DELETE_STAFF_ENROLLMENT);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												SC.say("SUCCESS", responseDTO.getMessage());
+												getAllStaffEnrollments2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+										}
+			
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+	}
+	
+	
+	
+	
+	
+	
+	/////////////////////TEACHER
+	
+	private void saveSchoolStaff2(final SchoolStaffWindow window) {
+		window.getSaveButton().addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoSchoolStaffWindowFieldIsEmpty(window)) {
+					SchoolStaffDTO dto = new SchoolStaffDTO();
+					// dto.setId(id);
+
+					dto.setRegistered(Boolean.valueOf(window.getRegisteredCombo().getValueAsString()));
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					dto.setStaffCode(window.getCodeField().getValueAsString());
+					dto.setStaffType(window.getStaffTypeCombo().getValueAsString());
+
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
+					dto.setSchoolDTO(schoolDTO);
+
+					GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
+					generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+					generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+					generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
+					generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+					generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
+					generalUserDetailDTO.setNameAbbrev(window.getNameAbrevField().getValueAsString());
+					generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+					generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+
+					dto.setGeneralUserDetailDTO(generalUserDetailDTO);
+
+					GWT.log("STAFF " + dto);
+					GWT.log("School " + dto.getSchoolDTO().getId());
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.SAVE_SCHOOL_STAFF);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<SchoolStaffDTO> responseDTO = result.getSchoolStaffResponse();
+								if (responseDTO.isStatus()) {
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllSchoolStaff2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+						}
+					});
+
+				} else {
+					SC.warn("Please Fill the fields");
+				}
+
+			}
+		});
+	}
+
+	
+	private void getAllSchoolStaff2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.DATA, new FilterDTO());
+		
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(MyRequestAction.COMMAND ,SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
+		else
+			map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+		
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolStaffDTO>> responseDTO = result.getSchoolStaffResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
+						getView().getSchoolStaffPane().getSchoolStaffListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+				
+			}
+		});
+
+	}
+	
+	
+	private void deleteSchoolStaff(MenuButton delete) {
+		delete.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSchoolStaffPane().getSchoolStaffListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getSchoolStaffPane().getSchoolStaffListGrid().getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.SCHOOL_STAFF_ID, record.getAttributeAsString("id"));
+								map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.DELETE_SCHOOL_STAFF);
+
+								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+									@Override
+									public void onNetworkResult(MyRequestResult result) {
+										if (result != null) {
+											SystemResponseDTO<String> responseDTO = result.getResponseText();
+											if (responseDTO.isStatus()) {
+												getAllSchoolStaff2();
+											} else {
+												SC.say(responseDTO.getMessage());
+											}
+										}
+			
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+		
+	}
+	
 
 }
