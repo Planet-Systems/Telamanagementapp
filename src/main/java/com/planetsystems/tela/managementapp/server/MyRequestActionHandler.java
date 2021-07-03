@@ -8,6 +8,7 @@ import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.server.handlers.AcademicYearTermHandler;
+import com.planetsystems.tela.managementapp.server.handlers.LearnerAttendanceHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LearnerEnrollmentHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler;
@@ -19,6 +20,7 @@ import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.LearnerAttendanceCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.LearnerEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
@@ -452,6 +454,36 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result83.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffs(action));
 				return result83;
 				
+			case LearnerAttendanceCommand.SAVE_LEARNER_ATTENDANCE:
+				MyRequestResult result84 = new MyRequestResult();
+				result84.setLearnerAttendanceResponse(LearnerAttendanceHandler.saveLearnerAttendance(action));
+				return result84;
+				
+			case LearnerAttendanceCommand.GET_ALL_LEARNER_ATTENDANCES:
+				MyRequestResult result85 = new MyRequestResult();
+				result85.setLearnerAtendanceResponseList(LearnerAttendanceHandler.getLearnerAttendances(action));
+				return result85;
+				
+			case LearnerAttendanceCommand.GET_LEARNER_ATTENDANCE_BY_ID:
+				MyRequestResult result86 = new MyRequestResult();
+				result86.setLearnerAttendanceResponse(LearnerAttendanceHandler.getLearnerAttendanceById(action));
+				return result86;
+				
+			case LearnerAttendanceCommand.DELETE_LEARNER_ATTENDANCE:
+				MyRequestResult result87 = new MyRequestResult();
+				result87.setResponseText(LearnerAttendanceHandler.deleteLearnerAttendance(action));
+				return result87;
+				
+			case LearnerAttendanceCommand.UPDATE_LEARNER_ATTENDANCE:
+				MyRequestResult result88 = new MyRequestResult();
+				result88.setLearnerAttendanceResponse(LearnerAttendanceHandler.updateLearnerAttendance(action));
+				return result88;
+				
+			case LearnerAttendanceCommand.GET_LEARNER_ATTENDANCE_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result89 = new MyRequestResult();
+				result89.setLearnerAtendanceResponseList(LearnerAttendanceHandler.getLearnerAttendancesByLoggedSystemUserProfileSchools(action));
+				return result89;
+
 				
 				
 

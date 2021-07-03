@@ -58,7 +58,8 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 		academicTermIdField.setHidden(true);
 		
 		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
-		academicYearField.setHidden(true);
+		//academicYearField.setHidden(true);
+		
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 		
@@ -87,7 +88,7 @@ public class LearnerAttendanceListGrid extends SuperListGrid {
 		     	
 		this.setDataSource(datasource);
 
-		this.setFields(idField , schoolClassIdField , academicTermIdField ,academicTermField , schoolField , schoolStaffIdField , academicTermField , schoolClassField , schoolStaffField , attendanceDateField ,boysPresentField , girlsPresentField ,totalPresentField, boysAbsentField ,girlsAbsentField , totalAbsentField  , commentField  );
+		this.setFields(idField , schoolClassIdField , academicTermIdField ,schoolStaffIdField,academicYearField , schoolField ,  academicTermField , schoolClassField , schoolStaffField , attendanceDateField ,boysPresentField , girlsPresentField ,totalPresentField, boysAbsentField ,girlsAbsentField , totalAbsentField  , commentField  );
 
 	}
 

@@ -6,6 +6,7 @@ import com.gwtplatform.dispatch.rpc.shared.Result;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
@@ -68,6 +69,9 @@ public class MyRequestResult implements Result {
 	SystemResponseDTO<StaffEnrollmentDto> staffEnrollmentResponse;
 	SystemResponseDTO<List<SchoolStaffDTO>> schoolStaffResponseList;
 	SystemResponseDTO<SchoolStaffDTO> schoolStaffResponse;
+	
+	SystemResponseDTO<List<LearnerAttendanceDTO>> learnerAtendanceResponseList;
+	SystemResponseDTO<LearnerAttendanceDTO> learnerAttendanceResponse;
 	
 	
 
@@ -316,6 +320,25 @@ public class MyRequestResult implements Result {
 		this.schoolStaffResponse = schoolStaffResponse;
 	}
 
+	public SystemResponseDTO<List<LearnerAttendanceDTO>> getLearnerAtendanceResponseList() {
+		return learnerAtendanceResponseList;
+	}
+
+	public void setLearnerAtendanceResponseList(
+			SystemResponseDTO<List<LearnerAttendanceDTO>> learnerAtendanceResponseList) {
+		this.learnerAtendanceResponseList = learnerAtendanceResponseList;
+	}
+
+	public SystemResponseDTO<LearnerAttendanceDTO> getLearnerAttendanceResponse() {
+		return learnerAttendanceResponse;
+	}
+
+	public void setLearnerAttendanceResponse(SystemResponseDTO<LearnerAttendanceDTO> learnerAttendanceResponse) {
+		this.learnerAttendanceResponse = learnerAttendanceResponse;
+	}
+
+	
+	
 
 	
 	

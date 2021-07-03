@@ -8,6 +8,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
@@ -31,6 +32,7 @@ import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolStaffEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.smartgwt.client.util.SC;
@@ -355,28 +357,43 @@ public class ComboUtil2 {
 
 		String schoolId = schoolCombo.getValueAsString();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
+		FilterDTO filterDTO = new FilterDTO();
+		filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
+	    map.put(MyRequestAction.DATA , filterDTO);
+	    
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
 
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
-			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolStaffDTO>> responseDTO = result.getSchoolStaffResponseList();
+					if (responseDTO.isStatus()) {
+                        if(responseDTO.getData() != null) {
+                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
-				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
-							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-					valueMap.put(schoolStaffDTO.getId(), fullName);
-				}
-				schoolStaffCombo.setValueMap(valueMap);
+            				for (SchoolStaffDTO schoolStaffDTO : responseDTO.getData()) {
+            					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+            							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+            					valueMap.put(schoolStaffDTO.getId(), fullName);
+            				}
+            				schoolStaffCombo.setValueMap(valueMap);
 
-				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue);
+            				if (defaultValue != null) {
+            					schoolStaffCombo.setValue(defaultValue);
+            				}
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
 				}
-			}
+		
+				} 
+				}
 		});
+		
 	}
+
 
 	public static void loadSchoolStaffMultiComboBySchool(final ComboBox schoolCombo,
 			final MultiComboBoxItem schoolStaffCombo, final DispatchAsync dispatcher, final PlaceManager placeManager,
@@ -384,25 +401,38 @@ public class ComboUtil2 {
 
 		String schoolId = schoolCombo.getValueAsString();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
+		FilterDTO filterDTO = new FilterDTO();
+		filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
+	    map.put(MyRequestAction.DATA , filterDTO);  
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
 
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
-			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolStaffDTO>> responseDTO = result.getSchoolStaffResponseList();
+					if (responseDTO.isStatus()) {
+                        if(responseDTO.getData() != null) {
+                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
-				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
-							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-					valueMap.put(schoolStaffDTO.getId(), fullName);
-				}
-				schoolStaffCombo.setValueMap(valueMap);
+            				for (SchoolStaffDTO schoolStaffDTO : responseDTO.getData()) {
+            					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+            							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+            					valueMap.put(schoolStaffDTO.getId(), fullName);
+            				}
+            				schoolStaffCombo.setValueMap(valueMap);
 
-				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue);
+            				if (defaultValue != null) {
+            					schoolStaffCombo.setValue(defaultValue);
+            				}
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
 				}
+		
+				}
+		
 			}
 		});
 	}
@@ -411,24 +441,38 @@ public class ComboUtil2 {
 			final PlaceManager placeManager, final String defaultValue) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_STAFF);
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+	    map.put(MyRequestAction.DATA , new FilterDTO());
+	    
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
+		
+		
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
-			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolStaffDTO>> responseDTO = result.getSchoolStaffResponseList();
+					if (responseDTO.isStatus()) {
+                        if(responseDTO.getData() != null) {
+                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
-				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName()
-							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-					valueMap.put(schoolStaffDTO.getId(), fullName);
-				}
-				SchoolStaffCombo.setValueMap(valueMap);
+            				for (SchoolStaffDTO schoolStaffDTO : responseDTO.getData()) {
+            					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName()
+            							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+            					valueMap.put(schoolStaffDTO.getId(), fullName);
+            				}
+            				SchoolStaffCombo.setValueMap(valueMap);
 
-				if (defaultValue != null) {
-					SchoolStaffCombo.setValue(defaultValue);
+            				if (defaultValue != null) {
+            					SchoolStaffCombo.setValue(defaultValue);
+            				}
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
 				}
+		
+				}
+			
 			}
 		});
 	}
