@@ -6,6 +6,7 @@ import com.gwtplatform.dispatch.rpc.shared.Result;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
@@ -56,6 +57,12 @@ public class MyRequestResult implements Result {
 	
 	SystemResponseDTO<List<SubjectDTO>> subjectResponseList;
 	SystemResponseDTO<SubjectDTO> subjectResponse;
+	
+	
+	SystemResponseDTO<List<LearnerEnrollmentDTO>> learnerEnrollmentResponseList;
+	SystemResponseDTO<LearnerEnrollmentDTO> learnerEnrollmentResponse;
+	
+	
 
 	public MyRequestResult() {
 		// TODO Auto-generated constructor stub
@@ -253,6 +260,24 @@ public class MyRequestResult implements Result {
 		this.subjectResponse = subjectResponse;
 	}
 
+	public SystemResponseDTO<List<LearnerEnrollmentDTO>> getLearnerEnrollmentResponseList() {
+		return learnerEnrollmentResponseList;
+	}
+
+	public void setLearnerEnrollmentResponseList(
+			SystemResponseDTO<List<LearnerEnrollmentDTO>> learnerEnrollmentResponseList) {
+		this.learnerEnrollmentResponseList = learnerEnrollmentResponseList;
+	}
+
+	public SystemResponseDTO<LearnerEnrollmentDTO> getLearnerEnrollmentResponse() {
+		return learnerEnrollmentResponse;
+	}
+
+	public void setLearnerEnrollmentResponse(SystemResponseDTO<LearnerEnrollmentDTO> learnerEnrollmentResponse) {
+		this.learnerEnrollmentResponse = learnerEnrollmentResponse;
+	}
+
+	
 	
 	
 }

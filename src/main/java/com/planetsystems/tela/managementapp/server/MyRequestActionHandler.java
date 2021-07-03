@@ -8,6 +8,7 @@ import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.server.handlers.AcademicYearTermHandler;
+import com.planetsystems.tela.managementapp.server.handlers.LearnerEnrollmentHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler;
 import com.planetsystems.tela.managementapp.server.handlers.RegionDistrictHandler;
@@ -17,6 +18,7 @@ import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.LearnerEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
@@ -342,6 +344,42 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result62 = new MyRequestResult();
 				result62.setSubjectResponseList(SubjectCategoryHandler.getSubjectBySubjectCategory(action));
 				return result62;
+				
+			case LearnerEnrollmentCommand.SAVE_LEARNER_ENROLLMENT:
+				MyRequestResult result63 = new MyRequestResult();
+				result63.setLearnerEnrollmentResponse(LearnerEnrollmentHandler.saveLearnerEnrollment(action));
+				return result63;
+				
+			case LearnerEnrollmentCommand.GET_ALL_LEARNER_ENROLLMENTS:
+				MyRequestResult result64 = new MyRequestResult();
+				result64.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollments(action));
+				return result64;
+				
+			case LearnerEnrollmentCommand.GET_LEARNER_ENROLLMENT_BY_ID:
+				MyRequestResult result65 = new MyRequestResult();
+				result65.setLearnerEnrollmentResponse(LearnerEnrollmentHandler.getLearnerEnrollmentById(action));
+				return result65;
+				
+			case LearnerEnrollmentCommand.DELETE_LEARNER_ENROLLMENT:
+				MyRequestResult result66 = new MyRequestResult();
+				result66.setResponseText(LearnerEnrollmentHandler.deleteLearnerEnrollment(action));
+				return result66;
+				
+			case LearnerEnrollmentCommand.UPDATE_LEARNER_ENROLLMENT:
+				MyRequestResult result67 = new MyRequestResult();
+				result67.setLearnerEnrollmentResponse(LearnerEnrollmentHandler.updateLearnerEnrollment(action));
+				return result67;
+				
+			case LearnerEnrollmentCommand.GET_LEARNER_ENROLLMENTS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result68 = new MyRequestResult();
+				result68.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollmentsByLoggedSystemUserProfileSchools(action));
+				return result68;
+				
+			case LearnerEnrollmentCommand.GET_LEARNER_ENROLLMENTS_BY_ACADEMIC_TERM_SCHOOL:
+				MyRequestResult result69 = new MyRequestResult();
+				result69.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollmentsByAcademicTermSchool(action));
+				return result69;
+				
 				
 				
 
