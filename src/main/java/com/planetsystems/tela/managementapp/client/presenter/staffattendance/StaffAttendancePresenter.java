@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -27,12 +28,16 @@ import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInPane;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clockin.ClockInWindow;
@@ -42,9 +47,12 @@ import com.planetsystems.tela.managementapp.client.presenter.staffattendance.clo
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.ClockInOutCommand;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -82,6 +90,8 @@ public class StaffAttendancePresenter
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
+	DateTimeFormat timeFormat = DateTimeFormat.getFormat(PredefinedFormat.HOUR24_MINUTE_SECOND);
+
 
 	@NameToken(NameTokens.staffAttendance)
 	@ProxyCodeSplit
@@ -120,13 +130,13 @@ public class StaffAttendancePresenter
 
 					getView().getControlsPane().addMenuButtons(buttons);
 
-					getAllStaffClockIn();
+					getAllStaffClockIn2();
 					addClockIn(clockInButton);
-					clockOut(clockOut);
+					clockOut2(clockOut);
 					selectFilterOption(filter);
 
 				} else if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKOUT_TAB_TITLE)) {
-					getAllStaffClockOut();
+					getAllStaffClockOut2();
 					MenuButton filter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
@@ -233,18 +243,19 @@ public class StaffAttendancePresenter
 				ClockInWindow window = new ClockInWindow();
 				window.show();
 
-				loadAcademicYearCombo(window, null);
-				loadAcademicTermCombo(window, null);
-				loadDistrictCombo(window, null);
-				loadSchoolCombo(window, null);
-				loadSchoolStaffCombo(window, null);
+				loadAcademicYearCombo2(window, null);
+				loadAcademicTermCombo2(window, null);
+				loadDistrictCombo2(window, null);
+				loadSchoolCombo2(window, null);
+				loadSchoolStaffCombo2(window, null);
 
-				saveClockin(window);
+				saveClockIn(window);
 			}
 		});
 
 	}
 
+	@Deprecated
 	protected void saveClockin(final ClockInWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -339,10 +350,17 @@ public class StaffAttendancePresenter
 		window.getLongitudeField().clearValue();
 	}
 
+	@Deprecated
 	private void loadAcademicYearCombo(final ClockInWindow window, final String defaultValue) {
 		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
 	}
 
+	private void loadAcademicYearCombo2(final ClockInWindow window, final String defaultValue) {
+		ComboUtil2.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
+	}
+	
+	
+	@Deprecated
 	private void loadAcademicTermCombo(final ClockInWindow window, final String defaultValue) {
 		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
@@ -353,11 +371,32 @@ public class StaffAttendancePresenter
 			}
 		});
 	}
+	
+	
+	private void loadAcademicTermCombo2(final ClockInWindow window, final String defaultValue) {
+		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil2.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
+						window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+			}
+		});
+	}
+	
+	
+
+	@Deprecated
 	private void loadDistrictCombo(final ClockInWindow window, final String defaultValue) {
 		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
+	
+	private void loadDistrictCombo2(final ClockInWindow window, final String defaultValue) {
+		ComboUtil2.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+	}
+	
 
+	@Deprecated
 	private void loadSchoolCombo(final ClockInWindow window, final String defaultValue) {
 		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
@@ -368,7 +407,22 @@ public class StaffAttendancePresenter
 			}
 		});
 	}
+	
+	
+	private void loadSchoolCombo2(final ClockInWindow window, final String defaultValue) {
+		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil2.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+						placeManager, defaultValue);
+			}
+		});
+	}
+	
+	
+
+	@Deprecated
 	private void loadSchoolStaffCombo(final ClockInWindow window, final String defaultValue) {
 		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
 
@@ -380,6 +434,19 @@ public class StaffAttendancePresenter
 		});
 	}
 
+	
+	private void loadSchoolStaffCombo2(final ClockInWindow window, final String defaultValue) {
+		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil2.loadSchoolStaffComboBySchool(window.getSchoolCombo(), window.getSchoolStaffCombo(),
+						dispatcher, placeManager, defaultValue);
+			}
+		});
+	}
+	
+	@Deprecated
 	private void getAllStaffClockIn() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
@@ -399,6 +466,7 @@ public class StaffAttendancePresenter
 
 	//////////////////////// clockout
 
+	@Deprecated
 	private void clockOut(MenuButton clockOutButton) {
 
 		clockOutButton.addClickHandler(new ClickHandler() {
@@ -430,7 +498,7 @@ public class StaffAttendancePresenter
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllStaffClockIn();
+							getAllStaffClockIn2();
 						}
 					});
 
@@ -442,6 +510,8 @@ public class StaffAttendancePresenter
 
 	}
 
+	
+	@Deprecated
 	private void getAllStaffClockOut() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
@@ -623,5 +693,192 @@ public class StaffAttendancePresenter
 			}
 		});
 	}
+	
+	
+	
+	
+	
+	//////////////////////////////////////////////////////NEW
+	
+	protected void saveClockIn(final ClockInWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoClockInWindowFieldIsEmpty(window)) {
+					ClockInDTO dto = new ClockInDTO();
+					// dto.setClockInDate(clockInDate);
+					dto.setComment(window.getCommentField().getValueAsString());
+					// dto.setId(id);
+					dto.setLatitude(window.getLatitudeField().getValueAsString());
+					dto.setLongitude(window.getLongitudeField().getValueAsString());
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					dto.setClockInDate(dateFormat.format(new Date()));
+					dto.setClockInTime(timeFormat.format(new Date()));
+
+					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
+							window.getAcademicTermCombo().getValueAsString());
+					dto.setAcademicTermDTO(academicTermDTO);
+
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
+					dto.setSchoolDTO(schoolDTO);
+
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO();
+					schoolStaffDTO.setId(window.getSchoolStaffCombo().getValueAsString());
+					dto.setSchoolStaffDTO(schoolStaffDTO);
+
+					GWT.log("DTO " + dto);
+					GWT.log("Term " + dto.getAcademicTermDTO().getId());
+					GWT.log("Staff " + dto.getSchoolStaffDTO().getId());
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, ClockInOutCommand.SAVE_CLOCK_IN);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<ClockInDTO> responseDTO = result.getClockInResponse();
+								if (responseDTO.isStatus()) {
+									clearClockInWindowFields(window);
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllStaffClockIn2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+							
+						}
+					});
+
+				} else {
+					SC.say("Please fill all the fields");
+				}
+
+			}
+
+		});
+
+	}
+	
+	
+	
+	private void getAllStaffClockIn2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.DATA, new FilterDTO());
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_ALL_CLOCK_INS);
+		else
+			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<ClockInDTO>> responseDTO = result.getClockInResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
+						getView().getClockInPane().getClockInListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+			
+			}
+		});
+
+	}
+	
+	
+	
+
+	
+	private void clockOut2(MenuButton clockOutButton) {
+
+		clockOutButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getClockInPane().getClockInListGrid().anySelected()) {
+					ListGridRecord record = getView().getClockInPane().getClockInListGrid().getSelectedRecord();
+					ClockOutDTO dto = new ClockOutDTO();
+
+					ClockInDTO clockInDTO = new ClockInDTO();
+					clockInDTO.setId(record.getAttribute(ClockInListGrid.ID));
+
+					dto.setClockInDTO(clockInDTO);
+					dto.setComment(record.getAttribute(ClockInListGrid.COMMENT));
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+//            	 SC.say("Hello");
+					GWT.log("DTO " + dto);
+					GWT.log("DTO id  " + dto.getClockInDTO().getId());
+
+					GWT.log("date " + dto.getCreatedDateTime());
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, ClockInOutCommand.SAVE_CLOCK_OUT);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<ClockOutDTO> responseDTO = result.getClockOutResponse();
+								if (responseDTO.isStatus()) {
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllStaffClockIn2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+					
+						}
+					});
+
+				} else {
+					SC.say("Please Select A record to clockout");
+				}
+			}
+		});
+
+	}
+
+	
+	
+	
+	private void getAllStaffClockOut2() {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(MyRequestAction.DATA, new FilterDTO());
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(MyRequestAction.COMMAND, RequestConstant.GET_CLOCK_OUT);
+		else
+			map.put(MyRequestAction.COMMAND, RequestConstant.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<ClockOutDTO>> responseDTO = result.getClockOutResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
+						getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(responseDTO.getData());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+				
+	
+			}
+		});
+
+	}
+	
+	
 
 }

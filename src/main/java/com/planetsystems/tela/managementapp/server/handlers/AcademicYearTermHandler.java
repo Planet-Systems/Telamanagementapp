@@ -35,7 +35,7 @@ public class AcademicYearTermHandler {
 						new GenericType<SystemResponseDTO<AcademicYearDTO>>() {
 						});
 		client.close();
-		
+		System.out.println("SAVE  YEARS  " + responseDTO);
 		return responseDTO;
 	}
 	
@@ -47,15 +47,15 @@ public class AcademicYearTermHandler {
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<AcademicYearDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("academicYears")
+		SystemResponseDTO<List<AcademicYearDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("academicYears")
 				.request(MediaType.APPLICATION_JSON).headers(headers)
 				.get(new GenericType<SystemResponseDTO<List<AcademicYearDTO>>>() {
 				});
 		client.close();
 		
+		System.out.println("GET  YEARS  " + responseDTO);
 		
-		
-		return responseDto;
+		return responseDTO;
 	}
 	
 	public static SystemResponseDTO<AcademicYearDTO> getAcademicYearById(MyRequestAction action){
@@ -168,14 +168,14 @@ public class AcademicYearTermHandler {
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<AcademicTermDTO> responseDto = client.target(ApiResourceUtil.API_LINK).path("academicTerms")
+		SystemResponseDTO<AcademicTermDTO> responseDTO = client.target(ApiResourceUtil.API_LINK).path("academicTerms")
 				.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
 				.get(new GenericType<SystemResponseDTO<AcademicTermDTO>>() {
 				});
 
 		client.close();
-		System.out.println("GET  TERM BY ID " + responseDto);
-		return responseDto;
+		System.out.println("GET  TERM BY ID " + responseDTO);
+		return responseDTO;
 	}
 	
 	
@@ -187,14 +187,14 @@ public class AcademicYearTermHandler {
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<String> responseDto = client.target(ApiResourceUtil.API_LINK).path("academicTerms")
+		SystemResponseDTO<String> responseDTO = client.target(ApiResourceUtil.API_LINK).path("academicTerms")
 				.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
 				.delete(new GenericType<SystemResponseDTO<String>>() {
 				});
 
 		client.close();
-		System.out.println("DELETE  TERM " + responseDto);
-		return responseDto;
+		System.out.println("DELETE  TERM " + responseDTO);
+		return responseDTO;
 	}
 	
 	

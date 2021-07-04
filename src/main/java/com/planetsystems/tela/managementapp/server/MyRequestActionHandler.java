@@ -8,6 +8,7 @@ import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.server.handlers.AcademicYearTermHandler;
+import com.planetsystems.tela.managementapp.server.handlers.ClockInOutHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LearnerAttendanceHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LearnerEnrollmentHandler;
 import com.planetsystems.tela.managementapp.server.handlers.LoginPresenterHandler;
@@ -20,6 +21,7 @@ import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AuthRequestCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.ClockInOutCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.LearnerAttendanceCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.LearnerEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
@@ -483,6 +485,38 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result89 = new MyRequestResult();
 				result89.setLearnerAtendanceResponseList(LearnerAttendanceHandler.getLearnerAttendancesByLoggedSystemUserProfileSchools(action));
 				return result89;
+				
+			case ClockInOutCommand.SAVE_CLOCK_IN:
+				MyRequestResult result90 = new MyRequestResult();
+				result90.setClockInResponse(ClockInOutHandler.saveClockIn(action));
+				return result90;
+				
+			case ClockInOutCommand.GET_ALL_CLOCK_INS:
+				MyRequestResult result91 = new MyRequestResult();
+				result91.setClockInResponseList(ClockInOutHandler.getClockIns(action));
+				return result91;
+				
+			case ClockInOutCommand.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result93 = new MyRequestResult();
+				result93.setClockInResponseList(ClockInOutHandler.getClockInsByLoggedSystemUserProfileSchools(action));
+				return result93;
+				
+			case ClockInOutCommand.SAVE_CLOCK_OUT:
+				MyRequestResult result94 = new MyRequestResult();
+				result94.setClockOutResponse(ClockInOutHandler.saveClockOut(action));
+				return result94;
+				
+			case ClockInOutCommand.GET_ALL_CLOCK_OUTS:
+				MyRequestResult result95 = new MyRequestResult();
+				result95.setClockOutResponseList(ClockInOutHandler.getClockOuts(action));
+				return result95;
+				
+			case ClockInOutCommand.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result97 = new MyRequestResult();
+				result97.setClockOutResponseList(ClockInOutHandler.getClockOutsByLoggedSystemUserProfileSchools(action));
+				return result97;
+	
+				
 
 				
 				

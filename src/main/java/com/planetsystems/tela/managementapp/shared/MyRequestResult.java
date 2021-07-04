@@ -5,6 +5,8 @@ import java.util.List;
 import com.gwtplatform.dispatch.rpc.shared.Result;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.ClockInDTO;
+import com.planetsystems.tela.dto.ClockOutDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
@@ -72,6 +74,12 @@ public class MyRequestResult implements Result {
 	
 	SystemResponseDTO<List<LearnerAttendanceDTO>> learnerAtendanceResponseList;
 	SystemResponseDTO<LearnerAttendanceDTO> learnerAttendanceResponse;
+	
+	SystemResponseDTO<ClockInDTO> clockInResponse;
+	SystemResponseDTO<List<ClockInDTO>> clockInResponseList;
+	
+	SystemResponseDTO<ClockOutDTO> clockOutResponse;
+	SystemResponseDTO<List<ClockOutDTO>> clockOutResponseList;
 	
 	
 
@@ -335,6 +343,38 @@ public class MyRequestResult implements Result {
 
 	public void setLearnerAttendanceResponse(SystemResponseDTO<LearnerAttendanceDTO> learnerAttendanceResponse) {
 		this.learnerAttendanceResponse = learnerAttendanceResponse;
+	}
+
+	public SystemResponseDTO<ClockInDTO> getClockInResponse() {
+		return clockInResponse;
+	}
+
+	public void setClockInResponse(SystemResponseDTO<ClockInDTO> clockInResponse) {
+		this.clockInResponse = clockInResponse;
+	}
+
+	public SystemResponseDTO<List<ClockInDTO>> getClockInResponseList() {
+		return clockInResponseList;
+	}
+
+	public void setClockInResponseList(SystemResponseDTO<List<ClockInDTO>> clockInResponseList) {
+		this.clockInResponseList = clockInResponseList;
+	}
+
+	public SystemResponseDTO<ClockOutDTO> getClockOutResponse() {
+		return clockOutResponse;
+	}
+
+	public void setClockOutResponse(SystemResponseDTO<ClockOutDTO> clockOutResponse) {
+		this.clockOutResponse = clockOutResponse;
+	}
+
+	public SystemResponseDTO<List<ClockOutDTO>> getClockOutResponseList() {
+		return clockOutResponseList;
+	}
+
+	public void setClockOutResponseList(SystemResponseDTO<List<ClockOutDTO>> clockOutResponseList) {
+		this.clockOutResponseList = clockOutResponseList;
 	}
 
 	
