@@ -1,0 +1,10 @@
+package com.planetsystems.tela.managementapp.shared.requestcommands;
+
+public interface TimetableCommands{
+	String SAVE_TIMETABLE = "SAVE_TIMETABLE";
+	String UPDATE_TIMETABLE = "UPDATE_TIMETABLE";
+	String DELETE_TIMETABLE = "DELETE_TIMETABLE";
+	String GET_ALL_TIMETABLES = "GET_ALL_TIMETABLES";
+	String GET_TIMETABLESS_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_TIMETABLESS_BY_SYSTEM_USER_PROFILE_SCHOOLS";
+	
+}

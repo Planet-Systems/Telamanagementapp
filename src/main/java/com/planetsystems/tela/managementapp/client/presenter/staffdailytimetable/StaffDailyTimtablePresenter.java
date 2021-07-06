@@ -19,25 +19,40 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableLessonDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
+import com.planetsystems.tela.dto.TimeTableDTO;
+import com.planetsystems.tela.dto.TimeTableLessonDTO;
+import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.timetable.LessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailyTimetableCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailyTimetableLessonCommands;
+import com.planetsystems.tela.managementapp.shared.requestcommands.TimetableLessonCommands;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -118,7 +133,7 @@ public class StaffDailyTimtablePresenter
 					
 					final String defaultValue = null;
 
-					ComboUtil.loadAcademicYearCombo(getView().getStaffDailyTimetablePane().getAcademicYearCombo(),
+					ComboUtil2.loadAcademicYearCombo(getView().getStaffDailyTimetablePane().getAcademicYearCombo(),
 							dispatcher, placeManager, defaultValue);
 					
 					getView().getStaffDailyTimetablePane().getAcademicYearCombo()
@@ -126,7 +141,7 @@ public class StaffDailyTimtablePresenter
 
 						@Override
 						public void onChanged(ChangedEvent event) {
-							ComboUtil.loadAcademicTermComboByAcademicYear(
+							ComboUtil2.loadAcademicTermComboByAcademicYear(
 									getView().getStaffDailyTimetablePane().getAcademicYearCombo(),
 									getView().getStaffDailyTimetablePane().getAcademicTermCombo(), dispatcher,
 									placeManager, defaultValue);
@@ -136,12 +151,12 @@ public class StaffDailyTimtablePresenter
 					
 					
 
-					ComboUtil.loadRegionCombo(getView().getStaffDailyTimetablePane().getRegionCombo() , dispatcher, placeManager, defaultValue);
+					ComboUtil2.loadRegionCombo(getView().getStaffDailyTimetablePane().getRegionCombo() , dispatcher, placeManager, defaultValue);
 					getView().getStaffDailyTimetablePane().getRegionCombo().addChangedHandler(new ChangedHandler() {
 						
 						@Override
 						public void onChanged(ChangedEvent event) {
-							ComboUtil.loadDistrictComboByRegion(getView().getStaffDailyTimetablePane().getRegionCombo() , 
+							ComboUtil2.loadDistrictComboByRegion(getView().getStaffDailyTimetablePane().getRegionCombo() , 
 									getView().getStaffDailyTimetablePane().getDistrictCombo(), dispatcher, placeManager, defaultValue);
 						}
 					});
@@ -151,7 +166,7 @@ public class StaffDailyTimtablePresenter
 
 						@Override
 						public void onChanged(ChangedEvent event) {
-							ComboUtil.loadSchoolComboByDistrict(
+							ComboUtil2.loadSchoolComboByDistrict(
 									getView().getStaffDailyTimetablePane().getDistrictCombo(),
 									getView().getStaffDailyTimetablePane().getSchoolCombo(), dispatcher, placeManager,
 									null);
@@ -161,7 +176,7 @@ public class StaffDailyTimtablePresenter
 					
 
 					disableEnableStaffDailyAttendancePaneLoadLessonButton();
-					getStaffDailyTimetablesByAcademicYearTermDistrictSchoolDate();
+					getStaffDailyTimetablesByAcademicYearTermDistrictSchoolDate2();
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -173,6 +188,7 @@ public class StaffDailyTimtablePresenter
 		});
 	}
 
+	@Deprecated
 	private void getStaffDailyTimetablesByAcademicYearTermDistrictSchoolDate() {
 		getView().getStaffDailyTimetablePane().getLoadAttendanceButton().addClickHandler(new ClickHandler() {
 
@@ -267,17 +283,17 @@ public class StaffDailyTimtablePresenter
 
 				disableEnableCreateStaffDailyTaskPaneLoadLessonButton(createStaffDailyTimetableLessonPane);
 
-				ComboUtil.loadAcademicYearCombo(createStaffDailyTimetableLessonPane.getAcademicYearCombo(), dispatcher,
+				ComboUtil2.loadAcademicYearCombo(createStaffDailyTimetableLessonPane.getAcademicYearCombo(), dispatcher,
 						placeManager, null);
 
-				ComboUtil.loadDistrictCombo(createStaffDailyTimetableLessonPane.getDistrictCombo(), dispatcher, placeManager,
+				ComboUtil2.loadDistrictCombo(createStaffDailyTimetableLessonPane.getDistrictCombo(), dispatcher, placeManager,
 						null);
 
 				createStaffDailyTimetableLessonPane.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
 					@Override
 					public void onChanged(ChangedEvent event) {
-						ComboUtil.loadSchoolComboByDistrict(createStaffDailyTimetableLessonPane.getDistrictCombo(),
+						ComboUtil2.loadSchoolComboByDistrict(createStaffDailyTimetableLessonPane.getDistrictCombo(),
 								createStaffDailyTimetableLessonPane.getSchoolCombo(), dispatcher, placeManager, null);
 					}
 				});
@@ -286,7 +302,7 @@ public class StaffDailyTimtablePresenter
 
 					@Override
 					public void onChanged(ChangedEvent event) {
-						ComboUtil.loadAcademicTermComboByAcademicYear(createStaffDailyTimetableLessonPane.getAcademicYearCombo(),
+						ComboUtil2.loadAcademicTermComboByAcademicYear(createStaffDailyTimetableLessonPane.getAcademicYearCombo(),
 								createStaffDailyTimetableLessonPane.getAcademicTermCombo(), dispatcher, placeManager, null);
 					}
 				});
@@ -295,13 +311,13 @@ public class StaffDailyTimtablePresenter
 
 					@Override
 					public void onChanged(ChangedEvent event) {
-						ComboUtil.loadSchoolStaffComboBySchool(createStaffDailyTimetableLessonPane.getSchoolCombo(),
+						ComboUtil2.loadSchoolStaffComboBySchool(createStaffDailyTimetableLessonPane.getSchoolCombo(),
 								createStaffDailyTimetableLessonPane.getSchoolStaffCombo(), dispatcher, placeManager, null);
 					}
 				});
 
-				getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(createStaffDailyTimetableLessonPane);
-				saveStaffDailyTimetableLesson(createStaffDailyTimetableLessonPane);
+				getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay2(createStaffDailyTimetableLessonPane);
+				saveStaffDailyTimetableLesson2(createStaffDailyTimetableLessonPane);
 
 				closeCreateStaffDailyTaskTab(createStaffDailyTimetableLessonPane);
 
@@ -324,6 +340,7 @@ public class StaffDailyTimtablePresenter
 
 	///////////////////////////
 
+	@Deprecated
 	private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay(
 			final CreateStaffDailyTimetableLessonPane createStaffDailyTimetableLessonPane) {
 		createStaffDailyTimetableLessonPane.getLoadLessonButton().addClickHandler(new ClickHandler() {
@@ -445,6 +462,7 @@ public class StaffDailyTimtablePresenter
 
 	}
 
+	@Deprecated
 	private void saveStaffDailyTimetableLesson(final CreateStaffDailyTimetableLessonPane createStaffDailyTimetableLessonPane) {
 		createStaffDailyTimetableLessonPane.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -564,22 +582,34 @@ public class StaffDailyTimtablePresenter
 			final ViewStaffDailyTimetableLessonPane viewStaffDailyTimetableLessonPane, final ListGridRecord record) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.SCHOOL_STAFF_ID, record.getAttribute(StaffDailyTimetableListGrid.SCHOOL_STAFF_ID));
-		map.put(RequestDelimeters.STAFF_DAILY_TIMETALE_ID,
-				record.getAttribute(StaffDailyTimetableListGrid.ID));
-		map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+		FilterDTO dto = new FilterDTO();
+		dto.setSchoolStaffDTO(new SchoolStaffDTO(record.getAttribute(StaffDailyTimetableListGrid.SCHOOL_STAFF_ID)));
+		dto.setStaffDailyTimeTableDTO(new StaffDailyTimeTableDTO(record.getAttribute(StaffDailyTimetableListGrid.ID)));
+		dto.setDate(dateFormat.format(new Date()));
+		
+		map.put(MyRequestAction.DATA, dto);
+
 		
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
-			map.put(NetworkDataUtil.ACTION , RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE);
+			map.put(MyRequestAction.COMMAND , StaffDailyTimetableLessonCommands.GET_ALL_STAFF_DAILY_TIME_TABLE_LESSONS);
 			else
-		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_DAILY_TIMETABLE_SCHOOL_STAFF_DATE);
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+		map.put(MyRequestAction.COMMAND , StaffDailyTimetableLessonCommands.GET_STAFF_DAILY_TIME_TABLES_LESSONS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+		
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
-			public void onNetworkResult(RequestResult result) {
-				viewStaffDailyTimetableLessonPane.getDailyTaskListGrid()
-						.addRecordsToGrid(result.getStaffDailyTimeTableLessonDTOs());
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDTO = result.getStaffDailyTimeTableLessonResponseList();
+					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null) {
+							viewStaffDailyTimetableLessonPane.getDailyTaskListGrid().addRecordsToGrid(responseDTO.getData());
+						}
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+				
 			}
 		});
 	}
@@ -595,5 +625,211 @@ public class StaffDailyTimtablePresenter
 		});
 
 	}
+	
+	
+	
+	//////////////////////////////////////////////////////////NEW NEW NEW NEW
+	
+	private void getStaffDailyTimetablesByAcademicYearTermDistrictSchoolDate2() {
+		getView().getStaffDailyTimetablePane().getLoadAttendanceButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				final String academicYearId = getView().getStaffDailyTimetablePane().getAcademicYearCombo()
+						.getValueAsString();
+				final String academicTermId = getView().getStaffDailyTimetablePane().getAcademicTermCombo()
+						.getValueAsString();
+				final String districtId = getView().getStaffDailyTimetablePane().getDistrictCombo().getValueAsString();
+				final String schoolId = getView().getStaffDailyTimetablePane().getSchoolCombo().getValueAsString();
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				FilterDTO dto = new FilterDTO();
+				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				dto.setDate(dateFormat.format(getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate()));
+				map.put(MyRequestAction.DATA, dto);
+				
+				
+
+				if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
+				   map.put(MyRequestAction.COMMAND, StaffDailyTimetableCommand.GET_ALL_STAFF_DAILY_TIME_TABLES);
+					else
+				map.put(MyRequestAction.COMMAND,
+						StaffDailyTimetableCommand.GET_STAFF_DAILY_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+				
+				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+					@Override
+					public void onNetworkResult(MyRequestResult result) {
+						if (result != null) {
+							SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDTO = result.getStaffDailyTimeTableResponseList();
+							if (responseDTO.isStatus()) {
+								if(responseDTO.getData() !=null) {
+									getView().getStaffDailyTimetablePane().getStaffDailyAttendanceListGrid()
+									.addRecordsToGrid(responseDTO.getData());
+								}	
+							
+							} else {
+								SC.say(responseDTO.getMessage());
+							}
+						}
+					
+					}
+				});
+			}
+		});
+
+	}
+	
+	
+	
+	private void getTimeTableLessonsForStaffAcademicYearTermDistrictSchoolDay2(
+			final CreateStaffDailyTimetableLessonPane createStaffDailyTimetableLessonPane) {
+		createStaffDailyTimetableLessonPane.getLoadLessonButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoFieldCreateStaffDailyTaskPaneFieldIsEmpty(createStaffDailyTimetableLessonPane)) {
+					String academicYearId = createStaffDailyTimetableLessonPane.getAcademicYearCombo().getValueAsString();
+					String academicTermId = createStaffDailyTimetableLessonPane.getAcademicTermCombo().getValueAsString();
+					String districtId = createStaffDailyTimetableLessonPane.getDistrictCombo().getValueAsString();
+					String schoolId = createStaffDailyTimetableLessonPane.getSchoolCombo().getValueAsString();
+					String schoolStaffId = createStaffDailyTimetableLessonPane.getSchoolStaffCombo().getValueAsString();
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					FilterDTO dto = new FilterDTO();
+					dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+					dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+					dto.setDistrictDTO(new DistrictDTO(districtId));
+					dto.setSchoolDTO(new SchoolDTO(schoolId));
+					dto.setSchoolStaffDTO(new SchoolStaffDTO(schoolStaffId));
+					dto.setDay(dayFormat.format(new Date()));
+					
+					map.put(MyRequestAction.COMMAND , TimetableLessonCommands.GET_ALL_TIMETABLE_LESSONS);
+					map.put(MyRequestAction.DATA , dto);
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<List<TimeTableLessonDTO>> responseDTO = result.getTimeTableLessonResponseList();
+								if (responseDTO.isStatus()) {
+									if(responseDTO.getData() != null) {
+										createStaffDailyTimetableLessonPane.getLessonListGrid().addRecordsToGrid(responseDTO.getData());
+
+										if (responseDTO.getData().isEmpty())
+											createStaffDailyTimetableLessonPane.getSaveButton().disable();
+										else
+											createStaffDailyTimetableLessonPane.getSaveButton().enable();
+									}
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+					
+						}
+					});
+
+				} else {
+					SC.say("Please Fill all the fields");
+				}
+			}
+		});
+	}
+	
+	
+	
+	private void saveStaffDailyTimetableLesson2(final CreateStaffDailyTimetableLessonPane createStaffDailyTimetableLessonPane) {
+		createStaffDailyTimetableLessonPane.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (createStaffDailyTimetableLessonPane.getLessonListGrid().anySelected()) {
+					final ComboBox termBox = createStaffDailyTimetableLessonPane.getAcademicTermCombo();
+					final ComboBox schoolBox = createStaffDailyTimetableLessonPane.getSchoolCombo();
+					final ComboBox districtBox = createStaffDailyTimetableLessonPane.getDistrictCombo();
+					final ComboBox staffBox = createStaffDailyTimetableLessonPane.getSchoolStaffCombo();
+					final TextItem dayItem = createStaffDailyTimetableLessonPane.getDayField();
+
+					StaffDailyTimeTableDTO staffDailyTimeTableDTO = new StaffDailyTimeTableDTO();
+					staffDailyTimeTableDTO.setAcademicTermDTO(new AcademicTermDTO(termBox.getValueAsString()));
+
+					staffDailyTimeTableDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					staffDailyTimeTableDTO.setLessonDate(dateFormat.format(new Date()));
+
+					SchoolDTO schoolDto = new SchoolDTO(schoolBox.getValueAsString());
+					schoolDto.setDistrictDTO(new DistrictDTO(districtBox.getValueAsString()));
+					
+					SchoolStaffDTO staffDto = new SchoolStaffDTO(staffBox.getValueAsString());
+					staffDto.setSchoolDTO(schoolDto);
+					
+					staffDailyTimeTableDTO.setSchoolStaffDTO(staffDto);
+					
+
+					ListGridRecord[] records = createStaffDailyTimetableLessonPane.getLessonListGrid().getSelectedRecords();
+					List<StaffDailyTimeTableLessonDTO> staffDailyTimeTableLessonDTOs = new ArrayList<StaffDailyTimeTableLessonDTO>();
+
+					for (int i = 0; i < records.length; i++) {
+						ListGridRecord record = records[i];
+
+						StaffDailyTimeTableLessonDTO lessonDTO = new StaffDailyTimeTableLessonDTO();
+						lessonDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+						lessonDTO.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+						lessonDTO.setLessonDate(dateFormat.format(new Date()));
+						lessonDTO.setEndTime(record.getAttributeAsString(LessonListGrid.END_TIME));
+						lessonDTO.setStartTime(record.getAttributeAsString(LessonListGrid.START_TIME));
+						lessonDTO.setSchoolClassDTO(
+								new SchoolClassDTO(record.getAttributeAsString(LessonListGrid.CLASS_ID)));
+						lessonDTO.setSubjectDTO(new SubjectDTO(record.getAttributeAsString(LessonListGrid.SUBJECT_ID)));
+
+						staffDailyTimeTableLessonDTOs.add(lessonDTO);
+
+					}
+					staffDailyTimeTableDTO.setStaffDailyTimeTableLessonDTOS(staffDailyTimeTableLessonDTOs);
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.COMMAND, StaffDailyTimetableCommand.SAVE_STAFF_DAILY_TIME_TABLE);
+					map.put(MyRequestAction.DATA, staffDailyTimeTableDTO);
+					
+
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<StaffDailyTimeTableDTO> responseDTO = result.getStaffDailyTimeTableResponse();
+								if (responseDTO.isStatus()) {
+									SC.say("Success" , responseDTO.getMessage());
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+							
+							
+							
+						}
+					});
+
+				} else {
+					SC.say("Please select lessons");
+				}
+
+			}
+		});
+
+	}
+
+	
+	
+	
+	
+	
 
 }

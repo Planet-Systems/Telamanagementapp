@@ -16,7 +16,13 @@ import com.planetsystems.tela.managementapp.server.handlers.MainPresenterHandler
 import com.planetsystems.tela.managementapp.server.handlers.RegionDistrictHandler;
 import com.planetsystems.tela.managementapp.server.handlers.SchoolCatergoryClassHandler;
 import com.planetsystems.tela.managementapp.server.handlers.SchoolStaffEnrollmentHandler;
+import com.planetsystems.tela.managementapp.server.handlers.StaffDailyTimetableHandler;
+import com.planetsystems.tela.managementapp.server.handlers.StaffDailyTimetableLessonHandler;
+import com.planetsystems.tela.managementapp.server.handlers.StaffDailyTimetableSupervisionHandler;
+import com.planetsystems.tela.managementapp.server.handlers.StaffDailyTimetableSupervisionTaskHandler;
 import com.planetsystems.tela.managementapp.server.handlers.SubjectCategoryHandler;
+import com.planetsystems.tela.managementapp.server.handlers.TimeTableLessonHandler;
+import com.planetsystems.tela.managementapp.server.handlers.TimetableHandler;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
@@ -27,9 +33,15 @@ import com.planetsystems.tela.managementapp.shared.requestcommands.LearnerEnroll
 import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolStaffEnrollmentCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailySupervisionCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailySupervisionTaskCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailyTimetableCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailyTimetableLessonCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.TimetableCommands;
+import com.planetsystems.tela.managementapp.shared.requestcommands.TimetableLessonCommands;
 
 public class MyRequestActionHandler implements ActionHandler<MyRequestAction, MyRequestResult> {
 
@@ -37,6 +49,7 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 	public MyRequestResult execute(MyRequestAction action, ExecutionContext context) throws ActionException {
 		try {
 			String command = (String) action.getRequestBody().get(MyRequestAction.COMMAND);
+			
 			switch (command) {
 			case AuthRequestCommand.LOGIN:
 				MyRequestResult result = new MyRequestResult();
@@ -164,6 +177,11 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result25.setDistrictResponseList(RegionDistrictHandler.getDistricts(action));
 				return result25;
 				
+			case RegionDistrictCommands.GET_ALL_DISTRICTS_BY_REGION:
+				MyRequestResult result108 = new MyRequestResult();
+				result108.setDistrictResponseList(RegionDistrictHandler.getDistrictByRegion(action));
+				return result108;
+				
 			case RegionDistrictCommands.GET_DISTRICT_BY_ID:
 				MyRequestResult result26 = new MyRequestResult();
 				result26.setDistrictResponse(RegionDistrictHandler.getDistrictById(action));
@@ -274,10 +292,10 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result47.setSchoolClassResponse(SchoolCatergoryClassHandler.getSchoolClassById(action));
 				return result47;
 				
-			case SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES_BY_SCHOOL:
-				MyRequestResult result48 = new MyRequestResult();
-				result48.setSchoolClassResponseList(SchoolCatergoryClassHandler.getSchoolClassesBySchool(action));
-				return result48;
+//			case SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES_BY_SCHOOL:
+//				MyRequestResult result48 = new MyRequestResult();
+//				result48.setSchoolClassResponseList(SchoolCatergoryClassHandler.getSchoolClassesBySchool(action));
+//				return result48;
 		
 				
 			case SchoolCategoryClassCommand.DELETE_SCHOOL_CLASS:
@@ -515,6 +533,83 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result97 = new MyRequestResult();
 				result97.setClockOutResponseList(ClockInOutHandler.getClockOutsByLoggedSystemUserProfileSchools(action));
 				return result97;
+	
+			case TimetableCommands.SAVE_TIMETABLE:
+				MyRequestResult result98 = new MyRequestResult();
+				result98.setTimeTableResponse(TimetableHandler.saveTimeTable(action));
+				return result98;
+				
+			case TimetableCommands.GET_ALL_TIMETABLES:
+				MyRequestResult result99 = new MyRequestResult();
+				result99.setTimeTableResponseList(TimetableHandler.getTimeTables(action));
+				return result99;
+				
+			case TimetableCommands.GET_TIMETABLESS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result100 = new MyRequestResult();
+				result100.setTimeTableResponseList(TimetableHandler.getTimeTablesByLoggedSystemUserProfileSchools(action));
+				return result100;
+	
+				
+			case TimetableLessonCommands.SAVE_TIMETABLE_LESSON:
+				MyRequestResult result101 = new MyRequestResult();
+				result101.setTimeTableLessonResponse(TimeTableLessonHandler.saveTimeTableLesson(action));
+				return result101;
+				
+			case TimetableLessonCommands.GET_ALL_TIMETABLE_LESSONS:
+				MyRequestResult result102 = new MyRequestResult();
+				result102.setTimeTableLessonResponseList(TimeTableLessonHandler.getTimeTableLessons(action));
+				return result102;
+				
+			case TimetableLessonCommands.DELETE_TIMETABLE_LESSON_BY_ID:
+				MyRequestResult result103 = new MyRequestResult();
+				result103.setResponseText(TimeTableLessonHandler.deleteTimeTableLesson(action));
+				return result103;
+				
+			case StaffDailyTimetableCommand.SAVE_STAFF_DAILY_TIME_TABLE:
+				MyRequestResult result104 = new MyRequestResult();
+				result104.setStaffDailyTimeTableResponse(StaffDailyTimetableHandler.saveStaffDailyTimeTable(action));
+				return result104;
+				
+			case StaffDailyTimetableCommand.GET_ALL_STAFF_DAILY_TIME_TABLES:
+				MyRequestResult result105 = new MyRequestResult();
+				result105.setStaffDailyTimeTableResponseList(StaffDailyTimetableHandler.getStaffDailyTimeTables(action));
+				return result105;
+				
+			case StaffDailyTimetableCommand.DELETE_STAFF_DAILY_TIME_TABLE:
+				MyRequestResult result106 = new MyRequestResult();
+				result106.setResponseText(StaffDailyTimetableHandler.deleteStaffDailyTimeTable(action));
+				return result106;
+				
+			case StaffDailyTimetableCommand.GET_STAFF_DAILY_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result107 = new MyRequestResult();
+				result107.setStaffDailyTimeTableResponseList(StaffDailyTimetableHandler.getStaffDailyTimeTablesByLoggedSystemUserProfileSchools(action));
+				return result107;
+				
+			case StaffDailyTimetableLessonCommands.GET_ALL_STAFF_DAILY_TIME_TABLE_LESSONS:
+				MyRequestResult result109 = new MyRequestResult();
+				result109.setStaffDailyTimeTableLessonResponseList(StaffDailyTimetableLessonHandler.getStaffDailyTimeTableLessons(action));
+				return result109;
+				
+			case StaffDailySupervisionCommand.SAVE_STAFF_DAILY_SUPERVISION:
+				MyRequestResult result110 = new MyRequestResult();
+				result110.setStaffDailyAttendanceSupervisionResponse(StaffDailyTimetableSupervisionHandler.saveStaffDailyAttendanceSupervision(action));
+				return result110;
+				
+			case StaffDailySupervisionCommand.GET_ALL_STAFF_DAILY_SUPERVISIONS:
+				MyRequestResult result111 = new MyRequestResult();
+				result111.setStaffDailyAttendanceSupervisionResponseList(StaffDailyTimetableSupervisionHandler.getStaffDailyAttendanceSupervisions(action));
+				return result111;
+		
+			case StaffDailySupervisionCommand.GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE:
+				MyRequestResult result112 = new MyRequestResult();
+				result112.setStaffDailyAttendanceSupervisionResponseList(StaffDailyTimetableSupervisionHandler.getStaffDailyTimeTablesByLoggedSystemUserProfileSchools(action));
+				return result112;
+				
+			case StaffDailySupervisionTaskCommand.GET_ALL_STAFF_DAILY_SUPERVISION_TASKS:
+				MyRequestResult result113 = new MyRequestResult();
+				result113.setAttendanceTaskSupervisionResponseList(StaffDailyTimetableSupervisionTaskHandler.getStaffDailyTimetableSupervisionTasks(action));
+				return result113;
+		
 	
 				
 

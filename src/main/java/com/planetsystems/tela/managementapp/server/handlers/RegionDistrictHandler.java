@@ -262,7 +262,6 @@ public static SystemResponseDTO<DistrictDTO> saveDistrict(MyRequestAction action
 	
 	public static SystemResponseDTO<List<DistrictDTO>> getDistrictByRegion(MyRequestAction action){
         String RegionId = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
-		DistrictDTO dto = (DistrictDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 
 		Client client = ClientBuilder.newClient();
@@ -270,7 +269,7 @@ public static SystemResponseDTO<DistrictDTO> saveDistrict(MyRequestAction action
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
 		SystemResponseDTO<List<DistrictDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("regions2")
-				.path(RegionId).path("districts2").request(MediaType.APPLICATION_JSON).headers(headers)
+				.path(RegionId).path("districts").request(MediaType.APPLICATION_JSON).headers(headers)
 				.get(new GenericType<SystemResponseDTO<List<DistrictDTO>>>() {
 				});
 

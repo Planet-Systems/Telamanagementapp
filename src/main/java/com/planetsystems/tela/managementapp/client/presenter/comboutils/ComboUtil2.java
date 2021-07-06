@@ -23,6 +23,7 @@ import com.planetsystems.tela.managementapp.client.presenter.networkutil.Network
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
+import com.planetsystems.tela.managementapp.client.presenter.timetable.TimeTableListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
@@ -590,9 +591,10 @@ public class ComboUtil2 {
 			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.SCHOOL_ID, schoolCombo.getValueAsString());
+		FilterDTO dto = new FilterDTO();
+		dto.setSchoolDTO(new SchoolDTO(schoolCombo.getValueAsString()));
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
-		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES_BY_SCHOOL);
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
@@ -623,29 +625,42 @@ public class ComboUtil2 {
 		});
 	}
 
-	@Deprecated
+	
+	
 	public static void loadSchoolClassesComboBySchoolAcademicTerm(final ComboBox academicTermCombo,
 			final ComboBox schoolCombo, final ComboBox schoolClassCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.SCHOOL_ID, schoolCombo.getValueAsString());
-		map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermCombo.getValueAsString());
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM);
+		FilterDTO dto = new FilterDTO();
+		dto.setAcademicTermDTO(new AcademicTermDTO(academicTermCombo.getValueAsString()));
+		dto.setSchoolDTO(new SchoolDTO(schoolClassCombo.getValueAsString()));
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		
 
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
-			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolClassDTO>> responseDTO = result.getSchoolClassResponseList();
+					if (responseDTO.isStatus()) {
+                        if(responseDTO.getData() != null) {
+                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
-				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
-					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-				}
-				schoolClassCombo.setValueMap(valueMap);
+            				for (SchoolClassDTO schoolClassDTO : responseDTO.getData()) {
+            					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
+            				}
+            				schoolClassCombo.setValueMap(valueMap);
 
-				if (defaultValue != null) {
-					schoolClassCombo.setValue(defaultValue);
+            				if (defaultValue != null) {
+            					schoolClassCombo.setValue(defaultValue);
+            				}
+                        }
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
 				}
+			
 			}
 		});
 
@@ -689,6 +704,7 @@ public class ComboUtil2 {
 	
 	
 
+	@Deprecated
 	public static void loadSystemUserGroupCombo(final ComboBox systemUserGroupCombo, DispatchAsync dispatcher,
 			PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();

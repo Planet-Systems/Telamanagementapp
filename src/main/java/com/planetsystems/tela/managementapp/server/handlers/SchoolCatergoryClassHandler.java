@@ -13,6 +13,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
@@ -327,14 +328,15 @@ public static SystemResponseDTO<SchoolClassDTO> saveSchoolClass(MyRequestAction 
 	
 	public static SystemResponseDTO<List<SchoolClassDTO>> getSchoolClassses(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 
 		Client client = ClientBuilder.newClient();
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("schoolClasses")
+		SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("filterSchoolClasses")
 				.request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
+				.post(Entity.entity(dto, MediaType.APPLICATION_JSON)  ,new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
 				});
 
 		client.close();
@@ -360,23 +362,6 @@ public static SystemResponseDTO<SchoolClassDTO> saveSchoolClass(MyRequestAction 
 		return responseDto;
 	}
 	
-	public static SystemResponseDTO<List<SchoolClassDTO>> getSchoolClassesBySchool(MyRequestAction action){
-		String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
-		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
-
-		Client client = ClientBuilder.newClient();
-		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
-		headers.add(HttpHeaders.AUTHORIZATION, token);
-
-		SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("schools")
-				.path(id).path("schoolClasses").request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
-				});
-
-		client.close();
-		System.out.println("GET  SCHOOL CLASS BY SCHOOL " + responseDto);
-		return responseDto;
-	}
 	
 	
 	public static SystemResponseDTO<String> deleteSchoolClass(MyRequestAction action){
