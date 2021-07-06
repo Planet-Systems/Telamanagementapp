@@ -19,14 +19,11 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
-import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
@@ -200,7 +197,7 @@ public class SubjectCategoryPresenter
 			public void onClick(MenuItemClickEvent event) {
 //	   		SC.say("Advanced Search");
 				FilterSubjectWindow window = new FilterSubjectWindow();
-				loadFilterSubjectCategoryCombo(window);
+				loadFilterSubjectCategoryCombo2(window);
 				window.show();
 				filterSubjectsSubjectCategory(window);
 			}
@@ -229,41 +226,6 @@ public class SubjectCategoryPresenter
 		window.getNameField().clearValue();
 	}
 
-	@Deprecated
-	private void saveSubjectCategory(final SubjectCategoryWindow window) {
-		window.getSaveButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-
-				if (checkIfNoSubjectCategoryWindowFieldIsEmpty(window)) {
-					SubjectCategoryDTO dto = new SubjectCategoryDTO();
-					dto.setName(window.getNameField().getValueAsString());
-					dto.setCode(window.getCodeField().getValueAsString());
-					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_SUBJECT_CATEGORY, dto);
-					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_SUBJECT_CATEGORY);
-
-					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-						@Override
-						public void onNetworkResult(RequestResult result) {
-							clearSubjectCategoryWindowFields(window);
-							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllSubjectCategories();
-						}
-					});
-
-				} else {
-					SC.say("Please fill all fields");
-				}
-
-			}
-
-		});
-	}
 
 	private boolean checkIfNoSubjectCategoryWindowFieldIsEmpty(SubjectCategoryWindow window) {
 		boolean flag = true;
@@ -296,103 +258,12 @@ public class SubjectCategoryPresenter
 
 	}
 
-	@Deprecated
-	private void updateSubjectCategory(final SubjectCategoryWindow window) {
-		window.getSaveButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ListGridRecord record = getView().getSubCategoryPane().getListGrid().getSelectedRecord();
-
-				SubjectCategoryDTO dto = new SubjectCategoryDTO();
-				dto.setName(window.getNameField().getValueAsString());
-				dto.setCode(window.getCodeField().getValueAsString());
-				dto.setId(record.getAttribute(SubjectCategoryListGrid.ID));
-				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
-
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.UPDATE_SUBJECT_CATEGORY, dto);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.UPDATE_SUBJECT_CATEGORY);
-
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						clearSubjectCategoryWindowFields(window);
-						window.close();
-						getAllSubjectCategories();
-					}
-				});
-
-			}
-		});
-
-	}
 
 	private void loadFieldsToEdit(SubjectCategoryWindow window) {
 		ListGridRecord record = getView().getSubCategoryPane().getListGrid().getSelectedRecord();
 
 		window.getCodeField().setValue(record.getAttribute(SchoolClassListGrid.CODE));
 		window.getNameField().setValue(record.getAttribute(SchoolClassListGrid.NAME));
-	}
-	
-	
-
-	@Deprecated
-	private void deleteSubjectCategory(MenuButton button) {
-		button.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if (getView().getSubCategoryPane().getListGrid().anySelected()) {
-					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
-
-						@Override
-						public void execute(Boolean value) {
-							if (value) {
-								ListGridRecord record = getView().getSubCategoryPane().getListGrid()
-										.getSelectedRecord();
-								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestDelimeters.SUBJECT_CATEGORY_ID, record.getAttributeAsString("id"));
-								map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_SUBJECT_CATEGORY);
-
-								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-									@Override
-									public void onNetworkResult(RequestResult result) {
-										setSubjectCategoryGridData(result.getSubjectCategoryDTOs());
-									}
-								});
-
-							}
-						}
-					});
-				} else {
-					SC.warn("Please check atleast one record");
-				}
-			}
-		});
-
-	}
-
-	@Deprecated
-	private void getAllSubjectCategories() {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SUBJECT_CATEGORY, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SUBJECT_CATEGORY);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				setSubjectCategoryGridData(result.getSubjectCategoryDTOs());
-			}
-		});
-	}
-
-	private void setSubjectCategoryGridData(List<SubjectCategoryDTO> subjectCategoryDTOs) {
-		getView().getSubCategoryPane().getListGrid().addRecordsToGrid(subjectCategoryDTOs);
 	}
 
 	///////////////////////////////////////// SUBJECT/////////////////////////////////////////////////////////////////////////////////
@@ -411,21 +282,10 @@ public class SubjectCategoryPresenter
 		});
 	}
 
-	@Deprecated
-	private void loadSubjectCategoryCombo(final SubjectWindow window, final String defaultValue) {
-		ComboUtil.loadSubjectCategoryCombo(window.getSubjectCategoryCombo(), dispatcher, placeManager, defaultValue);
-	}
-	
 	private void loadSubjectCategoryCombo2(final SubjectWindow window, final String defaultValue) {
 		ComboUtil2.loadSubjectCategoryCombo(window.getSubjectCategoryCombo(), dispatcher, placeManager, defaultValue);
 	}
 
-
-	@Deprecated
-	private void loadFilterSubjectCategoryCombo(final FilterSubjectWindow window) {
-		ComboUtil.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo(), dispatcher, placeManager,null);
-	}
-	
 	private void loadFilterSubjectCategoryCombo2(final FilterSubjectWindow window) {
 		ComboUtil2.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo(), dispatcher, placeManager,null);
 	}
@@ -434,46 +294,6 @@ public class SubjectCategoryPresenter
 		window.getCodeField().clearValue();
 		window.getNameField().clearValue();
 		window.getSubjectCategoryCombo().clearValue();
-	}
-
-	
-	@Deprecated
-	private void saveSubject(final SubjectWindow window) {
-		window.getSaveButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-
-				if (checkIfNoSubjectWindowFieldIsEmpty(window)) {
-					SubjectDTO dto = new SubjectDTO();
-					dto.setName(window.getNameField().getValueAsString());
-					dto.setCode(window.getCodeField().getValueAsString());
-					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-
-					SubjectCategoryDTO categoryDTO = new SubjectCategoryDTO();
-					categoryDTO.setId(window.getSubjectCategoryCombo().getValueAsString());
-					dto.setSubjectCategoryDTO(categoryDTO);
-
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_SUBJECT, dto);
-					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_SUBJECT);
-					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-						@Override
-						public void onNetworkResult(RequestResult result) {
-							clearSubjectWindowFields(window);
-							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllSubjects();
-						}
-					});
-
-				} else {
-					SC.warn("Please fill all fields");
-				}
-
-			}
-
-		});
 	}
 
 	private boolean checkIfNoSubjectWindowFieldIsEmpty(SubjectWindow window) {
@@ -510,17 +330,6 @@ public class SubjectCategoryPresenter
 	}
 
 	
-	@Deprecated
-	private void loadFieldsToEdit(SubjectWindow window) {
-		ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
-
-		window.getSubjectCategoryCombo().setValue(record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY));
-		window.getCodeField().setValue(record.getAttribute(SubjectListGrid.CODE));
-		window.getNameField().setValue(record.getAttribute(SubjectListGrid.NAME));
-
-		loadSubjectCategoryCombo(window, record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY_ID));
-	}
-	
 	private void loadFieldsToEdit2(SubjectWindow window) {
 		ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
 
@@ -531,100 +340,8 @@ public class SubjectCategoryPresenter
 		loadSubjectCategoryCombo2(window, record.getAttribute(SubjectListGrid.SUBJECT_CATEGORY_ID));
 	}
 
-
 	
-	@Deprecated
-	private void updateSubject(final SubjectWindow window) {
-		window.getSaveButton().addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-				ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
-
-				SubjectDTO dto = new SubjectDTO();
-				dto.setId(record.getAttribute(SubjectListGrid.ID));
-				dto.setName(window.getNameField().getValueAsString());
-				dto.setCode(window.getCodeField().getValueAsString());
-				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
-
-				SubjectCategoryDTO categoryDTO = new SubjectCategoryDTO();
-				categoryDTO.setId(window.getSubjectCategoryCombo().getValueAsString());
-				dto.setSubjectCategoryDTO(categoryDTO);
-
-
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.UPDATE_SUBJECT, dto);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.UPDATE_SUBJECT);
-
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						clearSubjectWindowFields(window);
-						window.clear();
-						getAllSubjects();
-					}
-				});
-
-			}
-		});
-	}
-
-	
-	@Deprecated
-	private void deleteSubject(MenuButton button) {
-		button.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if (getView().getSubjectPane().getListGrid().anySelected()) {
-					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
-
-						@Override
-						public void execute(Boolean value) {
-							if (value) {
-								ListGridRecord record = getView().getSubjectPane().getListGrid().getSelectedRecord();
-								// SC.say("Id "+record.getAttributeAsString("id")+" Name
-								// "+record.getAttributeAsString("name"));
-
-								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestDelimeters.SUBJECT_ID, record.getAttributeAsString("id"));
-								map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_SUBJECT);
-
-								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-									@Override
-									public void onNetworkResult(RequestResult result) {
-										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-										getAllSubjects();
-									}
-								});
-
-							}
-						}
-					});
-				} else {
-					SC.warn("Please check atleast one record");
-				}
-			}
-		});
-
-	}
-
-	@Deprecated
-	private void getAllSubjects() {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SUBJECT, null);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SUBJECT);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				getView().getSubjectPane().getListGrid().addRecordsToGrid(result.getSubjectDTOs());
-			}
-		});
-	}
 
 	// filter
 	private void filterSubjectsSubjectCategory(final FilterSubjectWindow window) {
@@ -680,7 +397,7 @@ public class SubjectCategoryPresenter
 							if (result != null) {
 								SystemResponseDTO<SubjectCategoryDTO> responseDTO = result.getSubjectCategoryResponse();
 								if (responseDTO.isStatus()) {
-									clearSubjectCategoryWindowFields(window);
+									//clearSubjectCategoryWindowFields(window);
 									SC.say("SUCCESS", responseDTO.getMessage());
 									getAllSubjectCategories2();
 								} else {

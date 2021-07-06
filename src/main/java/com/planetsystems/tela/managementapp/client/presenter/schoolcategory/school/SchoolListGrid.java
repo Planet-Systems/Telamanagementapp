@@ -13,6 +13,8 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class SchoolListGrid extends SuperListGrid {
+	public static final String REGION = "region";
+	public static final String REGION_ID = "regionId";
 	public static String ID = "id";
 	public static String CODE = "code";
 	public static String NAME = "name";
@@ -53,12 +55,16 @@ public class SchoolListGrid extends SuperListGrid {
 		ListGridField categoryIdField = new ListGridField(CATEGORY_ID, "School Category Id");
 		categoryIdField.setHidden(true);
 		
+		ListGridField regionField = new ListGridField(REGION, "Region");
+		ListGridField regionIdField = new ListGridField(REGION_ID, "Region Id");
+		regionIdField.setHidden(true);
+		
 		
 		ListGridField districtField = new ListGridField(DISTRICT, "District");
 		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
 		districtIdField.setHidden(true);
 
-		this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , categoryField, districtField , attendanceTrackedField , locationField , 
+		this.setFields(idField ,categoryIdField , districtIdField , regionIdField , deviceNumberField, codeField , nameField , categoryField, regionField, districtField , attendanceTrackedField , locationField , 
 				latitudeField , latitudeField);
 		this.setDataSource(dataSource);
 
@@ -77,6 +83,11 @@ public class SchoolListGrid extends SuperListGrid {
 		if(schoolDTO.getDistrictDTO() != null) {
 			record.setAttribute(DISTRICT, schoolDTO.getDistrictDTO().getName());
 			record.setAttribute(DISTRICT_ID, schoolDTO.getDistrictDTO().getId());
+			
+			if(schoolDTO.getDistrictDTO().getRegion() != null) {
+				record.setAttribute(REGION, schoolDTO.getDistrictDTO().getRegion().getName());
+				record.setAttribute(REGION_ID, schoolDTO.getDistrictDTO().getRegion().getId());
+			}
 		}
 		
 		record.setAttribute(DEVICE_NUMBER, schoolDTO.getDeviceNumber());
