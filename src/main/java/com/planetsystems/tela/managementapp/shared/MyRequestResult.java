@@ -24,6 +24,8 @@ import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
+import com.planetsystems.tela.dto.SystemUserProfileDTO;
+import com.planetsystems.tela.dto.SystemUserProfileSchoolDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.response.SystemErrorDTO;
@@ -104,6 +106,12 @@ public class MyRequestResult implements Result {
 	
 	SystemResponseDTO<StaffDailyAttendanceTaskSupervisionDTO> staffDailyAttendanceTaskSupervisionResponse;
 	SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> attendanceTaskSupervisionResponseList;
+
+	SystemResponseDTO<SystemUserProfileDTO>  systemUserProfileResponse;
+	SystemResponseDTO<List<SystemUserProfileDTO> > systemUserProfileResponseList;
+	
+	SystemResponseDTO<SystemUserProfileSchoolDTO> systemUserProfileSchoolResponse;
+	SystemResponseDTO<List<SystemUserProfileSchoolDTO>> systemUserProfileSchoolResponseList;
 	
 
 	public MyRequestResult() {
@@ -600,6 +608,54 @@ public class MyRequestResult implements Result {
 			SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> attendanceTaskSupervisionResponseList) {
 		this.attendanceTaskSupervisionResponseList = attendanceTaskSupervisionResponseList;
 	}
+
+
+	public SystemResponseDTO<SystemUserProfileDTO> getSystemUserProfileResponse() {
+		return systemUserProfileResponse;
+	}
+
+
+	public void setSystemUserProfileResponse(SystemResponseDTO<SystemUserProfileDTO> systemUserProfileResponse) {
+		this.systemUserProfileResponse = systemUserProfileResponse;
+	}
+
+
+	public SystemResponseDTO<List<SystemUserProfileDTO>> getSystemUserProfileResponseList() {
+		return systemUserProfileResponseList;
+	}
+
+
+	public void setSystemUserProfileResponseList(
+			SystemResponseDTO<List<SystemUserProfileDTO>> systemUserProfileResponseList) {
+		this.systemUserProfileResponseList = systemUserProfileResponseList;
+	}
+
+
+	public SystemResponseDTO<SystemUserProfileSchoolDTO> getSystemUserProfileSchoolResponse() {
+		return systemUserProfileSchoolResponse;
+	}
+
+
+	public void setSystemUserProfileSchoolResponse(
+			SystemResponseDTO<SystemUserProfileSchoolDTO> systemUserProfileSchoolResponse) {
+		this.systemUserProfileSchoolResponse = systemUserProfileSchoolResponse;
+	}
+
+
+	public SystemResponseDTO<List<SystemUserProfileSchoolDTO>> getSystemUserProfileSchoolResponseList() {
+		return systemUserProfileSchoolResponseList;
+	}
+
+
+	public void setSystemUserProfileSchoolResponseList(
+			SystemResponseDTO<List<SystemUserProfileSchoolDTO>> systemUserProfileSchoolResponseList) {
+		this.systemUserProfileSchoolResponseList = systemUserProfileSchoolResponseList;
+	}
+	
+	
+	
+	
+	
 
 	
 }

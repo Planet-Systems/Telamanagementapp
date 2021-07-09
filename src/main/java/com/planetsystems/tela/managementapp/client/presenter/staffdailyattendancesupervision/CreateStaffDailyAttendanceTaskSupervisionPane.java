@@ -21,6 +21,8 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 	private ComboBox academicYearCombo;
 	private ComboBox schoolStaffCombo;
 	private TextItem dayField;
+	private TextItem supervisorField;
+	private TextItem supervisorIdField;
 	private ComboBox academicTermCombo;
 	private IButton loadTasksButton;
 	private IButton commentButton;
@@ -110,8 +112,16 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		dayField = new TextItem("Day");
 		dayField.setValue(dayFormat.format(new Date()));
 		dayField.disable();
+		
+		supervisorField = new TextItem("Supervisor");
+		supervisorField.setValue("Wanfadger (HM)");
+		supervisorField.disable();
+		
+		supervisorIdField = new TextItem("SupervisorId");
+		supervisorIdField.setValue("Wanfadger (HM)");
+		supervisorIdField.hide();
 
-		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField, schoolStaffCombo);
+		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField, schoolStaffCombo , supervisorField , supervisorIdField);
 
 		commentButton = new IButton("Comment");
 		commentButton.setLayoutAlign(Alignment.CENTER);
@@ -184,6 +194,17 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		return closeTabButton;
 	}
 
+	public TextItem getSupervisorField() {
+		return supervisorField;
+	}
+
+	public TextItem getSupervisorIdField() {
+		return supervisorIdField;
+	}
+	
+	
+
+	
 	
 
 

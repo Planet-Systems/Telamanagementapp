@@ -23,7 +23,6 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
@@ -51,7 +50,6 @@ import com.planetsystems.tela.managementapp.shared.MyRequestResult;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistrictCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolStaffEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.TimetableCommands;
@@ -132,7 +130,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addTimeTablePane(newButton);
-					viewTimeTableLessons2(view);
+					viewTimeTableLessonsTab(view);
 
 					getAllTimeTables2();
 
@@ -148,220 +146,220 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 	
 	
-	@Deprecated
-	private void viewTimeTableLessons(MenuButton view) {
-		view.addClickHandler(new ClickHandler() {
+//	@Deprecated
+//	private void viewTimeTableLessons(MenuButton view) {
+//		view.addClickHandler(new ClickHandler() {
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				if (getView().getTimetablePane().getTimeTableListGrid().anySelected()) {					
+//					
+//					Tab tab = new Tab();
+//					tab.setTitle("Time Table Lessons");
+//					getView().getTabSet().removeTab(1);// remove before putting
+//					final ListGridRecord record = getView().getTimetablePane().getTimeTableListGrid().getSelectedRecord();
+//					final String timeTableId = record.getAttribute(TimeTableListGrid.ID);
+//
+//					final ViewTimeTableLessonsPane viewTimeTableLessonsPane = new ViewTimeTableLessonsPane();
+//					viewTimeTableLessonsPane.getLessonListGrid().setShowFilterEditor(true);
+//					//set controls button
+//					MenuButton add = new MenuButton("Add");
+//					add.addClickHandler(new ClickHandler() {
+//						
+//						@Override
+//						public void onClick(ClickEvent event) {
+//							saveTimeTableLessonByTimeTable(viewTimeTableLessonsPane , record , null);
+//						}
+//					});
+//					MenuButton edit = new MenuButton("edit");
+//					MenuButton delete = new MenuButton("delete");
+//					delete.addClickHandler(new ClickHandler() {
+//						
+//						@Override
+//						public void onClick(ClickEvent event) {
+//							if(viewTimeTableLessonsPane.getLessonListGrid().anySelected()) {
+//								deleteTimeTableLesson(viewTimeTableLessonsPane , record , null);
+//							}else {
+//								SC.say("Select lesson to delete");
+//							}
+//						}
+//
+//						
+//					});
+//					
+//					
+//                    viewTimeTableLessonsPane.getControlsPane().addMenuButtons(Arrays.asList(add , edit , delete));
+//                    
+//
+//					
+//					
+//					viewTimeTableLessonsPane.getSchool().setContents(record.getAttribute(TimeTableListGrid.SCHOOL));
+//					viewTimeTableLessonsPane.getDistrict().setContents(record.getAttribute(TimeTableListGrid.DISTRICT));
+//
+//					viewTimeTableLessonsPane.getAcademicTerm()
+//							.setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_TERM));
+//					viewTimeTableLessonsPane.getAcademicYear()
+//							.setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_YEAR));
+//
+//					tab.setPane(viewTimeTableLessonsPane);
+//
+//					getView().getTabSet().addTab(tab);
+//					getView().getTabSet().selectTab(tab);
+//
+//					getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, timeTableId);
+//
+//					viewTimeTableLessonsPane.getCloseTabButton().addClickHandler(new ClickHandler() {
+//
+//						@Override
+//						public void onClick(ClickEvent event) {
+//							getView().getTabSet().removeTab(1);
+//						}
+//					});
+//
+//				} else {
+//					SC.warn("Selected TimeTable to view");
+//				}
+//
+//			}
+//
+//
+//		});
+//
+//	}
+//	
+	
+	
+	
+//	
+//	@Deprecated
+//	
+//	private void deleteTimeTableLesson(final ViewTimeTableLessonsPane viewTimeTableLessonsPane, final ListGridRecord timeTableRecord , final String defaultValue) {
+//		final ListGridRecord lessonRecord = viewTimeTableLessonsPane.getLessonListGrid().getSelectedRecord();
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+//		map.put(RequestDelimeters.TIME_TABLE_LESSON_ID, lessonRecord.getAttribute(LessonListGrid.ID));
+//		map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_TIME_TABLE_LESSON);
+//		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+//			
+//			@Override
+//			public void onNetworkResult(RequestResult result) {
+//				SC.say(result.getSystemFeedbackDTO().getMessage());
+//				getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane , timeTableRecord.getAttribute(TimeTableListGrid.ID) );
+//			}
+//		});
+//		
+//	}
+	
+	
+	
+//	@Deprecated
+//	private void saveTimeTableLessonByTimeTable(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , final ListGridRecord timeTableRecord , final String defaultValue) {
+//		final TimeTableLessonWindow window = new TimeTableLessonWindow();
+//		 window.getAddRecordButton().setTitle("Save");
+//		 loadLessonDayCombo(window);
+//
+//			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//			map.put(RequestDelimeters.SCHOOL_ID, timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID));
+//			map.put(RequestDelimeters.ACADEMIC_TERM_ID, timeTableRecord.getAttribute(TimeTableListGrid.ACADEMIC_TERM_ID));
+//			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM);
+//			
+//            NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {		
+//				@Override
+//				public void onNetworkResult(RequestResult result) {
+//					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+//
+//					for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
+//						valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
+//					}
+//					window.getSchoolClassCombo().setValueMap(valueMap);
+//
+//					if (defaultValue != null) {
+//						window.getSchoolClassCombo().setValue(defaultValue);
+//					}
+//				}
+//			});
+//			
+//        	LinkedHashMap<String, Object> staffMap = new LinkedHashMap<>();
+//        	staffMap.put(RequestDelimeters.SCHOOL_ID, timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID));
+//        	staffMap.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
+//			
+//            NetworkDataUtil.callNetwork(dispatcher, placeManager, staffMap , new NetworkResult() {		
+//				@Override
+//				public void onNetworkResult(RequestResult result) {
+//					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+//
+//					for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+//						
+//						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+//								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+//						valueMap.put(schoolStaffDTO.getId(), fullName);
+//					}
+//					window.getSchoolStaffCombo().setValueMap(valueMap);
+//
+//					if (defaultValue != null) {
+//						window.getSchoolStaffCombo().setValueMap(valueMap);
+//					}
+//				}
+//			});
+//            
+//			ComboUtil.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
+//		 window.show();
+//		 
+//		 ///lesson dto
+//	     window.getAddRecordButton().addClickHandler(new ClickHandler() {
+//			
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				 TimeTableLessonDTO lessonDTO = new TimeTableLessonDTO();
+//				 lessonDTO.setEndTime(timeFormat.format(window.getEndTime().getValueAsDate()));
+//				 lessonDTO.setStartTime(timeFormat.format(window.getStartTime().getValueAsDate()));
+//				 lessonDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+//				 lessonDTO.setSchoolClassDTO(new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString()));
+//				 lessonDTO.setSchoolStaffDTO(new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString()));
+//				 lessonDTO.setLessonDay(window.getLessonDayCombo().getValueAsString());
+//				 lessonDTO.setSubjectDTO(new SubjectDTO(window.getSubjectCombo().getValueAsString()));
+//				 
+//				 LinkedHashMap<String, Object> saveMap = new LinkedHashMap<>();
+//				 saveMap.put(RequestDelimeters.TIME_TABLE_ID, timeTableRecord.getAttribute(TimeTableListGrid.ID));
+//				 saveMap.put(RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE , lessonDTO);
+//				 saveMap.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE);
+//				 NetworkDataUtil.callNetwork(dispatcher, placeManager, saveMap , new NetworkResult() {
+//					
+//					@Override
+//					public void onNetworkResult(RequestResult result) {
+//						SC.say(result.getSystemFeedbackDTO().getMessage());
+//						clearTimeTableLessonWindow(window);
+//						getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, timeTableRecord.getAttribute(TimeTableListGrid.ID));
+//					}
+//				});
+//			}
+//		});
+//
+//	}
 
-			@Override
-			public void onClick(ClickEvent event) {
-				if (getView().getTimetablePane().getTimeTableListGrid().anySelected()) {					
-					
-					Tab tab = new Tab();
-					tab.setTitle("Time Table Lessons");
-					getView().getTabSet().removeTab(1);// remove before putting
-					final ListGridRecord record = getView().getTimetablePane().getTimeTableListGrid().getSelectedRecord();
-					final String timeTableId = record.getAttribute(TimeTableListGrid.ID);
-
-					final ViewTimeTableLessonsPane viewTimeTableLessonsPane = new ViewTimeTableLessonsPane();
-					viewTimeTableLessonsPane.getLessonListGrid().setShowFilterEditor(true);
-					//set controls button
-					MenuButton add = new MenuButton("Add");
-					add.addClickHandler(new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							saveTimeTableLessonByTimeTable(viewTimeTableLessonsPane , record , null);
-						}
-					});
-					MenuButton edit = new MenuButton("edit");
-					MenuButton delete = new MenuButton("delete");
-					delete.addClickHandler(new ClickHandler() {
-						
-						@Override
-						public void onClick(ClickEvent event) {
-							if(viewTimeTableLessonsPane.getLessonListGrid().anySelected()) {
-								deleteTimeTableLesson(viewTimeTableLessonsPane , record , null);
-							}else {
-								SC.say("Select lesson to delete");
-							}
-						}
-
-						
-					});
-					
-					
-                    viewTimeTableLessonsPane.getControlsPane().addMenuButtons(Arrays.asList(add , edit , delete));
-                    
-
-					
-					
-					viewTimeTableLessonsPane.getSchool().setContents(record.getAttribute(TimeTableListGrid.SCHOOL));
-					viewTimeTableLessonsPane.getDistrict().setContents(record.getAttribute(TimeTableListGrid.DISTRICT));
-
-					viewTimeTableLessonsPane.getAcademicTerm()
-							.setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_TERM));
-					viewTimeTableLessonsPane.getAcademicYear()
-							.setContents(record.getAttribute(TimeTableListGrid.ACADEMIC_YEAR));
-
-					tab.setPane(viewTimeTableLessonsPane);
-
-					getView().getTabSet().addTab(tab);
-					getView().getTabSet().selectTab(tab);
-
-					getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, timeTableId);
-
-					viewTimeTableLessonsPane.getCloseTabButton().addClickHandler(new ClickHandler() {
-
-						@Override
-						public void onClick(ClickEvent event) {
-							getView().getTabSet().removeTab(1);
-						}
-					});
-
-				} else {
-					SC.warn("Selected TimeTable to view");
-				}
-
-			}
-
-
-		});
-
-	}
 	
 	
 	
 	
 	
-	@Deprecated
 	
-	private void deleteTimeTableLesson(final ViewTimeTableLessonsPane viewTimeTableLessonsPane, final ListGridRecord timeTableRecord , final String defaultValue) {
-		final ListGridRecord lessonRecord = viewTimeTableLessonsPane.getLessonListGrid().getSelectedRecord();
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put(RequestDelimeters.TIME_TABLE_LESSON_ID, lessonRecord.getAttribute(LessonListGrid.ID));
-		map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_TIME_TABLE_LESSON);
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				SC.say(result.getSystemFeedbackDTO().getMessage());
-				getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane , timeTableRecord.getAttribute(TimeTableListGrid.ID) );
-			}
-		});
-		
-	}
-	
-	
-	
-	@Deprecated
-	private void saveTimeTableLessonByTimeTable(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , final ListGridRecord timeTableRecord , final String defaultValue) {
-		final TimeTableLessonWindow window = new TimeTableLessonWindow();
-		 window.getAddRecordButton().setTitle("Save");
-		 loadLessonDayCombo(window);
-
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestDelimeters.SCHOOL_ID, timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID));
-			map.put(RequestDelimeters.ACADEMIC_TERM_ID, timeTableRecord.getAttribute(TimeTableListGrid.ACADEMIC_TERM_ID));
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM);
-			
-            NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {		
-				@Override
-				public void onNetworkResult(RequestResult result) {
-					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-					for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
-						valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-					}
-					window.getSchoolClassCombo().setValueMap(valueMap);
-
-					if (defaultValue != null) {
-						window.getSchoolClassCombo().setValue(defaultValue);
-					}
-				}
-			});
-			
-        	LinkedHashMap<String, Object> staffMap = new LinkedHashMap<>();
-        	staffMap.put(RequestDelimeters.SCHOOL_ID, timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID));
-        	staffMap.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
-			
-            NetworkDataUtil.callNetwork(dispatcher, placeManager, staffMap , new NetworkResult() {		
-				@Override
-				public void onNetworkResult(RequestResult result) {
-					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-					for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-						
-						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
-								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-						valueMap.put(schoolStaffDTO.getId(), fullName);
-					}
-					window.getSchoolStaffCombo().setValueMap(valueMap);
-
-					if (defaultValue != null) {
-						window.getSchoolStaffCombo().setValueMap(valueMap);
-					}
-				}
-			});
-            
-			ComboUtil.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
-		 window.show();
-		 
-		 ///lesson dto
-	     window.getAddRecordButton().addClickHandler(new ClickHandler() {
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				 TimeTableLessonDTO lessonDTO = new TimeTableLessonDTO();
-				 lessonDTO.setEndTime(timeFormat.format(window.getEndTime().getValueAsDate()));
-				 lessonDTO.setStartTime(timeFormat.format(window.getStartTime().getValueAsDate()));
-				 lessonDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
-				 lessonDTO.setSchoolClassDTO(new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString()));
-				 lessonDTO.setSchoolStaffDTO(new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString()));
-				 lessonDTO.setLessonDay(window.getLessonDayCombo().getValueAsString());
-				 lessonDTO.setSubjectDTO(new SubjectDTO(window.getSubjectCombo().getValueAsString()));
-				 
-				 LinkedHashMap<String, Object> saveMap = new LinkedHashMap<>();
-				 saveMap.put(RequestDelimeters.TIME_TABLE_ID, timeTableRecord.getAttribute(TimeTableListGrid.ID));
-				 saveMap.put(RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE , lessonDTO);
-				 saveMap.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_TABLE_LESSON_BY_TIME_TABLE);
-				 NetworkDataUtil.callNetwork(dispatcher, placeManager, saveMap , new NetworkResult() {
-					
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						SC.say(result.getSystemFeedbackDTO().getMessage());
-						clearTimeTableLessonWindow(window);
-						getTimeTableLessonsByTimeTable(viewTimeTableLessonsPane, timeTableRecord.getAttribute(TimeTableListGrid.ID));
-					}
-				});
-			}
-		});
-
-	}
-
-	
-	
-	
-	
-	
-	
-	@Deprecated
-	private void getTimeTableLessonsByTimeTable(final ViewTimeTableLessonsPane viewTimeTableLessonsPane,
-			String timeTableId) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.TIME_TABLE_ID, timeTableId);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				viewTimeTableLessonsPane.getLessonListGrid().addRecordsToGrid(result.getTableLessonDTOs());
-				
-			}
-		});
-
-	}
-	
+//	@Deprecated
+//	private void getTimeTableLessonsByTimeTable(final ViewTimeTableLessonsPane viewTimeTableLessonsPane,
+//			String timeTableId) {
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//		map.put(RequestDelimeters.TIME_TABLE_ID, timeTableId);
+//		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLE_LESSONS_BY_TIME_TABLE);
+//
+//		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+//
+//			@Override
+//			public void onNetworkResult(RequestResult result) {
+//				viewTimeTableLessonsPane.getLessonListGrid().addRecordsToGrid(result.getTableLessonDTOs());
+//				
+//			}
+//		});
+//
+//	}
+//	
 	
 	private void getTimeTableLessonsByTimeTable2(final ViewTimeTableLessonsPane viewTimeTableLessonsPane,
 			String timeTableId) {
@@ -402,7 +400,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			public void onClick(ClickEvent event) {
 				// add create Lesson tab
 				final CreateTimeTablePane createTimeTablePane = new CreateTimeTablePane();
-				final Tab createLessonTab = new Tab("create lesson");
+				final Tab createLessonTab = new Tab("Create Lesson");
 				createLessonTab.setCanClose(true);
 				loadAcademicYearCombo2(createTimeTablePane, null);
 				loadAcademicTermsInAcademicYearCombo2(createTimeTablePane, null);
@@ -444,7 +442,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 							timeTableDTO.setAcademicTermDTO(academicTermDTO);
 
 							ListGridRecord[] records = createTimeTablePane.getLessonListGrid().getSelectedRecords(); // new
-							// ListGridRecord[list.size()];
+		
 							List<TimeTableLessonDTO> tableLessonDTOs = new ArrayList<TimeTableLessonDTO>();
 
 							for (int i = 0; i < records.length; i++) {
@@ -464,17 +462,11 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 								SubjectDTO subjectDTO = new SubjectDTO(record.getAttribute(LessonListGrid.SUBJECT_ID));
 								lessonDTO.setSubjectDTO(subjectDTO);
-
-								// (record.getAttribute(LessonListGrid.DAY));
 								tableLessonDTOs.add(lessonDTO);
-								GWT.log("RECORD " + record);
+	
 							}
 
 							timeTableDTO.setTimeTableLessonDTOS(tableLessonDTOs);
-
-							//GWT.log("RECORD " + timeTableDTO);
-
-//						        System.out.println("timetable  "+timeTableDTO.getTimeTableLessonDTOS().get(0).getTimeTableDTO());
 							saveTimeTable2(timeTableDTO, null);
 
 						} else {
@@ -490,33 +482,32 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 		});
 	}
 
-	@Deprecated
-	private void saveTimeTable(final TimeTableDTO timeTableDTO, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.SAVE_TIME_TABLE, timeTableDTO);
-		map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_TABLE);
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				getView().getTabSet().removeTab(1);
-				getView().getTabSet().selectTab(0);
-				getAllTimeTables();
-			}
-		});
-	}
+//	@Deprecated
+//	private void saveTimeTable(final TimeTableDTO timeTableDTO, final String defaultValue) {
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//		map.put(RequestConstant.SAVE_TIME_TABLE, timeTableDTO);
+//		map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_TIME_TABLE);
+//		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+//			
+//			@Override
+//			public void onNetworkResult(RequestResult result) {
+//				getView().getTabSet().removeTab(1);
+//				getView().getTabSet().selectTab(0);
+//				getAllTimeTables();
+//			}
+//		});
+//	}
 
+	
 	private void displayTimeTableLessonWindow(final CreateTimeTablePane createTimeTablePane) {
 		createTimeTablePane.getAddLessonButton().addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				TimeTableLessonWindow window = new TimeTableLessonWindow();
-				loadLessonDayCombo(window);
-				String defaultValue = null;
 				
-//				ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(createTimeTablePane.getAcademicTermCombo() ,createTimeTablePane.getSchoolCombo() , window.getSchoolClassCombo(), dispatcher, placeManager,
-//						defaultValue);
+				String defaultValue = null;
+				loadLessonDayCombo(window , defaultValue);
 				ComboUtil2.loadSchoolClassesComboBySchoolAcademicTerm(createTimeTablePane.getAcademicTermCombo() ,createTimeTablePane.getSchoolCombo() , window.getSchoolClassCombo(), dispatcher, placeManager,
 						defaultValue);
 				
@@ -615,19 +606,22 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	}
 
 
-	private void loadLessonDayCombo(TimeTableLessonWindow window) {
+	private void loadLessonDayCombo(TimeTableLessonWindow window , String defaultValue) {
 		Map<String, String> daysMap = new HashMap<String, String>();
 	    for (LessonDay lessonDay : LessonDay.values()) {
 			daysMap.put(lessonDay.getDay() , lessonDay.getDay());
 		}
 
 		window.getLessonDayCombo().setValueMap(daysMap);
+		if (defaultValue != null) {
+			window.getLessonDayCombo().setValue(defaultValue);
+		}
 	}
 
-	@Deprecated
-	private void loadDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
-		ComboUtil.loadDistrictCombo(createTimeTablePane.getDistrictCombo(), dispatcher, placeManager, defaultValue);
-	}
+//	@Deprecated
+//	private void loadDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
+//		ComboUtil.loadDistrictCombo(createTimeTablePane.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+//	}
 
 	private void loadDistrictCombo2(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
 		ComboUtil2.loadDistrictCombo(createTimeTablePane.getDistrictCombo(), dispatcher, placeManager, defaultValue);
@@ -635,20 +629,20 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 
 	
 
-	@Deprecated
-	private void loadSchoolsInDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
-
-		createTimeTablePane.getDistrictCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				ComboUtil.loadSchoolComboByDistrict(createTimeTablePane.getDistrictCombo(),
-						createTimeTablePane.getSchoolCombo(), dispatcher, placeManager, defaultValue);
-			}
-		});
-
-	}
+//	@Deprecated
+//	private void loadSchoolsInDistrictCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
+//
+//		createTimeTablePane.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//
+//				ComboUtil.loadSchoolComboByDistrict(createTimeTablePane.getDistrictCombo(),
+//						createTimeTablePane.getSchoolCombo(), dispatcher, placeManager, defaultValue);
+//			}
+//		});
+//
+//	}
 	
 	private void loadSchoolsInDistrictCombo2(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
 
@@ -665,30 +659,30 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	}
 
 	
-	@Deprecated
-	public void loadAcademicYearCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
-		ComboUtil.loadAcademicYearCombo(createTimeTablePane.getAcademicYearCombo(), dispatcher, placeManager,
-				defaultValue);
-	}
+//	@Deprecated
+//	public void loadAcademicYearCombo(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
+//		ComboUtil.loadAcademicYearCombo(createTimeTablePane.getAcademicYearCombo(), dispatcher, placeManager,
+//				defaultValue);
+//	}
 	
 	public void loadAcademicYearCombo2(final CreateTimeTablePane createTimeTablePane, final String defaultValue) {
 		ComboUtil2.loadAcademicYearCombo(createTimeTablePane.getAcademicYearCombo(), dispatcher, placeManager,
 				defaultValue);
 	}
 
-	@Deprecated
-	private void loadAcademicTermsInAcademicYearCombo(final CreateTimeTablePane createTimeTablePane,
-			final String defaultValue) {
-		createTimeTablePane.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadAcademicTermComboByAcademicYear(createTimeTablePane.getAcademicYearCombo(),
-						createTimeTablePane.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
-			}
-		});
-
-	}
+//	@Deprecated
+//	private void loadAcademicTermsInAcademicYearCombo(final CreateTimeTablePane createTimeTablePane,
+//			final String defaultValue) {
+//		createTimeTablePane.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				ComboUtil.loadAcademicTermComboByAcademicYear(createTimeTablePane.getAcademicYearCombo(),
+//						createTimeTablePane.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+//			}
+//		});
+//
+//	}
 	
 	private void loadAcademicTermsInAcademicYearCombo2(final CreateTimeTablePane createTimeTablePane,
 			final String defaultValue) {
@@ -705,23 +699,23 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	
 
 
-	@Deprecated
-	private void getAllTimeTables() {
-
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION , RequestConstant.GET_TIME_TABLES);
-			else 
-		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				getView().getTimetablePane().getTimeTableListGrid().addRecordsToGrid(result.getTimeTableDTOs());
-			}
-		});
-	}
+//	@Deprecated
+//	private void getAllTimeTables() {
+//
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+//			map.put(NetworkDataUtil.ACTION , RequestConstant.GET_TIME_TABLES);
+//			else 
+//		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+//
+//		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+//
+//			@Override
+//			public void onNetworkResult(RequestResult result) {
+//				getView().getTimetablePane().getTimeTableListGrid().addRecordsToGrid(result.getTimeTableDTOs());
+//			}
+//		});
+//	}
 
 	public void activateAddLessonButton(final CreateTimeTablePane createTimeTablePane) {
 		final boolean[] flag = new boolean[1];
@@ -831,81 +825,19 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	//////////////////////////////////////////////////////////////////NEW NEW BEW NEW NEW LESSON
 	
 	
-	private void saveTimeTableLessonByTimeTable2(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , final ListGridRecord timeTableRecord , final String defaultValue) {
+	private void saveTimeTableLessonByTimeTable2(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , final ListGridRecord timeTableRecord) {
 		final TimeTableLessonWindow window = new TimeTableLessonWindow();
 		 window.getAddRecordButton().setTitle("Save");
-		 loadLessonDayCombo(window);
-
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			FilterDTO dto = new FilterDTO();
-			dto.setAcademicTermDTO(new AcademicTermDTO(timeTableRecord.getAttribute(TimeTableListGrid.ACADEMIC_TERM_ID)));
-			dto.setSchoolDTO(new SchoolDTO(timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID)));
-			map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
-			map.put(MyRequestAction.DATA, dto);
+	
+         
+		 String academicTermId = timeTableRecord.getAttribute(TimeTableListGrid.ACADEMIC_TERM_ID);
+		 String schoolId = timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID);
+		 final String defaultValue = null;
+		 
+		 loadLessonDayCombo(window , defaultValue);
+			ComboUtil2.loadSchoolClassesComboBySchoolAcademicTermIds(academicTermId, schoolId, window.getSchoolClassCombo() , dispatcher, placeManager, defaultValue);
 			
-			
-            NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {		
-				@Override
-				public void onNetworkResult(MyRequestResult result) {
-
-					if (result != null) {
-						SystemResponseDTO<List<SchoolClassDTO>> responseDTO = result.getSchoolClassResponseList();
-						if (responseDTO.isStatus()) {
-	                        if(responseDTO.getData() != null) {
-	                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-	        					for (SchoolClassDTO schoolClassDTO : responseDTO.getData()) {
-	        						valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-	        					}
-	        					window.getSchoolClassCombo().setValueMap(valueMap);
-
-	        					if (defaultValue != null) {
-	        						window.getSchoolClassCombo().setValue(defaultValue);
-	        					}
-	                        }
-						} else {
-							SC.say(responseDTO.getMessage());
-						}
-					}
-		
-				}
-			});
-			
-            
-        	LinkedHashMap<String, Object> staffMap = new LinkedHashMap<>();
-        	staffMap.put(MyRequestAction.DATA, dto);
-        	staffMap.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
-        ;
-			
-            NetworkDataUtil2.callNetwork2(dispatcher, placeManager, staffMap , new NetworkResult2() {		
-				@Override
-				public void onNetworkResult(MyRequestResult result) {
-					if (result != null) {
-						SystemResponseDTO<List<SchoolStaffDTO>> responseDTO = result.getSchoolStaffResponseList();
-						if (responseDTO.isStatus()) {
-	                        if(responseDTO.getData() != null) {
-	                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-	        					for (SchoolStaffDTO schoolStaffDTO : responseDTO.getData()) {
-	        						
-	        						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
-	        								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-	        						valueMap.put(schoolStaffDTO.getId(), fullName);
-	        					}
-	        					window.getSchoolStaffCombo().setValueMap(valueMap);
-
-	        					if (defaultValue != null) {
-	        						window.getSchoolStaffCombo().setValueMap(valueMap);
-	        					}
-						} else {
-							SC.say(responseDTO.getMessage());
-						}
-					}
-			
-					}
-					
-				}
-			});
+			ComboUtil2.loadSchoolStaffComboBySchoolAcademicTerm(academicTermId , schoolId ,  window.getSchoolStaffCombo(), dispatcher, placeManager, defaultValue);
             
 			ComboUtil2.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, defaultValue);
 		 window.show();
@@ -957,7 +889,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	
 	
 	
-	private void viewTimeTableLessons2(MenuButton view) {
+	private void viewTimeTableLessonsTab(MenuButton view) {
 		view.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -978,17 +910,32 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 						
 						@Override
 						public void onClick(ClickEvent event) {
-							saveTimeTableLessonByTimeTable2(viewTimeTableLessonsPane , record , null);
+							saveTimeTableLessonByTimeTable2(viewTimeTableLessonsPane , record);
 						}
 					});
 					MenuButton edit = new MenuButton("edit");
+					
+					edit.addClickHandler(new ClickHandler() {
+						
+						@Override
+						public void onClick(ClickEvent event) {
+							if(viewTimeTableLessonsPane.getLessonListGrid().anySelected()) {
+								showEditTimetableLessonWindow(viewTimeTableLessonsPane , record , viewTimeTableLessonsPane.getLessonListGrid().getSelectedRecord());
+							}else {
+								SC.say("Select lesson to edit");
+							}
+					
+						}
+
+					});
+					
 					MenuButton delete = new MenuButton("delete");
 					delete.addClickHandler(new ClickHandler() {
 						
 						@Override
 						public void onClick(ClickEvent event) {
 							if(viewTimeTableLessonsPane.getLessonListGrid().anySelected()) {
-								deleteTimeTableLesson2(viewTimeTableLessonsPane , record , null);
+								deleteTimeTableLesson2(viewTimeTableLessonsPane , record);
 							}else {
 								SC.say("Select lesson to delete");
 							}
@@ -1041,7 +988,7 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	
 	
 	
-	private void deleteTimeTableLesson2(final ViewTimeTableLessonsPane viewTimeTableLessonsPane, final ListGridRecord timeTableRecord , final String defaultValue) {
+	private void deleteTimeTableLesson2(final ViewTimeTableLessonsPane viewTimeTableLessonsPane, final ListGridRecord timeTableRecord) {
 		final ListGridRecord lessonRecord = viewTimeTableLessonsPane.getLessonListGrid().getSelectedRecord();
 
 		SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
@@ -1079,6 +1026,74 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 	}
 	
 	
+	
+	private void showEditTimetableLessonWindow(final ViewTimeTableLessonsPane viewTimeTableLessonsPane , final ListGridRecord timeTableRecord , ListGridRecord lessonRecord) {
+		final TimeTableLessonWindow window = new TimeTableLessonWindow();
+		 window.getAddRecordButton().setTitle("Save");
+		
+        
+		 String academicTermId = timeTableRecord.getAttribute(TimeTableListGrid.ACADEMIC_TERM_ID);
+		 String schoolId = timeTableRecord.getAttribute(TimeTableListGrid.SCHOOL_ID);
+		 
+			ComboUtil2.loadSchoolClassesComboBySchoolAcademicTermIds(academicTermId, schoolId, window.getSchoolClassCombo() , dispatcher, placeManager, 
+					lessonRecord.getAttribute(LessonListGrid.CLASS_ID));
+			
+			ComboUtil2.loadSchoolStaffComboBySchoolAcademicTerm(academicTermId , schoolId ,  window.getSchoolStaffCombo(), dispatcher, placeManager, 
+					lessonRecord.getAttribute(LessonListGrid.STAFF_ID));
+			
+			ComboUtil2.loadSubjectCombo(window.getSubjectCombo(), dispatcher, placeManager, lessonRecord.getAttribute(LessonListGrid.SUBJECT_ID));
+			
+			loadLessonDayCombo(window , lessonRecord.getAttribute(LessonListGrid.LESSON_DAY));
+			
+			window.getEndTime().setValue(lessonRecord.getAttributeAsDate(LessonListGrid.END_TIME));
+			window.getStartTime().setValue(lessonRecord.getAttributeAsDate(LessonListGrid.START_TIME));
+			
+			
+			window.show();
+			
+			editLesson();
+
+	}
+
+	private void editLesson() {
+//		 TimeTableLessonDTO lessonDTO = new TimeTableLessonDTO();
+//		 lessonDTO.setId(lessonRecord.getAttribute(LessonListGrid.ID));
+//		 lessonDTO.setEndTime(timeFormat.format(window.getEndTime().getValueAsDate()));
+//		 lessonDTO.setStartTime(timeFormat.format(window.getStartTime().getValueAsDate()));
+//		 lessonDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+//		 lessonDTO.setSchoolClassDTO(new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString()));
+//		 lessonDTO.setSchoolStaffDTO(new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString()));
+//		 lessonDTO.setLessonDay(window.getLessonDayCombo().getValueAsString());
+//		 lessonDTO.setSubjectDTO(new SubjectDTO(window.getSubjectCombo().getValueAsString()));
+//		 
+//		 lessonDTO.setTimeTableDTO(new TimeTableDTO(timeTableRecord.getAttribute(TimeTableListGrid.ID)));
+//		 
+//		 LinkedHashMap<String, Object> saveMap = new LinkedHashMap<>();
+//		 saveMap.put(MyRequestAction.COMMAND, TimetableLessonCommands.UPDATE_TIMETABLE_LESSON);
+//		 saveMap.put(MyRequestAction.DATA , lessonDTO);
+//		 
+//		 NetworkDataUtil2.callNetwork2(dispatcher, placeManager, saveMap , new NetworkResult2() {
+//			
+//			@Override
+//			public void onNetworkResult(MyRequestResult result) {
+//				if (result != null) {
+//					SystemResponseDTO<TimeTableLessonDTO> responseDTO = result.getTimeTableLessonResponse();
+//					if (responseDTO.isStatus()) {
+//                        	SC.say(responseDTO.getMessage());
+//    						//clearTimeTableLessonWindow(window);
+//    						getTimeTableLessonsByTimeTable2(viewTimeTableLessonsPane, timeTableRecord.getAttribute(TimeTableListGrid.ID));
+//				
+//				}else {
+//					SC.say(responseDTO.getMessage());
+//				}
+//		
+//				}
+//			
+//				
+//			}
+//		});
+		
+	}
 	
 
 	

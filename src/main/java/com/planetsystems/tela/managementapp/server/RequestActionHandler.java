@@ -82,7 +82,7 @@ import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.ReportsRequestConstant;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SmsRequest;
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffEnrollmentRequest;
-import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserProfileRequestConstant;
@@ -4051,7 +4051,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			}
 
-			else if (action.getRequest().equalsIgnoreCase(SystemMenuRequestConstant.SAVE_SYSTEM_MENU)
+			else if (action.getRequest().equalsIgnoreCase(SystemMenuCommands.SAVE_SYSTEM_MENU)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
@@ -4060,7 +4060,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				@SuppressWarnings("unchecked")
 				List<SystemMenuDTO> systemMenuDTOs = (List<SystemMenuDTO>) action.getRequestBody()
-						.get(SystemMenuRequestConstant.DATA);
+						.get(SystemMenuCommands.DATA);
 
 				if (systemMenuDTOs != null) {
 
@@ -4139,7 +4139,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				return new RequestResult(feedback, responselist, null);
 
-			} else if (action.getRequest().equalsIgnoreCase(SystemMenuRequestConstant.GET_SYSTEM_MENUS)
+			} else if (action.getRequest().equalsIgnoreCase(SystemMenuCommands.GET_SYSTEM_MENUS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				System.out.println("GETTING SYSTEM mENUS ");
 

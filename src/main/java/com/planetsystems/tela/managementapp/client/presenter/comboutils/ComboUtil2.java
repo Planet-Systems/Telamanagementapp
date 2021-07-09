@@ -395,6 +395,51 @@ public class ComboUtil2 {
 		
 	}
 
+	
+	public static void loadSchoolStaffComboBySchoolAcademicTerm(final String academicTermId , final String schoolId, final ComboBox schoolStaffCombo,
+			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		FilterDTO filterDTO = new FilterDTO();
+		filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
+		filterDTO.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+	    map.put(MyRequestAction.DATA , filterDTO);
+	    
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolStaffDTO>> responseDTO = result.getSchoolStaffResponseList();
+					if (responseDTO.isStatus()) {
+                        if(responseDTO.getData() != null) {
+                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+            				for (SchoolStaffDTO schoolStaffDTO : responseDTO.getData()) {
+            					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+            							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+            					valueMap.put(schoolStaffDTO.getId(), fullName);
+            				}
+            				schoolStaffCombo.setValueMap(valueMap);
+
+            				if (defaultValue != null) {
+            					schoolStaffCombo.setValue(defaultValue);
+            				}
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+		
+				} 
+				}
+		});
+		
+	}
+
+	
+	
 
 	public static void loadSchoolStaffMultiComboBySchool(final ComboBox schoolCombo,
 			final MultiComboBoxItem schoolStaffCombo, final DispatchAsync dispatcher, final PlaceManager placeManager,
@@ -595,6 +640,7 @@ public class ComboUtil2 {
 		dto.setSchoolDTO(new SchoolDTO(schoolCombo.getValueAsString()));
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
 		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		map.put(MyRequestAction.DATA, dto);
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
@@ -633,8 +679,10 @@ public class ComboUtil2 {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		FilterDTO dto = new FilterDTO();
 		dto.setAcademicTermDTO(new AcademicTermDTO(academicTermCombo.getValueAsString()));
-		dto.setSchoolDTO(new SchoolDTO(schoolClassCombo.getValueAsString()));
+		dto.setSchoolDTO(new SchoolDTO(schoolCombo.getValueAsString()));
 		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(MyRequestAction.DATA, dto);
 		
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
@@ -665,6 +713,48 @@ public class ComboUtil2 {
 		});
 
 	}
+	
+	
+	public static void loadSchoolClassesComboBySchoolAcademicTermIds(final String academicTermId, String schoolId, final ComboBox schoolClassCombo, final DispatchAsync dispatcher,
+			final PlaceManager placeManager, final String defaultValue) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		FilterDTO dto = new FilterDTO();
+		dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+		dto.setSchoolDTO(new SchoolDTO(schoolId));
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(MyRequestAction.DATA, dto);
+		
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SchoolClassDTO>> responseDTO = result.getSchoolClassResponseList();
+					if (responseDTO.isStatus()) {
+                        if(responseDTO.getData() != null) {
+                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+            				for (SchoolClassDTO schoolClassDTO : responseDTO.getData()) {
+            					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
+            				}
+            				schoolClassCombo.setValueMap(valueMap);
+
+            				if (defaultValue != null) {
+            					schoolClassCombo.setValue(defaultValue);
+            				}
+                        }
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+			
+			}
+		});
+
+	}
+	
 
 ////////////////////////////////////SUBJECT COMBOS
 	public static void loadSubjectCombo(final ComboBox subjectCombo, final DispatchAsync dispatcher,

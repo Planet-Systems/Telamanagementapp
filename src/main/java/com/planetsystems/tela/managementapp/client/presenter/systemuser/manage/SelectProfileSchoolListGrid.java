@@ -3,31 +3,33 @@ package com.planetsystems.tela.managementapp.client.presenter.systemuser.manage;
 import java.util.List;
 
 import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SystemUserProfileSchoolDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class SchoolDistrictListGrid extends SuperListGrid {
-	public static String ID = "id";
-	public static String NAME = "name";
+public class SelectProfileSchoolListGrid extends SuperListGrid {
+
 	public static String DISTRICT = "district";
 	public static String DISTRICT_ID = "districtId";
+	public static String SCHOOL = "school";
+	public static String SCHOOL_ID = "schoolId";
 	public static String REGION_ID = "region_id";
 	public static String REGION = "region";
 	
 	private SchoolDataSource dataSource;
 
 
-	public SchoolDistrictListGrid() { 
+	public SelectProfileSchoolListGrid() { 
 		super();
 		
 		dataSource = SchoolDataSource.getInstance();
 		
-		ListGridField idField = new ListGridField(ID, "Id");
-		idField.setHidden(true);
-		ListGridField nameField = new ListGridField(NAME, "Name");
+		ListGridField schoolNameField = new ListGridField(SCHOOL, "Name");
+		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "Id");
+		schoolIdField.setHidden(true);
 
 		
 		ListGridField districtField = new ListGridField(DISTRICT, "District");
@@ -38,24 +40,27 @@ public class SchoolDistrictListGrid extends SuperListGrid {
 		ListGridField regionIdField = new ListGridField(REGION_ID, "Region Id");
 		regionIdField.setHidden(true);
 
-		this.setFields(idField  , districtIdField , regionIdField , nameField , districtField , regionField);
+		this.setFields(districtIdField , regionIdField , schoolIdField , districtField , regionField , schoolNameField);
 		this.setDataSource(dataSource);
 
 	}
 
-	public ListGridRecord addRowData(SchoolDTO schoolDTO) {
+	public ListGridRecord addRowData(SchoolDTO dto) {
 		ListGridRecord record = new ListGridRecord();
-		record.setAttribute(ID, schoolDTO.getId());
-		record.setAttribute(NAME, schoolDTO.getName());
-
-		if(schoolDTO.getDistrictDTO() != null) {
-			record.setAttribute(DISTRICT, schoolDTO.getDistrictDTO().getName());
-			record.setAttribute(DISTRICT_ID, schoolDTO.getDistrictDTO().getId());
+		
+		if(dto!= null) {
+			record.setAttribute(SCHOOL, dto.getName());
+			record.setAttribute(SCHOOL_ID, dto.getId());
 			
-			if (schoolDTO.getDistrictDTO().getRegion() != null) {
-				record.setAttribute(REGION , schoolDTO.getDistrictDTO().getRegion().getName());
-				record.setAttribute(REGION_ID , schoolDTO.getDistrictDTO().getRegion().getId());
-					
+			if(dto.getDistrictDTO() != null) {
+				record.setAttribute(DISTRICT, dto.getDistrictDTO().getName());
+				record.setAttribute(DISTRICT_ID, dto.getDistrictDTO().getId());
+				
+				if (dto.getDistrictDTO().getRegion() != null) {
+					record.setAttribute(REGION , dto.getDistrictDTO().getRegion().getName());
+					record.setAttribute(REGION_ID , dto.getDistrictDTO().getRegion().getId());
+						
+				}
 			}
 		}
 		
@@ -90,11 +95,11 @@ public class SchoolDistrictListGrid extends SuperListGrid {
 		public SchoolDataSource(String id) {
 			setID(id);
 			
-			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			DataSourceTextField idField = new DataSourceTextField(SCHOOL_ID);
 			idField.setHidden(true);
 			idField.setPrimaryKey(true);
 			
-			DataSourceTextField nameField = new DataSourceTextField(NAME, "Name");
+			DataSourceTextField nameField = new DataSourceTextField(SCHOOL, "Name");
 			
 			DataSourceTextField districtField = new DataSourceTextField(DISTRICT, "District");
 			DataSourceTextField districtIdField = new DataSourceTextField(DISTRICT_ID, "District Id");

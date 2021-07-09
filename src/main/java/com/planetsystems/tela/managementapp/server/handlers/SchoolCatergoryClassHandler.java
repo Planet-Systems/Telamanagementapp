@@ -15,8 +15,10 @@ import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
+import com.planetsystems.tela.dto.response.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
+import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 
 public class SchoolCatergoryClassHandler {
@@ -223,6 +225,7 @@ public static SystemResponseDTO<SchoolDTO> saveSchool(MyRequestAction action){
 	}
 	
 	
+
 	public static SystemResponseDTO<SchoolDTO> updateSchool(MyRequestAction action){
 
 		SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(MyRequestAction.DATA);
@@ -263,9 +266,10 @@ public static SystemResponseDTO<SchoolDTO> saveSchool(MyRequestAction action){
 	}
 	
 	
+	
 	public static SystemResponseDTO<List<SchoolDTO>> getSchoolsByDistrict(MyRequestAction action){
         String id = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
-		SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(MyRequestAction.DATA);
+		//SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 
 		Client client = ClientBuilder.newClient();
@@ -297,6 +301,29 @@ public static SystemResponseDTO<SchoolDTO> saveSchool(MyRequestAction action){
 		client.close();
 		
 		System.out.println("GET  CATEGORIES BY PROFILE SCCHOOLS: " + responseDTO);
+		
+		return responseDTO;
+	}
+	
+	
+	public static SystemResponseDTO<List<SchoolDTO>> getAllSchoolsBySystemUserProfileSchools(MyRequestAction action){
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+		String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
+		Client client = ClientBuilder.newClient();
+
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<List<SchoolDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK)
+				.path("systemUserProfile").path(profileId).path("schools")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.get(new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
+				});
+
+		
+		client.close();
+		
+		System.out.println("GET  SchoolDTOS BY PROFILE SCCHOOLS: " + responseDTO);
 		
 		return responseDTO;
 	}

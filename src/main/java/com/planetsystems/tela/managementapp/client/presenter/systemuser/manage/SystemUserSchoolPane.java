@@ -12,7 +12,7 @@ public class SystemUserSchoolPane  extends VLayout{
 	private IButton userSchoolButton;
 	private IButton addButton;
 	private IButton deleteButton;
-	private SchoolDistrictListGrid schoolDistrictListGrid;
+	private ProfileSchoolsListGrid profileSchoolsListGrid;
 	
 	
 	public SystemUserSchoolPane() {
@@ -32,13 +32,13 @@ public class SystemUserSchoolPane  extends VLayout{
     	
     	controlButtonLayout.setMembers(userSchoolButton , deleteButton , addButton);
 		
-    	schoolDistrictListGrid = new SchoolDistrictListGrid();
-    	schoolDistrictListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
-    	schoolDistrictListGrid.setSelectionType(SelectionStyle.SIMPLE);
+    	profileSchoolsListGrid = new ProfileSchoolsListGrid();
+    	profileSchoolsListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
+    	profileSchoolsListGrid.setSelectionType(SelectionStyle.SIMPLE);
    
     	
         this.addMember(controlButtonLayout);
-		this.addMember(schoolDistrictListGrid);
+		this.addMember(profileSchoolsListGrid);
         this.setHeight100();
 		this.setWidth100();
 	}
@@ -56,9 +56,11 @@ public class SystemUserSchoolPane  extends VLayout{
 	}
 
 	
-	
-	public SchoolDistrictListGrid getSchoolDistrictListGrid() {
-		return schoolDistrictListGrid;
+
+
+
+	public ProfileSchoolsListGrid getProfileSchoolsListGrid() {
+		return profileSchoolsListGrid;
 	}
 
 

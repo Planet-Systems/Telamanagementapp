@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.inject.Inject;
@@ -32,12 +31,9 @@ import com.planetsystems.tela.dto.StaffDailyTimeTableLessonDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
-import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable.StaffDailyTimetableLessonListGrid;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
@@ -46,9 +42,7 @@ import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
-import com.planetsystems.tela.managementapp.shared.RequestConstant;
-import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
-import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolStaffEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailySupervisionCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailySupervisionTaskCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailyTimetableLessonCommands;
@@ -172,42 +166,6 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 		});
 	}
 
-	@Deprecated
-	private void getStaffDailyAttendanceSuperVisions() {
-		getView().getStaffDailyAttendanceSupervisionPane().getLoadSuperVisionButton()
-				.addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						final String schoolId = getView().getStaffDailyAttendanceSupervisionPane().getSchoolCombo()
-								.getValueAsString();
-
-						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-						map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-						map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
-
-						if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-							map.put(NetworkDataUtil.ACTION,
-									RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_IN_SCHOOL_DATE);
-						else
-							map.put(NetworkDataUtil.ACTION,
-									RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE);
-
-						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-							@Override
-							public void onNetworkResult(RequestResult result) {
-								getView().getStaffDailyAttendanceSupervisionPane()
-										.getStaffDailyAttendanceSupervisionListGrid()
-										.addRecordsToGrid(result.getStaffDailyAttendanceSupervisionDTOs());
-							}
-						});
-
-					}
-				});
-
-	}
-
 	
 	private void showCreateTab(MenuButton newButton) {
 		newButton.addClickHandler(new ClickHandler() {
@@ -256,7 +214,11 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					public void onChanged(ChangedEvent event) {
 						ComboUtil2.loadSchoolStaffComboBySchool(createSupervisionTaskPane.getSchoolCombo(),
 								createSupervisionTaskPane.getSchoolStaffCombo(), dispatcher, placeManager, null);
+						
+						loadSchoolStaffSupervisor(createSupervisionTaskPane);
 					}
+
+
 				});
 
 				getStaffDailyTimetableLessonsForStaffSchoolStaffDate2(createSupervisionTaskPane);
@@ -287,106 +249,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 
 	}
 
-	
-	@Deprecated
-	private void getStaffDailyTimetableLessonsForStaffSchoolStaffDate(
-			final CreateStaffDailyAttendanceTaskSupervisionPane createSupervisionTaskPane) {
-		createSupervisionTaskPane.getLoadTasksButton().addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-				final String schoolId = createSupervisionTaskPane.getSchoolCombo().getValueAsString();
-				final String schoolStaffId = createSupervisionTaskPane.getSchoolStaffCombo().getValueAsString();
-
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.SCHOOL_STAFF_ID, schoolStaffId);
-				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE);
-
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						createSupervisionTaskPane.getDailyAttendanceTaskListGrid()
-								.addRecordsToGrid(result.getStaffDailyTimeTableLessonDTOs());
-
-						if (result.getStaffDailyTimeTableLessonDTOs().isEmpty())
-							createSupervisionTaskPane.getCommentButton().disable();
-						else
-							createSupervisionTaskPane.getCommentButton().enable();
-
-					}
-				});
-
-			}
-		});
-
-	}
-
-	
-	@Deprecated
-	private void saveStaffDailyAttendanceTaskSupervision(
-			final CreateStaffDailyAttendanceTaskSupervisionPane createSupervisionTaskPane, final CommentWindow window) {
-
-		window.getSaveButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				StaffDailyAttendanceSupervisionDTO supervisionDTO = new StaffDailyAttendanceSupervisionDTO();
-				String comment = window.getCommenTextAreaItem().getValueAsString();
-				SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(
-						createSupervisionTaskPane.getSchoolStaffCombo().getValueAsString());
-
-				supervisionDTO.setComment(comment);
-				supervisionDTO.setSchoolStaffDTO(schoolStaffDTO);
-				supervisionDTO.setSupervisionTime(timeFormat.format(new Date()));
-				supervisionDTO.setSupervisionDate(dateFormat.format(new Date()));
-				supervisionDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
-
-				List<StaffDailyAttendanceTaskSupervisionDTO> taskSupervisionDTOs = new ArrayList<StaffDailyAttendanceTaskSupervisionDTO>();
-				ListGridRecord[] records = createSupervisionTaskPane.getDailyAttendanceTaskListGrid()
-						.getSelectedRecords();
-				for (int i = 0; i < records.length; i++) {
-					ListGridRecord record = records[i];
-
-					StaffDailyAttendanceTaskSupervisionDTO task = new StaffDailyAttendanceTaskSupervisionDTO();
-					task.setCreatedDateTime(dateTimeFormat.format(new Date()));
-
-					StaffDailyTimeTableDTO staffDailyTimeTableDTO = new StaffDailyTimeTableDTO();
-					staffDailyTimeTableDTO
-							.setId(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID));
-					task.setStaffDailyTimeTableDTO(staffDailyTimeTableDTO);
-
-					task.setTeachingStatus("present");
-					task.setTeachingTimeStatus("In Time");
-					// task.setStatus(status);
-
-					taskSupervisionDTOs.add(task);
-				}
-				supervisionDTO.setStaffDailyAttendanceTaskSupervisionDTOS(taskSupervisionDTOs);
-
-				GWT.log("DATA Supervision " + supervisionDTO);
-
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_STAFF_DAILY_TASK_SUPERVISIONS, supervisionDTO);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_STAFF_DAILY_TASK_SUPERVISIONS);
-
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						window.close();
-						SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-						getView().getTabSet().removeTab(1);
-						getView().getTabSet().setSelectedTab(0);
-					}
-				});
-
-			}
-		});
-
-	}
 
 	private void closeCreateStaffDailyTaskTab(CreateStaffDailyAttendanceTaskSupervisionPane createSupervisionTaskPane) {
 		createSupervisionTaskPane.getCloseTabButton().addClickHandler(new ClickHandler() {
@@ -538,28 +401,6 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 		});
 	}
 
-	@Deprecated
-	private void getStaffDailySupervisionTasksByStaffDateStaffDailySupervisionAttendance(
-			final ViewStaffDailyAttendanceTaskSupervisionPane supervisionPane, final ListGridRecord record) {
-
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.SCHOOL_STAFF_ID,
-				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.SCHOOL_STAFF_ID));
-		map.put(RequestDelimeters.STAFF_DAILY_ATTENDANCE_SUPERVISION_ID,
-				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.ID));
-		map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
-		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				supervisionPane.getStaffDailyAttendanceTaskSupervisionListGrid()
-						.addRecordsToGrid(result.getStaffDailyAttendanceTaskSupervisionDTOs());
-			}
-		});
-	}
 
 	private void closeViewStaffDailyAttendanceSupervisionTaskTab(
 			ViewStaffDailyAttendanceTaskSupervisionPane viewStaffDailyAttendanceSupervisionTaskPane) {
@@ -699,6 +540,8 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 				SchoolDTO schoolDTO = new SchoolDTO(createSupervisionTaskPane.getSchoolCombo().getValueAsString());
 				schoolDTO.setDistrictDTO(new DistrictDTO(createSupervisionTaskPane.getDistrictCombo().getValueAsString()));
 				schoolStaffDTO.setSchoolDTO(schoolDTO);
+				
+				supervisionDTO.setSupervisorDTO(new SchoolStaffDTO(createSupervisionTaskPane.getSupervisorIdField().getValueAsString()));
 			
 
 				supervisionDTO.setComment(comment);
@@ -718,20 +561,15 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					StaffDailyAttendanceTaskSupervisionDTO task = new StaffDailyAttendanceTaskSupervisionDTO();
 					task.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
-					StaffDailyTimeTableDTO staffDailyTimeTableDTO = new StaffDailyTimeTableDTO();
-					staffDailyTimeTableDTO
-							.setId(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID));
-					task.setStaffDailyTimeTableDTO(staffDailyTimeTableDTO);
+					task.setStaffDailyTimeTableDTO(new StaffDailyTimeTableDTO(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID)));
 
 					task.setTeachingStatus("present");
 					task.setTeachingTimeStatus("In Time");
-					// task.setStatus(status);
 
 					taskSupervisionDTOs.add(task);
 				}
 				supervisionDTO.setStaffDailyAttendanceTaskSupervisionDTOS(taskSupervisionDTOs);
 
-				GWT.log("DATA Supervision " + supervisionDTO);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(MyRequestAction.DATA, supervisionDTO);
@@ -799,6 +637,40 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 	}
 
 	
+	private void loadSchoolStaffSupervisor(
+			final CreateStaffDailyAttendanceTaskSupervisionPane createSupervisionTaskPane) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		FilterDTO dto = new FilterDTO();
+		dto.setStaffType("Head teacher");
+		dto.setSchoolDTO(new SchoolDTO(createSupervisionTaskPane.getSchoolCombo().getValueAsString()));
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFF_BY_TYPE_SCHOOL);
+		map.put(MyRequestAction.DATA, dto);
+		
+
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+			@Override
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<SchoolStaffDTO> responseDTO = result.getSchoolStaffResponse();
+					if (responseDTO.isStatus()) {
+						//SC.say("Success" , responseDTO.getMessage());
+						SchoolStaffDTO dto = responseDTO.getData();
+						String fullName = dto.getGeneralUserDetailDTO().getFirstName() +" "+responseDTO.getData().getGeneralUserDetailDTO().getLastName();
+						String type = dto.getStaffType();
+						createSupervisionTaskPane.getSupervisorField().setValue(fullName+" ("+type+")");
+						createSupervisionTaskPane.getSupervisorIdField().setValue(dto.getId());
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
+				}
+				
+				
+				
+			}
+		});
+		
+	}
 	
 	
 

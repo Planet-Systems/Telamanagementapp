@@ -21,6 +21,10 @@ import com.planetsystems.tela.managementapp.server.handlers.StaffDailyTimetableL
 import com.planetsystems.tela.managementapp.server.handlers.StaffDailyTimetableSupervisionHandler;
 import com.planetsystems.tela.managementapp.server.handlers.StaffDailyTimetableSupervisionTaskHandler;
 import com.planetsystems.tela.managementapp.server.handlers.SubjectCategoryHandler;
+import com.planetsystems.tela.managementapp.server.handlers.SystemMenuHandler;
+import com.planetsystems.tela.managementapp.server.handlers.SystemUserGroupHandler;
+import com.planetsystems.tela.managementapp.server.handlers.SystemUserProfileHandler;
+import com.planetsystems.tela.managementapp.server.handlers.SystemUserProfileSchoolsHandler;
 import com.planetsystems.tela.managementapp.server.handlers.TimeTableLessonHandler;
 import com.planetsystems.tela.managementapp.server.handlers.TimetableHandler;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
@@ -38,8 +42,12 @@ import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailySup
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailyTimetableCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.StaffDailyTimetableLessonCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuCommands;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupSystemMenuCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserProfileSchoolCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.TimetableCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.TimetableLessonCommands;
 
@@ -277,6 +285,7 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result44.setSchoolResponseList(SchoolCatergoryClassHandler.getAllSchoolsByLoggedSystemUserProfileSchools(action));;
 				return result44;
 				
+		
 			case SchoolCategoryClassCommand.SAVE_SCHOOL_CLASS:
 				MyRequestResult result45 = new MyRequestResult();
 				result45.setSchoolClassResponse(SchoolCatergoryClassHandler.saveSchoolClass(action));
@@ -555,6 +564,11 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result101.setTimeTableLessonResponse(TimeTableLessonHandler.saveTimeTableLesson(action));
 				return result101;
 				
+			case TimetableLessonCommands.UPDATE_TIMETABLE_LESSON:
+				MyRequestResult result115 = new MyRequestResult();
+				result115.setTimeTableLessonResponse(TimeTableLessonHandler.updateTimeTableLesson(action));
+				return result115;
+				
 			case TimetableLessonCommands.GET_ALL_TIMETABLE_LESSONS:
 				MyRequestResult result102 = new MyRequestResult();
 				result102.setTimeTableLessonResponseList(TimeTableLessonHandler.getTimeTableLessons(action));
@@ -609,6 +623,79 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result113 = new MyRequestResult();
 				result113.setAttendanceTaskSupervisionResponseList(StaffDailyTimetableSupervisionTaskHandler.getStaffDailyTimetableSupervisionTasks(action));
 				return result113;
+				
+			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFF_BY_TYPE_SCHOOL:
+				MyRequestResult result114 = new MyRequestResult();
+				result114.setSchoolStaffResponse(SchoolStaffEnrollmentHandler.getSchoolStaffByTypeSchool(action));
+				return result114;
+				
+				
+			case SystemUserGroupCommand.SAVE_SYSTEM_USER_GROUP:
+				MyRequestResult result116 = new MyRequestResult();
+				result116.setSystemUserGroupResponse(SystemUserGroupHandler.saveSystemUserGroup(action));
+				return result116;
+				
+			case SystemUserGroupCommand.GET_ALL_SYSTEM_USER_GROUPS:
+				MyRequestResult result117 = new MyRequestResult();
+				result117.setSystemUserGroupResponseList(SystemUserGroupHandler.getSystemUserGroups(action));
+				return result117;
+				
+			case SystemUserGroupCommand.DELETE_SYSTEM_USER_GROUP:
+				MyRequestResult result118 = new MyRequestResult();
+				result118.setResponseText(SystemUserGroupHandler.deleteSystemUserGroup(action));
+				return result118;
+				
+			case SystemUserGroupCommand.UPDATE_SYSTEM_USER_GROUP:
+				MyRequestResult result119 = new MyRequestResult();
+				result119.setSystemUserGroupResponse(SystemUserGroupHandler.updateSystemUserGroup(action));
+				return result119;
+				
+				
+			case SystemUserCommand.SAVE_SYSTEM_USER:
+				MyRequestResult result120 = new MyRequestResult();
+				result120.setSystemUserProfileResponse(SystemUserProfileHandler.saveSystemUserProfile(action));
+				return result120;
+				
+			case SystemUserCommand.GET_ALL_SYSTEM_USERS:
+				MyRequestResult result121 = new MyRequestResult();
+				result121.setSystemUserProfileResponseList(SystemUserProfileHandler.getSystemUserProfiles(action));
+				return result121;
+				
+			case SystemMenuCommands.SAVE_SYSTEM_MENU:
+				MyRequestResult result122 = new MyRequestResult();
+				result122.setResponseText(SystemMenuHandler.saveSystemMenu(action));
+				return result122;
+				
+			case SystemMenuCommands.GET_SYSTEM_MENUS:
+				MyRequestResult result123 = new MyRequestResult();
+				result123.setSystemMenuResponseList(SystemMenuHandler.getSystemMenus(action));
+				return result123;
+				
+			case SystemMenuCommands.DELETE_SYSTEM_MENUS:
+				MyRequestResult result124 = new MyRequestResult();
+				result124.setResponseText(SystemMenuHandler.deleteSystemMenus(action));
+				return result124;
+				
+			case SystemUserProfileSchoolCommand.SAVE_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result125 = new MyRequestResult();
+				result125.setResponseText(SystemUserProfileSchoolsHandler.saveSystemUserProfileSchool(action));;
+				return result125;
+				
+			case SystemUserProfileSchoolCommand.GET_SYSTEM_USER_PROFILE_SCHOOL_SCHOOLS_BY_ID:
+				MyRequestResult result126 = new MyRequestResult();
+				result126.setSystemUserProfileSchoolResponseList(SystemUserProfileSchoolsHandler.getSystemUserProfileSchoolByProfileId(action));;
+				return result126;
+				
+			case SystemUserProfileSchoolCommand.DELETE_SYSTEM_USER_PROFILE_SCHOOLS:
+				MyRequestResult result127 = new MyRequestResult();
+				result127.setResponseText(SystemUserProfileSchoolsHandler.deleteSystemUserProfileSchools(action));;
+				return result127;
+				
+			case SystemUserProfileSchoolCommand.GET_NOT_PROFILE_SCHOOLS_BY_PROFILE_DISTRICT:
+				MyRequestResult result128 = new MyRequestResult();
+				result128.setSchoolResponseList(SystemUserProfileSchoolsHandler.notProfileSchools(action));;
+				return result128;
+
 		
 	
 				

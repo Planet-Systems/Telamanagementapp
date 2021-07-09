@@ -498,11 +498,11 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				if (result != null) {
 					SystemResponseDTO<List<RegionDto>> responseDTO = result.getRegionResponseList();
 					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
 						getView().getRegionPane().getListGrid().addRecordsToGrid(responseDTO.getData());
 					} else {
 						SC.say(responseDTO.getMessage());
 					}
-
 				}
 
 			}
@@ -661,6 +661,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 				if (result != null) {
 					SystemResponseDTO<List<DistrictDTO>> responseDTO = result.getDistrictResponseList();
 					if (responseDTO.isStatus()) {
+						if(responseDTO.getData() != null)
 						getView().getDistrictPane().getListGrid().addRecordsToGrid(responseDTO.getData());
 					} else {
 						SC.say(responseDTO.getMessage());

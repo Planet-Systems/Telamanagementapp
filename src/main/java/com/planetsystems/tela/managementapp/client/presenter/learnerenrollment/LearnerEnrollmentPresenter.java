@@ -168,11 +168,11 @@ public class LearnerEnrollmentPresenter
 				LearnerEnrollmentWindow window = new LearnerEnrollmentWindow();
 				String defaultValue = null;
 				setLearnerTotal(window);
-				loadAcademicYearCombo(window, defaultValue);
-				loadAcademicTermCombo(window, defaultValue);
-				loadDistrictCombo(window, defaultValue);
-				loadSchoolCombo(window, defaultValue);
-				loadSchoolClassCombo(window, defaultValue);
+				loadAcademicYearCombo2(window, defaultValue);
+				loadAcademicTermCombo2(window, defaultValue);
+				loadDistrictCombo2(window, defaultValue);
+				loadSchoolCombo2(window, defaultValue);
+				loadSchoolClassCombo2(window, defaultValue);
 
 				window.show();
 
@@ -182,48 +182,52 @@ public class LearnerEnrollmentPresenter
 		});
 	}
 
-	private void loadAcademicYearCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
-		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
+	private void loadAcademicYearCombo2(final LearnerEnrollmentWindow window, final String defaultValue) {
+		ComboUtil2.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
 	}
 
-	private void loadAcademicTermCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+	private void loadAcademicTermCombo2(final LearnerEnrollmentWindow window, final String defaultValue) {
 		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
+				ComboUtil2.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
 						window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
 			}
 		});
 	}
 
-	private void loadDistrictCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
-		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+	
+	private void loadDistrictCombo2(final LearnerEnrollmentWindow window, final String defaultValue) {
+		ComboUtil2.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
 
-	private void loadSchoolCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+	private void loadSchoolCombo2(final LearnerEnrollmentWindow window, final String defaultValue) {
 		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+				ComboUtil2.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
 						placeManager, defaultValue);
 			}
 		});
 
 	}
+	
 
-	private void loadSchoolClassCombo(final LearnerEnrollmentWindow window, final String defaultValue) {
+
+	
+	private void loadSchoolClassCombo2(final LearnerEnrollmentWindow window, final String defaultValue) {
 		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
-						window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager, defaultValue);
+				ComboUtil2.loadSchoolClassesComboBySchool(window.getSchoolCombo(),  window.getSchoolClassCombo() , dispatcher, placeManager, defaultValue);
+
 			}
 		});
 	}
-
+	
 	public void setLearnerTotal(final LearnerEnrollmentWindow window) {
 		final int[] totalGirls = new int[1];
 		final int[] totalBoys = new int[1];
@@ -269,49 +273,7 @@ public class LearnerEnrollmentPresenter
 
 	}
 
-	@Deprecated
-	private void saveLearnerEnrollment(final LearnerEnrollmentWindow window) {
-		window.getSaveButton().addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-
-				if (checkIfNoLearnerEnrollmentWindowFieldIsEmpty(window)) {
-
-				} else {
-					SC.warn("Please Fill all fields");
-				}
-
-				LearnerEnrollmentDTO dto = new LearnerEnrollmentDTO();
-				// dto.setId(id);
-				dto.setTotalBoys(Long.valueOf(window.getTotalBoysField().getValueAsString()));
-				dto.setTotalGirls(Long.valueOf(window.getTotalGirlsField().getValueAsString()));
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-
-				SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
-				dto.setSchoolClassDTO(schoolClassDTO);
-
-				GWT.log("DTO " + dto);
-				GWT.log("ID " + dto.getSchoolClassDTO().getId());
-
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.SAVE_LEARNER_ENROLLMENT, dto);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_LEARNER_ENROLLMENT);
-
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						clearLearnerEnrollmentWindowFields(window);
-						window.close();
-						SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-						getAllLearnerEnrollments();
-					}
-				});
-			}
-		});
-
-	}
 
 	protected boolean checkIfNoLearnerEnrollmentWindowFieldIsEmpty(LearnerEnrollmentWindow window) {
 		boolean flag = true;
@@ -345,41 +307,8 @@ public class LearnerEnrollmentPresenter
 
 	}
 
-	@Deprecated
-	private void getAllLearnerEnrollments() {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ENROLLMENT);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ENROLLMENTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid()
-						.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
-			}
-		});
-	}
-
 ///////////////////////FILTER LEARNER HEADCOUNT COMBOS(4)
 
-//loads school combo in filter learner head count pane
-	@Deprecated
-	private void loadFilterLearnerHeadCountSchoolCombo(final FilterLearnerHeadCountWindow window) {
-		window.getFilterLearnerHeadCountPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				ComboUtil.loadSchoolComboByDistrict(window.getFilterLearnerHeadCountPane().getDistrictCombo(),
-						window.getFilterLearnerHeadCountPane().getSchoolCombo(), dispatcher, placeManager, null);
-			}
-		});
-
-	}
-	
 	private void loadFilterLearnerHeadCountSchoolCombo2(final FilterLearnerHeadCountWindow window) {
 		window.getFilterLearnerHeadCountPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
@@ -393,46 +322,18 @@ public class LearnerEnrollmentPresenter
 
 	}
 
-//loads district combo in filter learner head count pane	
-	@Deprecated
-	private void loadFilterLearnerHeadCountDistrictCombo(final FilterLearnerHeadCountWindow window) {
-		ComboUtil.loadDistrictCombo(window.getFilterLearnerHeadCountPane().getDistrictCombo(), dispatcher, placeManager,
-				null);
-	}
 	
 	private void loadFilterLearnerHeadCountDistrictCombo2(final FilterLearnerHeadCountWindow window) {
 		ComboUtil2.loadDistrictCombo(window.getFilterLearnerHeadCountPane().getDistrictCombo(), dispatcher, placeManager,null);
 	}
 
-//loads academic year combo in filter learner head count pane	
-	
-	@Deprecated
-	private void loadFilterLearnerHeadCountAcademicYearCombo(final FilterLearnerHeadCountWindow window) {
-		ComboUtil.loadAcademicYearCombo(window.getFilterLearnerHeadCountPane().getAcademicYearCombo(), dispatcher,
-				placeManager, null);
-	}
 	
 	private void loadFilterLearnerHeadCountAcademicYearCombo2(final FilterLearnerHeadCountWindow window) {
 		ComboUtil2.loadAcademicYearCombo(window.getFilterLearnerHeadCountPane().getAcademicYearCombo(), dispatcher,
 				placeManager, null);
 	}
 
-	// loads academic year combo in filter learner head count pane
-	
-	@Deprecated
-	private void loadFilterLearnerHeadCountAcademicTermCombo(final FilterLearnerHeadCountWindow window) {
-		window.getFilterLearnerHeadCountPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
-			@Override
-			public void onChanged(ChangedEvent event) {
-
-				ComboUtil.loadAcademicTermComboByAcademicYear(
-						window.getFilterLearnerHeadCountPane().getAcademicYearCombo(),
-						window.getFilterLearnerHeadCountPane().getAcademicTermCombo(), dispatcher, placeManager, null);
-			}
-		});
-
-	}
 	
 	private void loadFilterLearnerHeadCountAcademicTermCombo2(final FilterLearnerHeadCountWindow window) {
 		window.getFilterLearnerHeadCountPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
@@ -451,44 +352,6 @@ public class LearnerEnrollmentPresenter
 
 	///////////////////////////////////////// END OF FILTER LEARNERS COMBOS
 
-	@Deprecated
-	private void filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(
-			final FilterLearnerHeadCountWindow window) {
-		window.getFilterButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				String academicYearId = window.getFilterLearnerHeadCountPane().getAcademicYearCombo()
-						.getValueAsString();
-				String academicTermId = window.getFilterLearnerHeadCountPane().getAcademicTermCombo()
-						.getValueAsString();
-				String districtId = window.getFilterLearnerHeadCountPane().getDistrictCombo().getValueAsString();
-				String schoolId = window.getFilterLearnerHeadCountPane().getSchoolCombo().getValueAsString();
-
-				FilterDTO dto = new FilterDTO();
-				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
-				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
-				dto.setDistrictDTO(new DistrictDTO(districtId));
-				dto.setSchoolDTO(new SchoolDTO(schoolId));
-
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.FILTER_LEARNER_ENROLLEMENTS, dto);
-				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.FILTER_LEARNER_ENROLLMENTS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
-
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						getView().getLearnerEnrollementPane().getLearnerEnrollmentListGrid()
-								.addRecordsToGrid(result.getLearnerEnrollmentDTOs());
-					}
-				});
-			}
-		});
-	}
-	
-
 
 	////////////////////////////////////////////////// NEW
 
@@ -500,57 +363,59 @@ public class LearnerEnrollmentPresenter
 
 				if (checkIfNoLearnerEnrollmentWindowFieldIsEmpty(window)) {
 
+					LearnerEnrollmentDTO dto = new LearnerEnrollmentDTO();
+					
+					// dto.setId(id);
+					dto.setTotalBoys(Long.valueOf(window.getTotalBoysField().getValueAsString()));
+					dto.setTotalGirls(Long.valueOf(window.getTotalGirlsField().getValueAsString()));
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+	                
+					SchoolClassDTO classDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
+					
+					AcademicTermDTO termDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					termDTO.setAcademicYearDTO(new AcademicYearDTO(window.getAcademicYearCombo().getValueAsString()));
+					
+					
+					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
+					schoolDTO.setDistrictDTO(new DistrictDTO(window.getDistrictCombo().getValueAsString()));
+					
+					classDTO.setAcademicTermDTO(termDTO);
+					classDTO.setSchoolDTO(schoolDTO);
+					
+					dto.setSchoolClassDTO(classDTO);
+					
+
+					GWT.log("DTO " + dto);
+					GWT.log("ID " + dto.getSchoolClassDTO().getId());
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(MyRequestAction.DATA, dto);
+					map.put(MyRequestAction.COMMAND, LearnerEnrollmentCommand.SAVE_LEARNER_ENROLLMENT);
+					
+					
+					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+
+						@Override
+						public void onNetworkResult(MyRequestResult result) {
+							if (result != null) {
+								SystemResponseDTO<LearnerEnrollmentDTO> responseDTO = result.getLearnerEnrollmentResponse();
+								if (responseDTO.isStatus()) {
+									//clearLearnerEnrollmentWindowFields(window);
+									//window.close();
+									SC.say("SUCCESS", responseDTO.getMessage());
+									getAllLearnerEnrollments2();
+								} else {
+									SC.say(responseDTO.getMessage());
+								}
+							}
+
+						}
+					});
+					
 				} else {
 					SC.warn("Please Fill all fields");
 				}
 
-				LearnerEnrollmentDTO dto = new LearnerEnrollmentDTO();
-				
-				// dto.setId(id);
-				dto.setTotalBoys(Long.valueOf(window.getTotalBoysField().getValueAsString()));
-				dto.setTotalGirls(Long.valueOf(window.getTotalGirlsField().getValueAsString()));
-				dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-                
-				SchoolClassDTO classDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
-				
-				AcademicTermDTO termDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
-				termDTO.setAcademicYearDTO(new AcademicYearDTO(window.getAcademicYearCombo().getValueAsString()));
-				
-				
-				SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
-				schoolDTO.setDistrictDTO(new DistrictDTO(window.getDistrictCombo().getValueAsString()));
-				
-				classDTO.setAcademicTermDTO(termDTO);
-				classDTO.setSchoolDTO(schoolDTO);
-				
-				dto.setSchoolClassDTO(classDTO);
-				
-
-				GWT.log("DTO " + dto);
-				GWT.log("ID " + dto.getSchoolClassDTO().getId());
-
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(MyRequestAction.DATA, dto);
-				map.put(MyRequestAction.COMMAND, LearnerEnrollmentCommand.SAVE_LEARNER_ENROLLMENT);
-
-				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-					@Override
-					public void onNetworkResult(MyRequestResult result) {
-						if (result != null) {
-							SystemResponseDTO<LearnerEnrollmentDTO> responseDTO = result.getLearnerEnrollmentResponse();
-							if (responseDTO.isStatus()) {
-								clearLearnerEnrollmentWindowFields(window);
-								window.close();
-								SC.say("SUCCESS", responseDTO.getMessage());
-								getAllLearnerEnrollments2();
-							} else {
-								SC.say(responseDTO.getMessage());
-							}
-						}
-
-					}
-				});
 			}
 		});
 
@@ -580,6 +445,8 @@ public class LearnerEnrollmentPresenter
 			}
 		});
 	}
+	
+	
 	
 	private void filterLearnerEnrollmentByAcademicTermSchool(final FilterLearnerHeadCountWindow window) {
 		window.getFilterButton().addClickHandler(new ClickHandler() {
@@ -617,6 +484,8 @@ public class LearnerEnrollmentPresenter
 			}
 		});
 	}
+	
+	
 	
 	
 	private void deleteLearnerEnrollment(MenuButton delete) {

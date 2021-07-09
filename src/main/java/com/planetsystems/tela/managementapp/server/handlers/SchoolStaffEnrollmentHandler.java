@@ -229,6 +229,26 @@ public static SystemResponseDTO<SchoolStaffDTO> saveSchoolStaff(MyRequestAction 
 	}
 	
 	
+	public static SystemResponseDTO<SchoolStaffDTO> getSchoolStaffByTypeSchool(MyRequestAction action){
+		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
+		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+
+		Client client = ClientBuilder.newClient();
+		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+		headers.add(HttpHeaders.AUTHORIZATION, token);
+
+		SystemResponseDTO<SchoolStaffDTO> responseDto = client.target(ApiResourceUtil.API_LINK).path("filterSchoolStaffByTypeSchool")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.post(Entity.entity(dto, MediaType.APPLICATION_JSON) , new GenericType<SystemResponseDTO<SchoolStaffDTO>>() {
+				});
+
+		client.close();
+		System.out.println("GET  SCHOOL_STAFF BY ID " + responseDto);
+		return responseDto;
+	}
+	
+	
+	
 	public static SystemResponseDTO<String> deleteSchoolStaff(MyRequestAction action){
 		String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);

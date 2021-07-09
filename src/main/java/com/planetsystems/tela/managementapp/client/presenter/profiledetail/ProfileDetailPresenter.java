@@ -30,7 +30,7 @@ import com.planetsystems.tela.managementapp.client.widget.Masthead;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuRequestConstant;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemMenuCommands;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserProfileRequestConstant;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.SC;

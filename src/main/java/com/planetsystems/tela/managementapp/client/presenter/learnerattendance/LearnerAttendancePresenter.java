@@ -185,56 +185,56 @@ public class LearnerAttendancePresenter
 	
 	
 	
-    @Deprecated
-	private void saveLearnerAttendance(final LearnerAttendanceWindow window) {
-		window.getSaveButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-
-				if (checkIfNoLearnerAttendanceWindowFieldIsEmpty(window)) {
-					LearnerAttendanceDTO dto = new LearnerAttendanceDTO();
-
-					dto.setBoysAbsent(Long.parseLong(window.getBoysAbsentField().getValueAsString()));
-					dto.setBoysPresent(Long.parseLong(window.getBoysPresentField().getValueAsString()));
-					dto.setGirlsAbsent(Long.parseLong(window.getGirlsAbsentField().getValueAsString()));
-					dto.setGirlsPresent(Long.parseLong(window.getGirlsPresentField().getValueAsString()));
-					dto.setComment(window.getCommentField().getValueAsString());
-					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-					dto.setAttendanceDate(dateFormat.format(new Date()));
-
-					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
-							window.getAcademicTermCombo().getValueAsString());
-					dto.setAcademicTermDTO(academicTermDTO);
-
-					SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
-					dto.setSchoolClassDTO(schoolClassDTO);
-
-					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString());
-					dto.setSchoolStaffDTO(schoolStaffDTO);
-
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, dto);
-					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_LEARNER_ATTENDANCE);
-
-					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-						@Override
-						public void onNetworkResult(RequestResult result) {
-							clearAcademicYearWindowFields(window);
-							window.close();
-							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllLearnerAttendance();
-						}
-					});
-				} else {
-					SC.warn("Please fill all fields");
-				}
-
-			}
-
-		});
-	}
+//    @Deprecated
+//	private void saveLearnerAttendance(final LearnerAttendanceWindow window) {
+//		window.getSaveButton().addClickHandler(new ClickHandler() {
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//
+//				if (checkIfNoLearnerAttendanceWindowFieldIsEmpty(window)) {
+//					LearnerAttendanceDTO dto = new LearnerAttendanceDTO();
+//
+//					dto.setBoysAbsent(Long.parseLong(window.getBoysAbsentField().getValueAsString()));
+//					dto.setBoysPresent(Long.parseLong(window.getBoysPresentField().getValueAsString()));
+//					dto.setGirlsAbsent(Long.parseLong(window.getGirlsAbsentField().getValueAsString()));
+//					dto.setGirlsPresent(Long.parseLong(window.getGirlsPresentField().getValueAsString()));
+//					dto.setComment(window.getCommentField().getValueAsString());
+//					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+//					dto.setAttendanceDate(dateFormat.format(new Date()));
+//
+//					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
+//							window.getAcademicTermCombo().getValueAsString());
+//					dto.setAcademicTermDTO(academicTermDTO);
+//
+//					SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
+//					dto.setSchoolClassDTO(schoolClassDTO);
+//
+//					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString());
+//					dto.setSchoolStaffDTO(schoolStaffDTO);
+//
+//					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//					map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, dto);
+//					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_LEARNER_ATTENDANCE);
+//
+//					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+//
+//						@Override
+//						public void onNetworkResult(RequestResult result) {
+//							clearAcademicYearWindowFields(window);
+//							window.close();
+//							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+//							getAllLearnerAttendance();
+//						}
+//					});
+//				} else {
+//					SC.warn("Please fill all fields");
+//				}
+//
+//			}
+//
+//		});
+//	}
 
 	private void clearAcademicYearWindowFields(LearnerAttendanceWindow window) {
 
@@ -293,61 +293,61 @@ public class LearnerAttendancePresenter
 	}
 
 	
-	@Deprecated
-	private void loadAcademicYearCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
-	}
+//	@Deprecated
+//	private void loadAcademicYearCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+//		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
+//	}
 
 	private void loadAcademicYearCombo2(final LearnerAttendanceWindow window, final String defaultValue) {
 		ComboUtil2.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
 	}
 
 	
-	@Deprecated
-	private void loadAcademicTermCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadAcademicTermCombo(window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
-			}
-		});
-
-	}
+//	@Deprecated
+//	private void loadAcademicTermCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+//		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				ComboUtil.loadAcademicTermCombo(window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+//			}
+//		});
+//
+//	}
 	
 	private void loadAcademicTermCombo2(final LearnerAttendanceWindow window, final String defaultValue) {
 		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil2.loadAcademicTermCombo(window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+				ComboUtil2.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(), window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
 			}
 		});
 
 	}
 	
 
-	@Deprecated
-	private void loadDistrictCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
-	}
+//	@Deprecated
+//	private void loadDistrictCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+//		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+//	}
 	
 	private void loadDistrictCombo2(final LearnerAttendanceWindow window, final String defaultValue) {
 		ComboUtil2.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
 	
-
-	@Deprecated
-	private void loadSchoolCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil2.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
-						placeManager, defaultValue);
-			}
-		});
-	}
+//
+//	@Deprecated
+//	private void loadSchoolCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+//		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				ComboUtil2.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+//						placeManager, defaultValue);
+//			}
+//		});
+//	}
 	
 	
 	private void loadSchoolCombo2(final LearnerAttendanceWindow window, final String defaultValue) {
@@ -361,17 +361,17 @@ public class LearnerAttendancePresenter
 		});
 	}
 
-	@Deprecated
-	private void loadSchoolStaffCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolStaffComboBySchool(window.getSchoolCombo(), window.getSchoolStaffCombo(),
-						dispatcher, placeManager, defaultValue);
-			}
-		});
-	}
+//	@Deprecated
+//	private void loadSchoolStaffCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+//		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				ComboUtil.loadSchoolStaffComboBySchool(window.getSchoolCombo(), window.getSchoolStaffCombo(),
+//						dispatcher, placeManager, defaultValue);
+//			}
+//		});
+//	}
 	
 	private void loadSchoolStaffCombo2(final LearnerAttendanceWindow window, final String defaultValue) {
 		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
@@ -385,34 +385,34 @@ public class LearnerAttendancePresenter
 	}
 	
 
-	@Deprecated
-	private void loadSchoolClassCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getAcademicTermCombo().getValueAsString() != null
-						&& window.getSchoolCombo().getValueAsString() != null) {
-					ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
-							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
-							defaultValue);
-				}
-			}
-		});
-
-		window.getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getAcademicTermCombo().getValueAsString() != null
-						&& window.getSchoolCombo().getValueAsString() != null) {
-					ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
-							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
-							defaultValue);
-				}
-			}
-		});
-	}
+//	@Deprecated
+//	private void loadSchoolClassCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+//		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (window.getAcademicTermCombo().getValueAsString() != null
+//						&& window.getSchoolCombo().getValueAsString() != null) {
+//					ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
+//							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
+//							defaultValue);
+//				}
+//			}
+//		});
+//
+//		window.getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (window.getAcademicTermCombo().getValueAsString() != null
+//						&& window.getSchoolCombo().getValueAsString() != null) {
+//					ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
+//							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
+//							defaultValue);
+//				}
+//			}
+//		});
+//	}
 
 	
 	private void loadSchoolClassCombo2(final LearnerAttendanceWindow window, final String defaultValue) {
@@ -420,47 +420,47 @@ public class LearnerAttendancePresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (window.getAcademicTermCombo().getValueAsString() != null
-						&& window.getSchoolCombo().getValueAsString() != null) {
-					ComboUtil2.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
-							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
-							defaultValue);
+				if (window.getSchoolCombo().getValueAsString() != null) {
+					ComboUtil2.loadSchoolClassesComboBySchool(window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager, defaultValue);
+//					(window.getAcademicTermCombo(),
+//							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
+//							defaultValue);
 				}
 			}
 		});
 
-		window.getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (window.getAcademicTermCombo().getValueAsString() != null
-						&& window.getSchoolCombo().getValueAsString() != null) {
-					ComboUtil2.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
-							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
-							defaultValue);
-				}
-			}
-		});
+//		window.getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
+//
+//			@Override
+//			public void onChanged(ChangedEvent event) {
+//				if (window.getAcademicTermCombo().getValueAsString() != null
+//						&& window.getSchoolCombo().getValueAsString() != null) {
+//					ComboUtil2.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
+//							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
+//							defaultValue);
+//				}
+//			}
+//		});
 	}
 	
 	
-	@Deprecated
-	private void getAllLearnerAttendance() {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCE);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				getView().getAttendancePane().getLearnerAttendanceListGrid()
-						.addRecordsToGrid(result.getLearnerAttendanceDTOs());
-			}
-		});
-	}
+//	@Deprecated
+//	private void getAllLearnerAttendance() {
+//		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+//		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+//			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCE);
+//		else
+//			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+//
+//		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+//
+//			@Override
+//			public void onNetworkResult(RequestResult result) {
+//				getView().getAttendancePane().getLearnerAttendanceListGrid()
+//						.addRecordsToGrid(result.getLearnerAttendanceDTOs());
+//			}
+//		});
+//	}
 
 	public void setTotalAbsentPresent(final LearnerAttendanceWindow window) {
 		final int[] totalGirlsPresent = new int[1];
@@ -558,7 +558,7 @@ public class LearnerAttendancePresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getFilterLearnerAttendancePane().getDistrictCombo(),
+				ComboUtil2.loadSchoolComboByDistrict(window.getFilterLearnerAttendancePane().getDistrictCombo(),
 						window.getFilterLearnerAttendancePane().getSchoolCombo(), dispatcher, placeManager, null);
 			}
 		});
@@ -567,13 +567,13 @@ public class LearnerAttendancePresenter
 
 	// loads district combo in filter learner head count pane
 	private void loadFilterLearnerAttendanceDistrictCombo(final FilterLearnerAttendanceWindow window) {
-		ComboUtil.loadDistrictCombo(window.getFilterLearnerAttendancePane().getDistrictCombo(), dispatcher,
+		ComboUtil2.loadDistrictCombo(window.getFilterLearnerAttendancePane().getDistrictCombo(), dispatcher,
 				placeManager, null);
 	}
 
 	// loads academic year combo in filter learner head count pane
 	private void loadFilterLearnerAttendanceAcademicYearCombo(final FilterLearnerAttendanceWindow window) {
-		ComboUtil.loadAcademicYearCombo(window.getFilterLearnerAttendancePane().getAcademicYearCombo(), dispatcher,
+		ComboUtil2.loadAcademicYearCombo(window.getFilterLearnerAttendancePane().getAcademicYearCombo(), dispatcher,
 				placeManager, null);
 	}
 
@@ -584,7 +584,7 @@ public class LearnerAttendancePresenter
 			@Override
 			public void onChanged(ChangedEvent event) {
 
-				ComboUtil.loadAcademicTermComboByAcademicYear(
+				ComboUtil2.loadAcademicTermComboByAcademicYear(
 						window.getFilterLearnerAttendancePane().getAcademicYearCombo(),
 						window.getFilterLearnerAttendancePane().getAcademicTermCombo(), dispatcher, placeManager, null);
 			}
@@ -709,7 +709,7 @@ public class LearnerAttendancePresenter
 								SystemResponseDTO<LearnerAttendanceDTO> responseDTO = result.getLearnerAttendanceResponse();
 								if (responseDTO.isStatus()) {
 									//clearAcademicYearWindowFields(window);
-									window.close();
+									//window.close();
 									SC.say("SUCCESS", responseDTO.getMessage());
 									getAllLearnerAttendance2();
 								} else {

@@ -255,61 +255,6 @@ public class StaffAttendancePresenter
 
 	}
 
-	@Deprecated
-	protected void saveClockin(final ClockInWindow window) {
-		window.getSaveButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-
-				if (checkIfNoClockInWindowFieldIsEmpty(window)) {
-					ClockInDTO dto = new ClockInDTO();
-					// dto.setClockInDate(clockInDate);
-					dto.setComment(window.getCommentField().getValueAsString());
-					// dto.setId(id);
-					dto.setLatitude(window.getLatitudeField().getValueAsString());
-					dto.setLongitude(window.getLongitudeField().getValueAsString());
-					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-
-					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
-							window.getAcademicTermCombo().getValueAsString());
-					dto.setAcademicTermDTO(academicTermDTO);
-
-					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
-					dto.setSchoolDTO(schoolDTO);
-
-					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO();
-					schoolStaffDTO.setId(window.getSchoolStaffCombo().getValueAsString());
-					dto.setSchoolStaffDTO(schoolStaffDTO);
-
-					GWT.log("DTO " + dto);
-					GWT.log("Term " + dto.getAcademicTermDTO().getId());
-					GWT.log("Staff " + dto.getSchoolStaffDTO().getId());
-
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_CLOCK_IN, dto);
-					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_CLOCK_IN);
-
-					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-						@Override
-						public void onNetworkResult(RequestResult result) {
-							clearClockInWindowFields(window);
-							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllStaffClockIn();
-						}
-					});
-
-				} else {
-					SC.say("Please fill all the fields");
-				}
-
-			}
-
-		});
-
-	}
-
 	private boolean checkIfNoClockInWindowFieldIsEmpty(ClockInWindow window) {
 		boolean flag = true;
 
@@ -350,28 +295,10 @@ public class StaffAttendancePresenter
 		window.getLongitudeField().clearValue();
 	}
 
-	@Deprecated
-	private void loadAcademicYearCombo(final ClockInWindow window, final String defaultValue) {
-		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
-	}
-
 	private void loadAcademicYearCombo2(final ClockInWindow window, final String defaultValue) {
 		ComboUtil2.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
 	}
-	
-	
-	@Deprecated
-	private void loadAcademicTermCombo(final ClockInWindow window, final String defaultValue) {
-		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
-						window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
-			}
-		});
-	}
-	
 	
 	private void loadAcademicTermCombo2(final ClockInWindow window, final String defaultValue) {
 		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
@@ -383,32 +310,12 @@ public class StaffAttendancePresenter
 			}
 		});
 	}
-	
-	
 
-	@Deprecated
-	private void loadDistrictCombo(final ClockInWindow window, final String defaultValue) {
-		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
-	}
 	
 	private void loadDistrictCombo2(final ClockInWindow window, final String defaultValue) {
 		ComboUtil2.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
 	}
-	
 
-	@Deprecated
-	private void loadSchoolCombo(final ClockInWindow window, final String defaultValue) {
-		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
-						placeManager, defaultValue);
-			}
-		});
-	}
-	
-	
 	private void loadSchoolCombo2(final ClockInWindow window, final String defaultValue) {
 		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
@@ -419,20 +326,7 @@ public class StaffAttendancePresenter
 			}
 		});
 	}
-	
-	
 
-	@Deprecated
-	private void loadSchoolStaffCombo(final ClockInWindow window, final String defaultValue) {
-		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolStaffComboBySchool(window.getSchoolCombo(), window.getSchoolStaffCombo(),
-						dispatcher, placeManager, defaultValue);
-			}
-		});
-	}
 
 	
 	private void loadSchoolStaffCombo2(final ClockInWindow window, final String defaultValue) {
@@ -444,89 +338,6 @@ public class StaffAttendancePresenter
 						dispatcher, placeManager, defaultValue);
 			}
 		});
-	}
-	
-	@Deprecated
-	private void getAllStaffClockIn() {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_IN);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
-			}
-		});
-
-	}
-
-	//////////////////////// clockout
-
-	@Deprecated
-	private void clockOut(MenuButton clockOutButton) {
-
-		clockOutButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if (getView().getClockInPane().getClockInListGrid().anySelected()) {
-					ListGridRecord record = getView().getClockInPane().getClockInListGrid().getSelectedRecord();
-					ClockOutDTO dto = new ClockOutDTO();
-
-					ClockInDTO clockInDTO = new ClockInDTO();
-					clockInDTO.setId(record.getAttribute(ClockInListGrid.ID));
-
-					dto.setClockInDTO(clockInDTO);
-					dto.setComment(record.getAttribute(ClockInListGrid.COMMENT));
-					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-//            	 SC.say("Hello");
-					GWT.log("DTO " + dto);
-					GWT.log("DTO id  " + dto.getClockInDTO().getId());
-
-					GWT.log("date " + dto.getCreatedDateTime());
-
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(RequestConstant.SAVE_CLOCK_OUT, dto);
-					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_CLOCK_OUT);
-
-					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-						@Override
-						public void onNetworkResult(RequestResult result) {
-							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllStaffClockIn2();
-						}
-					});
-
-				} else {
-					SC.say("Please Select A record to clockout");
-				}
-			}
-		});
-
-	}
-
-	
-	@Deprecated
-	private void getAllStaffClockOut() {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUT);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
-
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-			@Override
-			public void onNetworkResult(RequestResult result) {
-				getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(result.getClockOutDTOs());
-			}
-		});
-
 	}
 
 ///////////////////////FILTER CLOCKIN COMBOS(4)
@@ -743,7 +554,7 @@ public class StaffAttendancePresenter
 							if (result != null) {
 								SystemResponseDTO<ClockInDTO> responseDTO = result.getClockInResponse();
 								if (responseDTO.isStatus()) {
-									clearClockInWindowFields(window);
+									//clearClockInWindowFields(window);
 									SC.say("SUCCESS", responseDTO.getMessage());
 									getAllStaffClockIn2();
 								} else {
@@ -855,9 +666,9 @@ public class StaffAttendancePresenter
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.DATA, new FilterDTO());
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(MyRequestAction.COMMAND, RequestConstant.GET_CLOCK_OUT);
+			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_ALL_CLOCK_OUTS);
 		else
-			map.put(MyRequestAction.COMMAND, RequestConstant.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 

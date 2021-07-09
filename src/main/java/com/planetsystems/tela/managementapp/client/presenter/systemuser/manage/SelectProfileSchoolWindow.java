@@ -13,15 +13,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class SelectProfileSchoolWindow extends Window{
 	private IButton cancelButton;
 	private IButton addSchoolsButton;
-	private SchoolDistrictListGrid schoolDistrictListGrid;
+	private SelectProfileSchoolListGrid selectProfileSchoolListGrid;
 	public SelectProfileSchoolWindow() {
 		super();
-		schoolDistrictListGrid = new SchoolDistrictListGrid();
-		schoolDistrictListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
-		schoolDistrictListGrid.setSelectionType(SelectionStyle.SIMPLE);
-		schoolDistrictListGrid.setShowFilterEditor(true);
-		
-		schoolDistrictListGrid.setHeight("90%");
+		selectProfileSchoolListGrid = new SelectProfileSchoolListGrid();
+		selectProfileSchoolListGrid.setSelectionAppearance(SelectionAppearance.CHECKBOX);
+		selectProfileSchoolListGrid.setSelectionType(SelectionStyle.SIMPLE);
+		selectProfileSchoolListGrid.setShowFilterEditor(true);
+		selectProfileSchoolListGrid.setHeight("90%");
 		
 		HLayout buttonHLayout = new HLayout();
 		buttonHLayout.setAlign(Alignment.CENTER);
@@ -36,14 +35,14 @@ public class SelectProfileSchoolWindow extends Window{
         VLayout layout = new VLayout();
         layout.setWidth100();
         layout.setHeight100();
-        layout.addMembers(schoolDistrictListGrid , buttonHLayout);
+        layout.addMembers(selectProfileSchoolListGrid , buttonHLayout);
 		
 
 		this.addItem(layout);
 		this.setWidth("50%");
 		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("Filter Schools By Region and District");
+		this.setTitle("Select Profile Schools");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		closeWindow(this);
@@ -72,9 +71,18 @@ public class SelectProfileSchoolWindow extends Window{
 	}
 
 
-	public SchoolDistrictListGrid getSchoolDistrictListGrid() {
-		return schoolDistrictListGrid;
+	public SelectProfileSchoolListGrid getSelectProfileSchoolListGrid() {
+		return selectProfileSchoolListGrid;
 	}
+
+
+	
+
+
+	
+
+
+	
 
 	
 	
