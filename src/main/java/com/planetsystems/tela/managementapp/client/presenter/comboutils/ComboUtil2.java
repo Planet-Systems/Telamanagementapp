@@ -64,7 +64,8 @@ public class ComboUtil2 {
 								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 								for (AcademicYearDTO academicYearDTO : responseDTO.getData()) {
-									valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
+									String name = academicYearDTO.getName()+" ("+academicYearDTO.getStartDate()+" - "+academicYearDTO.getEndDate()+")";
+									valueMap.put(academicYearDTO.getId(), name);
 								}
 
 								academicYearComboBox.setValueMap(valueMap);

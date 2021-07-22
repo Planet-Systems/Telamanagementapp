@@ -320,7 +320,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 				if(result != null) {
 					SystemResponseDTO<SystemUserGroupDTO> response = result.getSystemUserGroupResponse();
 					SystemUserGroupDTO systemUserGroupDTO = response.getData();
-					//SC.say("GROUP "+systemUserGroupDTO.getName() , "status "+response.isStatus() +" MESSAGE "+response.getMessage());
+					GWT.log("GROUP "+systemUserGroupDTO.getName() +"status "+response.isStatus() +" MESSAGE "+response.getMessage());
 					Cookies.setCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE , systemUserGroupDTO.getName());	
 				}else {
 					SC.say("Unknown Error");

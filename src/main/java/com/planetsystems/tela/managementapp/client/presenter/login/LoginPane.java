@@ -38,7 +38,7 @@ public class LoginPane extends VLayout {
 		username.setShowHintInField(true);
 		username.setWidth("*");
 		username.setHeight(30);
-		username.setValue("admin@gmail.com");
+		//username.setValue("admin@gmail.com");
 		
 		
 
@@ -48,7 +48,7 @@ public class LoginPane extends VLayout {
 		password.setShowHintInField(true);
 		password.setWidth("*");
 		password.setHeight(30);
-		password.setValue("123");
+		//password.setValue("123");
 
 		DynamicForm form = new DynamicForm();
 		form.setFields(username, password);

@@ -189,6 +189,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					//update(edit);
 					 //delete(delete);
 					// onDetailsButtonCLicked(details);
+				
 					getSystemUserProfiles();
 				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_MENU_SETUP)) {
 
@@ -444,8 +445,9 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 													SystemResponseDTO<String> responseDTO = result.getResponseText();
 													if (responseDTO.isStatus()) {
 															// close windows
-															getProfileSchoolsBySystemUserProfile(profilePermissionWindow, profileRecord);
-															profilePermissionWindow.close();
+															//getProfileSchoolsBySystemUserProfile(profilePermissionWindow, profileRecord);
+															getAllSystemUserProfiles();
+														    profilePermissionWindow.close();
 															regionDistrictWindow.close();
 															profileSchoolWindow.close();
 													} else {
@@ -1012,7 +1014,9 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		return flag;
 	}
 
-	private void getSystemUserProfiles() {
+	
+
+	private void getSystemUserProfiles() {	
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.GET_SYSTEM_USER_PROFILES);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {

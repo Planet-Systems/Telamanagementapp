@@ -237,7 +237,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onClick(ClickEvent event) {
 				AcademicYearWindow window = new AcademicYearWindow();
-				window.getSaveButton().setTitle("Close");
+				window.getCancelButton().setTitle("Close");
 				saveAcademicYear2(window);
 				window.show();
 			}
