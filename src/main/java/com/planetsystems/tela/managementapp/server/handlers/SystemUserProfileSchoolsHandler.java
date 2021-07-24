@@ -1,6 +1,5 @@
 package com.planetsystems.tela.managementapp.server.handlers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.client.Client;
@@ -15,7 +14,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SystemUserProfileSchoolDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
-import com.planetsystems.tela.managementapp.server.APIGateWay;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
@@ -38,7 +36,7 @@ public class SystemUserProfileSchoolsHandler {
 						new GenericType<SystemResponseDTO<String>>() {
 						});
 		client.close();
-		System.out.println("SAVE  YEARS  " + responseDTO);
+		System.out.println("SAVE  SYSTEM_USER_PROFILE_SCHOOLS  " + responseDTO);
 		return responseDTO;
 	}
 	
@@ -56,7 +54,7 @@ public class SystemUserProfileSchoolsHandler {
 				});
 		client.close();
 		
-		System.out.println("GET  YEARS  " + responseDTO);
+		System.out.println("GET  SYSTEM_USER_PROFILE_SCHOOLS  " + responseDTO);
 		
 		return responseDTO;
 	}
@@ -118,7 +116,7 @@ public class SystemUserProfileSchoolsHandler {
 						new GenericType<SystemResponseDTO<SystemUserProfileSchoolDTO>>() {
 						});
 		client.close();
-		System.out.println("UPDATE YEAR " + responseDTO);
+		System.out.println("UPDATE SYSTEM_USER_PROFILE_SCHOOLS " + responseDTO);
 		return responseDTO;
 	}
 	

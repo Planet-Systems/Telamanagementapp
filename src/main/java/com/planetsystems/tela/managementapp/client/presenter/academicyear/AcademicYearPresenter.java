@@ -21,6 +21,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -31,21 +32,16 @@ import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.F
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearPane;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearWindow;
-import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
-import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
-import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.AcademicYearTermCommand;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -212,21 +208,15 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-//   		SC.say("Advanced Search");
 				FilterAcademicTermWindow window = new FilterAcademicTermWindow();
-				loadFilterAcademicYearCombo(window);
+				ComboUtil2.loadAcademicYearCombo(window.getFilterAcademicTermsPane().getAcademicYearCombo(), dispatcher,
+						placeManager, null);
 				window.show();
-				filterAcademicTermsByAcademicYear(window);
+				filterAcademicTerms(window);
 			}
 
 		});
 
-	}
-
-	// filter window
-	private void loadFilterAcademicYearCombo(final FilterAcademicTermWindow window) {
-		ComboUtil2.loadAcademicYearCombo(window.getFilterAcademicTermsPane().getAcademicYearCombo(), dispatcher,
-				placeManager, null);
 	}
 
 ///////////////////////////////////////////////////////ACADEMIC YEAR/////////////////////////////////////////////////////////	
@@ -385,26 +375,44 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		ComboUtil2.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, record.getAttribute(AcademicTermListGrid.YEAR_ID));
 	}
 	
-	public void filterAcademicTermsByAcademicYear(final FilterAcademicTermWindow window) {
+	public void filterAcademicTerms(final FilterAcademicTermWindow window) {
 		window.getFilterAcademicTermsPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String id = window.getFilterAcademicTermsPane().getAcademicYearCombo().getValueAsString();
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, id);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_ACADEMIC_TERMS_BY_ACADEMIC_YEAR);
-
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						window.close();
-						getView().getAcademicTermPane().getListGrid().addRecordsToGrid(result.getAcademicTermDTOs());
-					}
-				});
+				FilterDTO dto = new FilterDTO();
+				
+				if(id != null)
+				dto.setAcademicYearDTO(new AcademicYearDTO(id));
+				
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.FILTER_ACADEMIC_TERMS);
+				termResponseList(map);
 			}
 		});
+
+	}
+	
+	private void termResponseList(LinkedHashMap<String, Object> map) {
+		
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+		@Override
+		public void onNetworkResult(MyRequestResult result) {
+			if (result != null) {
+				SystemResponseDTO<List<AcademicTermDTO>> responseDTO = result.getAcademicTermResponseList();
+				if (responseDTO.isStatus()) {
+					if (responseDTO.getData() != null) {
+						getView().getAcademicTermPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+					}
+				} else {
+					SC.say(responseDTO.getMessage());
+				}
+			}
+
+		}
+	});
 
 	}
 
@@ -426,25 +434,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(MyRequestAction.DATA, dto);
 					map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.SAVE_YEAR);
-
-					
-					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-						@Override
-						public void onNetworkResult(MyRequestResult result) {
-							if (result != null) {
-								SystemResponseDTO<AcademicYearDTO> responseDTO = result.getAcademicYearResponse();
-								if (responseDTO.isStatus()) {
-									//clearAcademicYearWindowFields(window);
-									getAllAcademicYears2();
-									
-								} else {
-									SC.say(responseDTO.getMessage());
-								}
-							}
-							
-						}
-					});
+                    termResponseList(map);
 				} else {
 					SC.say("Fill all fields");
 				}
@@ -458,19 +448,22 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.GET_ALL_YEARS);
-
-		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-			@Override
-			public void onNetworkResult(MyRequestResult result) {
-				if (result != null) {
-					SystemResponseDTO<List<AcademicYearDTO>> responseDTO = result.getAcademicYearResponseList();
-					getView().getAcademicYearPane().getListGrid().addRecordsToGrid(responseDTO.getData());
-				}
-
-			}
-		});
+		yearResponseList(map);
 	}
 
+	private void yearResponseList(LinkedHashMap<String, Object> map) {
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
+		@Override
+		public void onNetworkResult(MyRequestResult result) {
+			if (result != null) {
+				SystemResponseDTO<List<AcademicYearDTO>> responseDTO = result.getAcademicYearResponseList();
+				getView().getAcademicYearPane().getListGrid().addRecordsToGrid(responseDTO.getData());
+			}
+
+		}
+	});
+	}
+	
 	private void deleteAcademicYear2(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -530,23 +523,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(MyRequestAction.DATA, dto);
 				map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.UPDATE_YEAR);
-
-				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-					@Override
-					public void onNetworkResult(MyRequestResult result) {
-						if (result != null) {
-							SystemResponseDTO<AcademicYearDTO> responseDTO = result.getAcademicYearResponse();
-							if (responseDTO.isStatus()) {
-								clearAcademicYearWindowFields(window);
-								window.show();
-								getAllAcademicYears2();
-							} else {
-								SC.say("INFO", responseDTO.getMessage());
-							}
-						}
-					}
-				});
+				
+				yearResponseList(map);
 			}
 		});
 
@@ -576,24 +554,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(MyRequestAction.DATA, dto);
 					map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.SAVE_TERM);
-
-					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-						@Override
-						public void onNetworkResult(MyRequestResult result) {
-							if (result != null) {
-								SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
-								if (responseDTO.isStatus()) {
-									//clearAcademicTermWindowFields(window);
-									SC.say("INFO", responseDTO.getMessage());
-									getAllAcademicTerms2();
-								} else {
-									SC.say("INFO", responseDTO.getMessage());
-								}
-							}
-
-						}
-					});
+					
+					termResponseList(map);
 				} else {
 					SC.warn("Please fill all fields");
 				}
@@ -605,23 +567,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	public void getAllAcademicTerms2() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.GET_ALL_TERMS);
-
-		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-			@Override
-			public void onNetworkResult(MyRequestResult result) {
-				if (result != null) {
-					SystemResponseDTO<List<AcademicTermDTO>> responseDTO = result.getAcademicTermResponseList();
-					if (responseDTO.isStatus()) {
-						if (responseDTO.getData() != null) {
-							getView().getAcademicTermPane().getListGrid().addRecordsToGrid(responseDTO.getData());
-						}
-					} else {
-						SC.say(responseDTO.getMessage());
-					}
-				}
-
-			}
-		});
+        
+		termResponseList(map);
 	}
 
 	private void deleteAcademicTerm2(MenuButton button) {
@@ -693,24 +640,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(MyRequestAction.DATA, dto);
 				map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.UPDATE_TERM);
-				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-					@Override
-					public void onNetworkResult(MyRequestResult result) {
-						if (result != null) {
-							SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
-							if(responseDTO.isStatus()) {
-								window.close();
-								clearAcademicTermWindowFields(window);
-								SC.say("SUCCESS", responseDTO.getMessage());
-								getAllAcademicTerms2();
-							}else {
-								SC.say("INFO", responseDTO.getMessage());
-							}
-							
-						}
-					}
-				});
+				
+                termResponseList(map);
 			}
 		});
 	}
@@ -732,24 +663,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
 								map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.ACTIVATE_TERM);
-
-								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-									@Override
-									public void onNetworkResult(MyRequestResult result) {
-										if(result != null) {
-											SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
-											
-											if(responseDTO.isStatus()) {
-												SC.say("INFO", responseDTO.getMessage());
-												getAllAcademicTerms2();
-											}else {
-												SC.say("INFO", responseDTO.getMessage());	
-											}
-										}
-									
-									}
-								});
+								
+								termResponseList(map);
 							}
 						}
 					});
@@ -779,24 +694,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(RequestDelimeters.ACADEMIC_TERM_ID, record.getAttributeAsString("id"));
 								map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.DEACTIVATE_TERM);
-
-								NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-									@Override
-									public void onNetworkResult(MyRequestResult result) {
-										if(result != null) {
-											SystemResponseDTO<AcademicTermDTO> responseDTO = result.getAcademicTermResponse();
-											
-											if(responseDTO.isStatus()) {
-												SC.say("SUCCESS", responseDTO.getMessage());
-												getAllAcademicTerms2();
-											}else {
-												SC.say("INFO", responseDTO.getMessage());	
-											}
-										}
-										
-									}
-								});
+								
+								termResponseList(map);
 							}
 						}
 					});
@@ -818,7 +717,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		window.getStartDateItem().setValue(record.getAttribute(AcademicTermListGrid.START_DATE));
 		window.getEndDateItem().setValue(record.getAttribute(AcademicTermListGrid.END_DATE));
 
-		ComboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, record.getAttribute(AcademicTermListGrid.YEAR_ID));
+		ComboUtil2.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, record.getAttribute(AcademicTermListGrid.YEAR_ID));
 	}
 
 	

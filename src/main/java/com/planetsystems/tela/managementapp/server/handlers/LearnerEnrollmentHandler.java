@@ -42,21 +42,22 @@ public class LearnerEnrollmentHandler {
 	}
 	
 	
-	public static SystemResponseDTO<List<LearnerEnrollmentDTO>> getLearnerEnrollments(MyRequestAction action){
+	public static SystemResponseDTO<List<LearnerEnrollmentDTO>> filterLearnerEnrollments(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		Client client = ClientBuilder.newClient();
 
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("learnerEnrollments")
+		SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("filterLearnerEnrollments")
 				.request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<LearnerEnrollmentDTO>>>() {
+				.post(Entity.entity(dto, MediaType.APPLICATION_JSON) , new GenericType<SystemResponseDTO<List<LearnerEnrollmentDTO>>>() {
 				});
 		client.close();
 		
 		
-		System.out.println("GET  LEARNER_ENROLLMENTS" + responseDTO);
+		System.out.println("FILTER  LEARNER_ENROLLMENTS" + responseDTO);
 		return responseDTO;
 	}
 	

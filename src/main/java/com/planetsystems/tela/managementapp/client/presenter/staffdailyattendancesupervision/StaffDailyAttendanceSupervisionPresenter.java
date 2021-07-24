@@ -643,7 +643,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 		FilterDTO dto = new FilterDTO();
 		dto.setStaffType("Head teacher");
 		dto.setSchoolDTO(new SchoolDTO(createSupervisionTaskPane.getSchoolCombo().getValueAsString()));
-		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFF_BY_TYPE_SCHOOL);
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.FILTER_SCHOOL_STAFFS);
 		map.put(MyRequestAction.DATA, dto);
 		
 

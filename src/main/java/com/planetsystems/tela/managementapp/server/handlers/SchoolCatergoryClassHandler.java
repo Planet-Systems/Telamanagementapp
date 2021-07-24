@@ -170,22 +170,22 @@ public static SystemResponseDTO<SchoolDTO> saveSchool(MyRequestAction action){
 	}
 	
 	
-	public static SystemResponseDTO<List<SchoolDTO>> getSchools(MyRequestAction action){
-		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
-
-		Client client = ClientBuilder.newClient();
-		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
-		headers.add(HttpHeaders.AUTHORIZATION, token);
-
-		SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("schools2")
-				.request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
-				});
-
-		client.close();
-		System.out.println("GET ALL SCHOOL " + responseDto);
-		return responseDto;
-	}
+//	public static SystemResponseDTO<List<SchoolDTO>> getSchools(MyRequestAction action){
+//		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+//
+//		Client client = ClientBuilder.newClient();
+//		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+//		headers.add(HttpHeaders.AUTHORIZATION, token);
+//
+//		SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("schools2")
+//				.request(MediaType.APPLICATION_JSON).headers(headers)
+//				.get(new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
+//				});
+//
+//		client.close();
+//		System.out.println("GET ALL SCHOOL " + responseDto);
+//		return responseDto;
+//	}
 	
 	public static SystemResponseDTO<SchoolDTO> getSchoolById(MyRequestAction action){
 		String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
@@ -246,45 +246,46 @@ public static SystemResponseDTO<SchoolDTO> saveSchool(MyRequestAction action){
 	}
 	
 	
-	public static SystemResponseDTO<List<SchoolDTO>> getSchoolsByCategory(MyRequestAction action){
-        String CategoryId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CATEGORY_ID);
-		SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(MyRequestAction.DATA);
+	
+	
+	public static SystemResponseDTO<List<SchoolDTO>> filterSchools(MyRequestAction action){
+		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 
 		Client client = ClientBuilder.newClient();
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<SchoolDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("schoolCategory2")
-				.path(CategoryId).path("schools2").request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
+		SystemResponseDTO<List<SchoolDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("filterSchools")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.post(Entity.entity(dto, MediaType.APPLICATION_JSON)  ,new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
 				});
 
 		client.close();
-		System.out.println("SCHOOL BY Category " + responseDTO);
+		System.out.println("Filter Schools " + responseDTO);
 		return responseDTO;
 	}
 	
 	
 	
-	public static SystemResponseDTO<List<SchoolDTO>> getSchoolsByDistrict(MyRequestAction action){
-        String id = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
-		//SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(MyRequestAction.DATA);
-		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
-
-		Client client = ClientBuilder.newClient();
-		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
-		headers.add(HttpHeaders.AUTHORIZATION, token);
-
-		SystemResponseDTO<List<SchoolDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("districts2")
-				.path(id).path("schools2").request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
-				});
-
-		client.close();
-		System.out.println("SCHOOL BY District " + responseDTO);
-		return responseDTO;
-	}
+//	public static SystemResponseDTO<List<SchoolDTO>> getSchoolsByDistrict(MyRequestAction action){
+//        String id = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
+//		//SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(MyRequestAction.DATA);
+//		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+//
+//		Client client = ClientBuilder.newClient();
+//		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+//		headers.add(HttpHeaders.AUTHORIZATION, token);
+//
+//		SystemResponseDTO<List<SchoolDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("districts2")
+//				.path(id).path("schools2").request(MediaType.APPLICATION_JSON).headers(headers)
+//				.get(new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
+//				});
+//
+//		client.close();
+//		System.out.println("SCHOOL BY District " + responseDTO);
+//		return responseDTO;
+//	}
 	
 	
 	public static SystemResponseDTO<List<SchoolDTO>> getAllSchoolsByLoggedSystemUserProfileSchools(MyRequestAction action){
@@ -353,7 +354,7 @@ public static SystemResponseDTO<SchoolClassDTO> saveSchoolClass(MyRequestAction 
 	}
 	
 	
-	public static SystemResponseDTO<List<SchoolClassDTO>> getSchoolClassses(MyRequestAction action){
+	public static SystemResponseDTO<List<SchoolClassDTO>> filterSchoolClassses(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 

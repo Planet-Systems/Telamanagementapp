@@ -25,8 +25,7 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	
 	public static final String ACADEMIC_YEAR_TAB_TITLE="Academic Year";
 	public static final String ACADEMIC_TERM_TAB_TITLE="Academic Term";
-	
-	private AcademicYearDashboardPane academicYearDashboardPane;
+
 	
 	VLayout vlayout;
    
@@ -49,7 +48,6 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 		academicYearTab.setTitle(ACADEMIC_YEAR_TAB_TITLE);
 
 		Tab academicTermTab = new Tab();
-		//tab2.setPane(assessmentPeriodPane);
 		academicTermTab.setPane(vlayout);
 		academicTermTab.setTitle(ACADEMIC_TERM_TAB_TITLE);
 
@@ -60,7 +58,7 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 		tabSet.setPadding(0);
 		
 		panel.addMember(controlsPane);
-		panel.addMembers(tabSet);//(tabSet);
+		panel.addMembers(tabSet);
 		panel.setWidth100();
 		panel.setHeight("90%");
 		Window.enableScrolling(false);

@@ -41,7 +41,7 @@ public class LearnerAttendanceHandler {
 	}
 	
 	
-	public static SystemResponseDTO<List<LearnerAttendanceDTO>> getLearnerAttendances(MyRequestAction action){
+	public static SystemResponseDTO<List<LearnerAttendanceDTO>> filterLearnerAttendances(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 		FilterDTO dto =  (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		Client client = ClientBuilder.newClient();
@@ -56,7 +56,7 @@ public class LearnerAttendanceHandler {
 				});
 		client.close();
 		
-		System.out.println("GET  LEARNER_ATTENDANCES " + responseDto);
+		System.out.println("FILTER  LEARNER_ATTENDANCES " + responseDto);
 		
 		return responseDto;
 	}

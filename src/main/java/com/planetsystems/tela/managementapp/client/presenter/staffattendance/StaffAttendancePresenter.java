@@ -92,7 +92,6 @@ public class StaffAttendancePresenter
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	DateTimeFormat timeFormat = DateTimeFormat.getFormat(PredefinedFormat.HOUR24_MINUTE_SECOND);
 
-
 	@NameToken(NameTokens.staffAttendance)
 	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<StaffAttendancePresenter> {
@@ -184,13 +183,11 @@ public class StaffAttendancePresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				FilterClockInWindow window = new FilterClockInWindow();
-				loadFilterClockInAcademicYearCombo(window);
-				loadFilterClockInAcademicTermCombo(window);
-				loadFilterClockInDistrictCombo(window);
-				loadFilterClockInSchoolCombo(window);
+				loadFilterClockInCombos(window, null);
 				window.show();
-				filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
+				filterClockIns(window);
 			}
+
 		});
 
 	}
@@ -222,13 +219,11 @@ public class StaffAttendancePresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				FilterClockOutWindow window = new FilterClockOutWindow();
-				loadFilterClockOutAcademicYearCombo(window);
-				loadFilterClockOutAcademicTermCombo(window);
-				loadFilterClockOutDistrictCombo(window);
-				loadFilterClockOutSchoolCombo(window);
+				loadFilterClockOutCombos(window, null);
 				window.show();
-				filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
+				filterClockOuts(window);
 			}
+
 		});
 
 	}
@@ -242,15 +237,11 @@ public class StaffAttendancePresenter
 
 				ClockInWindow window = new ClockInWindow();
 				window.show();
-
-				loadAcademicYearCombo2(window, null);
-				loadAcademicTermCombo2(window, null);
-				loadDistrictCombo2(window, null);
-				loadSchoolCombo2(window, null);
-				loadSchoolStaffCombo2(window, null);
+				loadAddClockOutCombos(window, null, null, null, null, null);
 
 				saveClockIn(window);
 			}
+
 		});
 
 	}
@@ -295,86 +286,66 @@ public class StaffAttendancePresenter
 		window.getLongitudeField().clearValue();
 	}
 
-	private void loadAcademicYearCombo2(final ClockInWindow window, final String defaultValue) {
-		ComboUtil2.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
-	}
+	private void loadAddClockOutCombos(final ClockInWindow window, final String year, final String term,
+			final String district, final String school, final String staff) {
+		ComboUtil2.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, year);
 
-	
-	private void loadAcademicTermCombo2(final ClockInWindow window, final String defaultValue) {
 		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 				ComboUtil2.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
-						window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+						window.getAcademicTermCombo(), dispatcher, placeManager, term);
 			}
 		});
-	}
 
-	
-	private void loadDistrictCombo2(final ClockInWindow window, final String defaultValue) {
-		ComboUtil2.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
-	}
+		ComboUtil2.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, district);
 
-	private void loadSchoolCombo2(final ClockInWindow window, final String defaultValue) {
 		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 				ComboUtil2.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
-						placeManager, defaultValue);
+						placeManager, school);
 			}
 		});
-	}
 
-
-	
-	private void loadSchoolStaffCombo2(final ClockInWindow window, final String defaultValue) {
 		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 				ComboUtil2.loadSchoolStaffComboBySchool(window.getSchoolCombo(), window.getSchoolStaffCombo(),
-						dispatcher, placeManager, defaultValue);
+						dispatcher, placeManager, staff);
 			}
 		});
+
 	}
 
 ///////////////////////FILTER CLOCKIN COMBOS(4)
 
-//loads school combo in filter learner head count pane
-	private void loadFilterClockInSchoolCombo(final FilterClockInWindow window) {
+	private void loadFilterClockInCombos(final FilterClockInWindow window, final String defaultValue) {
 		window.getFilterClockInPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getFilterClockInPane().getDistrictCombo(),
-						window.getFilterClockInPane().getSchoolCombo(), dispatcher, placeManager, null);
+				ComboUtil2.loadSchoolComboByDistrict(window.getFilterClockInPane().getDistrictCombo(),
+						window.getFilterClockInPane().getSchoolCombo(), dispatcher, placeManager, defaultValue);
 			}
 		});
 
-	}
+		ComboUtil2.loadDistrictCombo(window.getFilterClockInPane().getDistrictCombo(), dispatcher, placeManager,
+				defaultValue);
 
-//loads district combo in filter learner head count pane	
-	private void loadFilterClockInDistrictCombo(final FilterClockInWindow window) {
-		ComboUtil.loadDistrictCombo(window.getFilterClockInPane().getDistrictCombo(), dispatcher, placeManager, null);
-	}
+		ComboUtil2.loadAcademicYearCombo(window.getFilterClockInPane().getAcademicYearCombo(), dispatcher, placeManager,
+				defaultValue);
 
-//loads academic year combo in filter learner head count pane	
-	private void loadFilterClockInAcademicYearCombo(final FilterClockInWindow window) {
-		ComboUtil.loadAcademicYearCombo(window.getFilterClockInPane().getAcademicYearCombo(), dispatcher, placeManager,
-				null);
-	}
-
-//loads academic year combo in filter learner head count pane	
-	private void loadFilterClockInAcademicTermCombo(final FilterClockInWindow window) {
 		window.getFilterClockInPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 
-				ComboUtil.loadAcademicTermComboByAcademicYear(window.getFilterClockInPane().getAcademicYearCombo(),
-						window.getFilterClockInPane().getAcademicTermCombo(), dispatcher, placeManager, null);
+				ComboUtil2.loadAcademicTermComboByAcademicYear(window.getFilterClockInPane().getAcademicYearCombo(),
+						window.getFilterClockInPane().getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
 			}
 		});
 
@@ -384,48 +355,36 @@ public class StaffAttendancePresenter
 
 ///////////////////////FILTER CLOCKOUT COMBOS(4)
 
-//loads school combo in filter learner head count pane
-	private void loadFilterClockOutSchoolCombo(final FilterClockOutWindow window) {
-		window.getFilterClockOutPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
+	private void loadFilterClockOutCombos(final FilterClockOutWindow window, final String defaultValue) {
+				window.getFilterClockOutPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadSchoolComboByDistrict(window.getFilterClockOutPane().getDistrictCombo(),
-						window.getFilterClockOutPane().getSchoolCombo(), dispatcher, placeManager, null);
-			}
-		});
+					@Override
+					public void onChanged(ChangedEvent event) {
+						ComboUtil2.loadSchoolComboByDistrict(window.getFilterClockOutPane().getDistrictCombo(),
+								window.getFilterClockOutPane().getSchoolCombo(), dispatcher, placeManager, defaultValue);
+					}
+				});
 
-	}
 
-//loads district combo in filter learner head count pane	
-	private void loadFilterClockOutDistrictCombo(final FilterClockOutWindow window) {
-		ComboUtil.loadDistrictCombo(window.getFilterClockOutPane().getDistrictCombo(), dispatcher, placeManager, null);
-	}
+				ComboUtil2.loadDistrictCombo(window.getFilterClockOutPane().getDistrictCombo(), dispatcher, placeManager, defaultValue);
 
-//loads academic year combo in filter learner head count pane	
-	private void loadFilterClockOutAcademicYearCombo(final FilterClockOutWindow window) {
-		ComboUtil.loadAcademicYearCombo(window.getFilterClockOutPane().getAcademicYearCombo(), dispatcher, placeManager,
-				null);
-	}
+				ComboUtil2.loadAcademicYearCombo(window.getFilterClockOutPane().getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
 
-//loads academic year combo in filter learner head count pane	
-	private void loadFilterClockOutAcademicTermCombo(final FilterClockOutWindow window) {
-		window.getFilterClockOutPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+				window.getFilterClockOutPane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
-			@Override
-			public void onChanged(ChangedEvent event) {
+					@Override
+					public void onChanged(ChangedEvent event) {
 
-				ComboUtil.loadAcademicTermComboByAcademicYear(window.getFilterClockOutPane().getAcademicYearCombo(),
-						window.getFilterClockOutPane().getAcademicTermCombo(), dispatcher, placeManager, null);
-			}
-		});
-
+						ComboUtil2.loadAcademicTermComboByAcademicYear(window.getFilterClockOutPane().getAcademicYearCombo(),
+								window.getFilterClockOutPane().getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+					}
+				});
 	}
 
 /////////////////////////////////////////END OF FILTER CLOCKOUT COMBOS
 
 	// filter
-	private void filterClockInsByAcademicYearAcademicTermDistrictSchool(final FilterClockInWindow window) {
+	private void filterClockIns(final FilterClockInWindow window) {
 		window.getFilterButton().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -438,36 +397,29 @@ public class StaffAttendancePresenter
 				String toDate = dateFormat.format(window.getFilterClockInPane().getToDateItem().getValueAsDate());
 
 				FilterDTO dto = new FilterDTO();
-				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
-				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
-				dto.setDistrictDTO(new DistrictDTO(districtId));
-				dto.setSchoolDTO(new SchoolDTO(schoolId));
-				dto.setFromDate(fromDate);
-				dto.setToDate(toDate);
+				if (academicYearId != null)
+					dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				if (academicTermId != null)
+					dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				if (districtId != null)
+					dto.setDistrictDTO(new DistrictDTO(districtId));
+				if (schoolId != null)
+					dto.setSchoolDTO(new SchoolDTO(schoolId));
+				if (fromDate != null)
+					dto.setFromDate(fromDate);
+				if (toDate != null)
+					dto.setToDate(toDate);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestDelimeters.FILTER_CLOCK_INS, dto);
-//				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-//				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-//				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-//				map.put(RequestDelimeters.CLOCKIN_DATE, date);
-				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.FILTER_CLOCKINS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, ClockInOutCommand.FILTER_CLOCKINS);
 
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						getView().getClockInPane().getClockInListGrid().addRecordsToGrid(result.getClockInDTOs());
-					}
-				});
-
+				clockInResponseList(map);
 			}
 		});
 	}
 
-	private void filterClockOutsByAcademicYearAcademicTermDistrictSchool(final FilterClockOutWindow window) {
+	private void filterClockOuts(final FilterClockOutWindow window) {
 		window.getFilterButton().addClickHandler(new ClickHandler() {
 
 			@Override
@@ -479,38 +431,28 @@ public class StaffAttendancePresenter
 				String date = dateFormat.format(window.getFilterClockOutPane().getClockinDateItem().getValueAsDate());
 
 				FilterDTO dto = new FilterDTO();
+				if(academicYearId != null)
 				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				if(academicTermId != null)
 				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				if(districtId != null)
 				dto.setDistrictDTO(new DistrictDTO(districtId));
+				if(schoolId != null)
 				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				if(date != null)
 				dto.setDate(date);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-//				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-//				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-//				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-//				map.put(RequestDelimeters.CLOCK_OUT_DATE, date);
-				map.put(RequestDelimeters.FILTER_CLOCK_OUTS, dto);
-				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.FILTER_CLOCK_OUTS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(result.getClockOutDTOs());
-					}
-				});
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND , ClockInOutCommand.FILTER_CLOCK_OUTS);
+				
+				clockOutResponseList(map);
 			}
 		});
 	}
-	
-	
-	
-	
-	
-	//////////////////////////////////////////////////////NEW
-	
+
+	////////////////////////////////////////////////////// NEW
+
 	protected void saveClockIn(final ClockInWindow window) {
 		window.getSaveButton().addClickHandler(new ClickHandler() {
 
@@ -519,9 +461,7 @@ public class StaffAttendancePresenter
 
 				if (checkIfNoClockInWindowFieldIsEmpty(window)) {
 					ClockInDTO dto = new ClockInDTO();
-					// dto.setClockInDate(clockInDate);
 					dto.setComment(window.getCommentField().getValueAsString());
-					// dto.setId(id);
 					dto.setLatitude(window.getLatitudeField().getValueAsString());
 					dto.setLongitude(window.getLongitudeField().getValueAsString());
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
@@ -539,10 +479,6 @@ public class StaffAttendancePresenter
 					schoolStaffDTO.setId(window.getSchoolStaffCombo().getValueAsString());
 					dto.setSchoolStaffDTO(schoolStaffDTO);
 
-					GWT.log("DTO " + dto);
-					GWT.log("Term " + dto.getAcademicTermDTO().getId());
-					GWT.log("Staff " + dto.getSchoolStaffDTO().getId());
-
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(MyRequestAction.DATA, dto);
 					map.put(MyRequestAction.COMMAND, ClockInOutCommand.SAVE_CLOCK_IN);
@@ -554,14 +490,14 @@ public class StaffAttendancePresenter
 							if (result != null) {
 								SystemResponseDTO<ClockInDTO> responseDTO = result.getClockInResponse();
 								if (responseDTO.isStatus()) {
-									//clearClockInWindowFields(window);
+									// clearClockInWindowFields(window);
 									SC.say("SUCCESS", responseDTO.getMessage());
 									getAllStaffClockIn2();
 								} else {
 									SC.say(responseDTO.getMessage());
 								}
 							}
-							
+
 						}
 					});
 
@@ -574,17 +510,20 @@ public class StaffAttendancePresenter
 		});
 
 	}
-	
-	
-	
+
 	private void getAllStaffClockIn2() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.DATA, new FilterDTO());
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_ALL_CLOCK_INS);
+			map.put(MyRequestAction.COMMAND, ClockInOutCommand.FILTER_CLOCKINS);
 		else
 			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
+		clockInResponseList(map);
+	}
+
+	// set grid
+	private void clockInResponseList(LinkedHashMap<String, Object> map) {
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
@@ -592,22 +531,17 @@ public class StaffAttendancePresenter
 				if (result != null) {
 					SystemResponseDTO<List<ClockInDTO>> responseDTO = result.getClockInResponseList();
 					if (responseDTO.isStatus()) {
-						if(responseDTO.getData() != null)
-						getView().getClockInPane().getClockInListGrid().addRecordsToGrid(responseDTO.getData());
+						if (responseDTO.getData() != null)
+							getView().getClockInPane().getClockInListGrid().addRecordsToGrid(responseDTO.getData());
 					} else {
 						SC.say(responseDTO.getMessage());
 					}
 				}
-			
+
 			}
 		});
-
 	}
-	
-	
-	
 
-	
 	private void clockOut2(MenuButton clockOutButton) {
 
 		clockOutButton.addClickHandler(new ClickHandler() {
@@ -624,12 +558,7 @@ public class StaffAttendancePresenter
 					dto.setClockInDTO(clockInDTO);
 					dto.setComment(record.getAttribute(ClockInListGrid.COMMENT));
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
-//            	 SC.say("Hello");
-					GWT.log("DTO " + dto);
-					GWT.log("DTO id  " + dto.getClockInDTO().getId());
-
-					GWT.log("date " + dto.getCreatedDateTime());
-
+	
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(MyRequestAction.DATA, dto);
 					map.put(MyRequestAction.COMMAND, ClockInOutCommand.SAVE_CLOCK_OUT);
@@ -647,7 +576,7 @@ public class StaffAttendancePresenter
 									SC.say(responseDTO.getMessage());
 								}
 							}
-					
+
 						}
 					});
 
@@ -659,17 +588,18 @@ public class StaffAttendancePresenter
 
 	}
 
-	
-	
-	
 	private void getAllStaffClockOut2() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.DATA, new FilterDTO());
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_ALL_CLOCK_OUTS);
+			map.put(MyRequestAction.COMMAND, ClockInOutCommand.FILTER_CLOCK_OUTS);
 		else
 			map.put(MyRequestAction.COMMAND, ClockInOutCommand.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
+		clockOutResponseList(map);
+	}
+
+	private void clockOutResponseList(LinkedHashMap<String, Object> map) {
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
@@ -677,19 +607,15 @@ public class StaffAttendancePresenter
 				if (result != null) {
 					SystemResponseDTO<List<ClockOutDTO>> responseDTO = result.getClockOutResponseList();
 					if (responseDTO.isStatus()) {
-						if(responseDTO.getData() != null)
-						getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(responseDTO.getData());
+						if (responseDTO.getData() != null)
+							getView().getClockOutPane().getClockOutListGrid().addRecordsToGrid(responseDTO.getData());
 					} else {
 						SC.say(responseDTO.getMessage());
 					}
 				}
-				
-	
+
 			}
 		});
-
 	}
-	
-	
 
 }

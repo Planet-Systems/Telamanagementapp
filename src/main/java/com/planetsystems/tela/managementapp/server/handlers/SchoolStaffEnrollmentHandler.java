@@ -44,7 +44,7 @@ public class SchoolStaffEnrollmentHandler {
 	}
 	
 	
-	public static SystemResponseDTO<List<StaffEnrollmentDto>> getStaffEnrollments(MyRequestAction action){
+	public static SystemResponseDTO<List<StaffEnrollmentDto>> filterStaffEnrollments(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 		FilterDTO filterDTO = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		Client client = ClientBuilder.newClient();
@@ -52,14 +52,14 @@ public class SchoolStaffEnrollmentHandler {
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<StaffEnrollmentDto>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("filterStaffEnrollmentsByAcademicYearAcademicTermDistrictSchool2")
+		SystemResponseDTO<List<StaffEnrollmentDto>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("filterStaffEnrollments")
 				.request(MediaType.APPLICATION_JSON).headers(headers)
 				.post(Entity.entity(filterDTO , MediaType.APPLICATION_JSON) , new GenericType<SystemResponseDTO<List<StaffEnrollmentDto>>>() {
 				});
 		client.close();
 		
 		
-		System.out.println("GET  STAFF_ENROLLMENTS" + responseDTO);
+		System.out.println("FILTER  STAFF_ENROLLMENTS" + responseDTO);
 		return responseDTO;
 	}
 	
@@ -192,7 +192,7 @@ public static SystemResponseDTO<SchoolStaffDTO> saveSchoolStaff(MyRequestAction 
 	}
 	
 	
-	public static SystemResponseDTO<List<SchoolStaffDTO>> getSchoolStaffs(MyRequestAction action){
+	public static SystemResponseDTO<List<SchoolStaffDTO>> filterSchoolStaffs(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 		FilterDTO filterDTO = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 
@@ -200,13 +200,13 @@ public static SystemResponseDTO<SchoolStaffDTO> saveSchoolStaff(MyRequestAction 
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("filterSchoolStaffByDistrictSchool")
+		SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("filterSchoolStaffs")
 				.request(MediaType.APPLICATION_JSON).headers(headers)
 				.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON) , new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
 				});
 
 		client.close();
-		System.out.println("GET ALL SCHOOL_STAFF " + responseDto);
+		System.out.println("FILTER ALL SCHOOL_STAFF " + responseDto);
 		return responseDto;
 	}
 	
@@ -229,23 +229,23 @@ public static SystemResponseDTO<SchoolStaffDTO> saveSchoolStaff(MyRequestAction 
 	}
 	
 	
-	public static SystemResponseDTO<SchoolStaffDTO> getSchoolStaffByTypeSchool(MyRequestAction action){
-		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
-		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
-
-		Client client = ClientBuilder.newClient();
-		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
-		headers.add(HttpHeaders.AUTHORIZATION, token);
-
-		SystemResponseDTO<SchoolStaffDTO> responseDto = client.target(ApiResourceUtil.API_LINK).path("filterSchoolStaffByTypeSchool")
-				.request(MediaType.APPLICATION_JSON).headers(headers)
-				.post(Entity.entity(dto, MediaType.APPLICATION_JSON) , new GenericType<SystemResponseDTO<SchoolStaffDTO>>() {
-				});
-
-		client.close();
-		System.out.println("GET  SCHOOL_STAFF BY ID " + responseDto);
-		return responseDto;
-	}
+//	public static SystemResponseDTO<SchoolStaffDTO> getSchoolStaffByTypeSchool(MyRequestAction action){
+//		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
+//		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+//
+//		Client client = ClientBuilder.newClient();
+//		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+//		headers.add(HttpHeaders.AUTHORIZATION, token);
+//
+//		SystemResponseDTO<SchoolStaffDTO> responseDto = client.target(ApiResourceUtil.API_LINK).path("filterSchoolStaffByTypeSchool")
+//				.request(MediaType.APPLICATION_JSON).headers(headers)
+//				.post(Entity.entity(dto, MediaType.APPLICATION_JSON) , new GenericType<SystemResponseDTO<SchoolStaffDTO>>() {
+//				});
+//
+//		client.close();
+//		System.out.println("GET  SCHOOL_STAFF BY ID " + responseDto);
+//		return responseDto;
+//	}
 	
 	
 	

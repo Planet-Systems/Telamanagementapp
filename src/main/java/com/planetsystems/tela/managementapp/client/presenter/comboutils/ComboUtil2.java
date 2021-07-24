@@ -35,6 +35,7 @@ import com.planetsystems.tela.managementapp.shared.requestcommands.RegionDistric
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolCategoryClassCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SchoolStaffEnrollmentCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
+import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupCommand;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SystemUserGroupRequestCommand;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
@@ -92,8 +93,12 @@ public class ComboUtil2 {
 
 		String academicYearId = academicYearCombo.getValueAsString();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-		map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.GET_ALL_TERMS_BY_YEAR);
+		FilterDTO dto = new FilterDTO();
+		if(academicYearId != null)
+		dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+		
+		map.put(MyRequestAction.DATA, dto);
+		map.put(MyRequestAction.COMMAND, AcademicYearTermCommand.FILTER_ACADEMIC_TERMS);
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
@@ -288,7 +293,8 @@ public class ComboUtil2 {
 	public static void loadSchoolCombo(final ComboBox schoolCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOLS);
+		map.put(MyRequestAction.DATA, new FilterDTO());
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.FILTER_SCHOOLS);
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
@@ -320,10 +326,13 @@ public class ComboUtil2 {
 
 	public static void loadSchoolComboByDistrict(final ComboBox districtCombo, final ComboBox schoolCombo,
 			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
-		String districtId = districtCombo.getValueAsString();
+
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.DISTRICT_ID, districtId);
-		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOLS_BY_SCHOOL_DISTRICT);
+		FilterDTO dto = new FilterDTO();
+		dto.setDistrictDTO(new DistrictDTO(districtCombo.getValueAsString()));
+		
+		map.put(MyRequestAction.DATA , dto);
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.FILTER_SCHOOLS);
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
@@ -360,10 +369,11 @@ public class ComboUtil2 {
 		String schoolId = schoolCombo.getValueAsString();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		FilterDTO filterDTO = new FilterDTO();
+		if(schoolId != null)
 		filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
 	    map.put(MyRequestAction.DATA , filterDTO);
 	    
-		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.FILTER_SCHOOL_STAFFS);
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
@@ -402,11 +412,13 @@ public class ComboUtil2 {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		FilterDTO filterDTO = new FilterDTO();
+		if(schoolId != null)
 		filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
 		filterDTO.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+		if(academicTermId != null)
 	    map.put(MyRequestAction.DATA , filterDTO);
 	    
-		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.FILTER_SCHOOL_STAFFS);
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
@@ -449,9 +461,10 @@ public class ComboUtil2 {
 		String schoolId = schoolCombo.getValueAsString();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		FilterDTO filterDTO = new FilterDTO();
+		if(schoolId != null)
 		filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
 	    map.put(MyRequestAction.DATA , filterDTO);  
-		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.FILTER_SCHOOL_STAFFS);
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
@@ -490,7 +503,7 @@ public class ComboUtil2 {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 	    map.put(MyRequestAction.DATA , new FilterDTO());
 	    
-		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS);
+		map.put(MyRequestAction.COMMAND, SchoolStaffEnrollmentCommand.FILTER_SCHOOL_STAFFS);
 		
 		
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
@@ -603,7 +616,8 @@ public class ComboUtil2 {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
-		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.FILTER_SCHOOL_CLASS);
+		map.put(MyRequestAction.DATA, new FilterDTO());
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
@@ -640,7 +654,7 @@ public class ComboUtil2 {
 		FilterDTO dto = new FilterDTO();
 		dto.setSchoolDTO(new SchoolDTO(schoolCombo.getValueAsString()));
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
-		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.FILTER_SCHOOL_CLASS);
 		map.put(MyRequestAction.DATA, dto);
 
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
@@ -681,7 +695,7 @@ public class ComboUtil2 {
 		FilterDTO dto = new FilterDTO();
 		dto.setAcademicTermDTO(new AcademicTermDTO(academicTermCombo.getValueAsString()));
 		dto.setSchoolDTO(new SchoolDTO(schoolCombo.getValueAsString()));
-		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.FILTER_SCHOOL_CLASS);
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
 		map.put(MyRequestAction.DATA, dto);
 		
@@ -722,7 +736,7 @@ public class ComboUtil2 {
 		FilterDTO dto = new FilterDTO();
 		dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
 		dto.setSchoolDTO(new SchoolDTO(schoolId));
-		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES);
+		map.put(MyRequestAction.COMMAND, SchoolCategoryClassCommand.FILTER_SCHOOL_CLASS);
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
 		map.put(MyRequestAction.DATA, dto);
 		
@@ -763,7 +777,8 @@ public class ComboUtil2 {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
-		map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.GET_ALL_SUBJECTS);
+		map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.FILTER_SUBJECTS);
+		map.put(MyRequestAction.DATA, new FilterDTO());
 		
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
@@ -795,23 +810,35 @@ public class ComboUtil2 {
 	
 	
 
-	@Deprecated
 	public static void loadSystemUserGroupCombo(final ComboBox systemUserGroupCombo, DispatchAsync dispatcher,
 			PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestCommand.GET_SYSTEM_USER_GROUPS);
-		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+		map.put(MyRequestAction.TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(MyRequestAction.COMMAND, SystemUserGroupCommand.GET_ALL_SYSTEM_USER_GROUPS);
+		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
-			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
-				for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
-					hashMap.put(dto.getId(), dto.getName());
+			public void onNetworkResult(MyRequestResult result) {
+				if (result != null) {
+					SystemResponseDTO<List<SystemUserGroupDTO>> responseDTO = result.getSystemUserGroupResponseList();
+					if (responseDTO.isStatus()) {
+                        if(responseDTO.getData() != null) {
+                        	LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+            				for (SystemUserGroupDTO dto : responseDTO.getData()) {
+            					valueMap.put(dto.getId(), dto.getName());
+            				}
+            				systemUserGroupCombo.setValueMap(valueMap);
+            				if (defaultValue != null) {
+            					systemUserGroupCombo.setValue(defaultValue);
+            				}
+                        }
+					} else {
+						SC.say(responseDTO.getMessage());
+					}
 				}
-				systemUserGroupCombo.setValueMap(hashMap);
-				if (defaultValue != null) {
-					systemUserGroupCombo.setValue(defaultValue);
-				}
+				
+				
+
 			}
 		});
 

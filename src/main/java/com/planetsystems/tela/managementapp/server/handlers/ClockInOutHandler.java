@@ -40,7 +40,7 @@ public class ClockInOutHandler {
 	}
 	
 	
-	public static SystemResponseDTO<List<ClockInDTO>> getClockIns(MyRequestAction action){
+	public static SystemResponseDTO<List<ClockInDTO>> filterClockIns(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		
@@ -55,7 +55,7 @@ public class ClockInOutHandler {
 				});
 		client.close();
 		
-		System.out.println("GET  CLOCK_INS  " + responseDTO);
+		System.out.println("FILTER  CLOCK_INS  " + responseDTO);
 		
 		return responseDTO;
 	}
@@ -104,7 +104,7 @@ public static SystemResponseDTO<ClockOutDTO> saveClockOut(MyRequestAction action
 	}
 	
 	
-	public static SystemResponseDTO<List<ClockOutDTO>> getClockOuts(MyRequestAction action){
+	public static SystemResponseDTO<List<ClockOutDTO>> filterClockOuts(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		
@@ -118,7 +118,7 @@ public static SystemResponseDTO<ClockOutDTO> saveClockOut(MyRequestAction action
 				});
 
 		client.close();
-		System.out.println("GET ALL CLOCK_OUT " + responseDto);
+		System.out.println("FILTER ALL CLOCK_OUT " + responseDto);
 		return responseDto;
 	}
 	

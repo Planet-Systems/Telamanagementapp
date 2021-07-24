@@ -13,6 +13,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
@@ -218,22 +219,21 @@ public class AcademicYearTermHandler {
 	}
 	
 	
-	public static SystemResponseDTO<List<AcademicTermDTO>> getAcademicTermByYear(MyRequestAction action){
-        String yearId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
-		AcademicTermDTO dto = (AcademicTermDTO) action.getRequestBody().get(MyRequestAction.DATA);
+	public static SystemResponseDTO<List<AcademicTermDTO>> filterAcademicTerm(MyRequestAction action){
+		FilterDTO dto = (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
 
 		Client client = ClientBuilder.newClient();
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<AcademicTermDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("academicYears")
-				.path(yearId).path("academicTerms").request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<AcademicTermDTO>>>() {
+		SystemResponseDTO<List<AcademicTermDTO>> responseDTO = client.target(ApiResourceUtil.API_LINK).path("filterAcademicTerms")
+				.request(MediaType.APPLICATION_JSON).headers(headers)
+				.post(Entity.entity(dto, MediaType.APPLICATION_JSON)  , new GenericType<SystemResponseDTO<List<AcademicTermDTO>>>() {
 				});
 
 		client.close();
-		System.out.println("TERM BY YEAR " + responseDTO);
+		System.out.println("FILTER ACADEMIC TERM " + responseDTO);
 		return responseDTO;
 	}
 	

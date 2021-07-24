@@ -135,9 +135,9 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result13.setAcademicTermResponse(AcademicYearTermHandler.updateAcademicTerm(action));
 				return result13;
 				
-			case AcademicYearTermCommand.GET_ALL_TERMS_BY_YEAR:
+			case AcademicYearTermCommand.FILTER_ACADEMIC_TERMS:
 				MyRequestResult result14 = new MyRequestResult();
-				result14.setAcademicTermResponseList(AcademicYearTermHandler.getAcademicTermByYear(action));
+				result14.setAcademicTermResponseList(AcademicYearTermHandler.filterAcademicTerm(action));
 				return result14;
 				
 			case AcademicYearTermCommand.ACTIVATE_TERM:
@@ -250,25 +250,25 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result37.setSchoolResponse(SchoolCatergoryClassHandler.saveSchool(action));
 				return result37;
 				
-			case SchoolCategoryClassCommand.GET_ALL_SCHOOLS:
-				MyRequestResult result38 = new MyRequestResult();
-				result38.setSchoolResponseList(SchoolCatergoryClassHandler.getSchools(action));
-				return result38;
+//			case SchoolCategoryClassCommand.FILTER_SCHOOLS:
+//				MyRequestResult result38 = new MyRequestResult();
+//				result38.setSchoolResponseList(SchoolCatergoryClassHandler.filterSchools(action));
+//				return result38;
 				
 			case SchoolCategoryClassCommand.GET_SCHOOL_BY_ID:
 				MyRequestResult result39 = new MyRequestResult();
 				result39.setSchoolResponse(SchoolCatergoryClassHandler.getSchoolById(action));
 				return result39;
 				
-			case SchoolCategoryClassCommand.GET_ALL_SCHOOLS_BY_SCHOOL_CATEGORY:
+			case SchoolCategoryClassCommand.FILTER_SCHOOLS:
 				MyRequestResult result40 = new MyRequestResult();
-				result40.setSchoolResponseList(SchoolCatergoryClassHandler.getSchoolsByCategory(action));
+				result40.setSchoolResponseList(SchoolCatergoryClassHandler.filterSchools(action));
 				return result40;
 				
-			case SchoolCategoryClassCommand.GET_ALL_SCHOOLS_BY_SCHOOL_DISTRICT:
-				MyRequestResult result41 = new MyRequestResult();
-				result41.setSchoolResponseList(SchoolCatergoryClassHandler.getSchoolsByDistrict(action));
-				return result41;
+//			case SchoolCategoryClassCommand.FILTER_SCHOOLS:
+//				MyRequestResult result41 = new MyRequestResult();
+//				result41.setSchoolResponseList(SchoolCatergoryClassHandler.getSchoolsByDistrict(action));
+//				return result41;
 				
 			case SchoolCategoryClassCommand.DELETE_SCHOOL:
 				MyRequestResult result42 = new MyRequestResult();
@@ -291,9 +291,9 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result45.setSchoolClassResponse(SchoolCatergoryClassHandler.saveSchoolClass(action));
 				return result45;
 				
-			case SchoolCategoryClassCommand.GET_ALL_SCHOOL_CLASSES:
+			case SchoolCategoryClassCommand.FILTER_SCHOOL_CLASS:
 				MyRequestResult result46 = new MyRequestResult();
-				result46.setSchoolClassResponseList(SchoolCatergoryClassHandler.getSchoolClassses(action));
+				result46.setSchoolClassResponseList(SchoolCatergoryClassHandler.filterSchoolClassses(action));
 				return result46;
 				
 			case SchoolCategoryClassCommand.GET_SCHOOL_CLASS_BY_ID:
@@ -352,9 +352,9 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result57.setSubjectResponse(SubjectCategoryHandler.saveSubject(action));
 				return result57;
 				
-			case SubjectCategoryCommand.GET_ALL_SUBJECTS:
+			case SubjectCategoryCommand.FILTER_SUBJECTS:
 				MyRequestResult result58 = new MyRequestResult();
-				result58.setSubjectResponseList(SubjectCategoryHandler.getSubjects(action));
+				result58.setSubjectResponseList(SubjectCategoryHandler.filterSubjects(action));
 				return result58;
 				
 			case SubjectCategoryCommand.GET_SUBJECT_BY_ID:
@@ -373,19 +373,19 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result61.setSubjectResponse(SubjectCategoryHandler.updateSubject(action));
 				return result61;
 				
-			case SubjectCategoryCommand.GET_ALL_SUBJECTS_BY_SUBJECT_CATEGORY:
-				MyRequestResult result62 = new MyRequestResult();
-				result62.setSubjectResponseList(SubjectCategoryHandler.getSubjectBySubjectCategory(action));
-				return result62;
+//			case SubjectCategoryCommand.GET_ALL_SUBJECTS_BY_SUBJECT_CATEGORY:
+//				MyRequestResult result62 = new MyRequestResult();
+//				result62.setSubjectResponseList(SubjectCategoryHandler.getSubjectBySubjectCategory(action));
+//				return result62;
 				
 			case LearnerEnrollmentCommand.SAVE_LEARNER_ENROLLMENT:
 				MyRequestResult result63 = new MyRequestResult();
 				result63.setLearnerEnrollmentResponse(LearnerEnrollmentHandler.saveLearnerEnrollment(action));
 				return result63;
 				
-			case LearnerEnrollmentCommand.GET_ALL_LEARNER_ENROLLMENTS:
+			case LearnerEnrollmentCommand.FILTER_LEARNER_ENROLLMENTS:
 				MyRequestResult result64 = new MyRequestResult();
-				result64.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollments(action));
+				result64.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.filterLearnerEnrollments(action));
 				return result64;
 				
 			case LearnerEnrollmentCommand.GET_LEARNER_ENROLLMENT_BY_ID:
@@ -408,19 +408,19 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result68.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollmentsByLoggedSystemUserProfileSchools(action));
 				return result68;
 				
-			case LearnerEnrollmentCommand.GET_LEARNER_ENROLLMENTS_BY_ACADEMIC_TERM_SCHOOL:
-				MyRequestResult result69 = new MyRequestResult();
-				result69.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollmentsByAcademicTermSchool(action));
-				return result69;
+//			case LearnerEnrollmentCommand.GET_LEARNER_ENROLLMENTS_BY_ACADEMIC_TERM_SCHOOL:
+//				MyRequestResult result69 = new MyRequestResult();
+//				result69.setLearnerEnrollmentResponseList(LearnerEnrollmentHandler.getLearnerEnrollmentsByAcademicTermSchool(action));
+//				return result69;
 				
 			case SchoolStaffEnrollmentCommand.SAVE_STAFF_ENROLLMENT:
 				MyRequestResult result70 = new MyRequestResult();
 				result70.setStaffEnrollmentResponse(SchoolStaffEnrollmentHandler.saveStaffEnrollment(action));
 				return result70;
 				
-			case SchoolStaffEnrollmentCommand.GET_ALL_STAFF_ENROLLMENTS:
+			case SchoolStaffEnrollmentCommand.FILTER_SCHOOL_STAFF_ENROLLMENTS:
 				MyRequestResult result71 = new MyRequestResult();
-				result71.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.getStaffEnrollments(action));
+				result71.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.filterStaffEnrollments(action));
 				return result71;
 				
 			case SchoolStaffEnrollmentCommand.GET_STAFF_ENROLLMENT_BY_ID:
@@ -443,19 +443,19 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result75.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.getStaffEnrollmentsByLoggedSystemUserProfileSchools(action));
 				return result75;
 				
-			case SchoolStaffEnrollmentCommand.GET_STAFF_ENROLLMENTS_BY_ACADEMIC_TERM_SCHOOL:
-				MyRequestResult result76 = new MyRequestResult();
-				result76.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.getStaffEnrollments(action));
-				return result76;
+//			case SchoolStaffEnrollmentCommand.GET_STAFF_ENROLLMENTS_BY_ACADEMIC_TERM_SCHOOL:
+//				MyRequestResult result76 = new MyRequestResult();
+//				result76.setStaffEnrollmentResponseList(SchoolStaffEnrollmentHandler.getStaffEnrollments(action));
+//				return result76;
 				
 			case SchoolStaffEnrollmentCommand.SAVE_SCHOOL_STAFF:
 				MyRequestResult result77 = new MyRequestResult();
 				result77.setSchoolStaffResponse(SchoolStaffEnrollmentHandler.saveSchoolStaff(action));
 				return result77;
 				
-			case SchoolStaffEnrollmentCommand.GET_ALL_SCHOOL_STAFFS:
+			case SchoolStaffEnrollmentCommand.FILTER_SCHOOL_STAFFS:
 				MyRequestResult result78 = new MyRequestResult();
-				result78.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffs(action));
+				result78.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.filterSchoolStaffs(action));
 				return result78;
 				
 			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFF_BY_ID:
@@ -478,19 +478,19 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result82.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffsByLoggedSystemUserProfileSchools(action));
 				return result82;
 				
-			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFFS_BY_ACADEMIC_TERM_SCHOOL:
-				MyRequestResult result83 = new MyRequestResult();
-				result83.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffs(action));
-				return result83;
+//			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFFS_BY_ACADEMIC_TERM_SCHOOL:
+//				MyRequestResult result83 = new MyRequestResult();
+//				result83.setSchoolStaffResponseList(SchoolStaffEnrollmentHandler.getSchoolStaffs(action));
+//				return result83;
 				
 			case LearnerAttendanceCommand.SAVE_LEARNER_ATTENDANCE:
 				MyRequestResult result84 = new MyRequestResult();
 				result84.setLearnerAttendanceResponse(LearnerAttendanceHandler.saveLearnerAttendance(action));
 				return result84;
 				
-			case LearnerAttendanceCommand.GET_ALL_LEARNER_ATTENDANCES:
+			case LearnerAttendanceCommand.FILTER_LEARNER_ATTENDANCES:
 				MyRequestResult result85 = new MyRequestResult();
-				result85.setLearnerAtendanceResponseList(LearnerAttendanceHandler.getLearnerAttendances(action));
+				result85.setLearnerAtendanceResponseList(LearnerAttendanceHandler.filterLearnerAttendances(action));
 				return result85;
 				
 			case LearnerAttendanceCommand.GET_LEARNER_ATTENDANCE_BY_ID:
@@ -518,9 +518,9 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result90.setClockInResponse(ClockInOutHandler.saveClockIn(action));
 				return result90;
 				
-			case ClockInOutCommand.GET_ALL_CLOCK_INS:
+			case ClockInOutCommand.FILTER_CLOCKINS:
 				MyRequestResult result91 = new MyRequestResult();
-				result91.setClockInResponseList(ClockInOutHandler.getClockIns(action));
+				result91.setClockInResponseList(ClockInOutHandler.filterClockIns(action));
 				return result91;
 				
 			case ClockInOutCommand.GET_CLOCK_INS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
@@ -533,9 +533,9 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result94.setClockOutResponse(ClockInOutHandler.saveClockOut(action));
 				return result94;
 				
-			case ClockInOutCommand.GET_ALL_CLOCK_OUTS:
+			case ClockInOutCommand.FILTER_CLOCK_OUTS:
 				MyRequestResult result95 = new MyRequestResult();
-				result95.setClockOutResponseList(ClockInOutHandler.getClockOuts(action));
+				result95.setClockOutResponseList(ClockInOutHandler.filterClockOuts(action));
 				return result95;
 				
 			case ClockInOutCommand.GET_CLOCK_OUTS_BY_SYSTEM_USER_PROFILE_SCHOOLS:
@@ -624,10 +624,10 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				result113.setAttendanceTaskSupervisionResponseList(StaffDailyTimetableSupervisionTaskHandler.getStaffDailyTimetableSupervisionTasks(action));
 				return result113;
 				
-			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFF_BY_TYPE_SCHOOL:
-				MyRequestResult result114 = new MyRequestResult();
-				result114.setSchoolStaffResponse(SchoolStaffEnrollmentHandler.getSchoolStaffByTypeSchool(action));
-				return result114;
+//			case SchoolStaffEnrollmentCommand.GET_SCHOOL_STAFF_BY_TYPE_SCHOOL:
+//				MyRequestResult result114 = new MyRequestResult();
+//				result114.setSchoolStaffResponse(SchoolStaffEnrollmentHandler.getSchoolStaffByTypeSchool(action));
+//				return result114;
 				
 				
 			case SystemUserGroupCommand.SAVE_SYSTEM_USER_GROUP:
@@ -660,6 +660,11 @@ public class MyRequestActionHandler implements ActionHandler<MyRequestAction, My
 				MyRequestResult result121 = new MyRequestResult();
 				result121.setSystemUserProfileResponseList(SystemUserProfileHandler.getSystemUserProfiles(action));
 				return result121;
+				
+			case SystemUserCommand.DELETE_SYSTEM_USER:
+				MyRequestResult result1200 = new MyRequestResult();
+				result1200.setResponseText(SystemUserProfileHandler.deleteSystemUserProfile(action));
+				return result1200;
 				
 			case SystemMenuCommands.SAVE_SYSTEM_MENU:
 				MyRequestResult result122 = new MyRequestResult();

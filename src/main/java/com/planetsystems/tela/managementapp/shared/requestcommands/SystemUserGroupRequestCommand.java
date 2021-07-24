@@ -1,5 +1,7 @@
 package com.planetsystems.tela.managementapp.shared.requestcommands;
 
+
+@Deprecated
 public interface SystemUserGroupRequestCommand {
 
   String SAVE_SYSTEM_USER_GROUP = "SAVE_SYSTEM_USER_GROUP";

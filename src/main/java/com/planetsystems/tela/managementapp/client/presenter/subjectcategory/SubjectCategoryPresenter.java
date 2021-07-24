@@ -19,6 +19,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
@@ -26,9 +27,7 @@ import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEven
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil2;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil2;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult2;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.schoolclass.SchoolClassListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.category.SubjectCategoryListGrid;
@@ -43,9 +42,7 @@ import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
 import com.planetsystems.tela.managementapp.shared.MyRequestResult;
-import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
-import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestcommands.SubjectCategoryCommand;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -134,7 +131,6 @@ public class SubjectCategoryPresenter
 					buttons.add(newButton);
 					buttons.add(edit);
 					buttons.add(delete);
-					// buttons.add(fiter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
 					addSubjectCategory(newButton);
@@ -151,7 +147,6 @@ public class SubjectCategoryPresenter
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
-					// buttons.add(delete);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
@@ -195,9 +190,8 @@ public class SubjectCategoryPresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-//	   		SC.say("Advanced Search");
 				FilterSubjectWindow window = new FilterSubjectWindow();
-				loadFilterSubjectCategoryCombo2(window);
+				ComboUtil2.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo(), dispatcher, placeManager,null);
 				window.show();
 				filterSubjectsSubjectCategory(window);
 			}
@@ -286,9 +280,7 @@ public class SubjectCategoryPresenter
 		ComboUtil2.loadSubjectCategoryCombo(window.getSubjectCategoryCombo(), dispatcher, placeManager, defaultValue);
 	}
 
-	private void loadFilterSubjectCategoryCombo2(final FilterSubjectWindow window) {
-		ComboUtil2.loadSubjectCategoryCombo(window.getFilterSubjectsPane().getCategoryCombo(), dispatcher, placeManager,null);
-	}
+	
 
 	public void clearSubjectWindowFields(SubjectWindow window) {
 		window.getCodeField().clearValue();
@@ -351,20 +343,15 @@ public class SubjectCategoryPresenter
 			public void onChanged(ChangedEvent event) {
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				String subjectCategoryId = window.getFilterSubjectsPane().getCategoryCombo().getValueAsString();
+				FilterDTO dto = new FilterDTO();
+				if(subjectCategoryId != null)
+				dto.setSubjectCategoryDTO(new SubjectCategoryDTO(subjectCategoryId));
 
-				map.put(RequestDelimeters.SUBJECT_CATEGORY_ID, subjectCategoryId);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SUBJECTS_IN_SUBJECT_CATEGORY);
+				map.put(MyRequestAction.DATA, dto);
+				map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.FILTER_SUBJECTS);
 				window.close();
 
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						window.close();
-						getView().getSubjectPane().getListGrid().addRecordsToGrid(result.getSubjectDTOs());
-					}
-				});
-
+				subjectResponseList(map);
 			}
 		});
 
@@ -390,25 +377,7 @@ public class SubjectCategoryPresenter
 					map.put(MyRequestAction.DATA, dto);
 					map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.SAVE_SUBJECT_CATEGORY);
 
-					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-						@Override
-						public void onNetworkResult(MyRequestResult result) {
-							if (result != null) {
-								SystemResponseDTO<SubjectCategoryDTO> responseDTO = result.getSubjectCategoryResponse();
-								if (responseDTO.isStatus()) {
-									//clearSubjectCategoryWindowFields(window);
-									SC.say("SUCCESS", responseDTO.getMessage());
-									getAllSubjectCategories2();
-								} else {
-									SC.say(responseDTO.getMessage());
-								}
-
-							}
-				
-						}
-					});
-
+					categoryResponseList(map);
 				} else {
 					SC.say("Please fill all fields");
 				}
@@ -423,7 +392,10 @@ public class SubjectCategoryPresenter
 	private void getAllSubjectCategories2() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.GET_ALL_SUBJECT_CATEGORYS);
-
+		categoryResponseList(map);
+	}
+	
+	private void categoryResponseList(LinkedHashMap<String, Object> map) {
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
@@ -441,7 +413,6 @@ public class SubjectCategoryPresenter
 			}
 		});
 	}
-	
 	
 	
 	private void deleteSubjectCategory2(MenuButton button) {
@@ -508,25 +479,8 @@ public class SubjectCategoryPresenter
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(MyRequestAction.DATA, dto);
 				map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.UPDATE_SUBJECT_CATEGORY);
-
-				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-					@Override
-					public void onNetworkResult(MyRequestResult result) {
-						if (result != null) {
-							SystemResponseDTO<SubjectCategoryDTO> responseDTO = result.getSubjectCategoryResponse();
-							if (responseDTO.isStatus()) {
-								clearSubjectCategoryWindowFields(window);
-								window.close();
-								getAllSubjectCategories2();
-							} else {
-								SC.say(responseDTO.getMessage());
-							}
-
-						}
-					}
-				});
-
+				
+				categoryResponseList(map);
 			}
 		});
 
@@ -551,24 +505,7 @@ public class SubjectCategoryPresenter
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(MyRequestAction.DATA, dto);
 					map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.SAVE_SUBJECT);
-					NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-						@Override
-						public void onNetworkResult(MyRequestResult result) {
-							if (result != null) {
-								SystemResponseDTO<SubjectDTO> responseDTO = result.getSubjectResponse();
-								if (responseDTO.isStatus()) {
-									clearSubjectWindowFields(window);
-									SC.say("SUCCESS", responseDTO.getMessage());
-									getAllSubjects2();
-								} else {
-									SC.say(responseDTO.getMessage());
-								}
-
-							}
-						}
-					});
-
+					subjectResponseList(map);
 				} else {
 					SC.warn("Please fill all fields");
 				}
@@ -581,8 +518,13 @@ public class SubjectCategoryPresenter
 	
 	private void getAllSubjects2() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.GET_ALL_SUBJECTS);
-
+		map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.FILTER_SUBJECTS);
+		map.put(MyRequestAction.DATA, new FilterDTO());
+		subjectResponseList(map);
+	}
+	
+	//SET GRID
+	private void subjectResponseList(LinkedHashMap<String, Object> map) {
 		NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
 
 			@Override
@@ -602,7 +544,6 @@ public class SubjectCategoryPresenter
 			}
 		});
 	}
-	
 	
 	
 	private void deleteSubject2(MenuButton button) {
@@ -677,25 +618,7 @@ public class SubjectCategoryPresenter
 				map.put(MyRequestAction.DATA, dto);
 				map.put(MyRequestAction.COMMAND, SubjectCategoryCommand.UPDATE_SUBJECT);
 
-				NetworkDataUtil2.callNetwork2(dispatcher, placeManager, map, new NetworkResult2() {
-
-					@Override
-					public void onNetworkResult(MyRequestResult result) {
-						if (result != null) {
-							SystemResponseDTO<SubjectDTO> responseDTO = result.getSubjectResponse();
-							if (responseDTO.isStatus()) {
-								clearSubjectWindowFields(window);
-								window.clear();
-								getAllSubjects2();
-							} else {
-								SC.say(responseDTO.getMessage());
-							}
-
-						}
-					
-					}
-				});
-
+				subjectResponseList(map);
 			}
 		});
 	}

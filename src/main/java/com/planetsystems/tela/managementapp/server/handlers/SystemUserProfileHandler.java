@@ -35,7 +35,7 @@ public class SystemUserProfileHandler {
 						new GenericType<SystemResponseDTO<SystemUserProfileDTO>>() {
 						});
 		client.close();
-		System.out.println("SAVE  SYSTEM_USER_PROFILE_IDS  " + responseDTO);
+		System.out.println("SAVE  SYSTEM_USER_PROFILE  " + responseDTO);
 		return responseDTO;
 	}
 	
@@ -53,7 +53,7 @@ public class SystemUserProfileHandler {
 				});
 		client.close();
 		
-		System.out.println("GET  SYSTEM_USER_PROFILE_IDS  " + responseDTO);
+		System.out.println("GET  SYSTEM_USER_PROFILES  " + responseDTO);
 		
 		return responseDTO;
 	}
@@ -88,7 +88,7 @@ public class SystemUserProfileHandler {
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<String> responseDTO = client.target(ApiResourceUtil.API_LINK).path("stemUserProfiles")
+		SystemResponseDTO<String> responseDTO = client.target(ApiResourceUtil.API_LINK).path("systemUserProfiles")
 				.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
 				.delete(new GenericType<SystemResponseDTO<String>>() {
 				});

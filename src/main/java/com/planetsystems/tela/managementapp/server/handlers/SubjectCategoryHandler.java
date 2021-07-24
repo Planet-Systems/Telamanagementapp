@@ -12,6 +12,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.planetsystems.tela.dto.SubjectDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.response.SystemResponseDTO;
 import com.planetsystems.tela.managementapp.shared.MyRequestAction;
@@ -143,20 +144,21 @@ public class SubjectCategoryHandler {
 	}
 	
 	
-	public static SystemResponseDTO<List<SubjectDTO>> getSubjects(MyRequestAction action){
+	public static SystemResponseDTO<List<SubjectDTO>> filterSubjects(MyRequestAction action){
 		String token = (String) action.getRequestBody().get(MyRequestAction.TOKEN);
+		FilterDTO dto =  (FilterDTO) action.getRequestBody().get(MyRequestAction.DATA);
 
 		Client client = ClientBuilder.newClient();
 		MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 		headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("subjects2")
+		SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(ApiResourceUtil.API_LINK).path("filterSubjects")
 				.request(MediaType.APPLICATION_JSON).headers(headers)
-				.get(new GenericType<SystemResponseDTO<List<SubjectDTO>>>() {
+				.post(Entity.entity(dto, MediaType.APPLICATION_JSON) ,new GenericType<SystemResponseDTO<List<SubjectDTO>>>() {
 				});
 
 		client.close();
-		System.out.println("GET ALL SUBJECT " + responseDto);
+		System.out.println("FILTER ALL SUBJECTS " + responseDto);
 		return responseDto;
 	}
 	
