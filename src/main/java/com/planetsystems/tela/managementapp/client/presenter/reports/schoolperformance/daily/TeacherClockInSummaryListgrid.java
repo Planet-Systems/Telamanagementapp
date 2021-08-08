@@ -5,6 +5,8 @@ import java.util.List;
 import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.planetsystems.tela.managementapp.shared.UtilityManager;
+import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -25,6 +27,9 @@ public class TeacherClockInSummaryListgrid extends SuperListGrid {
 	public TeacherClockInSummaryListgrid() {
 		super();
 		ListGridField staff = new ListGridField(STAFF, "Teacher");
+
+		
+		
 //		staff.setHidden(true);
 
 		ListGridField day = new ListGridField(DAY, "Day");

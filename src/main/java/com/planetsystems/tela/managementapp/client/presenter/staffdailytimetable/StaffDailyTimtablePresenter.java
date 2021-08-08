@@ -549,7 +549,7 @@ public class StaffDailyTimtablePresenter
 					getView().getTabSet().selectTab(tab);
 
 					getStaffDailyTimetableLessonsByStaffDailyTimetableStaffDate(viewStaffDailyTimetableLessonPane,
-							record);
+							record  ,  schoolId);
 
 					closeViewStaffDailyAttendanceTaskTab(viewStaffDailyTimetableLessonPane);
 				} else {
@@ -561,13 +561,16 @@ public class StaffDailyTimtablePresenter
 	}
 
 	private void getStaffDailyTimetableLessonsByStaffDailyTimetableStaffDate(
-			final ViewStaffDailyTimetableLessonPane viewStaffDailyTimetableLessonPane, final ListGridRecord record) {
+			final ViewStaffDailyTimetableLessonPane viewStaffDailyTimetableLessonPane, final ListGridRecord record , String schoolId) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.SCHOOL_STAFF_ID, record.getAttribute(StaffDailyTimetableListGrid.SCHOOL_STAFF_ID));
 		map.put(RequestDelimeters.STAFF_DAILY_TIMETALE_ID,
 				record.getAttribute(StaffDailyTimetableListGrid.ID));
+		map.put(RequestDelimeters.SCHOOL_ID , schoolId);
 		map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+		
+		//SC.say("Prams "+map.get(RequestDelimeters.SCHOOL_STAFF_ID)+" \n"+map.get(RequestDelimeters.STAFF_DAILY_TIMETALE_ID)+" "+map.get(RequestDelimeters.LESSON_DATE));
 		
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
 			map.put(NetworkDataUtil.ACTION , RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE);
