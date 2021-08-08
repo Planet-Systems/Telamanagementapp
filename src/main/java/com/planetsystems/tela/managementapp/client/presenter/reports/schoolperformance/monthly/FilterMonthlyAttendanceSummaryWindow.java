@@ -26,9 +26,9 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 	public FilterMonthlyAttendanceSummaryWindow() {
 		super();
 
-		saveButton = new IButton("Fetch");
+		saveButton = new IButton("Ok");
 
-		cancelButton = new IButton("Close");
+		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
 		HLayout buttonLayout = new HLayout();
@@ -41,18 +41,18 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 
 		DynamicForm form = new DynamicForm();
 		academicYearCombo = new ComboBox();
-		academicYearCombo.setTitle("AcademicYear");
-		academicYearCombo.setHint("Year");
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Academic Year");
 		academicYearCombo.setShowHintInField(true);
 
 		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Academic Term");
 		academicTermCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
 		regionCombo.setTitle("Region");
-		regionCombo.setHint("region");
+		regionCombo.setHint("Region");
 		regionCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
@@ -67,7 +67,7 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 		
 		monthCombo = new ComboBox();
 		monthCombo.setTitle("Month");
-		monthCombo.setHint("month");
+		monthCombo.setHint("Month");
 		monthCombo.setShowHintInField(true);
 	
 		//academicTermCombo
@@ -75,7 +75,7 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 		form.setWrapItemTitles(false);
 		
 //, "150", "250"
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" );
+		form.setColWidths("150", "300"   );
 		form.setCellPadding(10);
 		form.setNumCols(2);
 
@@ -86,9 +86,9 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setHeight("50%");
 		this.setAutoCenter(true);
-		this.setTitle("Monthly ClockIn Summary");
+		this.setTitle("End of Month ClockIn Summary");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

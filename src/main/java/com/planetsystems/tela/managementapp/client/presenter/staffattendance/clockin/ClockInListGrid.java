@@ -47,11 +47,11 @@ public class ClockInListGrid extends SuperListGrid {
 		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "Staff Id");
 		schoolStaffIdField.setHidden(true);
 
-		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Term");
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 
-		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Year");
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 
@@ -65,12 +65,16 @@ public class ClockInListGrid extends SuperListGrid {
 		ListGridField latitudeField = new ListGridField(LATITUDE, "latitude");
 		ListGridField longitudeField = new ListGridField(LONGTITUDE, "longitude");
 		ListGridField statusField = new ListGridField(STATUS, "status");
+		statusField.setHidden(true);
+		
 		ListGridField commentField = new ListGridField(COMMENT, "comment");
 
 		this.setDataSource(dataSource);
 		this.setFields(idField, schoolIdField, schoolStaffIdField, academicTermIdField, academicYearIdField,
 				academicYearField, academicTermField, schoolField, schoolStaffField, clockInDateField, clockInTimeField,
 				commentField, statusField, latitudeField, longitudeField);
+		
+		this.setWrapHeaderTitles(true);
 
 	}
 

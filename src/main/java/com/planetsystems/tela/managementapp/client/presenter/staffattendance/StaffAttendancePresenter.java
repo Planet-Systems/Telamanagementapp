@@ -118,22 +118,31 @@ public class StaffAttendancePresenter
 					buttons.add(filter);
 					buttons.add(clockOut);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Teacher Clockin Details",buttons);
 
-					getAllStaffClockIn();
+					//getAllStaffClockIn();
+					//Load the filters to allow the user to define the clockins to view
+					loadFilter();
 					addClockIn(clockInButton);
 					clockOut(clockOut);
 					selectFilterOption(filter);
 
 				} else if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKOUT_TAB_TITLE)) {
-					getAllStaffClockOut();
+					
+					//Load the filters to allow the user to define the clockouts to view
+					
+					loadClockoutFilters();
+					
+					//getAllStaffClockOut();
+					
+					
 					MenuButton filter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
 
 					buttons.add(filter);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Teacher Clockout Details",buttons);
 					selectFilterClockOutOption(filter);
 
 				} else {
@@ -173,16 +182,21 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				FilterClockInWindow window = new FilterClockInWindow();
-				loadFilterClockInAcademicYearCombo(window);
-				loadFilterClockInAcademicTermCombo(window);
-				loadFilterClockInDistrictCombo(window);
-				loadFilterClockInSchoolCombo(window);
-				window.show();
-				filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
+				loadFilter();
 			}
 		});
 
+	}
+	
+	private void loadFilter() {
+		FilterClockInWindow window = new FilterClockInWindow();
+		loadFilterClockInAcademicYearCombo(window);
+		loadFilterClockInAcademicTermCombo(window);
+		loadFilterClockInDistrictCombo(window);
+		loadFilterClockInSchoolCombo(window);
+		filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
+		window.show();
+		
 	}
 
 	private void selectFilterClockOutOption(final MenuButton filter) {
@@ -211,16 +225,21 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				FilterClockOutWindow window = new FilterClockOutWindow();
-				loadFilterClockOutAcademicYearCombo(window);
-				loadFilterClockOutAcademicTermCombo(window);
-				loadFilterClockOutDistrictCombo(window);
-				loadFilterClockOutSchoolCombo(window);
-				window.show();
-				filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
+				
+				loadClockoutFilters();
 			}
 		});
 
+	}
+	
+	private void loadClockoutFilters() {
+		FilterClockOutWindow window = new FilterClockOutWindow();
+		loadFilterClockOutAcademicYearCombo(window);
+		loadFilterClockOutAcademicTermCombo(window);
+		loadFilterClockOutDistrictCombo(window);
+		loadFilterClockOutSchoolCombo(window);
+		filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
+		window.show();
 	}
 
 	///////////////////////////////////////////

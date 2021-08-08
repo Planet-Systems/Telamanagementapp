@@ -22,7 +22,7 @@ public class FilterStaffWindow extends Window {
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 		
-		filterButton = new IButton("Filter");
+		filterButton = new IButton("Ok");
 		
 		
 		HLayout buttonLayout = new HLayout();
@@ -40,9 +40,9 @@ public class FilterStaffWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("40%");
+		this.setHeight("30%");
 		this.setAutoCenter(true);
-		this.setTitle("Filter Classes");
+		this.setTitle("Advanced Filter");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

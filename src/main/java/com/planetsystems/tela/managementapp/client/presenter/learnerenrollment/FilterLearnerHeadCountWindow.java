@@ -28,7 +28,7 @@ public class FilterLearnerHeadCountWindow extends Window {
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 		
-		filterButton = new IButton("Load");
+		filterButton = new IButton("Ok");
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , filterButton);
@@ -45,9 +45,9 @@ public class FilterLearnerHeadCountWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setHeight("50%");
 		this.setAutoCenter(true);
-		this.setTitle("Filter Classes");
+		this.setTitle("Advanced Filter");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

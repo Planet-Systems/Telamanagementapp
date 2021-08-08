@@ -82,7 +82,7 @@ public class LearnerAttendancePresenter
 	protected void onBind() {
 		super.onBind();
 		setControlsPaneMenuButtons();
-		getAllLearnerAttendance();
+		//getAllLearnerAttendance();
 	}
 
 	public void setControlsPaneMenuButtons() {
@@ -93,11 +93,12 @@ public class LearnerAttendancePresenter
 
 		List<MenuButton> buttons = new ArrayList<>();
 		buttons.add(newButton);
-		buttons.add(edit);
-		buttons.add(delete);
+		//buttons.add(edit);
+		//buttons.add(delete);
 		buttons.add(filter);
 
-		getView().getControlsPane().addMenuButtons(buttons);
+		getView().getControlsPane().addMenuButtons("Learner Attendance",buttons);
+		loadAdvancedFilter();
 		addLearnerAttendance(newButton);
 		selectFilterOption(filter);
 
@@ -130,16 +131,21 @@ public class LearnerAttendancePresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				FilterLearnerAttendanceWindow window = new FilterLearnerAttendanceWindow();
-				loadFilterLearnerAttendanceAcademicYearCombo(window);
-				loadFilterLearnerAttendanceAcademicTermCombo(window);
-				loadFilterLearnerAttendanceDistrictCombo(window);
-				loadFilterLearnerAttendanceSchoolCombo(window);
-				window.show();
-				filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(window);
+				
+				loadAdvancedFilter();
 			}
 		});
 
+	}
+	
+	private void loadAdvancedFilter() {
+		FilterLearnerAttendanceWindow window = new FilterLearnerAttendanceWindow();
+		loadFilterLearnerAttendanceAcademicYearCombo(window);
+		loadFilterLearnerAttendanceAcademicTermCombo(window);
+		loadFilterLearnerAttendanceDistrictCombo(window);
+		loadFilterLearnerAttendanceSchoolCombo(window);
+		filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(window);
+		window.show();
 	}
 
 //////////////////////LEARNER Attendance

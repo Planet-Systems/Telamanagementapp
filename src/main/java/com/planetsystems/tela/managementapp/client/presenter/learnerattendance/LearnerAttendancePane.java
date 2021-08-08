@@ -21,7 +21,7 @@ public class LearnerAttendancePane extends VLayout {
      
 		learnerAttendanceListGrid = new LearnerAttendanceListGrid();
 		
-		this.addMember(header);
+		//this.addMember(header);
 		this.addMember(learnerAttendanceListGrid);
 		
 	}

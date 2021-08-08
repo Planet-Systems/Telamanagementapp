@@ -116,7 +116,7 @@ public class TimeAttendanceSupervisionPresenter
 					buttons.add(edit);
 					buttons.add(delete);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Teacher Time Attendance Supervision Details",buttons);
 					loadAcademicYearCombo(getView().getClockInPane(), null);
 					loadAcademicTermCombo(getView().getClockInPane(), null);
 					loadDistrictCombo(getView().getClockInPane(), null);
@@ -136,7 +136,7 @@ public class TimeAttendanceSupervisionPresenter
 					buttons.add(edit);
 					buttons.add(filter);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Teacher Task Attendance Supervision Details",buttons);
 					loadAcademicYearCombo(getView().getClockOutPane(), null);
 					loadAcademicTermCombo(getView().getClockOutPane(), null);
 					loadDistrictCombo(getView().getClockOutPane(), null);

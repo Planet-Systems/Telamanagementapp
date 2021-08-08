@@ -51,11 +51,11 @@ public class ClockOutListGrid extends SuperListGrid {
 		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "Staff Id");
 		schoolStaffIdField.setHidden(true);
 
-		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Term");
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 
-		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Year");
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 		
@@ -66,6 +66,7 @@ public class ClockOutListGrid extends SuperListGrid {
 		ListGridField latitudeField = new ListGridField(LATITUDE, "latitude");
 		ListGridField longitudeField = new ListGridField(LONGTITUDE, "longitude");
 		ListGridField statusField = new ListGridField(STATUS, "status");
+		statusField.setHidden(true);
 		ListGridField commentField = new ListGridField(COMMENT, "comment");
 		
 		ListGridField clockInIdField = new ListGridField(CLOCKED_IN_ID, "clock In Id");
@@ -79,6 +80,7 @@ public class ClockOutListGrid extends SuperListGrid {
 				latitudeField, longitudeField);
 
 		this.setDataSource(dataSource);
+		this.setWrapHeaderTitles(true);
 	}
 
 	public ListGridRecord addRowData(ClockOutDTO clockOutDTO) {

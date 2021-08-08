@@ -21,11 +21,16 @@ public class LoginPane extends VLayout {
 	private Label forgotPasswordField;
 	private Label signup;
 
+	private Label slogan;
+	private Label slogan2;
+
 	public LoginPane() {
 		super();
 
-		/*Img desLogo = new Img("logo-2.png");*/
-		Img desLogo = new Img("des_logo.jpg");
+		/* Img desLogo = new Img("logo-2.png"); */
+		/* Img desLogo = new Img("des_logo.jpg"); */
+		Img desLogo = new Img("moes_logo.png");
+
 		desLogo.setWidth(100);
 		desLogo.setHeight(100);
 		desLogo.setTooltip("DIRECTORATE OF EDUCATION STANDARDS");
@@ -53,6 +58,23 @@ public class LoginPane extends VLayout {
 		form.setColWidths("120", "300");
 		form.setCellPadding(10);
 
+		slogan = new Label();
+		slogan.setContents(
+				"<span style='color:#ffffff;font-weight: 600;font-size: 19px;'>MINISTRY OF EDUCATION AND SPORTS</span>");
+		slogan.setAutoHeight();
+		// slogan.setCursor(Cursor.HAND);
+		slogan.setLayoutAlign(Alignment.CENTER);
+		slogan.setAlign(Alignment.CENTER);
+		slogan.setWidth("500px");
+
+		slogan2 = new Label();
+		slogan2.setContents(
+				"<span style='color:#ffffff;font-weight: 600;font-size: 18px;'>TeLa System </span>");
+		slogan2.setAutoHeight();
+		slogan2.setLayoutAlign(Alignment.CENTER);
+		slogan2.setAlign(Alignment.CENTER);
+		slogan2.setWidth("500px");
+
 		forgotPasswordField = new Label();
 		forgotPasswordField.setContents("<span style='color:#ffffff;font-weight: 600;'>Forgot password</span>");
 		forgotPasswordField.setAutoHeight();
@@ -67,6 +89,14 @@ public class LoginPane extends VLayout {
 		signup.setPadding(5);
 		signup.setCursor(Cursor.HAND);
 		signup.setAlign(Alignment.CENTER);
+
+		VLayout sloganLayout = new VLayout();
+		sloganLayout.addMember(slogan);
+		sloganLayout.addMember(slogan2);
+		sloganLayout.setAutoHeight();
+		sloganLayout.setWidth100();
+		sloganLayout.setMembersMargin(10); 
+		sloganLayout.setMargin(5); 
 
 		HLayout loginbuttonLayout = new HLayout();
 		loginbuttonLayout.addMember(loginButton);
@@ -87,8 +117,10 @@ public class LoginPane extends VLayout {
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMembersMargin(10);
 
+		// 00698C
 		VLayout layout = new VLayout();
 		layout.addMember(desLogo);
+		layout.addMember(sloganLayout);
 		layout.addMember(form);
 		layout.addMember(buttonLayout);
 		layout.setStyleName("login-form");

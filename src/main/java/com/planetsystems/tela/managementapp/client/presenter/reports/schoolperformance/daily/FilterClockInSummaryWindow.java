@@ -28,9 +28,9 @@ public class FilterClockInSummaryWindow extends Window  {
 	public FilterClockInSummaryWindow() {
 		super();
 
-		fetchButton = new IButton("Fetch");
+		fetchButton = new IButton("Ok");
 
-		cancelButton = new IButton("Close");
+		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
 		HLayout buttonLayout = new HLayout();
@@ -43,18 +43,18 @@ public class FilterClockInSummaryWindow extends Window  {
 
 		DynamicForm form = new DynamicForm();
 		academicYearCombo = new ComboBox();
-		academicYearCombo.setTitle("AcademicYear");
-		academicYearCombo.setHint("Year");
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Academic Year");
 		academicYearCombo.setShowHintInField(true);
 
 		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Academic Term");
 		academicTermCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
 		regionCombo.setTitle("Region");
-		regionCombo.setHint("region");
+		regionCombo.setHint("Region");
 		regionCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
@@ -68,8 +68,8 @@ public class FilterClockInSummaryWindow extends Window  {
 		schoolCombo.setShowHintInField(true);
 		
 		schoolStaffCombo = new ComboBox();
-		schoolStaffCombo.setTitle("Staff");
-		schoolStaffCombo.setHint("staff");
+		schoolStaffCombo.setTitle("Teacher");
+		schoolStaffCombo.setHint("Teacher");
 		schoolStaffCombo.setShowHintInField(true);
 		
 		fromDateItem = new DateItem();
@@ -85,7 +85,7 @@ public class FilterClockInSummaryWindow extends Window  {
 		form.setFields(academicYearCombo , academicTermCombo , regionCombo, districtCombo ,schoolCombo, schoolStaffCombo  , fromDateItem , toDateItem  );
 		form.setWrapItemTitles(false);
 		
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250" , "150", "250" );
+		form.setColWidths("150", "300");
 		form.setCellPadding(10);
 		form.setNumCols(2);
 
@@ -96,9 +96,9 @@ public class FilterClockInSummaryWindow extends Window  {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("90%");
+		this.setHeight("70%");
 		this.setAutoCenter(true);
-		this.setTitle("Teacher ClockIn Summary");
+		this.setTitle("Teacher Daily ClockIn Summary");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

@@ -37,7 +37,7 @@ public class FilterStaffsPane extends HLayout {
 		form.setMargin(10);
 		form.setCellPadding(10);
 		form.setNumCols(2);
-		form.setColWidths("80" , "250");
+		form.setColWidths("100" , "300");
 		
 		
 		this.addMember(form);

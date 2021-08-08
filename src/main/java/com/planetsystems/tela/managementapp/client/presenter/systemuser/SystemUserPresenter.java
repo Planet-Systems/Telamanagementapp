@@ -1237,6 +1237,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 								for (ListGridRecord record : getView().getSystemMenuPane().getListgrid()
 										.getSelectedRecords()) {
+									
 									SystemMenuDTO dto = new SystemMenuDTO();
 									dto.setId(record.getAttribute(SystemMenuListgrid.ID));
 

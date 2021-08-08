@@ -1,19 +1,23 @@
 package com.planetsystems.tela.managementapp.shared;
 
 public class RequestConstant {
-	public static final String SYSTEM_CONFIGURATION = "System Configuration";
+	public static final String SYSTEM_CONFIGURATION = "System Administration";
 	public static final String SYSTEM_ENROLLMENT = "Enrollment";
 	public static final String SYSTEM_SETTINGS = "Setting";
 	public static final String SYSTEM_USERS = "System Users";
-	public static final String SYSTEM_TIME_TABLES = "TimeTable";
+	public static final String SYSTEM_TIME_TABLES = "TimeTables";
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
-	public static final String SYSTEM_REPORTS = "Supervision";
-	public static final String SYSTEM_ATTENDANCE = "Attendance";
+	public static final String SYSTEM_REPORTS = "Performance Reports";
+	public static final String SYSTEM_ATTENDANCE = "Attendance"; 
 
 	public static final String CURRICULUM_COVERAGE = "Curriculum Coverage";
 	public static final String INCENTIVES = "Incentives";
 	public static final String UTILITY_MANAGER = "Utility Manager";
+	
+	public static final String SUPERVISION = "Supervision";
+	
+	public static final String SCHOOL_STATISTICS = "School Statistics";
 
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";
@@ -238,5 +242,12 @@ public class RequestConstant {
 	public static final String NationalEndOfMonthTimeAttendanceReport = "NationalEndOfMonthTimeAttendanceReport";
 	public static final String NationalEndOfTermTimeAttendanceReport = "NationalEndOfTermTimeAttendanceReport";
 	public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
+	
+	
+	public static final String TeacherTimeAttendanceReportExport = "TeacherTimeAttendanceReportExport";
+	public static final String SchoolEndOfWeekTimeAttendanceReportExport  = "SchoolEndOfWeekTimeAttendanceReportExport";
+	public static final String SchoolEndOfMonthTimeAttendanceReportExport  = "SchoolEndOfMonthTimeAttendanceReportExport";
+	public static final String SchoolEndOfTermTimeAttendanceReportExport  = "SchoolEndOfTermTimeAttendanceReportExport";
+	
 
 }

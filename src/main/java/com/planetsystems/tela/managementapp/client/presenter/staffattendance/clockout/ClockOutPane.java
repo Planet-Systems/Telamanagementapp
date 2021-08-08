@@ -22,7 +22,7 @@ private ClockOutListGrid clockOutListGrid;
 		clockOutListGrid = new ClockOutListGrid();
 
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(clockOutListGrid);
 		this.addMember(layout);
 		

@@ -22,7 +22,7 @@ private ClockInListGrid clockInListGrid;
 		clockInListGrid = new ClockInListGrid();
 
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(clockInListGrid);
 		this.addMember(layout);
 		

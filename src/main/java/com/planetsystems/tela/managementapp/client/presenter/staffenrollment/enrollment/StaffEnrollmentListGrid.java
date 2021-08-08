@@ -7,6 +7,7 @@ import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -42,22 +43,25 @@ public class StaffEnrollmentListGrid extends SuperListGrid {
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 		
-		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Term");
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 		
-		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Year");
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 		
-		ListGridField totalFemaleField = new ListGridField(TOTAL_FEMALE, "Females");
-		ListGridField totalMaleField = new ListGridField(TOTAL_MALE, "Males");
+		ListGridField totalFemaleField = new ListGridField(TOTAL_FEMALE, "No. Female");
+		ListGridField totalMaleField = new ListGridField(TOTAL_MALE, "No. Male");
 		ListGridField totalField = new ListGridField(TOTAL, "Total");
+		totalField.setAlign(Alignment.CENTER);
+		
 		ListGridField statusField = new ListGridField(STATUS, "staus");
+		statusField.setHidden(true); 
 		
 		
 
-		this.setFields(idField , academicTermIdField , schoolIdField , schoolField , academicTermField  ,totalMaleField , totalFemaleField , totalField , statusField);
+		this.setFields(idField , academicTermIdField , academicTermField  ,schoolIdField , schoolField , totalMaleField , totalFemaleField , totalField , statusField);
 
 		this.setDataSource(dataSource);
 	}

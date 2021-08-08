@@ -22,7 +22,7 @@ public class LearnerEnrollementPane extends VLayout{
 		learnerEnrollmentListGrid = new LearnerEnrollmentListGrid();
 
 
-		this.addMember(header);
+		//this.addMember(header);
 		this.addMember(learnerEnrollmentListGrid);		
 	}
 

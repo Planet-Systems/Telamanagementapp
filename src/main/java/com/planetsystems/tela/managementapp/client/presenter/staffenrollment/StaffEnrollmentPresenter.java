@@ -101,7 +101,7 @@ public class StaffEnrollmentPresenter
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllStaffEnrollments();
+		//getAllStaffEnrollments();
 
 	}
 
@@ -114,7 +114,7 @@ public class StaffEnrollmentPresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.STAFF_ENROLLMENT)) {
-					getAllStaffEnrollments();
+					
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -122,16 +122,20 @@ public class StaffEnrollmentPresenter
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
-					buttons.add(edit);
-					buttons.add(delete);
+					//buttons.add(edit);
+					//buttons.add(delete);
 					buttons.add(filter);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Teacher Statistics",buttons);
+					
+					loadTeacherStaticsFilter();
+					//getAllStaffEnrollments();
+					
 					addStaffEnrollment(newButton);
 					selectFilterStaffEnrollmentOption(filter);
 
 				} else if (selectedTab.equalsIgnoreCase(StaffEnrollmentView.TEACHER_LIST)) {
-					getAllSchoolStaff();
+					
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
@@ -139,11 +143,14 @@ public class StaffEnrollmentPresenter
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
-					buttons.add(edit);
-					buttons.add(delete);
+					//buttons.add(edit);
+					//buttons.add(delete);
 					buttons.add(filter);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Teachers' Details List",buttons);
+					
+					loadTeacherDetailsFilter();
+					//getAllSchoolStaff();
 					addSchoolStaff(newButton);
 					editSchoolStaff(edit);
 					selectFilterOption(filter);
@@ -187,14 +194,18 @@ public class StaffEnrollmentPresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 //	   		SC.say("Advanced Search");
-				FilterStaffWindow window = new FilterStaffWindow();
-				loadFilterStaffDistrictCombo(window);
-				loadFilterStaffSchoolCombo(window);
-				window.show();
-				filterSchoolStaffsByDistrictSchool(window);
+				loadTeacherDetailsFilter();
 			}
 		});
 
+	}
+	
+	private void loadTeacherDetailsFilter() {
+		FilterStaffWindow window = new FilterStaffWindow();
+		loadFilterStaffDistrictCombo(window);
+		loadFilterStaffSchoolCombo(window);
+		window.show();
+		filterSchoolStaffsByDistrictSchool(window);
 	}
 
 	
@@ -205,7 +216,7 @@ public class StaffEnrollmentPresenter
 		public void onClick(ClickEvent event) {
 			final SchoolStaffWindow window = new SchoolStaffWindow();
 			window.getCodeField().disable();
-			window.getSaveButton().setTitle("edit");
+			window.getSaveButton().setTitle("Edit");
 			ListGridRecord record = getView().getSchoolStaffPane().getSchoolStaffListGrid().getSelectedRecord();
 			loadFieldsToEdit(window , record);
 
@@ -317,15 +328,19 @@ public class StaffEnrollmentPresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 //	   		SC.say("Advanced Search");
-				FilterStaffHeadCountWindow window = new FilterStaffHeadCountWindow();
-				loadFilterStaffHeadCountDistrictCombo(window);
-				loadFilterStaffHeadCountSchoolCombo(window);
-				loadFilterStaffHeadCountAcademicYearCombo(window);
-				loadFilterStaffHeadCountAcademicTermCombo(window);
-				filterSchoolStaffEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
-				window.show();
+				loadTeacherStaticsFilter();
 			}
 		});
+	}
+	
+	private void loadTeacherStaticsFilter() {
+		FilterStaffHeadCountWindow window = new FilterStaffHeadCountWindow();
+		loadFilterStaffHeadCountDistrictCombo(window);
+		loadFilterStaffHeadCountSchoolCombo(window);
+		loadFilterStaffHeadCountAcademicYearCombo(window);
+		loadFilterStaffHeadCountAcademicTermCombo(window);
+		filterSchoolStaffEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
+		window.show();
 	}
 
 	//////////////////////
