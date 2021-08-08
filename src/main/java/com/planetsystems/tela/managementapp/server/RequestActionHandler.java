@@ -3499,9 +3499,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-		
-				
-				System.out.print(" tt "+);
 
 				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
 						.path("schools").path(schoolId).path("schoolstaffs").path(schoolStaffId)

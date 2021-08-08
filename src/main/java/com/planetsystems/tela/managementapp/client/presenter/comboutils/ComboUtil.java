@@ -46,7 +46,13 @@ public class ComboUtil {
 						valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
 					}
 
-					academicYearComboBox.setValueMap(valueMap);
+					
+					if(academicYearComboBox.getValueAsString() != null) {
+						academicYearComboBox.clearValue();
+						academicYearComboBox.setValueMap(valueMap);
+					}else {
+						academicYearComboBox.setValueMap(valueMap);
+					}
 
 					if (defaultValue != null) {
 						academicYearComboBox.setValue(defaultValue);
@@ -111,7 +117,14 @@ public class ComboUtil {
 				for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
 					valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
 				}
-				academicTermCombo.setValueMap(valueMap);
+				
+				if(academicTermCombo.getValueAsString() != null) {
+					academicTermCombo.clearValue();
+					academicTermCombo.setValueMap(valueMap);
+				}else {
+					academicTermCombo.setValueMap(valueMap);
+				}
+//				
 				if (defaultValue != null) {
 					academicTermCombo.setValue(defaultValue);
 				}
@@ -169,7 +182,14 @@ public class ComboUtil {
 				for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
 					valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
 				}
-				academicTermCombo.setValueMap(valueMap);
+				if(academicTermCombo.getValueAsString() != null) {
+					academicTermCombo.clearValue();
+					academicTermCombo.setValueMap(valueMap);
+				}else {
+					academicTermCombo.setValueMap(valueMap);
+				}
+				
+				
 				if (defaultValue != null) {
 					academicTermCombo.setValue(defaultValue);
 				}
@@ -236,7 +256,12 @@ public class ComboUtil {
 				for (RegionDto regionDto : result.getRegionDtos()) {
 					valueMap.put(regionDto.getId(), regionDto.getName());
 				}
-				comboBox.setValueMap(valueMap);
+				if(comboBox.getValueAsString() != null) {
+					comboBox.clearValue();
+					comboBox.setValueMap(valueMap);
+				}else {
+					comboBox.setValueMap(valueMap);
+				}
 
 				if (defaultValue != null) {
 					comboBox.setValue(defaultValue);
@@ -312,7 +337,14 @@ public class ComboUtil {
 				for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
 					valueMap.put(districtDTO.getId(), districtDTO.getName());
 				}
-				districtCombo.setValueMap(valueMap);
+				
+				if(districtCombo.getValueAsString() != null) {
+					districtCombo.clearValue();
+					districtCombo.setValueMap(valueMap);
+				}else {
+					districtCombo.setValueMap(valueMap);	
+				}
+
 				if (defaultValue != null) {
 					districtCombo.setValue(defaultValue);
 				}
@@ -378,7 +410,14 @@ public class ComboUtil {
 				for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
 					valueMap.put(districtDTO.getId(), districtDTO.getName());
 				}
-				districtCombo.setValueMap(valueMap);
+				
+				if(districtCombo.getValueAsString() != null) {
+					districtCombo.clearValue();
+					districtCombo.setValueMap(valueMap);
+				}else {
+					districtCombo.setValueMap(valueMap);
+				}
+				
 				if (defaultValue != null) {
 					districtCombo.setValue(defaultValue);
 				}
@@ -442,7 +481,14 @@ public class ComboUtil {
 				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
 					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
 				}
-				schoolCombo.setValueMap(valueMap);
+				
+				if(schoolCombo.getValueAsString() != null) {
+					schoolCombo.clearValue();
+					schoolCombo.setValueMap(valueMap);
+				}else {
+					schoolCombo.setValueMap(valueMap);
+				}
+				
 				if (defaultValue != null) {
 					schoolCombo.setValue(defaultValue);
 				}
@@ -505,8 +551,14 @@ public class ComboUtil {
 				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
 					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
 				}
+				
+				if(schoolCombo.getValueAsString() != null) {
+					schoolCombo.clearValue();
+					schoolCombo.setValueMap(valueMap);
+				}else {
+					schoolCombo.setValueMap(valueMap);
+				}
 
-				schoolCombo.setValueMap(valueMap);
 
 				if (defaultValue != null) {
 					schoolCombo.setValue(defaultValue);
@@ -574,7 +626,14 @@ public class ComboUtil {
 							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
 					valueMap.put(schoolStaffDTO.getId(), fullName);
 				}
-				schoolStaffCombo.setValueMap(valueMap);
+				
+				if(schoolStaffCombo.getValueAsString() != null) {
+					schoolStaffCombo.clearValue();
+					schoolStaffCombo.setValueMap(valueMap);
+				}else {
+					schoolStaffCombo.setValueMap(valueMap);
+				}
+
 
 				if (defaultValue != null) {
 					schoolStaffCombo.setValue(defaultValue);
@@ -603,7 +662,13 @@ public class ComboUtil {
 								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
 						valueMap.put(schoolStaffDTO.getId(), fullName);
 					}
-					schoolStaffCombo.setValueMap(valueMap);
+					
+					if(schoolStaffCombo.getValues() != null) {
+						schoolStaffCombo.clearValue();
+						schoolStaffCombo.setValueMap(valueMap);
+					}else {
+						schoolStaffCombo.setValueMap(valueMap);
+					}
 
 					if (defaultValue != null) {
 						schoolStaffCombo.setValue(defaultValue);
@@ -670,7 +735,14 @@ public class ComboUtil {
 							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
 					valueMap.put(schoolStaffDTO.getId(), fullName);
 				}
-				SchoolStaffCombo.setValueMap(valueMap);
+				
+				if(SchoolStaffCombo.getValueAsString() != null) {
+					SchoolStaffCombo.clearValue();
+					SchoolStaffCombo.setValueMap(valueMap);
+				}else {
+					SchoolStaffCombo.setValueMap(valueMap);
+				}
+
 
 				if (defaultValue != null) {
 					SchoolStaffCombo.setValue(defaultValue);
@@ -742,7 +814,12 @@ public class ComboUtil {
 					valueMap.put(schoolCategoryDTO.getId(), schoolCategoryDTO.getName());
 				}
 
-				schoolCategoryCombo.setValueMap(valueMap);
+				if(schoolCategoryCombo.getValueAsString() != null) {
+					schoolCategoryCombo.clearValue();
+					schoolCategoryCombo.setValueMap(valueMap);
+				}else {
+					schoolCategoryCombo.setValueMap(valueMap);
+				}
 
 				if (defaultValue != null) {
 					schoolCategoryCombo.setValue(defaultValue);
@@ -817,7 +894,15 @@ public class ComboUtil {
 				for (SubjectCategoryDTO subjectCategoryDTO : result.getSubjectCategoryDTOs()) {
 					valueMap.put(subjectCategoryDTO.getId(), subjectCategoryDTO.getName());
 				}
-				subjectCategoryCombo.setValueMap(valueMap);
+
+				
+				if(subjectCategoryCombo.getValueAsString() != null) {
+					subjectCategoryCombo.clearValue();
+					subjectCategoryCombo.setValueMap(valueMap);
+				}else {
+					subjectCategoryCombo.setValueMap(valueMap);
+				}
+
 				if (defaultValue != null) {
 					subjectCategoryCombo.setValue(defaultValue);
 				}
@@ -882,7 +967,14 @@ public class ComboUtil {
 				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
 					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
 				}
-				schoolClassCombo.setValueMap(valueMap);
+				
+				if(schoolClassCombo.getValueAsString() != null) {
+					schoolClassCombo.clearValue();
+					schoolClassCombo.setValueMap(valueMap);
+				}else {
+					schoolClassCombo.setValueMap(valueMap);	
+				}
+				
 				if (defaultValue != null) {
 					schoolClassCombo.setValue(defaultValue);
 				}
@@ -949,7 +1041,14 @@ public class ComboUtil {
 				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
 					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
 				}
-				schoolClassComboBox.setValueMap(valueMap);
+				
+				if(schoolClassComboBox.getValueAsString() != null) {
+					schoolClassComboBox.clearValue();
+					schoolClassComboBox.setValueMap(valueMap);
+				}else {
+					schoolClassComboBox.setValueMap(valueMap);
+				}
+
 
 				if (defaultValue != null) {
 					schoolClassComboBox.setValue(defaultValue);
@@ -1014,7 +1113,14 @@ public class ComboUtil {
 				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
 					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
 				}
-				schoolClassCombo.setValueMap(valueMap);
+				
+				if(schoolClassCombo.getValueAsString() != null) {
+					schoolClassCombo.clearValue();
+					schoolClassCombo.setValueMap(valueMap);
+				}else {
+					schoolClassCombo.setValueMap(valueMap);
+				}
+				
 
 				if (defaultValue != null) {
 					schoolClassCombo.setValue(defaultValue);
@@ -1078,7 +1184,14 @@ public class ComboUtil {
 				for (SubjectDTO subjectDTO : result.getSubjectDTOs()) {
 					valueMap.put(subjectDTO.getId(), subjectDTO.getName());
 				}
-				subjectCombo.setValueMap(valueMap);
+				
+				if(subjectCombo.getValueAsString() != null) {
+					subjectCombo.clearValue();
+					subjectCombo.setValueMap(valueMap);
+				}else {
+					subjectCombo.setValueMap(valueMap);
+				}
+
 
 				if (defaultValue != null) {
 					subjectCombo.setValue(defaultValue);
@@ -1132,11 +1245,19 @@ public class ComboUtil {
 			
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
+				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 				for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
-					hashMap.put(dto.getId(), dto.getName());
+					valueMap.put(dto.getId(), dto.getName());
 				}
-				systemUserGroupCombo.setValueMap(hashMap);
+
+				
+				if(systemUserGroupCombo.getValueAsString() != null) {
+					systemUserGroupCombo.clearValue();
+					systemUserGroupCombo.setValueMap(valueMap);
+				}else {
+					systemUserGroupCombo.setValueMap(valueMap);
+				}
+				
 				if (defaultValue != null) {
 					systemUserGroupCombo.setValue(defaultValue);
 				}
