@@ -74,6 +74,7 @@ import com.planetsystems.tela.dto.reports.outputs.DistrictWeeklyReport;
 import com.planetsystems.tela.dto.reports.outputs.NationalMonthlyReport;
 import com.planetsystems.tela.dto.reports.outputs.NationalTermlyReport;
 import com.planetsystems.tela.dto.reports.outputs.NationalWeeklyReport;
+import com.planetsystems.tela.dto.reports.outputs.TeacherTimeOnSiteReport;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
@@ -4617,6 +4618,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				if (responseDto != null) {
 					list = responseDto.getData();
+					
+					System.out.println("SchoolEndOfTermTimeAttendanceDTO: "+list);
+					
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
 					System.out.println("REPORT1  " + responseDto);
@@ -4643,6 +4647,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
+				//SchoolTimeOnTaskSummaryDTO
+				
 				SystemResponseDTO<List<SchoolTimeOnTaskSummaryDTO>> responseDto = client.target(API_LINK)
 						.path("Reports").path("SchoolTimeOnTaskSummary")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
@@ -4765,6 +4771,58 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 
 			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.TeacherTimeAttendanceReportExport)) {
+
+				System.out.print("TeacherTimeAttendanceReportExport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				FilterDTO filterDTO = (FilterDTO) action.getRequestBody()
+						.get(RequestConstant.TeacherTimeAttendanceReportExport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				///Reports/TeacherClockInSummary/print
+				
+				TeacherTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports").path("TeacherClockInSummary").path("print")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), TeacherTimeOnSiteReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("Teacher time on site");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("Teacher time on site");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+			
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DistrictEndOfWeekTimeAttendanceReport)) {
 

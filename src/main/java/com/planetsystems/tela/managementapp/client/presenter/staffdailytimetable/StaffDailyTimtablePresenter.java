@@ -112,7 +112,7 @@ public class StaffDailyTimtablePresenter
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(view);
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Task Attendance Supervision",buttons);
 					showCreateTab(newButton);
 					viewStaffDailyTimetableLessonTab(view);
 					

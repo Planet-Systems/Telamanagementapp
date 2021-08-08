@@ -51,14 +51,12 @@ public class FilterClockInPane extends HLayout {
 		toDateItem.setTitle("To");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo , fromDateItem , toDateItem);
+		form.setFields(academicYearCombo,academicTermCombo  ,districtCombo , schoolCombo , fromDateItem , toDateItem);
 		form.setWrapItemTitles(false);
 		form.setCellPadding(10);
 		form.setNumCols(2);
 		form.setColWidths("150" , "250" , "150" , "250" , "150" , "250" , "150" , "250" , "150" , "250" , "150" , "250");
-	
-		
-		
+	 
 		this.addMember(form);
 		this.setAutoHeight();
 		this.setWidth100();

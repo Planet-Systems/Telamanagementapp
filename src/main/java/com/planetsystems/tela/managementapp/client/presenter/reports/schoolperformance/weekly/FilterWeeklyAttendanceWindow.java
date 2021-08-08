@@ -27,9 +27,9 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 	public FilterWeeklyAttendanceWindow() {
 		super();
 
-		saveButton = new IButton("Fetch");
+		saveButton = new IButton("Ok");
 
-		cancelButton = new IButton("Close");
+		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
 		HLayout buttonLayout = new HLayout();
@@ -42,18 +42,18 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 
 		DynamicForm form = new DynamicForm();
 		academicYearCombo = new ComboBox();
-		academicYearCombo.setTitle("AcademicYear");
-		academicYearCombo.setHint("Year");
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Academic Year");
 		academicYearCombo.setShowHintInField(true);
 
 		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Academic Term");
 		academicTermCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
 		regionCombo.setTitle("Region");
-		regionCombo.setHint("region");
+		regionCombo.setHint("Region");
 		regionCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
@@ -73,7 +73,7 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 		
 		weekCombo = new ComboBox();
 		weekCombo.setTitle("Week");
-		weekCombo.setHint("week");
+		weekCombo.setHint("Week");
 		weekCombo.setShowHintInField(true);
 		
 		
@@ -83,7 +83,7 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 		
 		form.setFields(academicYearCombo , academicTermCombo ,regionCombo, districtCombo , schoolCombo, monthCombo  , weekCombo );
 		form.setWrapItemTitles(false);
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250");
+		form.setColWidths("150", "300"  );
 		form.setCellPadding(10);
 		form.setNumCols(2);
 
@@ -94,9 +94,9 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("80%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("Weekly ClockIn Summary");
+		this.setTitle("End of Week ClockIn Summary");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

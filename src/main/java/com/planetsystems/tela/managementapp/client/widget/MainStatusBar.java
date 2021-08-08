@@ -80,18 +80,19 @@ public class MainStatusBar extends HLayout {
 
 		// toolStrip.addMember(serverTimeLabel);
 
-		Label footerLabel = new Label("<h4><b>" + "&copy; Planet Systems (Uganda), 2021" + "</b></h4>");
+		//Label footerLabel = new Label("<h4><b>" + "&copy; Planet Systems (Uganda), 2021" + "</b></h4>");
+		Label footerLabel = new Label("<h4><b>" + "Powered By Planet Systems (Uganda)" + "</b></h4>");
 		footerLabel.setWidth("20%");
 		footerLabel.setAlign(Alignment.LEFT);
 		footerLabel.setMargin(10);
 		
-		Label footerLabel2 = new Label("<h4><b>" + "Licensed to Ministery of Education and Sports Uganda" + "</b></h4>");
+		Label footerLabel2 = new Label("<h4><b>" + "Licensed to Ministry of Education and Sports Uganda" + "</b></h4>");
 		
 		footerLabel2.setWidth("20%");
 		footerLabel2.setAlign(Alignment.RIGHT);
 		footerLabel2.setMargin(10);
 		
-		Label footerLabel3 = new Label("<h4><b>" + " Support contacts (+256) 772 503 726, or email: tela@gmail.com" + "</b></h4>");
+		Label footerLabel3 = new Label("<h4><b>" + " Support contacts 0800 377771, or email: tela@gmail.com" + "</b></h4>");
 		
 		footerLabel3.setWidth("20%");
 		footerLabel3.setAlign(Alignment.CENTER);

@@ -28,7 +28,7 @@ public class SchoolStaffPane extends VLayout {
      
 		schoolStaffListGrid = new SchoolStaffListGrid();
 		
-		this.addMember(header);
+		//this.addMember(header);
 		this.addMember(schoolStaffListGrid);
 		
 	}

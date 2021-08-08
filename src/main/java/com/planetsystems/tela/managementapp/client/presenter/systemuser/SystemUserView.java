@@ -52,9 +52,8 @@ class SystemUserView extends ViewImpl implements SystemUserPresenter.MyView {
 		systemMenuPaneTab.setTitle(SYSTEM_MENU_SETUP);
 
 		tabSet = new TabSet();
-
-		tabSet.addTab(userRolePaneTab);
-		tabSet.addTab(usersPaneTab); 
+		tabSet.addTab(usersPaneTab);
+		tabSet.addTab(userRolePaneTab); 
 		tabSet.addTab(systemMenuPaneTab);
 
 		tabSet.setMargin(0);

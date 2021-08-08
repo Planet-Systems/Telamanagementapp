@@ -23,7 +23,7 @@ public class StaffEnrollmentPane extends VLayout {
 		staffEnrollmentListGrid = new StaffEnrollmentListGrid();
 
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(staffEnrollmentListGrid);
 		this.addMember(layout);
 		

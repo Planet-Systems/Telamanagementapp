@@ -110,7 +110,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(view);
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Time Attendance Supervision",buttons);
 					showCreateTab(newButton);
 					viewAttendanceTaskSupervisionTab(view);
 

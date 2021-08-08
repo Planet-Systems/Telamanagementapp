@@ -85,7 +85,7 @@ public class LearnerEnrollmentPresenter
 	protected void onBind() {
 		super.onBind();
 		setControlsPaneMenuButtons();
-		getAllLearnerEnrollments();
+		//getAllLearnerEnrollments();
 	}
 
 	public void setControlsPaneMenuButtons() {
@@ -96,11 +96,13 @@ public class LearnerEnrollmentPresenter
 
 		List<MenuButton> buttons = new ArrayList<>();
 		buttons.add(newButton);
-		buttons.add(edit);
-		buttons.add(delete);
+		//buttons.add(edit);
+		//buttons.add(delete);
 		buttons.add(filter);
 
-		getView().getControlsPane().addMenuButtons(buttons);
+		getView().getControlsPane().addMenuButtons("Learner Head Count",buttons);
+		
+		learnerEnrolmentFilter();
 		addLearnerEnrollment(newButton);
 		selectFilterOption(filter);
 
@@ -134,16 +136,20 @@ public class LearnerEnrollmentPresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 //	   		SC.say("Advanced Search");
-				FilterLearnerHeadCountWindow window = new FilterLearnerHeadCountWindow();
-				loadFilterLearnerHeadCountAcademicYearCombo(window);
-				loadFilterLearnerHeadCountAcademicTermCombo(window);
-				loadFilterLearnerHeadCountDistrictCombo(window);
-				loadFilterLearnerHeadCountSchoolCombo(window);
-				filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
-				window.show();
+				learnerEnrolmentFilter();
 			}
 		});
 
+	}
+	
+	private void learnerEnrolmentFilter() {
+		FilterLearnerHeadCountWindow window = new FilterLearnerHeadCountWindow();
+		loadFilterLearnerHeadCountAcademicYearCombo(window);
+		loadFilterLearnerHeadCountAcademicTermCombo(window);
+		loadFilterLearnerHeadCountDistrictCombo(window);
+		loadFilterLearnerHeadCountSchoolCombo(window);
+		filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
+		window.show();
 	}
 
 	///////////////////////////////////////

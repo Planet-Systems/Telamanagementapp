@@ -4,14 +4,16 @@ import java.util.List;
 
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
-public class IncentivesData {
-	 
+public class SchoolStatisticsData {
+	
 	private static ListGridRecord[] records;
 
 	public static ListGridRecord[] getRecords() {
+		
 		if (records == null) {
 			records = getNewRecords();
 		}
+		
 		return records;
 
 	}
@@ -26,10 +28,10 @@ public class IncentivesData {
 
 	public static ListGridRecord[] getNewRecords() {
 		return new ListGridRecord[] { 
-				createRecord("", "application_form", "Staff Dev't Plan"),
-				createRecord("", "application_form", "Support Schemes"),
-				createRecord("", "application_form", "Rewards & Awards"),
-	};}
+				createRecord("", "application_form", "Statistics Update"),
+				createRecord("", "application_form", "Annual Census") };
+
+	}
 
 	public static ListGridRecord[] getNewRecords(List<String> list) {
 

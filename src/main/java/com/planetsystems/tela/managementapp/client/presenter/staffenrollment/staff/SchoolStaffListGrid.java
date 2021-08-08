@@ -71,6 +71,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		this.setFields(idField, schoolIdField, districtIdField, staffCodeField, role,firstNameField, lastNameField,staffTypeField , genderField,
 				phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField, districtField, schoolField, registeredField);
 		this.setDataSource(dataSource);
+		this.setWrapHeaderTitles(true);
 	}
 
 	public ListGridRecord addRowData(SchoolStaffDTO schoolStaffDTO) {

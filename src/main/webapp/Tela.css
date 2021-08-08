@@ -129,9 +129,13 @@ h1 {
 	padding: 40px;
 	background-color:#383f45 ;
 	font-color:#ffffff;
-	/*  background: linear-gradient(45deg,  rgba(66, 183, 245,0.8) 0%,rgba(66, 245, 189,0.4) 100%); */
-	 background-image: linear-gradient(147deg, #ffd000 0%, #FF8000 74%); 
+	/*  background: linear-gradient(45deg,  rgba(66, 183, 245,0.8) 0%,rgba(66, 245, 189,0.4) 100%); */ 
 	/* background-image: linear-gradient(147deg, #ffffff 0%, #ffffff 74%); */
+	
+	/*  background-image: linear-gradient(147deg, #ffd000 0%, #FF8000 74%);  */
+	  background-image: linear-gradient(147deg, #ffd000 0%, #00698C 74%); 
+	 
+	
 }
 
 .login-form-button {
@@ -162,6 +166,10 @@ h1 {
 .menu-switcher {
 	margin-top:10px;
 	margin-left:10px;
+}
+
+.myaccount-button { 
+	margin-top: 200px;
 }
 
 .menu-button, .menu-buttonOver, .menu-buttonFocused,
@@ -265,6 +273,63 @@ h1 {
 }
 
 .cancel-buttonFocusedOver, .cancel-buttonPendingFocusedOver {
+	border: 1px solid #cccccc;
+	-moz-box-shadow: 0 0 5px rgb(210 227 252);
+	-webkit-box-shadow: 0 0 5px rgb(210 227 252);
+	box-shadow: 0 0 5px rgb(218 220 224);
+	color: #173dea;
+}
+
+
+
+
+.myaccount-button, .myaccount-buttonOver, .myaccount-buttonFocused,
+	.myaccount-buttonFocusedOver, .myaccount-buttonDown,
+	.myaccount-buttonFocusedDown, .myaccount-buttonSelected,
+	.myaccount-buttonSelectedFocused, .myaccount-buttonSelectedDown,
+	.myaccount-buttonSelectedFocusedDown, .myaccount-buttonSelectedOver,
+	.myaccount-buttonSelectedFocusedOver, .myaccount-buttonDisabled,
+	.myaccount-buttonSelectedDisabled, .myaccount-buttonPending,
+	.myaccount-buttonPendingOver, .myaccount-buttonPendingFocused,
+	.myaccount-buttonPendingFocusedOver, .myaccount-buttonPendingDown,
+	.myaccount-buttonPendingFocusedDown, .myaccount-buttonPendingSelected,
+	.myaccount-buttonPendingSelectedFocused, .myaccount-buttonPendingSelectedDown,
+	.myaccount-buttonPendingSelectedFocusedDown,
+	.myaccount-buttonPendingSelectedOver,
+	.myaccount-buttonPendingSelectedFocusedOver, .myaccount-buttonPendingDisabled,
+	.myaccount-buttonPendingSelectedDisabled {
+	background-color: #ffffff;
+	border: 1px solid rgb(218 220 224);
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	line-height: 14px;
+	outline: 0px;
+	color: #1A73E8;
+	font-size: 11px;
+	font-weight: 500;
+	font-family: corbel;
+	margin: 5px;
+	font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+	justify-content: center;
+}
+
+.myaccount-button:hover, .myaccount-buttonOver, .myaccount-buttonPendingOver {
+	/* background-color: #8BBC21;
+	border: 1px solid #8BBC21; */
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	background-color: #ffffff;
+	border: 1px solid rgb(210 227 252);
+	color: #173dea;
+}
+
+.myaccount-buttonFocusedOver, .myaccount-buttonPendingFocusedOver {
 	border: 1px solid #cccccc;
 	-moz-box-shadow: 0 0 5px rgb(210 227 252);
 	-webkit-box-shadow: 0 0 5px rgb(210 227 252);

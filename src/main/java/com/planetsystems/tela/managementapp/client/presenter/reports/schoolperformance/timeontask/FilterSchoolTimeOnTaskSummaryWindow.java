@@ -28,9 +28,9 @@ public class FilterSchoolTimeOnTaskSummaryWindow extends Window  {
 	public FilterSchoolTimeOnTaskSummaryWindow() {
 		super();
 
-		saveButton = new IButton("Load");
+		saveButton = new IButton("Ok");
 
-		cancelButton = new IButton("Close");
+		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
 		HLayout buttonLayout = new HLayout();
@@ -43,18 +43,18 @@ public class FilterSchoolTimeOnTaskSummaryWindow extends Window  {
 
 		DynamicForm form = new DynamicForm();
 		academicYearCombo = new ComboBox();
-		academicYearCombo.setTitle("AcademicYear");
-		academicYearCombo.setHint("Year");
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Academic Year");
 		academicYearCombo.setShowHintInField(true);
 
 		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Academic Term");
 		academicTermCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
 		regionCombo.setTitle("Region");
-		regionCombo.setHint("region");
+		regionCombo.setHint("Region");
 		regionCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
@@ -68,8 +68,8 @@ public class FilterSchoolTimeOnTaskSummaryWindow extends Window  {
 		schoolCombo.setShowHintInField(true);
 		
 		schoolStaffCombo = new ComboBox();
-		schoolStaffCombo.setTitle("Staff");
-		schoolStaffCombo.setHint("staff");
+		schoolStaffCombo.setTitle("Teacher");
+		schoolStaffCombo.setHint("Teacher");
 		schoolStaffCombo.setShowHintInField(true);
 	
 		fromDateItem = new DateItem();
@@ -83,7 +83,7 @@ public class FilterSchoolTimeOnTaskSummaryWindow extends Window  {
 		form.setWrapItemTitles(false);
 		
 //, "150", "250"
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" ,"150", "250" );
+		form.setColWidths("150", "300" );
 		form.setCellPadding(10);
 		form.setNumCols(2);
 
@@ -94,9 +94,9 @@ public class FilterSchoolTimeOnTaskSummaryWindow extends Window  {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("90%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("Time On Task Summary");
+		this.setTitle("Teacher Time On Task Summary");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

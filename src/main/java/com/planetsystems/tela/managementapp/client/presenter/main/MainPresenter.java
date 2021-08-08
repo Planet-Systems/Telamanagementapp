@@ -31,6 +31,10 @@ import com.planetsystems.tela.managementapp.client.menu.IncentivesData;
 import com.planetsystems.tela.managementapp.client.menu.IncentivesDataSource;
 import com.planetsystems.tela.managementapp.client.menu.ReportsData;
 import com.planetsystems.tela.managementapp.client.menu.ReportsDataSource;
+import com.planetsystems.tela.managementapp.client.menu.SchoolStatisticsData;
+import com.planetsystems.tela.managementapp.client.menu.SchoolStatisticsDataSource;
+import com.planetsystems.tela.managementapp.client.menu.SupervisionData;
+import com.planetsystems.tela.managementapp.client.menu.SupervisionDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationData;
 import com.planetsystems.tela.managementapp.client.menu.SystemAdministrationDataSource;
 import com.planetsystems.tela.managementapp.client.menu.SystemAttendanceData;
@@ -292,6 +296,8 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				List<String> timetable = new ArrayList<String>();
 				List<String> systemusers = new ArrayList<String>();
 				List<String> generatereports = new ArrayList<String>();
+				
+				List<String> supervision = new ArrayList<String>();
 
 				if (result.getSystemMenuDTOs().isEmpty()) {
 					SC.say("You don have any menu");
@@ -324,6 +330,11 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 						else if (systemMenuDTO.getNavigationMenu()
 								.equalsIgnoreCase(NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu()))
 							generatereports.add(systemMenuDTO.getSubMenuItem());
+						
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.SUPERVISION.getNavigationMenu()))
+							supervision.add(systemMenuDTO.getSubMenuItem());
+						 
 
 					}
 
@@ -353,6 +364,22 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 								new NavigationPaneClickHandler());
 
 					}
+					
+					if (!supervision.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.SUPERVISION,
+								SupervisionDataSource.getInstance(SupervisionData.getNewRecords(supervision)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SUPERVISION,
+								new NavigationPaneClickHandler());
+					}
+					
+					if (!generatereports.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
+								ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
+								new NavigationPaneClickHandler());
+					}
 
 					if (!timetable.isEmpty()) {
 
@@ -372,20 +399,21 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 								new NavigationPaneClickHandler());
 					}
 
-					if (!generatereports.isEmpty()) {
-						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
-								ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
+					
+					 
 
-						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
-								new NavigationPaneClickHandler());
-					}
-
-					//Need to customize it
+					// Need to customize it
 					getView().getNavigationPane().addSection(RequestConstant.CURRICULUM_COVERAGE,
 							CurriculumCoverageDataSource.getInstance(CurriculumCoverageData.getNewRecords()));
 					getView().getNavigationPane().addRecordClickHandler(RequestConstant.CURRICULUM_COVERAGE,
 							new NavigationPaneClickHandler());
 
+					getView().getNavigationPane().addSection(RequestConstant.SCHOOL_STATISTICS,
+							SchoolStatisticsDataSource.getInstance(SchoolStatisticsData.getNewRecords()));
+					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SCHOOL_STATISTICS,
+							new NavigationPaneClickHandler());
+
+					//
 					getView().getNavigationPane().addSection(RequestConstant.INCENTIVES,
 							IncentivesDataSource.getInstance(IncentivesData.getNewRecords()));
 					getView().getNavigationPane().addRecordClickHandler(RequestConstant.INCENTIVES,
@@ -496,6 +524,16 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 										new NavigationPaneClickHandler());
 
 							}
+							
+							if (!generatereports.isEmpty()) {
+
+								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
+										ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
+
+								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
+										new NavigationPaneClickHandler());
+							}
+							
 
 							if (!timetable.isEmpty()) {
 
@@ -516,14 +554,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 										new NavigationPaneClickHandler());
 							}
 
-							if (!generatereports.isEmpty()) {
-
-								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
-										ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
-
-								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
-										new NavigationPaneClickHandler());
-							}
+							
 
 							/*
 							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&

@@ -7,6 +7,7 @@ import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -51,21 +52,24 @@ public class LearnerEnrollmentListGrid extends SuperListGrid  {
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
 
-		ListGridField schoolCLassField = new ListGridField(SCHOOL_CLASS, "School Class");
+		ListGridField schoolCLassField = new ListGridField(SCHOOL_CLASS, "Class");
 		ListGridField schoolCLassIdField = new ListGridField(SCHOOL_CLASS_ID, "School Class Id");
 		schoolCLassIdField.setHidden(true);
 		
 		
-		ListGridField totalBoysField = new ListGridField(TOTAL_BOYS, "Boys");
-		ListGridField totalGirlsField = new ListGridField(TOTAL_GIRLS, "Girls");
+		ListGridField totalBoysField = new ListGridField(TOTAL_BOYS, "No. Boys");
+		ListGridField totalGirlsField = new ListGridField(TOTAL_GIRLS, "No. Girls");
 		ListGridField totalField = new ListGridField(TOTAL, "Total");
-		ListGridField statusField = new ListGridField(STATUS, "status");
+		totalField.setAlign(Alignment.CENTER);
 		
-		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		ListGridField statusField = new ListGridField(STATUS, "status");
+		statusField.setHidden(true); 
+		
+		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Term");
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 		
-		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Year");
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 		
@@ -77,6 +81,7 @@ public class LearnerEnrollmentListGrid extends SuperListGrid  {
 		this.setDataSource(datasource);
 		this.setFields(idField , schoolCLassIdField ,academicTermIdField , academicYearIdField , schoolIdField,academicYearField , academicTermField,schoolField, schoolCLassField , totalBoysField , totalGirlsField , totalField ,statusField );
 
+		this.setWrapHeaderTitles(true);
 	}
 	
 	

@@ -41,12 +41,12 @@ public class FilterStaffHeadCountPane extends HLayout {
 		
 		
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo);
+		form.setFields(academicYearCombo,academicTermCombo,districtCombo , schoolCombo);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(10);
 		form.setNumCols(2);
-		form.setColWidths("80" , "250");
+		form.setColWidths("100" , "300");
 		
 		this.addMember(form);
 		this.setAutoHeight();
