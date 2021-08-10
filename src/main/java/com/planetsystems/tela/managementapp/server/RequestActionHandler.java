@@ -74,6 +74,9 @@ import com.planetsystems.tela.dto.reports.outputs.DistrictWeeklyReport;
 import com.planetsystems.tela.dto.reports.outputs.NationalMonthlyReport;
 import com.planetsystems.tela.dto.reports.outputs.NationalTermlyReport;
 import com.planetsystems.tela.dto.reports.outputs.NationalWeeklyReport;
+import com.planetsystems.tela.dto.reports.outputs.SchoolEndMonthTimeOnSiteReport;
+import com.planetsystems.tela.dto.reports.outputs.SchoolEndTermTimeOnSiteReport;
+import com.planetsystems.tela.dto.reports.outputs.SchoolEndWeekTimeOnSiteReport;
 import com.planetsystems.tela.dto.reports.outputs.TeacherTimeOnSiteReport;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
@@ -4801,6 +4804,153 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					dto.setInputFileName("Teacher time on site");
 					dto.setJsonString(jsonString);
 					dto.setOutputFileName("Teacher time on site");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SchoolEndOfWeekTimeAttendanceReportExport)) {
+
+				System.out.print("SchoolEndOfWeekTimeAttendanceReportExport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				FilterDTO filterDTO = (FilterDTO) action.getRequestBody()
+						.get(RequestConstant.SchoolEndOfWeekTimeAttendanceReportExport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+  
+				SchoolEndWeekTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports").path("SchoolEndOfWeekTimeAttendance").path("print")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), SchoolEndWeekTimeOnSiteReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("School End of Week 001 -Time attendance");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("School End of Week 001 -Time attendance");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SchoolEndOfMonthTimeAttendanceReportExport)) {
+
+				System.out.print("SchoolEndOfMonthTimeAttendanceReportExport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				FilterDTO filterDTO = (FilterDTO) action.getRequestBody()
+						.get(RequestConstant.SchoolEndOfMonthTimeAttendanceReportExport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+  
+				SchoolEndMonthTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports").path("SchoolEndOfMonthTimeAttendance").path("print")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), SchoolEndMonthTimeOnSiteReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("School End of Month  001A -Time attendance");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("School End of Month  001A -Time attendance");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SchoolEndOfTermTimeAttendanceReportExport)) {
+
+				System.out.print("SchoolEndOfTermTimeAttendanceReportExport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				FilterDTO filterDTO = (FilterDTO) action.getRequestBody()
+						.get(RequestConstant.SchoolEndOfTermTimeAttendanceReportExport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+  
+				SchoolEndTermTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports").path("SchoolEndOfTermTimeAttendance").path("print")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), SchoolEndTermTimeOnSiteReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("School End of Term  001B-Time attendance");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("School End of Term  001B-Time attendance");
 					dto.setRefId(refId);
 
 					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")

@@ -112,11 +112,13 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
+				
 				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 				for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
 					valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
 				}
+ 
 				
 				if(academicTermCombo.getValueAsString() != null) {
 					academicTermCombo.clearValue();
@@ -124,9 +126,11 @@ public class ComboUtil {
 				}else {
 					academicTermCombo.setValueMap(valueMap);
 				}
-//				
+ 
 				if (defaultValue != null) {
 					academicTermCombo.setValue(defaultValue);
+				}else {
+					academicTermCombo.clearValue();
 				}
 			}
 		});

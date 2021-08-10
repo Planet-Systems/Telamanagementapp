@@ -71,7 +71,7 @@ public class FilterMonthlyAttendanceSummaryWindow extends Window  {
 		monthCombo.setShowHintInField(true);
 	
 		//academicTermCombo
-		form.setFields(academicYearCombo  , regionCombo , districtCombo ,schoolCombo , monthCombo );
+		form.setFields(academicYearCombo,academicTermCombo  , regionCombo , districtCombo ,schoolCombo , monthCombo );
 		form.setWrapItemTitles(false);
 		
 //, "150", "250"
