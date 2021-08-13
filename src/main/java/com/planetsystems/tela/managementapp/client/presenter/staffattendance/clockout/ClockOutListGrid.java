@@ -63,18 +63,18 @@ public class ClockOutListGrid extends SuperListGrid {
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "SchoolId");
 		schoolIdField.setHidden(true);
 		
-		ListGridField latitudeField = new ListGridField(LATITUDE, "latitude");
-		ListGridField longitudeField = new ListGridField(LONGTITUDE, "longitude");
-		ListGridField statusField = new ListGridField(STATUS, "status");
+		ListGridField latitudeField = new ListGridField(LATITUDE, "Latitude");
+		ListGridField longitudeField = new ListGridField(LONGTITUDE, "Longitude");
+		ListGridField statusField = new ListGridField(STATUS, "Status");
 		statusField.setHidden(true);
-		ListGridField commentField = new ListGridField(COMMENT, "comment");
+		ListGridField commentField = new ListGridField(COMMENT, "Comment");
 		
 		ListGridField clockInIdField = new ListGridField(CLOCKED_IN_ID, "clock In Id");
 		clockInIdField.setHidden(true);
 		
-		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME, "clocked In Time");
-		ListGridField clockOutTimeField = new ListGridField(CLOCKED_OUT_TIME, "clocked Out Time");
-		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE, "clocked In Date");
+		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME, "In Time");
+		ListGridField clockOutTimeField = new ListGridField(CLOCKED_OUT_TIME, "OutTime");
+		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE, "Date");
 
 		this.setFields(idField, schoolStaffIdField,schoolIdField, academicTermIdField,academicYearIdField,clockInIdField ,academicYearField , academicTermField,schoolField, schoolStaffField , clockInDateField,clockInTimeField , clockOutTimeField ,commentField ,statusField,
 				latitudeField, longitudeField);

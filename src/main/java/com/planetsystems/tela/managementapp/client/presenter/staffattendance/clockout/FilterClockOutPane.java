@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.staffattendance.cl
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class FilterClockOutPane extends HLayout {
@@ -11,14 +12,8 @@ public class FilterClockOutPane extends HLayout {
 	private ComboBox schoolCombo;
 	private ComboBox academicYearCombo;
 	private ComboBox academicTermCombo;
-	private DateItem clockinDateItem;
+	private TextItem dateField;
 
-	
-	public static final String DISTRICT_ID = "DISTRICT_ID";
-	public static final String SCHOOL_ID = "SCHOOL_ID";
-	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
-	
 	public FilterClockOutPane() {
 		super();
 
@@ -43,11 +38,12 @@ public class FilterClockOutPane extends HLayout {
 		academicTermCombo.setHint("Select A  Term");
 		academicTermCombo.setShowHintInField(true);
 		
-		clockinDateItem = new DateItem();
-		clockinDateItem.setTitle("Date");
+		dateField = new TextItem();
+		dateField.setTitle("Today");
+		dateField.disable();
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo , clockinDateItem);
+		form.setFields(academicYearCombo  ,districtCombo ,academicTermCombo, schoolCombo , dateField);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setCellPadding(10);
@@ -82,9 +78,14 @@ public class FilterClockOutPane extends HLayout {
 	}
 
 
-	public DateItem getClockinDateItem() {
-		return clockinDateItem;
+
+
+	public TextItem getDateField() {
+		return dateField;
 	}
+
+
+	
 
 
 }

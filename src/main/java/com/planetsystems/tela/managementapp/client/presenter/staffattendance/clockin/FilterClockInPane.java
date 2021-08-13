@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.staffattendance.cl
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 
 public class FilterClockInPane extends HLayout {
@@ -11,14 +12,14 @@ public class FilterClockInPane extends HLayout {
 	private ComboBox schoolCombo;
 	private ComboBox academicYearCombo;
 	private ComboBox academicTermCombo;
-	private DateItem fromDateItem;
-	private DateItem toDateItem;
+	private TextItem todayDateField;
+//	private DateItem toDateItem;
 
 	
-	public static final String DISTRICT_ID = "DISTRICT_ID";
-	public static final String SCHOOL_ID = "SCHOOL_ID";
-	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
+//	public static final String DISTRICT_ID = "DISTRICT_ID";
+//	public static final String SCHOOL_ID = "SCHOOL_ID";
+//	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
+//	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
 	
 	public FilterClockInPane() {
 		super();
@@ -44,14 +45,15 @@ public class FilterClockInPane extends HLayout {
 		academicTermCombo.setHint("Select A  Term");
 		academicTermCombo.setShowHintInField(true);
 		
-		fromDateItem = new DateItem();
-		fromDateItem.setTitle("From");
+		todayDateField = new TextItem();
+		todayDateField.setTitle("Today");
+		todayDateField.disable();
 		
-		toDateItem = new DateItem();
-		toDateItem.setTitle("To");
+//		toDateItem = new DateItem();
+//		toDateItem.setTitle("To");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearCombo,academicTermCombo  ,districtCombo , schoolCombo , fromDateItem , toDateItem);
+		form.setFields(academicYearCombo,academicTermCombo  ,districtCombo , schoolCombo , todayDateField);
 		form.setWrapItemTitles(false);
 		form.setCellPadding(10);
 		form.setNumCols(2);
@@ -83,14 +85,12 @@ public class FilterClockInPane extends HLayout {
 	}
 
 
-	public DateItem getFromDateItem() {
-		return fromDateItem;
+	public TextItem getTodayDateField() {
+		return todayDateField;
 	}
 
-
-	public DateItem getToDateItem() {
-		return toDateItem;
-	}
+	
+	
 
 	
 

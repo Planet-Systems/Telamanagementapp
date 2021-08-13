@@ -82,6 +82,7 @@ public class StaffAttendancePresenter
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
+	DateTimeFormat dayDateFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
 	@NameToken(NameTokens.staffAttendance)
 	@ProxyCodeSplit
@@ -194,6 +195,8 @@ public class StaffAttendancePresenter
 		loadFilterClockInAcademicTermCombo(window);
 		loadFilterClockInDistrictCombo(window);
 		loadFilterClockInSchoolCombo(window);
+		
+		window.getFilterClockInPane().getTodayDateField().setValue(dayDateFormat.format(new Date()));
 		filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
 		window.show();
 		
@@ -238,6 +241,7 @@ public class StaffAttendancePresenter
 		loadFilterClockOutAcademicTermCombo(window);
 		loadFilterClockOutDistrictCombo(window);
 		loadFilterClockOutSchoolCombo(window);
+		window.getFilterClockOutPane().getDateField().setValue(dayDateFormat.format(new Date()));
 		filterClockOutsByAcademicYearAcademicTermDistrictSchool(window);
 		window.show();
 	}
@@ -564,16 +568,26 @@ public class StaffAttendancePresenter
 
 	// filter
 	private void filterClockInsByAcademicYearAcademicTermDistrictSchool(final FilterClockInWindow window) {
+		
 		window.getFilterButton().addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				
+				//show filter parameters
+				getView().getClockInPane().getFilterParams().show();
+				getView().getClockInPane().getAcademicYearField().setValue(window.getFilterClockInPane().getAcademicYearCombo().getDisplayValue());
+				getView().getClockInPane().getAcademicTermField().setValue(window.getFilterClockInPane().getAcademicTermCombo().getDisplayValue());
+				getView().getClockInPane().getDistrictField().setValue(window.getFilterClockInPane().getDistrictCombo().getDisplayValue());
+				getView().getClockInPane().getSchoolField().setValue(window.getFilterClockInPane().getSchoolCombo().getDisplayValue());
+				getView().getClockInPane().getDateField().setValue(dayDateFormat.format(new Date()));
+				
 				String academicYearId = window.getFilterClockInPane().getAcademicYearCombo().getValueAsString();
 				String academicTermId = window.getFilterClockInPane().getAcademicTermCombo().getValueAsString();
 				String districtId = window.getFilterClockInPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterClockInPane().getSchoolCombo().getValueAsString();
-				String fromDate = dateFormat.format(window.getFilterClockInPane().getFromDateItem().getValueAsDate());
-				String toDate = dateFormat.format(window.getFilterClockInPane().getToDateItem().getValueAsDate());
+				String fromDate = dateFormat.format(new Date());
+				//String toDate = dateFormat.format(window.getFilterClockInPane().getToDateItem().getValueAsDate());
 
 				FilterDTO dto = new FilterDTO();
 				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
@@ -581,17 +595,12 @@ public class StaffAttendancePresenter
 				dto.setDistrictDTO(new DistrictDTO(districtId));
 				dto.setSchoolDTO(new SchoolDTO(schoolId));
 				dto.setFromDate(fromDate);
-				dto.setToDate(toDate);
+				//dto.setToDate(toDate);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestDelimeters.FILTER_CLOCK_INS, dto);
-//				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-//				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-//				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-//				map.put(RequestDelimeters.CLOCKIN_DATE, date);
 				map.put(NetworkDataUtil.ACTION,
-						RequestConstant.FILTER_CLOCKINS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
+						RequestConstant.FILTER_CLOCKINS);
 
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -610,11 +619,21 @@ public class StaffAttendancePresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
+				
+				//show filter parameters
+				getView().getClockOutPane().getFilterParams().show();
+				getView().getClockOutPane().getAcademicYearField().setValue(window.getFilterClockOutPane().getAcademicYearCombo().getDisplayValue());
+				getView().getClockOutPane().getAcademicTermField().setValue(window.getFilterClockOutPane().getAcademicTermCombo().getDisplayValue());
+				getView().getClockOutPane().getDistrictField().setValue(window.getFilterClockOutPane().getDistrictCombo().getDisplayValue());
+				getView().getClockOutPane().getSchoolField().setValue(window.getFilterClockOutPane().getSchoolCombo().getDisplayValue());
+				getView().getClockOutPane().getDateField().setValue(dayDateFormat.format(new Date()));
+				
+				
 				String academicYearId = window.getFilterClockOutPane().getAcademicYearCombo().getValueAsString();
 				String academicTermId = window.getFilterClockOutPane().getAcademicTermCombo().getValueAsString();
 				String districtId = window.getFilterClockOutPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterClockOutPane().getSchoolCombo().getValueAsString();
-				String date = dateFormat.format(window.getFilterClockOutPane().getClockinDateItem().getValueAsDate());
+				String date = dateFormat.format(new Date());
 
 				FilterDTO dto = new FilterDTO();
 				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
@@ -624,11 +643,6 @@ public class StaffAttendancePresenter
 				dto.setDate(date);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-//				map.put(RequestDelimeters.ACADEMIC_YEAR_ID, academicYearId);
-//				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
-//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-//				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-//				map.put(RequestDelimeters.CLOCK_OUT_DATE, date);
 				map.put(RequestDelimeters.FILTER_CLOCK_OUTS, dto);
 				map.put(NetworkDataUtil.ACTION,
 						RequestConstant.FILTER_CLOCK_OUTS_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
