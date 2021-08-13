@@ -98,13 +98,15 @@ public class SchoolTimeOnTaskSummaryListgrid extends SuperListGrid {
 		}
 
 		if (dto.getSupervisor() != null) {
-			record.setAttribute(Supervisor, dto);
+			record.setAttribute(Supervisor, dto.getSupervisor());
 		}
 
 		if (dto.getPrensetismStatus() != null) {
-			record.setAttribute(PrensetismStatus, dto);
+			record.setAttribute(PrensetismStatus, dto.getPrensetismStatus());
 			record.setAttribute(PrensetismComment, dto.getPrensetismComment());
 		}
+		
+		record.setAttribute(DATE, dto.getTaskDate());
 
 		return record;
 	}

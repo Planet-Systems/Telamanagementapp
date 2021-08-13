@@ -100,6 +100,12 @@ public class SchoolPerformaceReportPresenter
 	}
 	
 	final FilterDTO teacherClockInSummaryDTO = new FilterDTO();
+	
+	final FilterDTO schoolEndOfWeekDTO = new FilterDTO();
+	
+	final FilterDTO schoolEndOfMonthDTO= new FilterDTO();
+	 
+	final FilterDTO schoolEndOfTermDTO= new FilterDTO();
 
 	private void loadMenuButtons() {
 		MenuButton filter = new MenuButton("View");
@@ -114,9 +120,7 @@ public class SchoolPerformaceReportPresenter
 		getView().getControlsPane().addMenuButtons("School Performance", buttons);
 
 		showFilter(filter);
-		
-		exportTeacherClockSummary(export);
-		
+		 
 
 	}
 
@@ -130,10 +134,10 @@ public class SchoolPerformaceReportPresenter
 
 				MenuItem dashboard = new MenuItem("Dashboard");
 				MenuItem item1 = new MenuItem("Teacher Clockin/Clockout Summary");
-				MenuItem item2 = new MenuItem("End of Week Time Attendance Reports");
-				MenuItem item3 = new MenuItem("End of Month Time Attendance Reports");
-				MenuItem item4 = new MenuItem("End of Term Time Attendance Reports");
-				MenuItem item5 = new MenuItem("Time On Task Reports");
+				MenuItem item2 = new MenuItem("End of Week Time Attendance Report");
+				MenuItem item3 = new MenuItem("End of Month Time Attendance Report");
+				MenuItem item4 = new MenuItem("End of Term Time Attendance Report");
+				MenuItem item5 = new MenuItem("Time On Task Report");
 
 				menu.setItems(dashboard, item1, item2, item3, item4, item5);
 
@@ -143,7 +147,25 @@ public class SchoolPerformaceReportPresenter
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
+						
+						
 						getView().getContentPane().setMembers(clockInSummaryPane);
+						
+						MenuButton filter = new MenuButton("View");
+						MenuButton refresh = new MenuButton("Refresh");
+						MenuButton export = new MenuButton("Export");
+
+						List<MenuButton> buttons = new ArrayList<>();
+						buttons.add(filter);
+						buttons.add(refresh);
+						buttons.add(export);
+
+						getView().getControlsPane().addMenuButtons("Teacher Clockin/Clockout Summary", buttons); 
+						showFilter(filter);
+						
+						exportTeacherClockSummary(export);
+						
+						
 						final FilterClockInSummaryWindow window = new FilterClockInSummaryWindow();
 						final String defaultValue = null;
 						ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager,
@@ -194,8 +216,27 @@ public class SchoolPerformaceReportPresenter
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
+						
+						MenuButton filter = new MenuButton("View");
+						MenuButton refresh = new MenuButton("Refresh");
+						MenuButton export = new MenuButton("Export");
+
+						List<MenuButton> buttons = new ArrayList<>();
+						buttons.add(filter);
+						buttons.add(refresh);
+						buttons.add(export);
+
+						getView().getControlsPane().addMenuButtons("End of Week Time Attendance Reports", buttons); 
+						showFilter(filter);
+						
+						exportSchoolEndOfWeek(export);
+						
+						
 						SchoolEndOfWeekTimeAttendancePane pane = new SchoolEndOfWeekTimeAttendancePane();
+						
 						getView().getContentPane().setMembers(pane);
+						
+						
 
 						final FilterWeeklyAttendanceWindow window = new FilterWeeklyAttendanceWindow();
 						final String defaultValue = null;
@@ -243,6 +284,7 @@ public class SchoolPerformaceReportPresenter
 						window.getWeekCombo().setValueMap(weekMap);
 
 						window.show();
+						
 						loadSchoolEndOfWeekTimeAttendance(window, pane);
 
 					}
@@ -252,6 +294,23 @@ public class SchoolPerformaceReportPresenter
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
+						
+						
+						
+						MenuButton filter = new MenuButton("View");
+						MenuButton refresh = new MenuButton("Refresh");
+						MenuButton export = new MenuButton("Export");
+
+						List<MenuButton> buttons = new ArrayList<>();
+						buttons.add(filter);
+						buttons.add(refresh);
+						buttons.add(export);
+
+						getView().getControlsPane().addMenuButtons("End of Month Time Attendance Report", buttons); 
+						showFilter(filter);
+						
+						exportSchoolEndOfMonth(export);
+						 
 						SchoolEndOfMonthTimeAttendancePane pane = new SchoolEndOfMonthTimeAttendancePane();
 						getView().getContentPane().setMembers(pane);
 
@@ -259,14 +318,17 @@ public class SchoolPerformaceReportPresenter
 						final String defaultValue = null;
 						ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager,
 								defaultValue);
+						
 						window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
 							@Override
 							public void onChanged(ChangedEvent event) {
+								
 								ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
 										window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
 							}
 						});
+						 
 
 						ComboUtil.loadRegionCombo(window.getRegionCombo(), dispatcher, placeManager, defaultValue);
 						window.getRegionCombo().addChangedHandler(new ChangedHandler() {
@@ -295,6 +357,7 @@ public class SchoolPerformaceReportPresenter
 						window.getMonthCombo().setValueMap(monthMap);
 
 						window.show();
+						
 						loadSchoolEndOfMonthTimeAttendance(window, pane);
 
 					}
@@ -319,6 +382,8 @@ public class SchoolPerformaceReportPresenter
 								buttons);
 
 						showFilter(filter);
+						
+						exportSchoolEndOfTerm(export);
 						
 						getView().getContentPane().setMembers(pane);
 
@@ -356,30 +421,35 @@ public class SchoolPerformaceReportPresenter
 										dispatcher, placeManager, defaultValue);
 							}
 						});
-
-						SchoolEndOfTermTimeAttendance();
-
+  
 						window.getSaveButton().addClickHandler(new ClickHandler() {
 
 							@Override
 							public void onClick(ClickEvent event) {
-								FilterDTO dto = new FilterDTO();
+								//FilterDTO dto = new FilterDTO();
+								
+								AcademicYearDTO academicYearDTO = new AcademicYearDTO(
+										window.getAcademicYearCombo().getValueAsString());
+								
 								AcademicTermDTO academicTermDTO = new AcademicTermDTO(
 										window.getAcademicTermCombo().getValueAsString());
+								
 								SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
 
-								dto.setAcademicTermDTO(academicTermDTO);
-								dto.setSchoolDTO(schoolDTO);
-
+								schoolEndOfTermDTO.setAcademicTermDTO(academicTermDTO);
+								schoolEndOfTermDTO.setSchoolDTO(schoolDTO);
+								schoolEndOfTermDTO.setAcademicYearDTO(academicYearDTO);
+								  
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(NetworkDataUtil.ACTION,
 										ReportsRequestConstant.SchoolEndOfTermTimeAttendanceReport);
-								map.put(ReportsRequestConstant.DATA, dto);
+								map.put(ReportsRequestConstant.DATA, schoolEndOfTermDTO);
 
 								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 									@Override
 									public void onNetworkResult(RequestResult result) {
+										
 										pane.getListgrid()
 												.addRecordsToGrid(result.getSchoolEndOfTermTimeAttendanceDTOs());
 									}
@@ -531,7 +601,7 @@ public class SchoolPerformaceReportPresenter
 						public void onNetworkResult(RequestResult result) {
 
 							clockInSummaryPane.getListgrid().addRecordsToGrid(result.getTeacherClockInSummaryDTOs());
-
+							 
 							
 						}
 					});
@@ -560,7 +630,9 @@ public class SchoolPerformaceReportPresenter
 				showFilter(filter);
 
 				getView().getContentPane().setMembers(pane);
-
+				
+				
+				 
 			}
 
 			@Deprecated
@@ -580,10 +652,14 @@ public class SchoolPerformaceReportPresenter
 
 				showFilter(filter);
 				getView().getContentPane().setMembers(pane);
+				
+				exportSchoolEndOfWeek(export);
+				
 			}
 
 			@Deprecated
 			private void loadSchoolEndOfMonthTimeAttendance() {
+				
 				SchoolEndOfMonthTimeAttendancePane pane = new SchoolEndOfMonthTimeAttendancePane();
 
 				MenuButton filter = new MenuButton("View");
@@ -693,25 +769,29 @@ public class SchoolPerformaceReportPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
+				
 				if (checkIfAllFieldsNotEmpty(window)) {
+					
 					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
-					// AcademicTermDTO academicTermDTO = new
-					// AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					
+					 AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
 					
 					AcademicYearDTO academicYearDTO = new AcademicYearDTO(
 							window.getAcademicYearCombo().getValueAsString());
 					String month = window.getMonthCombo().getValueAsString();
 					String week = window.getWeekCombo().getValueAsString();
 
-					FilterDTO dto = new FilterDTO();
-					dto.setAcademicYearDTO(academicYearDTO);
-					dto.setSchoolDTO(schoolDTO);
-					dto.setMonth(month);
-					dto.setWeek(week);
-
+					//FilterDTO dto = new FilterDTO();
+					
+					schoolEndOfWeekDTO.setAcademicYearDTO(academicYearDTO);
+					schoolEndOfWeekDTO.setAcademicTermDTO(academicTermDTO);
+					schoolEndOfWeekDTO.setSchoolDTO(schoolDTO);
+					schoolEndOfWeekDTO.setMonth(month);
+					schoolEndOfWeekDTO.setWeek(week);
+					 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.SchoolEndOfWeekTimeAttendanceReport);
-					map.put(ReportsRequestConstant.DATA, dto);
+					map.put(ReportsRequestConstant.DATA, schoolEndOfWeekDTO);
 
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -736,21 +816,25 @@ public class SchoolPerformaceReportPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 				if (checkIfAllFieldsNotEmpty(window)) {
+					
 					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
-					// AcademicTermDTO academicTermDTO = new
-					// AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					
+					  AcademicTermDTO academicTermDTO = new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString());
+					  
 					AcademicYearDTO academicYearDTO = new AcademicYearDTO(
 							window.getAcademicYearCombo().getValueAsString());
+					
 					String month = window.getMonthCombo().getValueAsString();
 
-					FilterDTO dto = new FilterDTO();
-					dto.setAcademicYearDTO(academicYearDTO);
-					dto.setSchoolDTO(schoolDTO);
-					dto.setMonth(month);
+					//FilterDTO dto = new FilterDTO();
+					schoolEndOfMonthDTO.setAcademicYearDTO(academicYearDTO);
+					schoolEndOfMonthDTO.setSchoolDTO(schoolDTO);
+					schoolEndOfMonthDTO.setMonth(month);
+					schoolEndOfMonthDTO.setAcademicTermDTO(academicTermDTO);
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.SchoolEndOfMonthTimeAttendanceREPORT);
-					map.put(ReportsRequestConstant.DATA, dto);
+					map.put(ReportsRequestConstant.DATA, schoolEndOfMonthDTO);
 
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -770,43 +854,9 @@ public class SchoolPerformaceReportPresenter
 
 	}
 
-	@Deprecated
-	private void SchoolEndOfTermTimeAttendance() {
-		SchoolEndOfTermTimeAttendancePane pane = new SchoolEndOfTermTimeAttendancePane();
+	 
 
-		MenuButton filter = new MenuButton("View");
-		MenuButton refresh = new MenuButton("Refresh");
-		MenuButton export = new MenuButton("Export");
-
-		List<MenuButton> buttons = new ArrayList<>();
-		buttons.add(filter);
-		buttons.add(refresh);
-		buttons.add(export);
-
-		getView().getControlsPane().addMenuButtons("School End of Term Time Attendance Report", buttons);
-
-		showFilter(filter);
-		getView().getContentPane().setMembers(pane);
-	}
-
-	@Deprecated
-	private void loadSchoolTimeOnTaskSummary() {
-		SchoolTimeOnTaskSummaryPane pane = new SchoolTimeOnTaskSummaryPane();
-
-		MenuButton filter = new MenuButton("View");
-		MenuButton refresh = new MenuButton("Refresh");
-		MenuButton export = new MenuButton("Export");
-
-		List<MenuButton> buttons = new ArrayList<>();
-		buttons.add(filter);
-		buttons.add(refresh);
-		buttons.add(export);
-
-		getView().getControlsPane().addMenuButtons("School Time On Task Reports", buttons);
-
-		showFilter(filter);
-		getView().getContentPane().setMembers(pane);
-	}
+	 
 
 	private void exportTeacherClockSummary(final MenuButton export) {
 		export.addClickHandler(new ClickHandler() {
@@ -818,6 +868,81 @@ public class SchoolPerformaceReportPresenter
 				map.put(RequestConstant.TeacherTimeAttendanceReportExport, teacherClockInSummaryDTO);
 
 				map.put(NetworkDataUtil.ACTION, RequestConstant.TeacherTimeAttendanceReportExport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+	}
+	
+	private void exportSchoolEndOfWeek(final MenuButton export) {
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.SchoolEndOfWeekTimeAttendanceReportExport, schoolEndOfWeekDTO);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.SchoolEndOfWeekTimeAttendanceReportExport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+	}
+	
+	private void exportSchoolEndOfMonth(final MenuButton export) {
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.SchoolEndOfMonthTimeAttendanceReportExport, schoolEndOfMonthDTO);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.SchoolEndOfMonthTimeAttendanceReportExport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+	}
+	
+	private void exportSchoolEndOfTerm(final MenuButton export) {
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.SchoolEndOfTermTimeAttendanceReportExport, schoolEndOfTermDTO);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.SchoolEndOfTermTimeAttendanceReportExport);
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 					@Override
