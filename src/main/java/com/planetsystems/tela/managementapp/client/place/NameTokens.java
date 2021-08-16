@@ -33,11 +33,11 @@ public class NameTokens {
 	public static final String schoolClassCategory = "Schools";
 	public static final String subjectCategory = "Subjects";
 
-	public static final String schoolStaff = "Staff Enrollment";
+	public static final String schoolStaff = "Teacher Enrollment";
 
 	public static final String learnerEnrollment = "Learner Enrollment";
 
-	public static final String staffAttendance = "Staff Attendance";
+	public static final String staffAttendance = "Teacher Attendance";
 	public static final String learnerAttendance = "Learner Attendance";
 
 	public static final String StaffDailyTask = "Task Attendance";

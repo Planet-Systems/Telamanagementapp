@@ -48,19 +48,24 @@ public class ClockInListGrid extends SuperListGrid {
 		schoolStaffIdField.setHidden(true);
 
 		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Term");
+		academicTermField.setHidden(true);
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 
 		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Year");
+		academicYearField.setHidden(true);
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 
 		ListGridField schoolField = new ListGridField(SCHOOL, "School");
+		schoolField.setHidden(true);
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 
-		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE, "clock In Date");
-		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME, "clock In Time");
+		ListGridField clockInDateField = new ListGridField(CLOCKED_IN_DATE, "Date");
+		clockInDateField.setHidden(true);
+		
+		ListGridField clockInTimeField = new ListGridField(CLOCKED_IN_TIME, "Time");
 
 		ListGridField latitudeField = new ListGridField(LATITUDE, "latitude");
 		ListGridField longitudeField = new ListGridField(LONGTITUDE, "longitude");

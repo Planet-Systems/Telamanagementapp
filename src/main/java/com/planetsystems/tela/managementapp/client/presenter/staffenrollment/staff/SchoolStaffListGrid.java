@@ -64,7 +64,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField dobField = new ListGridField(DOB, "D.O.B");
 		ListGridField nationalIdField = new ListGridField(NATIONAL_ID, "N.I.N");
 		ListGridField genderField = new ListGridField(GENDER, "Gender");
-		ListGridField nameAbrevField = new ListGridField(NAME_ABBREV, "Name Abbreviation");
+		ListGridField nameAbrevField = new ListGridField(NAME_ABBREV, "Initials");
 
 		ListGridField role = new ListGridField(ROLE, "Role");
 
