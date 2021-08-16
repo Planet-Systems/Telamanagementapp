@@ -106,6 +106,8 @@ public class SchoolPerformaceReportPresenter
 	final FilterDTO schoolEndOfMonthDTO= new FilterDTO();
 	 
 	final FilterDTO schoolEndOfTermDTO= new FilterDTO();
+	
+	final FilterDTO schoolTimeOntaskDTO= new FilterDTO();
 
 	private void loadMenuButtons() {
 		MenuButton filter = new MenuButton("View");
@@ -479,6 +481,8 @@ public class SchoolPerformaceReportPresenter
 
 						showFilter(filter);
 						
+						exportTeachTimeOntaskReport(export);
+						
 						getView().getContentPane().setMembers(pane);
 
 						final FilterSchoolTimeOnTaskSummaryWindow window = new FilterSchoolTimeOnTaskSummaryWindow();
@@ -532,18 +536,18 @@ public class SchoolPerformaceReportPresenter
 							@Override
 							public void onClick(ClickEvent event) {
 								if (checkIfAllFieldsNotEmpty(window)) {
-									FilterDTO dto = new FilterDTO();
-									dto.setAcademicTermDTO(
+									//FilterDTO dto = new FilterDTO();
+									schoolTimeOntaskDTO.setAcademicTermDTO(
 											new AcademicTermDTO(window.getAcademicTermCombo().getValueAsString()));
-									dto.setSchoolDTO(new SchoolDTO(window.getSchoolCombo().getValueAsString()));
-									dto.setSchoolStaffDTO(
+									schoolTimeOntaskDTO.setSchoolDTO(new SchoolDTO(window.getSchoolCombo().getValueAsString()));
+									schoolTimeOntaskDTO.setSchoolStaffDTO(
 											new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString()));
-									dto.setToDate(dateFormat.format(window.getToDateItem().getValueAsDate()));
-									dto.setFromDate(dateFormat.format(window.getFromDateItem().getValueAsDate()));
+									schoolTimeOntaskDTO.setToDate(dateFormat.format(window.getToDateItem().getValueAsDate()));
+									schoolTimeOntaskDTO.setFromDate(dateFormat.format(window.getFromDateItem().getValueAsDate()));
 
 									LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 									map.put(NetworkDataUtil.ACTION, ReportsRequestConstant.SchoolTimeOnTaskSummary);
-									map.put(ReportsRequestConstant.DATA, dto);
+									map.put(ReportsRequestConstant.DATA, schoolTimeOntaskDTO);
 
 									NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -943,6 +947,31 @@ public class SchoolPerformaceReportPresenter
 				map.put(RequestConstant.SchoolEndOfTermTimeAttendanceReportExport, schoolEndOfTermDTO);
 
 				map.put(NetworkDataUtil.ACTION, RequestConstant.SchoolEndOfTermTimeAttendanceReportExport);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						UtilityManager.getInstance().preview(result.getSystemFeedbackDTO().getMessage(),
+								"Preview Report");
+
+					}
+				});
+
+			}
+		});
+	}
+	
+	private void exportTeachTimeOntaskReport(final MenuButton export) {
+		export.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.TimeOnTaskReportExport, schoolTimeOntaskDTO);
+
+				map.put(NetworkDataUtil.ACTION, RequestConstant.TimeOnTaskReportExport);
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 					@Override

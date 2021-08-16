@@ -248,6 +248,7 @@ public class RequestConstant {
 	public static final String SchoolEndOfWeekTimeAttendanceReportExport  = "SchoolEndOfWeekTimeAttendanceReportExport";
 	public static final String SchoolEndOfMonthTimeAttendanceReportExport  = "SchoolEndOfMonthTimeAttendanceReportExport";
 	public static final String SchoolEndOfTermTimeAttendanceReportExport  = "SchoolEndOfTermTimeAttendanceReportExport";
+	public static final String TimeOnTaskReportExport  = "TimeOnTaskReportExport";
 	
 
 }

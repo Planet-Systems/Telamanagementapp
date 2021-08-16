@@ -78,6 +78,7 @@ import com.planetsystems.tela.dto.reports.outputs.SchoolEndMonthTimeOnSiteReport
 import com.planetsystems.tela.dto.reports.outputs.SchoolEndTermTimeOnSiteReport;
 import com.planetsystems.tela.dto.reports.outputs.SchoolEndWeekTimeOnSiteReport;
 import com.planetsystems.tela.dto.reports.outputs.TeacherTimeOnSiteReport;
+import com.planetsystems.tela.dto.reports.outputs.TeacherTimeOnTaskReport;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
@@ -4951,6 +4952,55 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					dto.setInputFileName("School End of Term  001B-Time attendance");
 					dto.setJsonString(jsonString);
 					dto.setOutputFileName("School End of Term  001B-Time attendance");
+					dto.setRefId(refId);
+
+					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
+							.request(MediaType.APPLICATION_JSON).headers(headers)
+							.post(Entity.entity(dto, MediaType.APPLICATION_JSON), SystemFeedbackDTO.class);
+
+					if (systemFeedback != null) {
+						feedback.setResponse(systemFeedback.isResponse());
+						feedback.setMessage(systemFeedback.getMessage());
+					}
+
+				}
+
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.TimeOnTaskReportExport)) {
+
+				System.out.print("TimeOnTaskReportExport");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				Client client = ClientBuilder.newClient();
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				FilterDTO filterDTO = (FilterDTO) action.getRequestBody()
+						.get(RequestConstant.TimeOnTaskReportExport);
+
+				String refId = "kfredrick";
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+  
+				TeacherTimeOnTaskReport responseDto = client.target(API_LINK).path("Reports").path("SchoolTimeOnTaskSummary").path("print")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON), TeacherTimeOnTaskReport.class);
+
+				if (responseDto != null) {
+
+					Gson gson = new Gson();
+					String jsonString = gson.toJson(responseDto);
+
+					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
+					dto.setInputFileName("Teacher time on task");
+					dto.setJsonString(jsonString);
+					dto.setOutputFileName("Teacher time on task");
 					dto.setRefId(refId);
 
 					SystemFeedbackDTO systemFeedback = client.target(REPORT_GEN_API).path("preview")
