@@ -250,6 +250,8 @@ public class RequestConstant {
 	public static final String SchoolEndOfTermTimeAttendanceReportExport  = "SchoolEndOfTermTimeAttendanceReportExport";
 	public static final String FILTER_CLOCKINS = "FILTER_CLOCKINS";
 	public static final String FILTER_CLOCK_OUTS = "FILTER_CLOCK_OUTS";
+	public static final String FILTER_STAFF_DAILY_TIMETABLES = "FILTER_STAFF_DAILY_TIMETABLES";
+	public static final String FILTER_STAFF_DAILY_TIMETABLE_LESSONS = "FILTER_STAFF_DAILY_TIMETABLE_LESSONS";
 	
 
 }

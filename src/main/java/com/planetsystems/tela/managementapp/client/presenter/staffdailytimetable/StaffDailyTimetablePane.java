@@ -20,7 +20,7 @@ public class StaffDailyTimetablePane extends VLayout {
 	private ComboBox academicYearCombo;
 	private ComboBox regionCombo;
 //	private TextItem dayField;
-	private DateItem lessonDayDateItem;
+	private TextItem lessonDayDateItem;
 	private ComboBox academicTermCombo;
 	private IButton loadAttendanceButton;
 
@@ -115,8 +115,9 @@ public class StaffDailyTimetablePane extends VLayout {
 //		dayField.setValue(dayFormat.format(new Date()));
 //		dayField.disable();
         
-		lessonDayDateItem = new DateItem();
-		lessonDayDateItem.setTitle("Lesson Day");
+		lessonDayDateItem = new TextItem();
+		lessonDayDateItem.setTitle("Today");
+		lessonDayDateItem.disable();
 		
 		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , lessonDayDateItem , schoolCombo);
 
@@ -145,8 +146,18 @@ public class StaffDailyTimetablePane extends VLayout {
 		return regionCombo;
 	}
 
-	public DateItem getLessonDayDateItem() {
+	
+
+	public TextItem getLessonDayDateItem() {
 		return lessonDayDateItem;
+	}
+
+	public DateTimeFormat getDayFormat() {
+		return dayFormat;
+	}
+
+	public StaffDailyTimetableListGrid getStaffDailyTimetableListGrid() {
+		return staffDailyTimetableListGrid;
 	}
 
 	public ComboBox getAcademicTermCombo() {

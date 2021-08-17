@@ -27,6 +27,9 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 	public static final String LESSON_DATE = "lessonDate";
 	
 	StaffDailyTimeTableLessonDTODataSource dataSource;
+	/*
+	 * Day , Class, Staff, Subject , Start time , Endtime , Suject status , Time status 
+	 */
 	
 	
 	public StaffDailyTimetableLessonListGrid() {
@@ -41,7 +44,7 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 		ListGridField staffDailyTimetableIdField = new ListGridField(STAFF_DAILY_TIME_TABLE_ID, "Id");
 		staffDailyTimetableIdField.setHidden(true);
 
-		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "LessonDate");
+		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "Date");
 		lessonDateField.setHidden(true);
 
 		ListGridField classField = new ListGridField(CLASS, "Class");
