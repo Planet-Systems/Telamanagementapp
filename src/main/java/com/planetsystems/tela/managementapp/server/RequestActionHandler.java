@@ -3740,14 +3740,38 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.path("staffDailyAttendanceSupervisions").path("schools").path(schoolId)
 						.queryParam("supervisionDate", supervisionDate).request(MediaType.APPLICATION_JSON)
 						.headers(headers)
-//=======
-//						.path("SystemUserProfile").path("StaffDailyAttendanceSupervisions")
-//						.path("Schools")
-//						.path(schoolId)
-//						.queryParam("supervisionDate", supervisionDate)
-//						.request(MediaType.APPLICATION_JSON).headers(headers)
-//>>>>>>> test
 						.get(new GenericType<SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>>>() {
+						});
+
+				if (responseDto.getData() != null)
+					list = responseDto.getData();
+
+				System.out.println("SUP RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.FILTER_STAFF_DAILY_SUPERVISIONS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffDailyAttendanceSupervisionDTO> list = new ArrayList<StaffDailyAttendanceSupervisionDTO>();
+
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestDelimeters.FILTER_DATA);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
+						.path("filterStaffDailyAttendanceSupervisions").request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON) , new GenericType<SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>>>() {
 						});
 
 				if (responseDto.getData() != null)
@@ -3799,7 +3823,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			else if (action.getRequest().equalsIgnoreCase(
 					RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION)
-
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyAttendanceTaskSupervisionDTO> list = new ArrayList<StaffDailyAttendanceTaskSupervisionDTO>();
@@ -3833,7 +3856,39 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION)
+			}
+			else if (action.getRequest().equalsIgnoreCase(
+					RequestConstant.FILTER_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<StaffDailyAttendanceTaskSupervisionDTO> list = new ArrayList<StaffDailyAttendanceTaskSupervisionDTO>();
+
+				FilterDTO filterDTO  = (FilterDTO) action.getRequestBody().get(RequestDelimeters.FILTER_DATA);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> responseDto = client.target(API_LINK)
+						.path("filterStaffDailyAttendanceTaskSupervisions").request(MediaType.APPLICATION_JSON)
+						.headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON) ,  new GenericType<SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>>>() {
+						});
+
+				if (responseDto.getData() != null)
+					list = responseDto.getData();
+
+				System.out.println("SUP RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_TIME_ATTENDANCE_SUPERVISION)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();

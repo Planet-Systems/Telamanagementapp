@@ -110,6 +110,7 @@ public class StaffAttendancePresenter
 				String selectedTab = event.getTab().getTitle();
 
 				if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKIN_TAB_TITLE)) {
+					getView().getClockOutPane().getFilterParams().hide();
 					MenuButton clockInButton = new MenuButton("ClockIn");
 					MenuButton clockOut = new MenuButton("ClockOut");
 					MenuButton filter = new MenuButton("Filter");
@@ -131,6 +132,7 @@ public class StaffAttendancePresenter
 				} else if (selectedTab.equalsIgnoreCase(StaffAttendanceView.CLOCKOUT_TAB_TITLE)) {
 					
 					//Load the filters to allow the user to define the clockouts to view
+					getView().getClockInPane().getFilterParams().hide();
 					
 					loadClockoutFilters();
 					

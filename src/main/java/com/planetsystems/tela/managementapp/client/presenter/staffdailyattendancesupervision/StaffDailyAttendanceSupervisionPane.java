@@ -1,15 +1,11 @@
 package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision;
 
-import java.util.Date;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
-import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -17,11 +13,9 @@ public class StaffDailyAttendanceSupervisionPane extends VLayout {
 	private ComboBox schoolCombo;
 	private ComboBox districtCombo;
 	private ComboBox academicYearCombo;
-	private TextItem dayField;
+	private DateItem dateField;
 	private ComboBox academicTermCombo;
 	private IButton loadSuperVisionButton;
-
-	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
 	private StaffDailyAttendanceSupervisionListGrid staffDailyAttendanceSupervisionListGrid;
 
@@ -104,11 +98,10 @@ public class StaffDailyAttendanceSupervisionPane extends VLayout {
 //		schoolStaffCombo.setHint("Staff");
 //		schoolStaffCombo.setShowHintInField(true);
 
-		dayField = new TextItem("Day");
-		dayField.setValue(dayFormat.format(new Date()));
-		dayField.disable();
+		dateField = new DateItem("Date");
+	
 
-		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dayField);
+		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo, dateField);
 
 //		saveButton = new IButton("Save");
 //		saveButton.setLayoutAlign(Alignment.CENTER);
@@ -141,16 +134,15 @@ public class StaffDailyAttendanceSupervisionPane extends VLayout {
 //		return schoolStaffCombo;
 //	}
 
-	public TextItem getDayField() {
-		return dayField;
-	}
 
 	public ComboBox getAcademicTermCombo() {
 		return academicTermCombo;
 	}
 
-	
 
+	public DateItem getDateField() {
+		return dateField;
+	}
 
 	public IButton getLoadSuperVisionButton() {
 		return loadSuperVisionButton;

@@ -111,8 +111,7 @@ public class ViewStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		schoolStaffField.disable();
 		schoolStaffField.setShowHintInField(true);
 
-		dayField = new TextItem("Day");
-		dayField.setValue(dayFormat.format(new Date()));
+		dayField = new TextItem("Date");
 		dayField.disable();
 
 		form.setFields(academicYearField, districtField, academicTermField, schoolField, dayField, schoolStaffField);
