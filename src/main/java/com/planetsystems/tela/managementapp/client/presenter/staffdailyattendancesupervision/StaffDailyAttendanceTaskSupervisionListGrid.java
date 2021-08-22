@@ -42,7 +42,10 @@ public class StaffDailyAttendanceTaskSupervisionListGrid extends SuperListGrid {
 
 		ListGridField teachingStatusField = new ListGridField(TEACHING_STATUS, "TeachingStatus");
 		ListGridField teachingTimeStatusField = new ListGridField(TEACHING_TIME_STATUS, "TeachingTimeStatus");
+		
 
+		
+		//Day , Class, Staff, Subject , Start time , Endtime , Suject status , Time status 
 		this.setFields(idField, supervisorIdField, supervisorField, supervisionDateField, supervisionTimeField,
 				teachingStatusField, teachingTimeStatusField);
 		this.setDataSource(dataSource);

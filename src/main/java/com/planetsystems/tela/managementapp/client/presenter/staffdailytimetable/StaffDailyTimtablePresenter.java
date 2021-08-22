@@ -19,7 +19,11 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableDTO;
 import com.planetsystems.tela.dto.StaffDailyTimeTableLessonDTO;
@@ -35,6 +39,7 @@ import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -75,6 +80,7 @@ public class StaffDailyTimtablePresenter
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
+	DateTimeFormat dayDateFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 	DateTimeFormat timeFormat = DateTimeFormat.getFormat(DatePattern.HOUR_MINUTE_SECONDS.getPattern());
 
 	@NameToken(NameTokens.StaffDailyTask)
@@ -105,6 +111,8 @@ public class StaffDailyTimtablePresenter
 				if (selectedTab.equalsIgnoreCase(StaffDailyTimetableView.STAFF_DAILY_TIMETABLE)) {
 					// close second tab
 					getView().getTabSet().removeTab(1);
+					//set date
+					getView().getStaffDailyTimetablePane().getLessonDayDateItem().setValue(dayDateFormat.format(new Date()));
 
 					MenuButton newButton = new MenuButton("New");
 					MenuButton view = new MenuButton("view");
@@ -190,9 +198,21 @@ public class StaffDailyTimtablePresenter
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate()));
+				//getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate())
+				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+				
+				FilterDTO filterDto = new FilterDTO();
+				filterDto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				filterDto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				filterDto.setDistrictDTO(new DistrictDTO(districtId));
+				filterDto.setSchoolDTO(new SchoolDTO(schoolId));
+				filterDto.setDate(dateFormat.format(new Date()));
+				
+				//getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate())
+				map.put(RequestDelimeters.FILTER_DATA , filterDto);
 				if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
-				   map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
+					map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_STAFF_DAILY_TIMETABLES);
+					//map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFF_DAILY_TIMETABLE_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
 					else
 				map.put(NetworkDataUtil.ACTION,
 						RequestConstant.GET_STAFF_DAILY_TIMETABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS_ACADEMIC_YEAR_TERM_DISTRICT_SCHOOL_DATE);
@@ -219,15 +239,14 @@ public class StaffDailyTimtablePresenter
 		final ComboBox termBox = getView().getStaffDailyTimetablePane().getAcademicTermCombo();
 		final ComboBox schoolBox = getView().getStaffDailyTimetablePane().getSchoolCombo();
 		//final TextItem dayItem = getView().getStaffDailyTimetablePane().getDayField();
-        final DateItem lessonDay = getView().getStaffDailyTimetablePane().getLessonDayDateItem();
+        //final DateItem lessonDay = getView().getStaffDailyTimetablePane().getLessonDayDateItem();
 		
 		termBox.addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
 
-				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null
-						&& lessonDay.getValueAsDate() != null) {
+				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null) {
 					button.setDisabled(false);
 				} else {
 					button.setDisabled(true);
@@ -240,8 +259,7 @@ public class StaffDailyTimtablePresenter
 			@Override
 			public void onChanged(ChangedEvent event) {
 
-				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null
-						&& lessonDay.getValueAsDate() != null) {
+				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null) {
 					button.setDisabled(false);
 				} else {
 					button.setDisabled(true);
@@ -570,10 +588,17 @@ public class StaffDailyTimtablePresenter
 		map.put(RequestDelimeters.SCHOOL_ID , schoolId);
 		map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
 		
+		FilterDTO filterDTO = new FilterDTO();
+		filterDTO.setSchoolStaffDTO(new SchoolStaffDTO(record.getAttribute(StaffDailyTimetableListGrid.SCHOOL_STAFF_ID)));
+		filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
+		filterDTO.setDate(dateFormat.format(new Date()));
+		map.put(RequestDelimeters.FILTER_DATA , filterDTO);
+
+		
 		//SC.say("Prams "+map.get(RequestDelimeters.SCHOOL_STAFF_ID)+" \n"+map.get(RequestDelimeters.STAFF_DAILY_TIMETALE_ID)+" "+map.get(RequestDelimeters.LESSON_DATE));
 		
 		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
-			map.put(NetworkDataUtil.ACTION , RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SCHOOL_STAFF_DATE);
+			map.put(NetworkDataUtil.ACTION , RequestConstant.FILTER_STAFF_DAILY_TIMETABLE_LESSONS);
 			else
 		map.put(NetworkDataUtil.ACTION,
 				RequestConstant.GET_STAFF_DAILY_TIMETABLE_LESSONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_DAILY_TIMETABLE_SCHOOL_STAFF_DATE);

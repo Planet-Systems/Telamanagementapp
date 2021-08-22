@@ -19,6 +19,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.planetsystems.tela.dto.FilterDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
@@ -41,6 +43,7 @@ import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -74,6 +77,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 	DateTimeFormat timeFormat = DateTimeFormat.getFormat(DatePattern.HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dayFormat = DateTimeFormat.getFormat(DatePattern.DAY.getPattern());
+	DateTimeFormat dayDateFormat = DateTimeFormat.getFormat(DatePattern.DAY_DATE.getPattern());
 
 	@NameToken(NameTokens.StaffDailyAttendanceSuperVision)
 	@ProxyCodeSplit
@@ -165,14 +169,23 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					public void onClick(ClickEvent event) {
 						final String schoolId = getView().getStaffDailyAttendanceSupervisionPane().getSchoolCombo()
 								.getValueAsString();
+						final Date date = getView().getStaffDailyAttendanceSupervisionPane().getDateField().getValueAsDate();
 
 						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 						map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 						map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
+						
+						FilterDTO filterDTO = new FilterDTO();
+						if(schoolId != null)
+						filterDTO.setSchoolDTO(new SchoolDTO(schoolId));
+						
+						filterDTO.setDate(dateFormat.format(date));
+						map.put(RequestDelimeters.FILTER_DATA, filterDTO);
+						
 
 						if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
 							map.put(NetworkDataUtil.ACTION,
-									RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_IN_SCHOOL_DATE);
+									RequestConstant.FILTER_STAFF_DAILY_SUPERVISIONS);
 						else
 							map.put(NetworkDataUtil.ACTION,
 									RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE);
@@ -436,7 +449,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 		final IButton button = getView().getStaffDailyAttendanceSupervisionPane().getLoadSuperVisionButton();
 		final ComboBox termBox = getView().getStaffDailyAttendanceSupervisionPane().getAcademicTermCombo();
 		final ComboBox schoolBox = getView().getStaffDailyAttendanceSupervisionPane().getSchoolCombo();
-		final TextItem dayItem = getView().getStaffDailyAttendanceSupervisionPane().getDayField();
+		final DateItem dateItem = getView().getStaffDailyAttendanceSupervisionPane().getDateField();
 
 		termBox.addChangedHandler(new ChangedHandler() {
 
@@ -444,7 +457,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 			public void onChanged(ChangedEvent event) {
 
 				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null
-						&& dayItem.getValueAsString() != null) {
+						&& dateItem.getValueAsDate() != null) {
 					button.setDisabled(false);
 				} else {
 					button.setDisabled(true);
@@ -458,7 +471,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 			public void onChanged(ChangedEvent event) {
 
 				if (termBox.getValueAsString() != null && schoolBox.getValueAsString() != null
-						&& dayItem.getValueAsString() != null) {
+						&& dateItem.getValueAsDate() != null) {
 					button.setDisabled(false);
 				} else {
 					button.setDisabled(true);
@@ -491,12 +504,15 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 
 					String school = getView().getStaffDailyAttendanceSupervisionPane().getSchoolCombo()
 							.getDisplayValue();
+					
+					Date date = getView().getStaffDailyAttendanceSupervisionPane().getDateField().getValueAsDate();
 
 					viewStaffDailyAttendanceSupervisionTaskPane.getAcademicYearField().setValue(academicYear);
 					viewStaffDailyAttendanceSupervisionTaskPane.getAcademicTermField().setValue(academicTerm);
 					viewStaffDailyAttendanceSupervisionTaskPane.getDistrictField().setValue(district);
 					viewStaffDailyAttendanceSupervisionTaskPane.getSchoolField().setValue(school);
 					viewStaffDailyAttendanceSupervisionTaskPane.getSchoolStaffField().setValue(schoolStaff);
+					viewStaffDailyAttendanceSupervisionTaskPane.getDayField().setValue(dayDateFormat.format(date));
 
 					Tab tab = new Tab();
 					tab.setTitle(StaffDailyAttendanceSupervisionView.VIEW_STAFF_DAILY_ATTENDANCE_SUPERVISION_TASK);
@@ -521,14 +537,29 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 			final ViewStaffDailyAttendanceTaskSupervisionPane supervisionPane, final ListGridRecord record) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestDelimeters.SCHOOL_STAFF_ID,
-				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.SCHOOL_STAFF_ID));
-		map.put(RequestDelimeters.STAFF_DAILY_ATTENDANCE_SUPERVISION_ID,
-				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.ID));
-		map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
-		map.put(NetworkDataUtil.ACTION,
-				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION);
+//		map.put(RequestDelimeters.SCHOOL_STAFF_ID,
+//				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.SCHOOL_STAFF_ID));
+//		map.put(RequestDelimeters.STAFF_DAILY_ATTENDANCE_SUPERVISION_ID,
+//				record.getAttribute(StaffDailyAttendanceSupervisionListGrid.ID));
+//		map.put(RequestDelimeters.SUPERVISION_DATE, dateFormat.format(new Date()));
+//		
+//		map.put(NetworkDataUtil.ACTION,
+//				RequestConstant.GET_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_STAFF_DATE_DAILY_ATTENDANCE_SUPERVISION);
+		
+		Date date = getView().getStaffDailyAttendanceSupervisionPane().getDateField().getValueAsDate();
 
+	
+		
+		
+		FilterDTO filterDTO = new FilterDTO();
+		filterDTO.setSchoolStaffDTO(new SchoolStaffDTO(record.getAttribute(StaffDailyAttendanceSupervisionListGrid.SCHOOL_STAFF_ID)));
+		filterDTO.setStaffDailyAttendanceSupervisionDTO(new StaffDailyAttendanceSupervisionDTO(record.getAttribute(StaffDailyAttendanceSupervisionListGrid.ID)));
+		filterDTO.setDate(dateFormat.format(date));
+		GWT.log("DATE "+filterDTO.getDate());
+		
+		map.put(NetworkDataUtil.ACTION , RequestConstant.FILTER_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS);
+		map.put(RequestDelimeters.FILTER_DATA , filterDTO);
+		
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

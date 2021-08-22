@@ -35,14 +35,18 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 
 
 		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
+		academicYearField.setHidden(true);
+		
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
 		
 		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
+		academicTermField.setHidden(true);
+		
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 
-		ListGridField schoolStaffField = new ListGridField(SCHOOL_STAFF, "School Staff");
+		ListGridField schoolStaffField = new ListGridField(SCHOOL_STAFF, "Teacher");
 		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "School Staff Id");
 		schoolStaffIdField.setHidden(true);
 
