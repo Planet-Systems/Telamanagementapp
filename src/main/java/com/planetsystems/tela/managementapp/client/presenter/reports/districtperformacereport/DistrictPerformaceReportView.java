@@ -22,6 +22,7 @@ class DistrictPerformaceReportView extends ViewImpl implements DistrictPerformac
 	DistrictPerformaceReportView() {
 		panel = new VLayout();
 		controlsPane = new ControlsPane();
+		
 		contentPane = new VLayout();
 		contentPane.setOverflow(Overflow.AUTO);
 

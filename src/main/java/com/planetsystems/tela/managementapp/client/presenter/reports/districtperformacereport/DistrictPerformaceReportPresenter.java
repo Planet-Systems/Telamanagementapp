@@ -25,6 +25,7 @@ import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUti
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
@@ -76,28 +77,80 @@ public class DistrictPerformaceReportPresenter
 	protected void onBind() {
 		super.onBind();
 		loadMenuButtons();
-		loadDistrictDashboard();
+		// loadDistrictDashboard();
 	}
 
 	private void loadMenuButtons() {
-		MenuButton filter = new MenuButton("View");
-		MenuButton refresh = new MenuButton("Refresh");
+		MenuButton refresh = new MenuButton("Dashboard");
+		MenuButton filter = new MenuButton("View More");
+
 		MenuButton export = new MenuButton("Export");
 
 		List<MenuButton> buttons = new ArrayList<>();
-		buttons.add(filter);
 		buttons.add(refresh);
+		buttons.add(filter);
 		buttons.add(export);
 
-		getView().getControlsPane().addMenuButtons("District Performance", buttons);
+		final ComboBox selectFilter = new ComboBox();
+		selectFilter.setTitle("District");
+		ComboUtil.loadDistrictCombo(selectFilter, dispatcher, placeManager, "Select");
+
+		getView().getControlsPane().addMenuButtons("District Performance", selectFilter, buttons);
 
 		showFilter(filter);
 
+		refresh.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				String id = selectFilter.getValueAsString();
+
+				loadDistrictDashboard(id);
+			}
+		});
+
+		selectFilter.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				String id = selectFilter.getValueAsString();
+
+				loadDistrictDashboard(id);
+
+			}
+		});
+
 	}
 
-	private void loadDistrictDashboard() {
-		DashboardSummaryDTO dto = new DashboardSummaryDTO();
-		DistrictDashboard.getInstance().generateDashboard(getView().getContentPane(), dto);
+	private void loadDistrictDashboard(String id) {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.GET_DISTRICT_SUMMARY_DASHBOARD, id);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT_SUMMARY_DASHBOARD);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				//if (result != null) {
+
+					//if (result.getDashboardSummaryDTO() != null) {
+						
+						DashboardSummaryDTO dto = result.getDashboardSummaryDTO();
+
+						DistrictDashboard.getInstance().generateDashboard(getView().getContentPane(), dto);
+						
+					/*}else {
+						
+					}
+*/
+				//}
+
+			}
+		});
+
 	}
 
 	private void showFilter(final MenuButton button) {
@@ -112,13 +165,14 @@ public class DistrictPerformaceReportPresenter
 				MenuItem item1 = new MenuItem("End of Week Teacher Time Attendance Report");
 				MenuItem item2 = new MenuItem("End of Month Teacher Time Attendance Report");
 				MenuItem item3 = new MenuItem("End of Term Teacher Time Attendance Report");
-				MenuItem item4 = new MenuItem("Number of Teachers Report"); 
+
+				MenuItem item4 = new MenuItem("Number of Teachers Report");
 				MenuItem item5 = new MenuItem("End of Week Learner Attendance Report");
 				MenuItem item6 = new MenuItem("End of Month Learner Attendance Report");
 				MenuItem item7 = new MenuItem("End of Term Learner Attendance Report");
 				MenuItem item8 = new MenuItem("Learner Enrollment Report");
 
-				menu.setItems(dashboard, item1, item2, item3,item4,item5,item6,item7,item8);
+				menu.setItems(dashboard, item1, item2, item3, item4, item5, item6, item7, item8);
 
 				menu.showNextTo(button, "bottom");
 
@@ -153,6 +207,7 @@ public class DistrictPerformaceReportPresenter
 					public void onClick(MenuItemClickEvent event) {
 
 						final ReportFilterWindow window = new ReportFilterWindow();
+						// window.getToDate().hide();
 						loadAcademicYearCombo(window, null);
 						loadAcademicTermCombo(window, null);
 						loadDistrictCombo(window, null);
@@ -238,6 +293,7 @@ public class DistrictPerformaceReportPresenter
 		map.put(RequestConstant.DistrictEndOfWeekTimeAttendance, dto);
 
 		map.put(NetworkDataUtil.ACTION, RequestConstant.DistrictEndOfWeekTimeAttendance);
+
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override

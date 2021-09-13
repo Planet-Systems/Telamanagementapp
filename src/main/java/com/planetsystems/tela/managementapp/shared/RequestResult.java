@@ -12,6 +12,7 @@ import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
 import com.planetsystems.tela.dto.RegionDto;
+import com.planetsystems.tela.dto.SMCSupervisionDTO;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
@@ -48,10 +49,14 @@ import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictReportFilterDTO;
+import com.planetsystems.tela.dto.reports.HeadTeacherSupervisionCriteria;
+import com.planetsystems.tela.dto.reports.HeadTeacherSupervisionReportDTO;
 import com.planetsystems.tela.dto.reports.NationalEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
+import com.planetsystems.tela.dto.reports.SMCSupervisionCriteria;
+import com.planetsystems.tela.dto.reports.SMCSupervisionReportDTO;
 
 public class RequestResult implements Result {
 
@@ -124,10 +129,54 @@ public class RequestResult implements Result {
 
 	private NationalReportFilterDTO nationalReportFilterDTO;
 
+	private List<HeadTeacherSupervisionCriteria> headTeacherSupervisionCriterias;
+
+	private HeadTeacherSupervisionReportDTO headTeacherSupervisionReportDTO;
+
+	private List<SMCSupervisionDTO> smcSupervisionDTOs;
+
+	private SMCSupervisionReportDTO smcSupervisionReportDTO;
+
+	private List<SMCSupervisionCriteria> smcSupervisionCriterias;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SMCSupervisionCriteria> smcSupervisionCriterias,
+			SMCSupervisionCriteria dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.smcSupervisionCriterias = smcSupervisionCriterias;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, SMCSupervisionReportDTO smcSupervisionReportDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.smcSupervisionReportDTO = smcSupervisionReportDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SMCSupervisionDTO> smcSupervisionDTOs,
+			SMCSupervisionDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.smcSupervisionDTOs = smcSupervisionDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			HeadTeacherSupervisionReportDTO headTeacherSupervisionReportDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.headTeacherSupervisionReportDTO = headTeacherSupervisionReportDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<HeadTeacherSupervisionCriteria> headTeacherSupervisionCriterias, HeadTeacherSupervisionCriteria dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.headTeacherSupervisionCriterias = headTeacherSupervisionCriterias;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<NationalEndOfWeekTimeAttendanceDTO> nationalEndOfWeekTimeAttendanceDTOs,
@@ -200,6 +249,12 @@ public class RequestResult implements Result {
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, DashboardSummaryDTO dashboardSummaryDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.dashboardSummaryDTO = dashboardSummaryDTO;
 	}
 
 	public RequestResult(DashboardSummaryDTO dashboardSummaryDTO) {
@@ -403,12 +458,9 @@ public class RequestResult implements Result {
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.systemUserProfileSchoolDTOs = systemUserProfileSchoolDTOs;
 	}
-	
-	
-	
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
-			List<SchoolTimeOnTaskSummaryDTO> schoolTimeOnTaskSummaryDTOs , SchoolTimeOnTaskSummaryDTO dto) {
+			List<SchoolTimeOnTaskSummaryDTO> schoolTimeOnTaskSummaryDTOs, SchoolTimeOnTaskSummaryDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.schoolTimeOnTaskSummaryDTOs = schoolTimeOnTaskSummaryDTOs;
@@ -433,32 +485,32 @@ public class RequestResult implements Result {
 		this.filterDto = filterDto;
 	}
 
-	public RequestResult(SystemFeedbackDTO feedback, List<TeacherClockInSummaryDTO> teacherClockInSummaryDTOs , TeacherClockInSummaryDTO dto) {
-	    this.systemFeedbackDTO = feedback;
-	    this.teacherClockInSummaryDTOs = teacherClockInSummaryDTOs;
-	}
-
-	public RequestResult(SystemFeedbackDTO feedback, List<SchoolEndOfWeekTimeAttendanceDTO> list, SchoolEndOfWeekTimeAttendanceDTO dto) {
+	public RequestResult(SystemFeedbackDTO feedback, List<TeacherClockInSummaryDTO> teacherClockInSummaryDTOs,
+			TeacherClockInSummaryDTO dto) {
 		this.systemFeedbackDTO = feedback;
-		this.schoolEndOfWeekTimeAttendanceDTOs =  list;
+		this.teacherClockInSummaryDTOs = teacherClockInSummaryDTOs;
 	}
 
-	public RequestResult(SystemFeedbackDTO feedback, List<SchoolEndOfMonthTimeAttendanceDTO> list, SchoolEndOfMonthTimeAttendanceDTO dto) {
-	   this.systemFeedbackDTO = feedback;
-	   this.schoolEndOfMonthTimeAttendanceDTOs = list;
+	public RequestResult(SystemFeedbackDTO feedback, List<SchoolEndOfWeekTimeAttendanceDTO> list,
+			SchoolEndOfWeekTimeAttendanceDTO dto) {
+		this.systemFeedbackDTO = feedback;
+		this.schoolEndOfWeekTimeAttendanceDTOs = list;
+	}
+
+	public RequestResult(SystemFeedbackDTO feedback, List<SchoolEndOfMonthTimeAttendanceDTO> list,
+			SchoolEndOfMonthTimeAttendanceDTO dto) {
+		this.systemFeedbackDTO = feedback;
+		this.schoolEndOfMonthTimeAttendanceDTOs = list;
 	}
 
 	public RequestResult(SystemFeedbackDTO feedback, SystemUserProfileDTO systemUserProfileDTO) {
 		this.systemFeedbackDTO = feedback;
 		this.systemUserProfileDTO = systemUserProfileDTO;
 	}
-	
-	
-
-
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
-			List<SchoolEndOfTermTimeAttendanceDTO> schoolEndOfTermTimeAttendanceDTOs , SchoolEndOfTermTimeAttendanceDTO dto) {
+			List<SchoolEndOfTermTimeAttendanceDTO> schoolEndOfTermTimeAttendanceDTOs,
+			SchoolEndOfTermTimeAttendanceDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.schoolEndOfTermTimeAttendanceDTOs = schoolEndOfTermTimeAttendanceDTOs;
@@ -645,8 +697,6 @@ public class RequestResult implements Result {
 		return schoolEndOfMonthTimeAttendanceDTOs;
 	}
 
-
-
 	public List<SchoolTimeOnTaskSummaryDTO> getSchoolTimeOnTaskSummaryDTOs() {
 		return schoolTimeOnTaskSummaryDTOs;
 	}
@@ -687,6 +737,24 @@ public class RequestResult implements Result {
 		return schoolEndOfTermTimeAttendanceDTOs;
 	}
 
-	
-	
+	public List<HeadTeacherSupervisionCriteria> getHeadTeacherSupervisionCriterias() {
+		return headTeacherSupervisionCriterias;
+	}
+
+	public HeadTeacherSupervisionReportDTO getHeadTeacherSupervisionReportDTO() {
+		return headTeacherSupervisionReportDTO;
+	}
+
+	public List<SMCSupervisionDTO> getSmcSupervisionDTOs() {
+		return smcSupervisionDTOs;
+	}
+
+	public SMCSupervisionReportDTO getSmcSupervisionReportDTO() {
+		return smcSupervisionReportDTO;
+	}
+
+	public List<SMCSupervisionCriteria> getSmcSupervisionCriterias() {
+		return smcSupervisionCriterias;
+	}
+
 }

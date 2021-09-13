@@ -42,7 +42,7 @@ public class OverallAttendanceDashboardGenerator {
 		return instance;
 	}
 
-	public void generateDashboard(DashboardPane dashboardPane, AttendanceDashboardSummaryDTO dto) {
+	public void generateDashboard(VLayout dashboardPane, AttendanceDashboardSummaryDTO dto) {
 
 		double totalTeachers = dto.getTeacher();
 		double totalLearners = dto.getLearner();

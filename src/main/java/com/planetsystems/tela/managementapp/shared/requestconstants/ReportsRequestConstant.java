@@ -8,6 +8,14 @@ public interface ReportsRequestConstant {
 	String DATA = "DATA";
 	String SchoolEndOfTermTimeAttendanceReport = "SchoolEndOfTermTimeAttendanceReport";
 	String SchoolTimeOnTaskSummary = "SchoolTimeOnTaskSummary";
+
+	String HeadTeacherEndOfWeekTimeAttendanceReport = "HeadTeacherEndOfWeekTimeAttendanceReport";
+	String HeadTeacherEndOfMonthTimeAttendanceREPORT = "HeadTeacherEndOfMonthTimeAttendanceREPORT";
+	String HeadTeacherEndOfTermTimeAttendanceReport = "HeadTeacherEndOfTermTimeAttendanceReport";
 	
 	
+	String HeadTeacherSupervisionReport = "HeadTeacherSupervisionReport";
+	
+	String SMCSupervisionReport = "SMCSupervisionReport";
+
 }

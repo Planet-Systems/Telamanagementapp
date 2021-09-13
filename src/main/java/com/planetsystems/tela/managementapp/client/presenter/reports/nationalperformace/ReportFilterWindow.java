@@ -25,10 +25,10 @@ public class ReportFilterWindow extends Window {
 		super();
 
 		year = new ComboBox();
-		year.setTitle("Year");
+		year.setTitle("Academic Year");
 
 		period = new ComboBox();
-		period.setTitle("Period");
+		period.setTitle("Academic Term");
  
 		fromDate = new DateItem();
 		fromDate.setTitle("From");

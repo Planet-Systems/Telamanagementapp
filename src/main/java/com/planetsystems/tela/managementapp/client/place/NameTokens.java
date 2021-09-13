@@ -2,6 +2,12 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String smcperformance = "SMC Performance";
+
+	public static final String smcsupervision = "SMC Supervision";
+
+	public static final String headteacherperformance = "HeadTeacher Performance";
+
 	public static final String devicemanager = "Device Manager";
 
 	public static final String SmsSystemUser = "SmsSystemUser";
@@ -45,7 +51,7 @@ public class NameTokens {
 	public static final String timeTable = "TimeTables";
 
 	public static final String SystemUser = "System Users";
-	
+
 	public static final String devicedashboard = "Device Dashboard";
 
 	public static String getLearnerenrollment() {
@@ -146,6 +152,18 @@ public class NameTokens {
 
 	public static String getDevicemanager() {
 		return devicemanager;
+	}
+
+	public static String getHeadteacherperformance() {
+		return headteacherperformance;
+	}
+
+	public static String getSmcsupervision() {
+		return smcsupervision;
+	}
+
+	public static String getSmcperformance() {
+		return smcperformance;
 	}
 
 }

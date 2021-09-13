@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -18,15 +20,20 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
+import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardPane;
+import com.planetsystems.tela.managementapp.client.presenter.dashboard.OverallAttendanceDashboardGenerator;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
+import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.UtilityManager;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -37,6 +44,7 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.planetsystems.tela.dto.reports.DistrictReportFilterDTO;
 import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 
 public class NationalPerformacePresenter
@@ -74,21 +82,71 @@ public class NationalPerformacePresenter
 	protected void onBind() {
 		super.onBind();
 		loadMenuButtons();
+		loadAttendanceDashboard();
 	}
 
 	private void loadMenuButtons() {
-		MenuButton filter = new MenuButton("View");
-		MenuButton refresh = new MenuButton("Refresh");
+		MenuButton filter = new MenuButton("More Views");
+		MenuButton refresh = new MenuButton("Dashboard");
 		MenuButton export = new MenuButton("Export");
 
 		List<MenuButton> buttons = new ArrayList<>();
-		buttons.add(filter);
 		buttons.add(refresh);
+		buttons.add(filter); 
 		buttons.add(export);
 
 		getView().getControlsPane().addMenuButtons("National Performance", buttons);
 
 		showFilter(filter);
+		refresh.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				loadAttendanceDashboard();
+				
+			}
+		});
+
+	}
+	
+	
+	
+	private void loadAttendanceDashboard() {
+ 
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_DEFAULT_ATTENDANCE_DASHBOARD, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							OverallAttendanceDashboardGenerator.getInstance().generateDashboard(
+									getView().getContentPane(), result.getAttendanceDashboardSummaryDTO());
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
 
 	}
 
@@ -145,6 +203,10 @@ public class NationalPerformacePresenter
 					public void onClick(MenuItemClickEvent event) {
 
 						final ReportFilterWindow window = new ReportFilterWindow();
+						//window.getFromDate().en
+						//window.getToDate().hide();
+						window.setHeight("40%"); 
+						
 						loadAcademicYearCombo(window, null);
 						loadAcademicTermCombo(window, null);
 
@@ -169,6 +231,10 @@ public class NationalPerformacePresenter
 					public void onClick(MenuItemClickEvent event) {
 
 						final ReportFilterWindow window = new ReportFilterWindow();
+						window.getFromDate().hide();
+						window.getToDate().hide();
+						window.setHeight("40%"); 
+						
 						loadAcademicYearCombo(window, null);
 						loadAcademicTermCombo(window, null);
 

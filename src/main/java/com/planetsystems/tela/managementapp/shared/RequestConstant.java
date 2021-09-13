@@ -210,6 +210,8 @@ public class RequestConstant {
 
 	public static final String GET_DEFAULT_ENROLLMENT_DASHBOARD = "GET_DEFAULT_ENROLLMENT_DASHBOARD";
 	public static final String GET_DEFAULT_ATTENDANCE_DASHBOARD = "GET_DEFAULT_ATTENDANCE_DASHBOARD";
+	
+	public static final String GET_DISTRICT_SUMMARY_DASHBOARD = "GET_DISTRICT_SUMMARY_DASHBOARD";
 
 	/// SYSTEM_USER_PROFILE_SCHOOLS_PROFILE
 	// public static final String SAVE_SYSTEM_USER_PROFILE_SCHOOLS =
@@ -245,9 +247,20 @@ public class RequestConstant {
 	
 	
 	public static final String TeacherTimeAttendanceReportExport = "TeacherTimeAttendanceReportExport"; 
+	
 	public static final String SchoolEndOfWeekTimeAttendanceReportExport  = "SchoolEndOfWeekTimeAttendanceReportExport";
 	public static final String SchoolEndOfMonthTimeAttendanceReportExport  = "SchoolEndOfMonthTimeAttendanceReportExport";
 	public static final String SchoolEndOfTermTimeAttendanceReportExport  = "SchoolEndOfTermTimeAttendanceReportExport";
+	
+	
+	public static final String HeadTeacherTimeAttendanceReportExport = "HeadTeacherTimeAttendanceReportExport";
+	public static final String HeadTeacherEndOfWeekTimeAttendanceReportExport  = "HeadTeacherEndOfWeekTimeAttendanceReportExport";
+	public static final String HeadTeacherEndOfMonthTimeAttendanceReportExport  = "HeadTeacherEndOfMonthTimeAttendanceReportExport";
+	public static final String HeadTeacherEndOfTermTimeAttendanceReportExport  = "HeadTeacherEndOfTermTimeAttendanceReportExport";
+	
+	public static final String HeadTeacherSupervidsionReportExport  = "HeadTeacherSupervidsionReportExport";
+	
+	public static final String SMCSupervidsionReportExport  = "SMCSupervidsionReportExport";
 
 	public static final String TimeOnTaskReportExport  = "TimeOnTaskReportExport";
 
@@ -257,6 +270,10 @@ public class RequestConstant {
 	public static final String FILTER_STAFF_DAILY_TIMETABLE_LESSONS = "FILTER_STAFF_DAILY_TIMETABLE_LESSONS";
 	public static final String FILTER_STAFF_DAILY_SUPERVISIONS = "FILTER_STAFF_DAILY_SUPERVISIONS";
 	public static final String FILTER_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS = "FILTER_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS";
+	
+	
+	public static final String FILTER_SMC_SUPERVISION_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL = "FILTER_SMC_SUPERVISION_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL";
+
 	
 
 }

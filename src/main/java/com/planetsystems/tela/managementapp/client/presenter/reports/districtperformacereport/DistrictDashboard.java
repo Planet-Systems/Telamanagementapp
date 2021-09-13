@@ -10,6 +10,8 @@ import org.moxieapps.gwt.highcharts.client.labels.DataLabelsData;
 import org.moxieapps.gwt.highcharts.client.labels.DataLabelsFormatter;
 import org.moxieapps.gwt.highcharts.client.labels.PieDataLabels;
 import org.moxieapps.gwt.highcharts.client.plotOptions.PiePlotOptions;
+
+import com.google.gwt.core.shared.GWT;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboarTestWindow;
 import com.planetsystems.tela.managementapp.shared.UtilityManager;
@@ -33,13 +35,13 @@ public class DistrictDashboard {
 
 	public void generateDashboard(VLayout dashboardPane, final DashboardSummaryDTO dto) {
 
-		long totalSchools = 100;
-		long totalTeachers = 150;
-		long totalLearners = 200;
+		//long totalSchools = 100;
+		//long totalTeachers = 150;
+		//long totalLearners = 200;
 
-		// long totalSchools = dto.getShools();
-		// long totalTeachers = dto.getTeachers();
-		// long totalLearners = dto.getLearners();
+		 long totalSchools = dto.getShools();
+		 long totalTeachers = dto.getTeachers();
+		 long totalLearners = dto.getLearners();
 
 		VLayout col1 = new VLayout();
 		col1.addMember(getCard("No. of Public Primary Schools", UtilityManager.getInstance().formatCash(totalSchools),
@@ -74,9 +76,11 @@ public class DistrictDashboard {
 
 		LearnerEnrollmentSummaryListgrid listgrid = new LearnerEnrollmentSummaryListgrid();
 		listgrid.setHeight(300);
+		listgrid.addRecordsToGrid(dto.getLearnsEnrolledByGender());
 
 		TeacherEnrollmentSummaryListgrid teacherEnrollmentSummaryListgrid = new TeacherEnrollmentSummaryListgrid();
 		teacherEnrollmentSummaryListgrid.setHeight(300);
+		teacherEnrollmentSummaryListgrid.addRecordsToGrid(dto.getStaffEnrolledByGender());
 
 		VLayout col3 = new VLayout();
 		col3.addMember(listgrid);
@@ -93,10 +97,11 @@ public class DistrictDashboard {
 		layout2.addMember(row2);
 		layout2.setMembersMargin(5);
 
+		 GWT.log("loading district dashboard"); 
 		 
 		/*DashboarTestWindow testWindow = new DashboarTestWindow();
-		testWindow.getLayout().setMembers(layout2); testWindow.show();  
-		 */ 
+		testWindow.getLayout().setMembers(layout2); testWindow.show(); */ 
+		  
 
 		dashboardPane.setMembers(layout2);
 

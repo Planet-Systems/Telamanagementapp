@@ -26,6 +26,8 @@ public class SchoolStaffWindow extends Window {
 	    private ComboBox registeredCombo;
 	    private ComboBox districtCombo;
 	    private ComboBox schoolCombo;
+	    
+	    private ComboBox roleCombo;
 	   
 	    
 	    private IButton saveButton;
@@ -34,17 +36,17 @@ public class SchoolStaffWindow extends Window {
 	public SchoolStaffWindow() {
 		super();
 		firstNameField = new TextItem();
-		firstNameField.setTitle("FirstName");
-		firstNameField.setHint("FirstName");
+		firstNameField.setTitle("First Name");
+		firstNameField.setHint("First Name");
 		firstNameField.setShowHintInField(true);
 		
 		lastNameField = new TextItem();
-		lastNameField.setTitle("LastName");
-		lastNameField.setHint("LastName");
+		lastNameField.setTitle("Last Name");
+		lastNameField.setHint("Last Name");
 		lastNameField.setShowHintInField(true);
 		
 		phoneNumberField = new TextItem();
-		phoneNumberField.setTitle("PhoneNumber");
+		phoneNumberField.setTitle("Phone Number");
 		phoneNumberField.setMask("#### ###-###");  
         phoneNumberField.setHint("#### ###-###");  
         phoneNumberField.setShowHintInField(true);  
@@ -52,25 +54,25 @@ public class SchoolStaffWindow extends Window {
 		
 		emailField = new TextItem();
 		emailField.setTitle("Email");
-		emailField.setHint("email");
+		emailField.setHint("Email");
 		emailField.setShowHintInField(true);
 
 		dobItem = new DateItem();
 		dobItem.setTitle("DOB");
 		
 		nationalIdField = new TextItem();
-		nationalIdField.setTitle("NationalId");
+		nationalIdField.setTitle("National Id");
 		nationalIdField.setHint("NIN");
 		nationalIdField.setShowHintInField(true);
 
 		nameAbrevField = new TextItem();
-		nameAbrevField.setTitle("NameAbbrev");
+		nameAbrevField.setTitle("Name Abbreviation");
 		nameAbrevField.setHint("Name Abbreviation");
 		nameAbrevField.setShowHintInField(true);
 		
 		codeField = new TextItem();
-		codeField.setTitle("CodeField");
-		codeField.setHint("codeField");
+		codeField.setTitle("Teacher PIN");
+		codeField.setHint("Teacher PIN");
 		codeField.setShowHintInField(true);
 		
 		genderCombo = new ComboBox();
@@ -79,8 +81,8 @@ public class SchoolStaffWindow extends Window {
 		genderCombo.setShowHintInField(true);
 		
 		registeredCombo = new ComboBox();
-		registeredCombo.setTitle("Registered");
-		registeredCombo.setHint("Registered");
+		registeredCombo.setTitle("Payroll Status");
+		registeredCombo.setHint("Payroll Status");
 		registeredCombo.setShowHintInField(true);
 		
 		
@@ -95,8 +97,13 @@ public class SchoolStaffWindow extends Window {
 		districtCombo.setHint("District");
 		districtCombo.setShowHintInField(true);
 		
+		roleCombo=new ComboBox();
+		roleCombo.setTitle("Role");
+		roleCombo.setHint("Role");
+		roleCombo.setShowHintInField(true);
+		
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(firstNameField , lastNameField , nameAbrevField , emailField , nationalIdField , phoneNumberField , codeField , districtCombo , genderCombo , schoolCombo , dobItem , registeredCombo);
+		dynamicForm.setFields(firstNameField , lastNameField , nameAbrevField , emailField , nationalIdField , phoneNumberField , codeField , districtCombo , genderCombo , schoolCombo , dobItem , registeredCombo,roleCombo);
 		dynamicForm.setNumCols(4);
 		dynamicForm.setWrapItemTitles(false);
 		dynamicForm.setMargin(10);
@@ -204,6 +211,10 @@ public class SchoolStaffWindow extends Window {
 
 	public IButton getCancelButton() {
 		return cancelButton;
+	}
+
+	public ComboBox getRoleCombo() {
+		return roleCombo;
 	}
 
 	

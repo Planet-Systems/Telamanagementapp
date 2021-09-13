@@ -122,8 +122,8 @@ public class StaffEnrollmentPresenter
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
-					//buttons.add(edit);
-					//buttons.add(delete);
+					buttons.add(edit);
+					buttons.add(delete);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons("Teacher Statistics",buttons);
@@ -143,8 +143,8 @@ public class StaffEnrollmentPresenter
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
-					//buttons.add(edit);
-					//buttons.add(delete);
+					buttons.add(edit);
+					buttons.add(delete);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons("Teachers' Details List",buttons);
@@ -214,14 +214,22 @@ public class StaffEnrollmentPresenter
 		
 		@Override
 		public void onClick(ClickEvent event) {
+			
 			final SchoolStaffWindow window = new SchoolStaffWindow();
+			
 			window.getCodeField().disable();
 			window.getSaveButton().setTitle("Edit");
 			ListGridRecord record = getView().getSchoolStaffPane().getSchoolStaffListGrid().getSelectedRecord();
+			
 			loadFieldsToEdit(window , record);
-
-			window.show();
+			
+			loadRoleCombo(window); 
+			
 			updateSchoolStaff(window , record);
+			
+			window.show();
+			
+			 
 			
 		}
 	});
@@ -239,6 +247,8 @@ public class StaffEnrollmentPresenter
 		window.getPhoneNumberField().setValue(record.getAttribute(SchoolStaffListGrid.PHONE_NUMBER));
 		window.getNameAbrevField().setValue(record.getAttribute(SchoolStaffListGrid.NAME_ABBREV));
 		
+		window.getRoleCombo().setValue(record.getAttribute(SchoolStaffListGrid.ROLE));
+		
 		loadDistrictCombo(window, record.getAttribute(SchoolStaffListGrid.DISTRICT_ID));
    		loadSchoolCombo(window, SchoolStaffListGrid.SCHOOL_ID);
 		loadGenderCombo(window, record.getAttribute(SchoolStaffListGrid.GENDER));
@@ -253,21 +263,24 @@ public class StaffEnrollmentPresenter
 		@Override
 		public void onClick(ClickEvent event) {
 		  	
-			DistrictDTO districtDTO = new DistrictDTO(record.getAttribute(SchoolStaffListGrid.DISTRICT_ID));
-			SchoolDTO schoolDTO = new SchoolDTO(record.getAttribute(SchoolStaffListGrid.SCHOOL_ID));
-			schoolDTO.setDistrictDTO(districtDTO);
-			
-			
+			//DistrictDTO districtDTO = new DistrictDTO(record.getAttribute(SchoolStaffListGrid.DISTRICT_ID));
+			 
 		  	SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO();
-		  	schoolStaffDTO.setSchoolDTO(schoolDTO);
+		  	schoolStaffDTO.setId(record.getAttribute(SchoolStaffListGrid.ID)); 
+		  	 
 		  	schoolStaffDTO.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 		  	if(window.getRegisteredCombo().getValueAsString().equalsIgnoreCase("Yes")) {
 			  	schoolStaffDTO.setRegistered(true);	
 		  	}else {
 			  	schoolStaffDTO.setRegistered(false);
 		  	}
+		  	  
+		  	schoolStaffDTO.setStaffType(window.getRoleCombo().getValueAsString());
 		  	
-		  	schoolStaffDTO.setSchoolDTO(new SchoolDTO(window.getSchoolCombo().getID()));
+		  	SchoolDTO schoolDTO = new SchoolDTO();
+			schoolDTO.setId(window.getSchoolCombo().getValueAsString()); 
+			
+			schoolStaffDTO.setSchoolDTO(schoolDTO);
 		    
 		  	GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
 		  	generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
@@ -291,7 +304,7 @@ public class StaffEnrollmentPresenter
 				public void onNetworkResult(RequestResult result) {
 					window.close();
 					SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-					getAllSchoolStaff();
+					//getAllSchoolStaff();
 				}
 			});
 		  	
@@ -621,6 +634,7 @@ public class StaffEnrollmentPresenter
 				loadRegisteredCombo(window, null);
 				loadDistrictCombo(window, null);
 				loadSchoolCombo(window, null);
+				loadRoleCombo(window);
 				saveSchoolStaff(window);
 				window.show();
 
@@ -628,6 +642,17 @@ public class StaffEnrollmentPresenter
 
 		});
 
+	}
+	
+	private void loadRoleCombo(final SchoolStaffWindow window) {
+		
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		valueMap.put("Teacher", "Teacher");
+		valueMap.put("Head teacher", "Head teacher");
+		valueMap.put("Deputy head teacher", "Deputy head teacher");
+		valueMap.put("Smc", "Smc");
+		window.getRoleCombo().setValueMap(valueMap);
+		 
 	}
 
 	private void saveSchoolStaff(final SchoolStaffWindow window) {
@@ -645,7 +670,7 @@ public class StaffEnrollmentPresenter
 
 					dto.setStaffCode(window.getCodeField().getValueAsString());
 					// dto.setStatus(status);
-					// dto.setStaffType(staffType);
+					dto.setStaffType(window.getRoleCombo().getValueAsString());
 
 					SchoolDTO schoolDTO = new SchoolDTO(window.getSchoolCombo().getValueAsString());
 					dto.setSchoolDTO(schoolDTO);
@@ -675,7 +700,7 @@ public class StaffEnrollmentPresenter
 						public void onNetworkResult(RequestResult result) {
 							clearSchoolStaffWindowFields(window);
 							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-							getAllSchoolStaff();
+							//getAllSchoolStaff();
 						}
 					});
 
@@ -696,35 +721,35 @@ public class StaffEnrollmentPresenter
 		if (window.getLastNameField().getValueAsString() == null)
 			flag = false;
 
-		if (window.getPhoneNumberField().getValueAsString() == null)
-			flag = false;
+		/*if (window.getPhoneNumberField().getValueAsString() == null)
+			flag = false;*/
 
-		if (window.getEmailField().getValueAsString() == null)
-			flag = false;
+	/*	if (window.getEmailField().getValueAsString() == null)
+			flag = false;*/
 
 		if (window.getDobItem().getValueAsDate() == null)
 			flag = false;
 
-		if (window.getNationalIdField().getValueAsString() == null)
-			flag = false;
+		/*if (window.getNationalIdField().getValueAsString() == null)
+			flag = false;*/
 
 		if (window.getGenderCombo().getValueAsString() == null)
 			flag = false;
 
-		if (window.getNameAbrevField().getValueAsString() == null)
-			flag = false;
+	/*	if (window.getNameAbrevField().getValueAsString() == null)
+			flag = false;*/
 
-		if (window.getCodeField().getValueAsString() == null)
-			flag = false;
+	/*	if (window.getCodeField().getValueAsString() == null)
+			flag = false;*/
 
 		if (window.getRegisteredCombo().getValueAsString() == null)
 			flag = false;
 
 		if (window.getSchoolCombo().getValueAsString() == null)
 			flag = false;
-
+/*
 		if (window.getDistrictCombo().getValueAsString() == null)
-			flag = false;
+			flag = false;*/
 
 		return flag;
 	}

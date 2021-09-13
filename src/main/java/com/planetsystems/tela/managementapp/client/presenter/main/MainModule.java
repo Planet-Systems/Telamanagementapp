@@ -8,9 +8,12 @@ import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.L
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.LearnerEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionModule;
 import com.planetsystems.tela.managementapp.client.presenter.reports.districtperformacereport.DistrictPerformaceReportModule;
+import com.planetsystems.tela.managementapp.client.presenter.reports.headteacherperformance.HeadTeacherPerformanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.reports.nationalperformace.NationalPerformaceModule;
 import com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance.SchoolPerformaceReportModule;
+import com.planetsystems.tela.managementapp.client.presenter.reports.smcperformance.SMCPerformanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.SchoolCategoryModule;
+import com.planetsystems.tela.managementapp.client.presenter.smcsupervision.SMCSupervisionModule;
 import com.planetsystems.tela.managementapp.client.presenter.smsmessage.SmsMessageModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffattendance.StaffAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.staffdailyattendancesupervision.StaffDailyAttendanceSupervisionModule;
@@ -45,8 +48,11 @@ public class MainModule extends AbstractPresenterModule {
 		install(new NationalPerformaceModule());
 		install(new SmsMessageModule());
 		install(new DeviceManagerModule());
+		install(new HeadTeacherPerformanceModule());
 		
-		
+		install(new SMCSupervisionModule());
+		install(new SMCPerformanceModule());
+		 
 
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
 

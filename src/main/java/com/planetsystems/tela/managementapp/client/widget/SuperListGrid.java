@@ -19,6 +19,7 @@ public class SuperListGrid extends ListGrid{
 		this.setFixedRecordHeights(true);
 		this.setMargin(3);
 		this.setShowRowNumbers(true);
+		this.setSelectCellTextOnClick(true);
 		
 	}
 	

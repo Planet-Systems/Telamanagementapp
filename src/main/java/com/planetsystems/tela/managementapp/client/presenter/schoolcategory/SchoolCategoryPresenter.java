@@ -585,9 +585,15 @@ public class SchoolCategoryPresenter
 				if (getView().getSchoolPane().getListGrid().anySelected()) {
 					AddSchoolWindow window = new AddSchoolWindow();
 					window.getSaveButton().setTitle("Update");
-					loadFieldsToEdit(window);
+					
+					loadRegionCombo(window, null);
+					loadSchoolCategoryCombo(window, null);
+					loadDistrictComboByRegion(window, null);
+					
+					loadFieldsToEdit(window);  
 					updateSchool(window);
 					window.show();
+					 
 
 				} else {
 					SC.say("Please select record to update");
@@ -602,7 +608,7 @@ public class SchoolCategoryPresenter
 
 		window.getSchoolCategoryCombo().setValue(record.getAttribute(SchoolListGrid.CATEGORY));
 		window.getSchoolCode().setValue(record.getAttribute(SchoolListGrid.CODE));
-		window.getDistrictCombo().setValue(record.getAttribute(SchoolListGrid.DISTRICT));
+		window.getDistrictCombo().setValue(record.getAttribute(SchoolListGrid.DISTRICT_ID));
 		window.getSchoolName().setValue(record.getAttribute(SchoolListGrid.NAME));
 		window.getLatitude().setValue(record.getAttribute(SchoolListGrid.LATITUDE));
 		window.getLongtitude().setValue(record.getAttribute(SchoolListGrid.LONGITUDE));

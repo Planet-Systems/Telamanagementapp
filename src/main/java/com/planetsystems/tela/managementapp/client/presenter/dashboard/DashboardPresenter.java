@@ -412,10 +412,10 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 				final Menu menu = new Menu();
 
-				MenuItem item1 = new MenuItem("View Enrollment Dashboard");
-				MenuItem item2 = new MenuItem("View Attendance Dashboard");
-				MenuItem item3 = new MenuItem("View Enrollment Over Time Dashboard");
-				MenuItem item4 = new MenuItem("View Attendance Over Time Dashboard");
+				MenuItem item1 = new MenuItem("View Enrollment");
+				MenuItem item2 = new MenuItem("View Attendance");
+				MenuItem item3 = new MenuItem("View Enrollment Over Time");
+				MenuItem item4 = new MenuItem("View Attendance Over Time");
 				MenuItem item5 = new MenuItem("Advanced Filter");
 
 				menu.setItems(item1, item2, item3, item4, item5);

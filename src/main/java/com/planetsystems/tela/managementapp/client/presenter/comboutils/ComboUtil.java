@@ -645,6 +645,44 @@ public class ComboUtil {
 			}
 		});
 	}
+	
+	public static void loadHeadteacherComboBySchool(final ComboBox schoolCombo, final ComboBox schoolStaffCombo,
+			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
+
+		String schoolId = schoolCombo.getValueAsString();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+					if(schoolStaffDTO.getStaffType().equalsIgnoreCase("Head teacher")) {
+						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+						valueMap.put(schoolStaffDTO.getId(), fullName);
+					}
+					
+				}
+				
+				if(schoolStaffCombo.getValueAsString() != null) {
+					schoolStaffCombo.clearValue();
+					schoolStaffCombo.setValueMap(valueMap);
+				}else {
+					schoolStaffCombo.setValueMap(valueMap);
+				}
+
+
+				if (defaultValue != null) {
+					schoolStaffCombo.setValue(defaultValue);
+				}
+			}
+		});
+	}
 		
 		
 		public static void loadSchoolStaffMultiComboBySchool(final ComboBox schoolCombo, final MultiComboBoxItem schoolStaffCombo,

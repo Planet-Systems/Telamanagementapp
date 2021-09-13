@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.reports.schoolperformance;
+package com.planetsystems.tela.managementapp.client.presenter.reports.headteacherperformance;
 
 import javax.inject.Inject;
 
@@ -9,8 +9,7 @@ import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-class SchoolPerformaceReportView extends ViewImpl implements SchoolPerformaceReportPresenter.MyView {
-
+class HeadTeacherPerformanceView extends ViewImpl implements HeadTeacherPerformancePresenter.MyView {
 	private static final String DEFAULT_MARGIN = "0px";
 	private VLayout panel;
 
@@ -19,11 +18,11 @@ class SchoolPerformaceReportView extends ViewImpl implements SchoolPerformaceRep
 	private VLayout contentPane;
 
 	@Inject
-	SchoolPerformaceReportView() {
+	HeadTeacherPerformanceView() {
 		panel = new VLayout();
 		controlsPane = new ControlsPane();
-		
-		contentPane = new VLayout(); 
+
+		contentPane = new VLayout();
 		contentPane.setOverflow(Overflow.AUTO);
 
 		panel.addMember(controlsPane);
@@ -46,4 +45,6 @@ class SchoolPerformaceReportView extends ViewImpl implements SchoolPerformaceRep
 		return contentPane;
 	}
 
+	
+	
 }
