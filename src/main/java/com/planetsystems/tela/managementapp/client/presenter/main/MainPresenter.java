@@ -210,7 +210,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 										dto.setUserName(userName);
 
 										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-										map.put(RequestConstant.DATA, dto);
+										map.put(RequestConstant.REQUEST_DATA, dto);
 										map.put(NetworkDataUtil.ACTION, RequestConstant.CHANGE_PASSWORD);
 
 										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {

@@ -14,35 +14,36 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 
 	public static final String ACADEMIC_YEAR = "ACADEMIC_YEAR";
 	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	
+
 	public static final String ACADEMIC_TERM = "ACADEMIC_TERM";
 	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
-	
+
 	public static final String SCHOOL_STAFF = "SCHOOL_STAFF";
 	public static final String SCHOOL_STAFF_ID = "SCHOOL_STAFF_ID";
-	
+
 	public static final String LESSON_DATE = "LESSON_DATE";
 
+	public static final String COMMENT = "comment";
+
 	StaffDailyAttendanceDataSource dataSource;
-	
+
 	public StaffDailyTimetableListGrid() {
 		super();
-		
-		dataSource = StaffDailyAttendanceDataSource.getInstance();
-		
-		ListGridField idField = new ListGridField(ID , "ID");
-		idField.setHidden(true);
 
+		dataSource = StaffDailyAttendanceDataSource.getInstance();
+
+		ListGridField idField = new ListGridField(ID, "ID");
+		idField.setHidden(true);
 
 		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
 		academicYearField.setHidden(true);
-		
+
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year Id");
 		academicYearIdField.setHidden(true);
-		
+
 		ListGridField academicTermField = new ListGridField(ACADEMIC_TERM, "Academic Term");
 		academicTermField.setHidden(true);
-		
+
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term Id");
 		academicTermIdField.setHidden(true);
 
@@ -50,11 +51,13 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 		ListGridField schoolStaffIdField = new ListGridField(SCHOOL_STAFF_ID, "School Staff Id");
 		schoolStaffIdField.setHidden(true);
 
-		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "Lesson Day");
+		ListGridField lessonDateField = new ListGridField(LESSON_DATE, "Teaching Date");
 
-	
-        this.setDataSource(dataSource);
-		this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDateField);
+		ListGridField comment = new ListGridField(COMMENT, "Teacher Comment");
+
+		this.setDataSource(dataSource);
+		this.setFields(idField, academicYearIdField, academicTermIdField, schoolStaffIdField, academicYearField,
+				academicTermField, lessonDateField, schoolStaffField, comment);
 	}
 
 	public ListGridRecord addRowData(StaffDailyTimeTableDTO staffDailyTimeTableDTO) {
@@ -65,25 +68,28 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 		if (staffDailyTimeTableDTO.getAcademicTermDTO() != null) {
 			record.setAttribute(ACADEMIC_TERM_ID, staffDailyTimeTableDTO.getAcademicTermDTO().getId());
 			record.setAttribute(ACADEMIC_TERM, staffDailyTimeTableDTO.getAcademicTermDTO().getTerm());
-			
-			if(staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO() != null) {
-				record.setAttribute(ACADEMIC_YEAR_ID, staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO().getId());
-				record.setAttribute(ACADEMIC_YEAR, staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO().getName());	
+
+			if (staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO() != null) {
+				record.setAttribute(ACADEMIC_YEAR_ID,
+						staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO().getId());
+				record.setAttribute(ACADEMIC_YEAR,
+						staffDailyTimeTableDTO.getAcademicTermDTO().getAcademicYearDTO().getName());
 			}
 		}
-
 
 		if (staffDailyTimeTableDTO.getSchoolStaffDTO() != null) {
 			record.setAttribute(SCHOOL_STAFF_ID, staffDailyTimeTableDTO.getSchoolStaffDTO().getId());
-			if(staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO() != null) {
-                String fullName = staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getFirstName()+" "
-			+staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getLastName();
-                
+			if (staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO() != null) {
+				String fullName = staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getFirstName()
+						+ " " + staffDailyTimeTableDTO.getSchoolStaffDTO().getGeneralUserDetailDTO().getLastName();
+
 				record.setAttribute(SCHOOL_STAFF, fullName);
-			
+
 			}
-			
+
 		}
+
+		record.setAttribute(COMMENT, staffDailyTimeTableDTO.getComment());
 
 		return record;
 	}
@@ -102,9 +108,7 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 	public void addRecordToGrid(StaffDailyTimeTableDTO dto) {
 		this.addData(addRowData(dto));
 	}
-	
-	
-	
+
 	public static class StaffDailyAttendanceDataSource extends DataSource {
 
 		private static StaffDailyAttendanceDataSource instance = null;
@@ -118,15 +122,15 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 
 		public StaffDailyAttendanceDataSource(String id) {
 			setID(id);
-			
+
 			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
 			idField.setHidden(true);
 			idField.setPrimaryKey(true);
-			
+
 			DataSourceTextField academicYearField = new DataSourceTextField(ACADEMIC_YEAR, "Academic Year");
 			DataSourceTextField academicYearIdField = new DataSourceTextField(ACADEMIC_YEAR_ID, "Academic Year Id");
 			academicYearIdField.setHidden(true);
-			
+
 			DataSourceTextField academicTermField = new DataSourceTextField(ACADEMIC_TERM, "Academic Term");
 			DataSourceTextField academicTermIdField = new DataSourceTextField(ACADEMIC_TERM_ID, "Academic Term Id");
 			academicTermIdField.setHidden(true);
@@ -137,14 +141,12 @@ public class StaffDailyTimetableListGrid extends SuperListGrid {
 
 			DataSourceTextField lessonDateField = new DataSourceTextField(LESSON_DATE, "Lesson Date");
 
-		
-
-			this.setFields(idField , academicYearIdField , academicTermIdField ,schoolStaffIdField , academicYearField , academicTermField , schoolStaffField , lessonDateField);
+			this.setFields(idField, academicYearIdField, academicTermIdField, schoolStaffIdField, academicYearField,
+					academicTermField, schoolStaffField, lessonDateField);
 
 			setClientOnly(true);
 
 		}
 	}
-	
-	
+
 }

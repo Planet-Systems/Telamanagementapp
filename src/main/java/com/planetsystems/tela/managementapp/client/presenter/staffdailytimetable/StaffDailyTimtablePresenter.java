@@ -59,6 +59,8 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class StaffDailyTimtablePresenter
 		extends Presenter<StaffDailyTimtablePresenter.MyView, StaffDailyTimtablePresenter.MyProxy> {
+	
+	
 	interface MyView extends View {
 		public StaffDailyTimetablePane getStaffDailyTimetablePane();
 
@@ -198,17 +200,18 @@ public class StaffDailyTimtablePresenter
 				map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 				map.put(RequestDelimeters.DISTRICT_ID, districtId);
 				map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-				//getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate())
-				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(new Date()));
+				
+				map.put(RequestDelimeters.LESSON_DATE, dateFormat.format(getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate()));
 				
 				FilterDTO filterDto = new FilterDTO();
 				filterDto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
 				filterDto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
 				filterDto.setDistrictDTO(new DistrictDTO(districtId));
 				filterDto.setSchoolDTO(new SchoolDTO(schoolId));
-				filterDto.setDate(dateFormat.format(new Date()));
+				filterDto.setDate(dateFormat.format(getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate()));
 				
 				//getView().getStaffDailyTimetablePane().getLessonDayDateItem().getValueAsDate())
+				
 				map.put(RequestDelimeters.FILTER_DATA , filterDto);
 				if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN)) 
 					map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_STAFF_DAILY_TIMETABLES);

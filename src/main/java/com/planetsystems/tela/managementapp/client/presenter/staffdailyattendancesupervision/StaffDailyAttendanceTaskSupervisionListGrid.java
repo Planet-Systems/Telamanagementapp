@@ -3,8 +3,10 @@ package com.planetsystems.tela.managementapp.client.presenter.staffdailyattendan
 import java.util.List;
 
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
+import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffDailyAttendanceTaskSupervisionDTO;
+import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -23,6 +25,12 @@ public class StaffDailyAttendanceTaskSupervisionListGrid extends SuperListGrid {
 	public static final String TEACHING_STATUS = "teachingStatus";
 	public static final String TEACHING_TIME_STATUS = "teachingTimeStatus";
 
+	public static final String SchoolClass = "schoolClass";
+	public static final String Subject = "subject";
+	public static final String StartTime = "startTime";
+	public static final String EndTime = "endTime";
+	public static final String DailyTimeTableLessonStatus = "dailyTimeTableLessonStatus";
+
 	StaffDailyAttendanceTaskSupervisionDataSource dataSource;
 
 	public StaffDailyAttendanceTaskSupervisionListGrid() {
@@ -40,14 +48,20 @@ public class StaffDailyAttendanceTaskSupervisionListGrid extends SuperListGrid {
 		ListGridField supervisionDateField = new ListGridField(SUPERVISION_DATE, "Supervision Date");
 		ListGridField supervisionTimeField = new ListGridField(SUPERVISION_TIME, "Supervision Time");
 
-		ListGridField teachingStatusField = new ListGridField(TEACHING_STATUS, "TeachingStatus");
-		ListGridField teachingTimeStatusField = new ListGridField(TEACHING_TIME_STATUS, "TeachingTimeStatus");
-		
+		ListGridField teachingStatusField = new ListGridField(TEACHING_STATUS, "Taught/Not Taught");
+		ListGridField teachingTimeStatusField = new ListGridField(TEACHING_TIME_STATUS, "In-Time/Out-of-Time");
 
-		
-		//Day , Class, Staff, Subject , Start time , Endtime , Suject status , Time status 
-		this.setFields(idField, supervisorIdField, supervisorField, supervisionDateField, supervisionTimeField,
-				teachingStatusField, teachingTimeStatusField);
+		ListGridField schoolClass = new ListGridField(SchoolClass, "Class");
+		ListGridField subject = new ListGridField(Subject, "Subject");
+		ListGridField startTime = new ListGridField(StartTime, "Start Time");
+		ListGridField endTime = new ListGridField(EndTime, "End Time");
+		ListGridField dailyTimeTableLessonStatus = new ListGridField(DailyTimeTableLessonStatus, "Teaching Status");
+
+		// Day , Class, Staff, Subject , Start time , Endtime , Suject status , Time
+		// status
+		this.setFields(idField, supervisorIdField, schoolClass, subject, startTime, endTime, dailyTimeTableLessonStatus,
+				teachingStatusField, teachingTimeStatusField, supervisionDateField,
+				supervisionTimeField, supervisorField);
 		this.setDataSource(dataSource);
 	}
 
@@ -67,12 +81,31 @@ public class StaffDailyAttendanceTaskSupervisionListGrid extends SuperListGrid {
 				SchoolStaffDTO supervisorDto = supervisionTaskSupervisionDTO.getStaffDailyAttendanceSupervisionDTO()
 						.getSupervisorDTO();
 				GeneralUserDetailDTO supervisorDetailDTO = supervisorDto.getGeneralUserDetailDTO();
-				String fullName = supervisorDetailDTO.getFirstName().concat(" ").concat(supervisorDetailDTO.getLastName());
+				String fullName = supervisorDetailDTO.getFirstName().concat(" ")
+						.concat(supervisorDetailDTO.getLastName());
 				record.setAttribute(SUPERVISIOR, fullName);
 				record.setAttribute(SUPERVISIOR_ID, supervisorDto.getId());
 			}
-				
-			
+
+		}
+
+		if (supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO() != null) {
+			if (supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO().getSchoolClassDTO() != null) {
+				record.setAttribute(SchoolClass,
+						supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO().getSchoolClassDTO().getName());
+			}
+
+			if (supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO().getSubjectDTO() != null) {
+				record.setAttribute(Subject,
+						supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO().getSubjectDTO().getName());
+			}
+
+			record.setAttribute(StartTime,
+					supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO().getStartTime());
+			record.setAttribute(EndTime, supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO().getEndTime());
+			record.setAttribute(DailyTimeTableLessonStatus,
+					supervisionTaskSupervisionDTO.getStaffDailyTimeTableLessonDTO().getDailyTimeTableLessonStatus());
+
 		}
 
 		return record;
@@ -120,7 +153,8 @@ public class StaffDailyAttendanceTaskSupervisionListGrid extends SuperListGrid {
 			DataSourceTextField supervisionTimeField = new DataSourceTextField(SUPERVISION_TIME, "Supervision Time");
 
 			DataSourceTextField teachingStatusField = new DataSourceTextField(TEACHING_STATUS, "TeachingStatus");
-			DataSourceTextField teachingTimeStatusField = new DataSourceTextField(TEACHING_TIME_STATUS, "TeachingTimeStatus");
+			DataSourceTextField teachingTimeStatusField = new DataSourceTextField(TEACHING_TIME_STATUS,
+					"TeachingTimeStatus");
 
 			this.setFields(idField, supervisorIdField, supervisorField, supervisionDateField, supervisionTimeField,
 					teachingStatusField, teachingTimeStatusField);

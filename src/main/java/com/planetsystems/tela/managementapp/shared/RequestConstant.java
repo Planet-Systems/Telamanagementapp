@@ -90,12 +90,16 @@ public class RequestConstant {
 	public static final String LOGED_IN = "LOGED_IN";// status
 	public static final String AUTH_TOKEN = "AUTH_TOKEN"; // token key
 	public static final String USERNAME = "USERNAME"; // Username
+	
+	public static final String REQUEST_DATA = "REQUEST_DATA";
 
 	public static final String SAVE_SCHOOL_STAFF = "SAVE_SCHOOL_STAFF";
 	public static final String UPDATE_SCHOOL_STAFF = "UPDATE_SCHOOL_STAFF";
 	public static final String DELETE_SCHOOL_STAFF = "DELETE_SCHOOL_STAFF";
 	public static final String GET_SCHOOL_STAFF = "GET_SCHOOL_STAFF";
 	public static final String GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS";
+	
+	public static final String DELETE_SCHOOL_STAFF_BULK = "DELETE_SCHOOL_STAFF_BULK";
 
 	public static final String GET_STAFFS_IN_SCHOOL = "GET_STAFFS_IN_SCHOOL";
 	public static final String GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL = "GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL";
@@ -221,8 +225,7 @@ public class RequestConstant {
 	public static final String GET_NOT_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE_DISTRICT = "GET_NOT_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE_DISTRICT";
 	public static final String DELETE_SYSTEM_USER_PROFILE_SCHOOLS = "DELETE_SYSTEM_USER_PROFILE_SCHOOLS";
 	public static final String DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE = "DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE";
-
-	public static final String DATA = "DATA";
+ 
 
 	public static final String LOGGED_SYSTEM_USER_GROUP = "LOGGED_SYSTEM_USER_GROUP";
 	public static final String LOGGED_IN_SYSTEM_USER_GROUP_COOKIE = "LOGGED_IN_SYSTEM_USER_GROUP_COOKIE";

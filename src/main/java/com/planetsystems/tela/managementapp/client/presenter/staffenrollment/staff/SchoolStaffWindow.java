@@ -36,17 +36,17 @@ public class SchoolStaffWindow extends Window {
 	public SchoolStaffWindow() {
 		super();
 		firstNameField = new TextItem();
-		firstNameField.setTitle("First Name");
+		firstNameField.setTitle("First Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		firstNameField.setHint("First Name");
 		firstNameField.setShowHintInField(true);
 		
 		lastNameField = new TextItem();
-		lastNameField.setTitle("Last Name");
+		lastNameField.setTitle("Last Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		lastNameField.setHint("Last Name");
 		lastNameField.setShowHintInField(true);
 		
 		phoneNumberField = new TextItem();
-		phoneNumberField.setTitle("Phone Number");
+		phoneNumberField.setTitle("Phone Number <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		phoneNumberField.setMask("#### ###-###");  
         phoneNumberField.setHint("#### ###-###");  
         phoneNumberField.setShowHintInField(true);  
@@ -58,7 +58,9 @@ public class SchoolStaffWindow extends Window {
 		emailField.setShowHintInField(true);
 
 		dobItem = new DateItem();
-		dobItem.setTitle("DOB");
+		dobItem.setTitle("DOB"); 
+		dobItem.setUseTextField(false);
+		dobItem.setWidth("*"); 
 		
 		nationalIdField = new TextItem();
 		nationalIdField.setTitle("National Id");
@@ -76,29 +78,29 @@ public class SchoolStaffWindow extends Window {
 		codeField.setShowHintInField(true);
 		
 		genderCombo = new ComboBox();
-		genderCombo.setTitle("Gender");
+		genderCombo.setTitle("Gender <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		genderCombo.setHint("Gender");
 		genderCombo.setShowHintInField(true);
 		
 		registeredCombo = new ComboBox();
-		registeredCombo.setTitle("Payroll Status");
+		registeredCombo.setTitle("Payroll Status <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		registeredCombo.setHint("Payroll Status");
 		registeredCombo.setShowHintInField(true);
 		
 		
 		
 		schoolCombo = new ComboBox();
-		schoolCombo.setTitle("School");
+		schoolCombo.setTitle("School <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolCombo.setHint("school");
 		schoolCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
+		districtCombo.setTitle("District <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		districtCombo.setHint("District");
 		districtCombo.setShowHintInField(true);
 		
 		roleCombo=new ComboBox();
-		roleCombo.setTitle("Role");
+		roleCombo.setTitle("Role <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		roleCombo.setHint("Role");
 		roleCombo.setShowHintInField(true);
 		
@@ -109,11 +111,11 @@ public class SchoolStaffWindow extends Window {
 		dynamicForm.setMargin(10);
 		dynamicForm.setCellPadding(8);
 		dynamicForm.setColWidths("80", "220" , "80", "220");
-	
-		
+	 
         
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Cancel");
+		cancelButton.setBaseStyle("cancel-button");
 	
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , saveButton);
@@ -136,8 +138,8 @@ public class SchoolStaffWindow extends Window {
 		
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("60%");
-		this.setHeight("70%");
+		this.setWidth("50%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
 		this.setTitle("School Staff");
 		this.setIsModal(true);

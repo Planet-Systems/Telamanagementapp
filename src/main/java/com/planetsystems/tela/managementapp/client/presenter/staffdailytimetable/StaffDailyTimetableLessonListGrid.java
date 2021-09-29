@@ -58,7 +58,7 @@ public class StaffDailyTimetableLessonListGrid extends SuperListGrid {
 		ListGridField startTimeField = new ListGridField(START_TIME, "Start Time");
 		ListGridField endTimeField = new ListGridField(END_TIME, "End Time");
 
-		ListGridField lessonStatusField = new ListGridField(LESSON_STATUS, "LessonStatus");
+		ListGridField lessonStatusField = new ListGridField(LESSON_STATUS, "Teaching Status");
 
 		this.setFields(staffDailyTimetableIdField, lessonDateField, classField, subjectField, startTimeField,
 				endTimeField, lessonStatusField);

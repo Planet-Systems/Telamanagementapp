@@ -3,7 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.comboutils;
 import java.util.LinkedHashMap;
 
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceManager; 
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
@@ -23,7 +23,13 @@ import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.planetsystems.tela.managementapp.shared.requestconstants.SystemUserGroupRequestConstant;
+import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.Record;
+import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.grid.ListGrid;
+import com.smartgwt.client.widgets.grid.ListGridField;
 
 public class ComboUtil {
 
@@ -255,20 +261,59 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				
+				
+				DataSource records = new DataSource();
+				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField nameField = new DataSourceTextField("name", "Region");
+				records.setFields(idField, nameField);
+				records.setClientOnly(true);
 
-				for (RegionDto regionDto : result.getRegionDtos()) {
-					valueMap.put(regionDto.getId(), regionDto.getName());
+				for (RegionDto regionDto : result.getRegionDtos()) { 
+					Record record = new Record();
+					record.setAttribute("id", regionDto.getId()); 
+					record.setAttribute("name", regionDto.getName()); 
+					records.addData(record);
+
 				}
+
+				ListGrid pickListProperties = new ListGrid();
+				pickListProperties.setShowFilterEditor(true);
+				pickListProperties.setFilterOnKeypress(true);
+				pickListProperties.setWidth(520);
+				pickListProperties.getWrapCells();
+				pickListProperties.setWrapCells(true);
+				pickListProperties.setFixedRecordHeights(false);
+
+				ListGridField id = new ListGridField("id", "Id");
+				id.setHidden(true); 
+				ListGridField name = new ListGridField("name", "Region");
+
+				comboBox.setOptionDataSource(records);
+
+				comboBox.setValueField("id");
+				comboBox.setDisplayField("name");
+				comboBox.setPickListFields(id, name);
+				comboBox.setPickListProperties(pickListProperties);
+				comboBox.setPickListWidth(300);
+				
+				
+
+				/*for (RegionDto regionDto : result.getRegionDtos()) {
+					valueMap.put(regionDto.getId(), regionDto.getName());
+				}*/
 				if(comboBox.getValueAsString() != null) {
 					comboBox.clearValue();
-					comboBox.setValueMap(valueMap);
+					//comboBox.setValueMap(valueMap);
 				}else {
-					comboBox.setValueMap(valueMap);
+					//comboBox.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
 					comboBox.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(comboBox.getJsObj());
+					comboBox.fireEvent(event1);
 				}
 			}
 		});
@@ -336,21 +381,61 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				
+				 
+				DataSource records = new DataSource();
+				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField nameField = new DataSourceTextField("name", "District");
+				records.setFields(idField, nameField);
+				records.setClientOnly(true);
 
-				for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-					valueMap.put(districtDTO.getId(), districtDTO.getName());
+				for (DistrictDTO districtDTO : result.getDistrictDTOs()) { 
+					Record record = new Record();
+					record.setAttribute("id", districtDTO.getId()); 
+					record.setAttribute("name", districtDTO.getName()); 
+					records.addData(record);
+
 				}
+
+				ListGrid pickListProperties = new ListGrid();
+				pickListProperties.setShowFilterEditor(true);
+				pickListProperties.setFilterOnKeypress(true);
+				pickListProperties.setWidth(520);
+				pickListProperties.getWrapCells();
+				pickListProperties.setWrapCells(true);
+				pickListProperties.setFixedRecordHeights(false);
+
+				ListGridField id = new ListGridField("id", "Id");
+				id.setHidden(true); 
+				ListGridField name = new ListGridField("name", "District");
+
+				districtCombo.setOptionDataSource(records);
+
+				districtCombo.setValueField("id");
+				districtCombo.setDisplayField("name");
+				districtCombo.setPickListFields(id, name);
+				districtCombo.setPickListProperties(pickListProperties);
+				districtCombo.setPickListWidth(300);
+ 
+				 
+				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				  
+
+				/*for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
+					valueMap.put(districtDTO.getId(), districtDTO.getName());
+				}*/
 				
 				if(districtCombo.getValueAsString() != null) {
 					districtCombo.clearValue();
-					districtCombo.setValueMap(valueMap);
+					//districtCombo.setValueMap(valueMap);
 				}else {
-					districtCombo.setValueMap(valueMap);	
+					//districtCombo.setValueMap(valueMap);	
 				}
 
 				if (defaultValue != null) {
-					districtCombo.setValue(defaultValue);
+					districtCombo.setValue(defaultValue); 
+					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
+					districtCombo.fireEvent(event1);
 				}
 			}
 		});
@@ -409,21 +494,61 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				
+				
+				DataSource records = new DataSource();
+				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField nameField = new DataSourceTextField("name", "District");
+				records.setFields(idField, nameField);
+				records.setClientOnly(true);
 
-				for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-					valueMap.put(districtDTO.getId(), districtDTO.getName());
+				for (DistrictDTO districtDTO : result.getDistrictDTOs()) { 
+					Record record = new Record();
+					record.setAttribute("id", districtDTO.getId()); 
+					record.setAttribute("name", districtDTO.getName()); 
+					records.addData(record);
+
 				}
+
+				ListGrid pickListProperties = new ListGrid();
+				pickListProperties.setShowFilterEditor(true);
+				pickListProperties.setFilterOnKeypress(true);
+				pickListProperties.setWidth(520);
+				pickListProperties.getWrapCells();
+				pickListProperties.setWrapCells(true);
+				pickListProperties.setFixedRecordHeights(false);
+
+				ListGridField id = new ListGridField("id", "Id");
+				id.setHidden(true); 
+				ListGridField name = new ListGridField("name", "District");
+
+				districtCombo.setOptionDataSource(records);
+
+				districtCombo.setValueField("id");
+				districtCombo.setDisplayField("name");
+				districtCombo.setPickListFields(id, name);
+				districtCombo.setPickListProperties(pickListProperties);
+				districtCombo.setPickListWidth(300);
+				
+				
+				
+
+				/*for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
+					valueMap.put(districtDTO.getId(), districtDTO.getName());
+				}*/
 				
 				if(districtCombo.getValueAsString() != null) {
 					districtCombo.clearValue();
-					districtCombo.setValueMap(valueMap);
+					//districtCombo.setValueMap(valueMap);
 				}else {
-					districtCombo.setValueMap(valueMap);
+					//districtCombo.setValueMap(valueMap);
 				}
 				
 				if (defaultValue != null) {
 					districtCombo.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
+					districtCombo.fireEvent(event1);
 				}
 			}
 		});
@@ -480,21 +605,58 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
-				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
+				
+				DataSource records = new DataSource();
+				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField nameField = new DataSourceTextField("name", "School");
+				records.setFields(idField, nameField);
+				records.setClientOnly(true);
+
+				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) { 
+					Record record = new Record();
+					record.setAttribute("id", schoolDTO.getId()); 
+					record.setAttribute("name", schoolDTO.getName()); 
+					records.addData(record);
+
 				}
+
+				ListGrid pickListProperties = new ListGrid();
+				pickListProperties.setShowFilterEditor(true);
+				pickListProperties.setFilterOnKeypress(true);
+				pickListProperties.setWidth(520);
+				pickListProperties.getWrapCells();
+				pickListProperties.setWrapCells(true);
+				pickListProperties.setFixedRecordHeights(false);
+
+				ListGridField id = new ListGridField("id", "Id");
+				id.setHidden(true); 
+				ListGridField name = new ListGridField("name", "School");
+
+				schoolCombo.setOptionDataSource(records);
+
+				schoolCombo.setValueField("id");
+				schoolCombo.setDisplayField("name");
+				schoolCombo.setPickListFields(id, name);
+				schoolCombo.setPickListProperties(pickListProperties);
+				schoolCombo.setPickListWidth(400);
+				
+				/*for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
+					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
+				}*/
 				
 				if(schoolCombo.getValueAsString() != null) {
 					schoolCombo.clearValue();
-					schoolCombo.setValueMap(valueMap);
+					//schoolCombo.setValueMap(valueMap);
 				}else {
-					schoolCombo.setValueMap(valueMap);
+					//schoolCombo.setValueMap(valueMap);
 				}
 				
 				if (defaultValue != null) {
 					schoolCombo.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
+					schoolCombo.fireEvent(event1);
 				}
 			}
 		});
@@ -550,22 +712,60 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				
+				
+				DataSource records = new DataSource();
+				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField nameField = new DataSourceTextField("name", "School");
+				records.setFields(idField, nameField);
+				records.setClientOnly(true);
 
-				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
+				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) { 
+					Record record = new Record();
+					record.setAttribute("id", schoolDTO.getId()); 
+					record.setAttribute("name", schoolDTO.getName()); 
+					records.addData(record);
+
 				}
+
+				ListGrid pickListProperties = new ListGrid();
+				pickListProperties.setShowFilterEditor(true);
+				pickListProperties.setFilterOnKeypress(true);
+				pickListProperties.setWidth(520);
+				pickListProperties.getWrapCells();
+				pickListProperties.setWrapCells(true);
+				pickListProperties.setFixedRecordHeights(false);
+
+				ListGridField id = new ListGridField("id", "Id");
+				id.setHidden(true); 
+				ListGridField name = new ListGridField("name", "School");
+
+				schoolCombo.setOptionDataSource(records);
+
+				schoolCombo.setValueField("id");
+				schoolCombo.setDisplayField("name");
+				schoolCombo.setPickListFields(id, name);
+				schoolCombo.setPickListProperties(pickListProperties);
+				schoolCombo.setPickListWidth(400);
+				
+
+				/*for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
+					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
+				}*/
 				
 				if(schoolCombo.getValueAsString() != null) {
 					schoolCombo.clearValue();
-					schoolCombo.setValueMap(valueMap);
+					//schoolCombo.setValueMap(valueMap);
 				}else {
-					schoolCombo.setValueMap(valueMap);
+					//schoolCombo.setValueMap(valueMap);
 				}
 
 
 				if (defaultValue != null) {
 					schoolCombo.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
+					schoolCombo.fireEvent(event1);
 				}
 			}
 		});
@@ -623,24 +823,66 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				
+				
+				
+				DataSource records = new DataSource();
+				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField nameField = new DataSourceTextField("name", "Teacher Name");
+				records.setFields(idField, nameField);
+				records.setClientOnly(true);
 
-				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { 
+					
+					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+					
+					Record record = new Record();
+					record.setAttribute("id", schoolStaffDTO.getId()); 
+					record.setAttribute("name", fullName); 
+					records.addData(record);
+
+				}
+
+				ListGrid pickListProperties = new ListGrid();
+				pickListProperties.setShowFilterEditor(true);
+				pickListProperties.setFilterOnKeypress(true);
+				pickListProperties.setWidth(520);
+				pickListProperties.getWrapCells();
+				pickListProperties.setWrapCells(true);
+				pickListProperties.setFixedRecordHeights(false);
+
+				ListGridField id = new ListGridField("id", "Id");
+				id.setHidden(true); 
+				ListGridField name = new ListGridField("name", "Teacher Name");
+
+				schoolStaffCombo.setOptionDataSource(records);
+
+				schoolStaffCombo.setValueField("id");
+				schoolStaffCombo.setDisplayField("name");
+				schoolStaffCombo.setPickListFields(id, name);
+				schoolStaffCombo.setPickListProperties(pickListProperties);
+				schoolStaffCombo.setPickListWidth(400);
+
+				/*for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
 					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
 							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
 					valueMap.put(schoolStaffDTO.getId(), fullName);
-				}
+				}*/
 				
 				if(schoolStaffCombo.getValueAsString() != null) {
 					schoolStaffCombo.clearValue();
-					schoolStaffCombo.setValueMap(valueMap);
+					//schoolStaffCombo.setValueMap(valueMap);
 				}else {
-					schoolStaffCombo.setValueMap(valueMap);
+					//schoolStaffCombo.setValueMap(valueMap);
 				}
 
 
 				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue);
+					schoolStaffCombo.setValue(defaultValue); 
+					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+					schoolStaffCombo.fireEvent(event1);
 				}
 			}
 		});
@@ -679,6 +921,8 @@ public class ComboUtil {
 
 				if (defaultValue != null) {
 					schoolStaffCombo.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+					schoolStaffCombo.fireEvent(event1);
 				}
 			}
 		});
@@ -714,6 +958,8 @@ public class ComboUtil {
 
 					if (defaultValue != null) {
 						schoolStaffCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+						schoolStaffCombo.fireEvent(event1);
 					}
 				}
 			});
@@ -760,7 +1006,7 @@ public class ComboUtil {
 
 	}
 
-	public static void loadSchoolStaffCombo(final ComboBox SchoolStaffCombo, final DispatchAsync dispatcher,
+	public static void loadSchoolStaffCombo(final ComboBox schoolStaffCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -770,24 +1016,66 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				
+				
+				DataSource records = new DataSource();
+				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField nameField = new DataSourceTextField("name", "Teacher Name");
+				records.setFields(idField, nameField);
+				records.setClientOnly(true);
 
-				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { 
+					
+					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+					
+					Record record = new Record();
+					record.setAttribute("id", schoolStaffDTO.getId()); 
+					record.setAttribute("name", fullName); 
+					records.addData(record);
+
+				}
+
+				ListGrid pickListProperties = new ListGrid();
+				pickListProperties.setShowFilterEditor(true);
+				pickListProperties.setFilterOnKeypress(true);
+				pickListProperties.setWidth(520);
+				pickListProperties.getWrapCells();
+				pickListProperties.setWrapCells(true);
+				pickListProperties.setFixedRecordHeights(false);
+
+				ListGridField id = new ListGridField("id", "Id");
+				id.setHidden(true); 
+				ListGridField name = new ListGridField("name", "Teacher Name");
+
+				schoolStaffCombo.setOptionDataSource(records);
+
+				schoolStaffCombo.setValueField("id");
+				schoolStaffCombo.setDisplayField("name");
+				schoolStaffCombo.setPickListFields(id, name);
+				schoolStaffCombo.setPickListProperties(pickListProperties);
+				schoolStaffCombo.setPickListWidth(400);
+				
+
+				/*for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
 					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName()
 							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
 					valueMap.put(schoolStaffDTO.getId(), fullName);
-				}
+				}*/
 				
-				if(SchoolStaffCombo.getValueAsString() != null) {
-					SchoolStaffCombo.clearValue();
-					SchoolStaffCombo.setValueMap(valueMap);
+				if(schoolStaffCombo.getValueAsString() != null) {
+					schoolStaffCombo.clearValue();
+					//SchoolStaffCombo.setValueMap(valueMap);
 				}else {
-					SchoolStaffCombo.setValueMap(valueMap);
+					//SchoolStaffCombo.setValueMap(valueMap);
 				}
 
 
 				if (defaultValue != null) {
-					SchoolStaffCombo.setValue(defaultValue);
+					schoolStaffCombo.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+					schoolStaffCombo.fireEvent(event1);
 				}
 			}
 		});

@@ -1,6 +1,5 @@
 package com.planetsystems.tela.managementapp.client.presenter.staffdailytimetable;
 
-import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
@@ -10,7 +9,6 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -20,7 +18,7 @@ public class StaffDailyTimetablePane extends VLayout {
 	private ComboBox academicYearCombo;
 	private ComboBox regionCombo;
 //	private TextItem dayField;
-	private TextItem lessonDayDateItem;
+	private DateItem lessonDayDateItem;
 	private ComboBox academicTermCombo;
 	private IButton loadAttendanceButton;
 
@@ -115,9 +113,9 @@ public class StaffDailyTimetablePane extends VLayout {
 //		dayField.setValue(dayFormat.format(new Date()));
 //		dayField.disable();
         
-		lessonDayDateItem = new TextItem();
-		lessonDayDateItem.setTitle("Today");
-		lessonDayDateItem.disable();
+		lessonDayDateItem = new DateItem();
+		lessonDayDateItem.setTitle("Supervision Date");
+		//lessonDayDateItem.disable();
 		
 		form.setFields(academicYearCombo, regionCombo , academicTermCombo , districtCombo , lessonDayDateItem , schoolCombo);
 
@@ -148,7 +146,7 @@ public class StaffDailyTimetablePane extends VLayout {
 
 	
 
-	public TextItem getLessonDayDateItem() {
+	public DateItem getLessonDayDateItem() {
 		return lessonDayDateItem;
 	}
 

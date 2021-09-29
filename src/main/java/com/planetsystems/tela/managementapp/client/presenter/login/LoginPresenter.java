@@ -83,7 +83,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 							map.put(NetworkDataUtil.ACTION , RequestConstant.RESET_PASSWORD );
 							AuthenticationDTO dto = new AuthenticationDTO();
 							dto.setUserName(email);
-							map.put(RequestConstant.DATA , dto);
+							map.put(RequestConstant.REQUEST_DATA , dto);
 						 
 						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 							

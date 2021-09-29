@@ -53,17 +53,17 @@ public class SMCSupervisionListgrid extends SuperListGrid {
 
 		ListGridField submissionDate = new ListGridField(SubmissionDate, "Date of Visit");
 
-		ListGridField staffAtWorkNotWorking = new ListGridField(StaffAtWorkNotWorking, "No. Teachers Not in Class");
-		ListGridField staffAtWorkWorking = new ListGridField(StaffAtWorkWorking, "No. Teachers Teaching");
-		ListGridField supervisorStatus = new ListGridField(SupervisorStatus, "Head Teacher");
+		ListGridField staffAtWorkNotWorking = new ListGridField(StaffAtWorkNotWorking, "Total Number Teachers Not in Class");
+		ListGridField staffAtWorkWorking = new ListGridField(StaffAtWorkWorking, "Total Number Teachers Teaching");
+		ListGridField supervisorStatus = new ListGridField(SupervisorStatus, "Status of Head Teacher");
 
-		ListGridField status_p1 = new ListGridField(Status_p1, "Teacher in P1");
-		ListGridField status_p2 = new ListGridField(Status_p2, "Teacher in P2");
-		ListGridField status_p3 = new ListGridField(Status_p3, "Teacher in P3");
-		ListGridField status_p4 = new ListGridField(Status_p4, "Teacher in P4");
-		ListGridField status_p5 = new ListGridField(Status_p5, "Teacher in P5");
-		ListGridField status_p6 = new ListGridField(Status_p6, "Teacher in P6");
-		ListGridField status_p7 = new ListGridField(Status_p7, "Teacher in P7");
+		ListGridField status_p1 = new ListGridField(Status_p1, "Status of Teacher in P1");
+		ListGridField status_p2 = new ListGridField(Status_p2, "Status of Teacher in P2");
+		ListGridField status_p3 = new ListGridField(Status_p3, "Status of Teacher in P3");
+		ListGridField status_p4 = new ListGridField(Status_p4, "Status of Teacher in P4");
+		ListGridField status_p5 = new ListGridField(Status_p5, "Status of Teacher in P5");
+		ListGridField status_p6 = new ListGridField(Status_p6, "Status of Teacher in P6");
+		ListGridField status_p7 = new ListGridField(Status_p7, "Status of Teacher in P7");
 
 		this.setFields(idField, cademicTerm, school, submissionDate,supervisorStatus, staffPresent, staffAtWork, staffAtWorkWorking,
 				staffAtWorkNotWorking, status_p1, status_p2, status_p3, status_p4, status_p5, status_p6, status_p7,

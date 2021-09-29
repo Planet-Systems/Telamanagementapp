@@ -109,7 +109,7 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					getView().getTabSet().removeTab(1);
 
 					MenuButton newButton = new MenuButton("New");
-					MenuButton view = new MenuButton("view");
+					MenuButton view = new MenuButton("View Teacher Lessons");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -346,9 +346,9 @@ public class StaffDailyAttendanceSupervisionPresenter extends
 					task.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					StaffDailyTimeTableDTO staffDailyTimeTableDTO = new StaffDailyTimeTableDTO();
-					staffDailyTimeTableDTO
-							.setId(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID));
-					task.setStaffDailyTimeTableDTO(staffDailyTimeTableDTO);
+					staffDailyTimeTableDTO.setId(record.getAttribute(StaffDailyTimetableLessonListGrid.STAFF_DAILY_TIME_TABLE_ID));
+					
+					//task.setStaffDailyTimeTableDTO(staffDailyTimeTableDTO);
 
 					task.setTeachingStatus("present");
 					task.setTeachingTimeStatus("In Time");

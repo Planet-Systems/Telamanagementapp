@@ -8,6 +8,7 @@ import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -51,11 +52,14 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField registeredField = new ListGridField(REGISTERED, "Payroll Status");
 
 		ListGridField schoolField = new ListGridField(SCHOOL, "School");
+		schoolField.setHidden(true);
+		
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 
 		ListGridField districtField = new ListGridField(DISTRICT, "District");
-		/// districtField.setHidden(true);
+		 districtField.setHidden(true);
+		
 		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
 		districtIdField.setHidden(true);
 
@@ -74,6 +78,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 				phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField, districtField, schoolField, registeredField);
 		this.setDataSource(dataSource);
 		this.setWrapHeaderTitles(true);
+		this.setSelectionType(SelectionStyle.SIMPLE);
 	}
 
 	public ListGridRecord addRowData(SchoolStaffDTO schoolStaffDTO) {

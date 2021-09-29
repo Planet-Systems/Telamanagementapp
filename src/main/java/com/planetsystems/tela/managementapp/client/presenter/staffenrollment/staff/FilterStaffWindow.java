@@ -39,7 +39,7 @@ public class FilterStaffWindow extends Window {
 
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("40%");
+		this.setWidth("30%");
 		this.setHeight("30%");
 		this.setAutoCenter(true);
 		this.setTitle("Advanced Filter");

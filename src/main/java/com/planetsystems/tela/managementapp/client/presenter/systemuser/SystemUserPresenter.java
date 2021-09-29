@@ -241,7 +241,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 													RequestConstant.DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
 											map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID,
 													profileRecord.getAttribute(SystemUserListGrid.ID));
-											map.put(RequestConstant.DATA, schoolDTOs);
+											map.put(RequestConstant.REQUEST_DATA, schoolDTOs);
 
 											NetworkDataUtil.callNetwork(dispatcher, placeManager, map,	new NetworkResult() {
 
@@ -377,7 +377,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 										LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 										map.put(NetworkDataUtil.ACTION,
 												RequestConstant.SAVE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
-										map.put(RequestConstant.DATA, schoolDTOs);
+										map.put(RequestConstant.REQUEST_DATA, schoolDTOs);
 										map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID,
 												profileRecord.getAttribute(SystemUserListGrid.ID));
 										NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {

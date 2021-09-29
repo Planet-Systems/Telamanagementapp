@@ -135,7 +135,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			if (action.getRequest().equalsIgnoreCase(RequestConstant.RESET_PASSWORD)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.DATA);
+				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
 				System.out.print("DTO Email " + dto.getUserName());
 
 				Client client = ClientBuilder.newClient();
@@ -160,7 +160,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			if (action.getRequest().equalsIgnoreCase(RequestConstant.CHANGE_PASSWORD)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.DATA);
+				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				System.out.print("DTO Email " + dto.getUserName());
 
@@ -1767,7 +1767,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_STAFF_ID);
+				String id = (String) action.getRequestBody().get(StaffEnrollmentRequest.ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -1779,6 +1779,35 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.path(id).request(MediaType.APPLICATION_JSON).headers(headers)
 						.delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_SCHOOL_STAFF_BULK)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				
+				@SuppressWarnings("unchecked")
+				List<SchoolStaffDTO> dtos = (List<SchoolStaffDTO>) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.path("bulkdelete").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dtos, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
 
 				if (deleteResponseDTO != null) {
 					feedback = deleteResponseDTO.getData();
@@ -3781,6 +3810,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.FILTER_STAFF_DAILY_SUPERVISIONS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				
+				
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyAttendanceSupervisionDTO> list = new ArrayList<StaffDailyAttendanceSupervisionDTO>();
 
@@ -3813,6 +3844,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			else if (action.getRequest().equalsIgnoreCase(
 					RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				
+				System.out.println("GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE");
+				
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyAttendanceSupervisionDTO> list = new ArrayList<StaffDailyAttendanceSupervisionDTO>();
 
@@ -3825,6 +3859,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/schools/8a008082648d961401648dadbf0f0003?supervisionDate=18/03/2021
+				
+				//SystemUserProfile/StaffDailyAttendanceSupervisions/Schools/{schoolId}
 				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
 						.path("SystemUserProfile").path("StaffDailyAttendanceSupervisions").path("Schools")
 						.path(schoolId).queryParam("supervisionDate", supervisionDate)
@@ -4039,7 +4075,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
 
-				List<SchoolDTO> dtos = (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.DATA);
+				List<SchoolDTO> dtos = (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
@@ -4101,7 +4137,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				List<SchoolDTO> dtos = (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.DATA);
+				List<SchoolDTO> dtos = (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
 				System.out.println("Handler profileSchool  " + dtos);
 				Client client = ClientBuilder.newClient();
 				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
