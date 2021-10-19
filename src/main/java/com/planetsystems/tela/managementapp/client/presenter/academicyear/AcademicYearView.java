@@ -4,6 +4,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermPane;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -19,9 +21,14 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	private VLayout panel;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
+
 	
 	public static final String ACADEMIC_YEAR_TAB_TITLE="Academic Year";
 	public static final String ACADEMIC_TERM_TAB_TITLE="Academic Term";
+	
+	private AcademicYearDashboardPane academicYearDashboardPane;
+	
+	VLayout vlayout;
    
  @Inject	
   AcademicYearView() {
@@ -30,6 +37,10 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
     	academicYearPane = new AcademicYearPane();
     	academicTermPane = new AcademicTermPane();
     	controlsPane = new ControlsPane();
+    	vlayout=new VLayout();
+    	
+    	vlayout.setMembers(academicTermPane);
+
 		tabSet = new TabSet();
 	
 
@@ -39,7 +50,7 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 
 		Tab academicTermTab = new Tab();
 		//tab2.setPane(assessmentPeriodPane);
-		academicTermTab.setPane(academicTermPane);
+		academicTermTab.setPane(vlayout);
 		academicTermTab.setTitle(ACADEMIC_TERM_TAB_TITLE);
 
 		tabSet.addTab(academicYearTab);
@@ -47,9 +58,9 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 
 		tabSet.setMargin(0);
 		tabSet.setPadding(0);
-
+		
 		panel.addMember(controlsPane);
-		panel.addMember(tabSet);
+		panel.addMembers(tabSet);//(tabSet);
 		panel.setWidth100();
 		panel.setHeight("90%");
 		Window.enableScrolling(false);
@@ -78,6 +89,10 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	
 	public AcademicTermPane getAcademicTermPane() {
 		return academicTermPane;
+	}
+
+	public VLayout getVlayout() {
+		return vlayout;
 	}
 
 	

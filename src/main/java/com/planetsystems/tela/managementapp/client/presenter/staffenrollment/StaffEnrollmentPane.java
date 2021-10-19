@@ -1,5 +1,6 @@
 package com.planetsystems.tela.managementapp.client.presenter.staffenrollment;
 
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.enrollment.StaffEnrollmentListGrid;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -22,7 +23,7 @@ public class StaffEnrollmentPane extends VLayout {
 		staffEnrollmentListGrid = new StaffEnrollmentListGrid();
 
 		VLayout layout = new VLayout();
-		layout.addMember(header);
+		//layout.addMember(header);
 		layout.addMember(staffEnrollmentListGrid);
 		this.addMember(layout);
 		

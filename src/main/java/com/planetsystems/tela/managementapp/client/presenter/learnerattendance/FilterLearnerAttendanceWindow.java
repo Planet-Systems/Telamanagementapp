@@ -13,11 +13,7 @@ public class FilterLearnerAttendanceWindow extends Window {
 	private IButton filterButton;
 	private IButton cancelButton;
 	private FilterLearnerAttendancePane filterLearnerAttendancePane;
-	public static final String ATTENDANCE_DATE = "ATTENDANCE_DATE";
-	public static final String ACADEMIC_YEAR_ID = "ACADEMIC_YEAR_ID";
-	public static final String ACADEMIC_TERM_ID = "ACADEMIC_TERM_ID";
-	public static final String DISTRICT_ID = "DISTRICT_ID";
-	public static final String SCHOOL_ID = "SCHOOL_ID";
+	
 
 	public FilterLearnerAttendanceWindow() {
 		super();
@@ -27,8 +23,7 @@ public class FilterLearnerAttendanceWindow extends Window {
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
 		
-		filterButton = new IButton("Filter");
-		filterButton.disable();
+		filterButton = new IButton("Ok");
 		
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton , filterButton);
@@ -45,9 +40,9 @@ public class FilterLearnerAttendanceWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setHeight("50%");
 		this.setAutoCenter(true);
-		this.setTitle("Filter Learner Attendance");
+		this.setTitle("Advanced Filter");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

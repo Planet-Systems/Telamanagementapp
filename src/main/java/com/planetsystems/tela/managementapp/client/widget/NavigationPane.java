@@ -16,9 +16,7 @@ package com.planetsystems.tela.managementapp.client.widget;
 
 import com.google.gwt.core.shared.GWT;
 import com.smartgwt.client.data.DataSource;
-import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.VisibilityMode;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.RecordClickHandler;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -50,8 +48,7 @@ public class NavigationPane extends VLayout {
     sectionStack.setVisibilityMode(VisibilityMode.MUTEX);
     sectionStack.setShowExpandControls(true);
     sectionStack.setAnimateSections(true);
-    
-    
+
     // sectionStack.setHeaderHeight(HEADER_HEIGHT);
     
     // add the Section Stack to the Navigation Pane layout container

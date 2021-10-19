@@ -2,6 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.timetable;
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -10,11 +11,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class CreateTimeTablePane extends VLayout {
 
-	private ComboBox academicYearComboBox;
-	private ComboBox academicTermComboBox;
-	private ComboBox districtComboBox;
-	private ComboBox schoolComboBox;
-	private IButton addLessonButton ;
+	private ComboBox academicYearCombo;
+	private ComboBox academicTermCombo;
+	private ComboBox districtCombo;
+	private ComboBox schoolCombo;
+	private IButton addLessonButton;
 	private LessonListGrid lessonListGrid;
 	
 	private IButton saveButton;
@@ -23,33 +24,33 @@ public class CreateTimeTablePane extends VLayout {
 	public CreateTimeTablePane() {
 		super();
 		
-		academicYearComboBox = new ComboBox();
-		academicYearComboBox.setTitle("AcademicYear");
-		academicYearComboBox.setHint("Year");
-		academicYearComboBox.setShowHint(true);
-		academicYearComboBox.setShowHintInField(true);
-		academicYearComboBox.setTitleOrientation(TitleOrientation.TOP);
+		academicYearCombo = new ComboBox();
+		academicYearCombo.setTitle("AcademicYear");
+		academicYearCombo.setHint("Year");
+		academicYearCombo.setShowHint(true);
+		academicYearCombo.setShowHintInField(true);
+		academicYearCombo.setTitleOrientation(TitleOrientation.TOP);
 		
-		academicTermComboBox = new ComboBox();
-		academicTermComboBox.setTitle("AcademicTerm");
-		academicTermComboBox.setHint("Term");
-		academicTermComboBox.setShowHint(true);
-		academicTermComboBox.setShowHintInField(true);
-		academicTermComboBox.setTitleOrientation(TitleOrientation.TOP);
+		academicTermCombo = new ComboBox();
+		academicTermCombo.setTitle("AcademicTerm");
+		academicTermCombo.setHint("Term");
+		academicTermCombo.setShowHint(true);
+		academicTermCombo.setShowHintInField(true);
+		academicTermCombo.setTitleOrientation(TitleOrientation.TOP);
 		
-		districtComboBox = new ComboBox();
-		districtComboBox.setTitle("District");
-		districtComboBox.setHint("District");
-		districtComboBox.setShowHint(true);
-		districtComboBox.setShowHintInField(true);
-		districtComboBox.setTitleOrientation(TitleOrientation.TOP);
+		districtCombo = new ComboBox();
+		districtCombo.setTitle("District");
+		districtCombo.setHint("District");
+		districtCombo.setShowHint(true);
+		districtCombo.setShowHintInField(true);
+		districtCombo.setTitleOrientation(TitleOrientation.TOP);
 		
-		schoolComboBox = new ComboBox();
-		schoolComboBox.setTitle("School");
-		schoolComboBox.setHint("School");
-		schoolComboBox.setShowHint(true);
-		schoolComboBox.setShowHintInField(true);
-		schoolComboBox.setTitleOrientation(TitleOrientation.TOP);
+		schoolCombo = new ComboBox();
+		schoolCombo.setTitle("School");
+		schoolCombo.setHint("School");
+		schoolCombo.setShowHint(true);
+		schoolCombo.setShowHintInField(true);
+		schoolCombo.setTitleOrientation(TitleOrientation.TOP);
 		
 		addLessonButton = new IButton("Add");
 		addLessonButton.setLayoutAlign(Alignment.RIGHT);
@@ -61,10 +62,11 @@ public class CreateTimeTablePane extends VLayout {
 		filterForm.setNumCols(4);
 		filterForm.setColWidths(20 , 150 ,20 , 150, 20 , 150, 20 , 150);
 		filterForm.setCellPadding(10);
-		filterForm.setFields(academicYearComboBox , academicTermComboBox , districtComboBox , schoolComboBox);
+		filterForm.setFields(academicYearCombo , academicTermCombo , districtCombo , schoolCombo);
 		
 		lessonListGrid = new LessonListGrid();
-
+		lessonListGrid.setSelectionType(SelectionStyle.MULTIPLE);
+	
 		
 		saveButton = new IButton("Save");
         saveButton.disable();
@@ -84,47 +86,38 @@ public class CreateTimeTablePane extends VLayout {
 		
 		VLayout layout = new VLayout();
 		layout.setMembersMargin(10);
-		layout.addMembers(filterForm , addLessonButton ,lessonListGrid , buttonLayout);
+		layout.addMembers(filterForm , addLessonButton , lessonListGrid , buttonLayout);
 		
 		
 	 
 		this.addMember(layout);
 	
 	}
-
-	public ComboBox getAcademicYearComboBox() {
-		return academicYearComboBox;
+	public ComboBox getAcademicYearCombo() {
+		return academicYearCombo;
 	}
-
-	public ComboBox getAcademicTermComboBox() {
-		return academicTermComboBox;
+	public ComboBox getAcademicTermCombo() {
+		return academicTermCombo;
 	}
-
-	public ComboBox getDistrictComboBox() {
-		return districtComboBox;
+	public ComboBox getDistrictCombo() {
+		return districtCombo;
 	}
-
-	public ComboBox getSchoolComboBox() {
-		return schoolComboBox;
+	public ComboBox getSchoolCombo() {
+		return schoolCombo;
 	}
-
 	public IButton getAddLessonButton() {
 		return addLessonButton;
 	}
-
 	public LessonListGrid getLessonListGrid() {
 		return lessonListGrid;
 	}
-
 	public IButton getSaveButton() {
 		return saveButton;
 	}
-
 	public IButton getCancelButton() {
 		return cancelButton;
 	}
-	
-	
 
+	
 
 }

@@ -56,6 +56,40 @@ public class APIGateWay {
 		}
 		return apiLink;
 	}
+	
+	public String getReportGeneratorLink() {
+
+		String apiLink = null;
+		try {
+
+			String filename = "properties.properties";
+
+			input = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+			if (input == null) {
+				System.out.println("Sorry, unable to find " + filename);
+				return null;
+			}
+
+			// load a properties file from class path, inside static method
+
+			prop.load(input);
+
+			apiLink = prop.getProperty("reportGenerator");
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return apiLink;
+	}
+
 
 	public Client getClientBuilder() {
 		return ClientBuilder.newClient();

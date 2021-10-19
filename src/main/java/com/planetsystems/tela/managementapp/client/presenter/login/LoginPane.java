@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.login;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
@@ -17,102 +18,119 @@ public class LoginPane extends VLayout {
 	private TextField username;
 	private PasswordItem password;
 
-	private Label forgotPassword;
-	
+	private Label forgotPasswordField;
 	private Label signup;
+
+	private Label slogan;
+	private Label slogan2;
 
 	public LoginPane() {
 		super();
-		
-		  Img desLogo = new Img("des_logo.jpg");
-			desLogo.setHeight(130);
-			desLogo.setWidth(130);
-			desLogo.setTooltip("DES LOGO");
-			desLogo.setLayoutAlign(Alignment.CENTER);
-			//desLogo.setAltText("Des Logo");
-			
-			Img telaLogo = new Img("telalog.png");
-			telaLogo.setHeight(50);
-			telaLogo.setWidth(400);
-			telaLogo.setTooltip("TELA LOGO");
-			telaLogo.setLayoutAlign(Alignment.CENTER);
-			telaLogo.setBackgroundColor("blue");
-			//telaLogo.setAltText("Tela log");
 
-			VLayout imgLayout = new VLayout();
-			//imgLayout.setBorder("1px solid red");
-			imgLayout.setWidth100();
-			imgLayout.setAutoHeight();
-			imgLayout.setMembersMargin(5);
-			imgLayout.addMembers(desLogo);
-			
-			
-			Label loginLabel = new Label("Login");
-			loginLabel.setAutoHeight();
-			loginLabel.setAutoWidth();
-			loginLabel.setPadding(5);
-			loginLabel.setMargin(2);
-			//loginLabel.setBorder("1px solid green");
-			loginLabel.setLayoutAlign(Alignment.CENTER);
-			
-			
-			username = new TextField();
-			username.setTitle("Username"); 
-			username.setHint("Username");
-			username.setShowHintInField(true);
-			
-			password = new PasswordItem();
-			password.setTitle("Password");
-			password.setWidth("*");
-			password.setHint("Password");
-			password.setShowHintInField(true);
-			
-			DynamicForm form = new DynamicForm();
-			form.setFields(username, password);
-			form.setWrapItemTitles(true);
-			form.setNumCols(2);
-			form.setColWidths("120", "300");
-			form.setCellPadding(10);
-			
-			
-			forgotPassword = new Label();
-			forgotPassword.setContents("Forgot password");
-			forgotPassword.setAutoHeight();
-			forgotPassword.setCursor(Cursor.HAND);
-	
-			
-			loginButton = new IButton();
-			loginButton.setTitle("Login");
-			
-			HLayout buttonLayout = new HLayout();
-			buttonLayout.setMembersMargin(40);
-			buttonLayout.addMembers(forgotPassword , loginButton);
-			buttonLayout.setAlign(Alignment.CENTER);		
-			buttonLayout.setAutoHeight();
-			buttonLayout.setAutoWidth();
-			buttonLayout.setMembersMargin(10);
-			
-			
-			signup = new Label();
-			signup.setContents("If you don't have an account? SignUp");
-			signup.setAutoHeight();
-			signup.setPadding(5);
-			signup.setCursor(Cursor.HAND);
-			signup.setAlign(Alignment.CENTER);
+		/* Img desLogo = new Img("logo-2.png"); */
+		/* Img desLogo = new Img("des_logo.jpg"); */
+		Img desLogo = new Img("moes_logo.png");
 
-			
-			VLayout layout = new VLayout();
-			layout.setMembersMargin(10);		
-			layout.setWidth100();
-			layout.setAutoHeight();
-			
-						
-			layout.addMember(imgLayout);
-			layout.addMember(loginLabel);
-			layout.addMember(form);
-			layout.addMember(buttonLayout);
-			layout.addMember(signup);
-		    this.addMember(layout);
+		desLogo.setWidth(100);
+		desLogo.setHeight(100);
+		desLogo.setTooltip("DIRECTORATE OF EDUCATION STANDARDS");
+		desLogo.setLayoutAlign(Alignment.CENTER);
+		desLogo.setAlign(Alignment.CENTER);
+
+		username = new TextField();
+		username.setTitle("<span style='color:#ffffff;font-weight: 600;'>UserName</span>");
+		username.setHint("Username");
+		username.setShowHintInField(true);
+		username.setWidth("*");
+		username.setHeight(30);
+
+		password = new PasswordItem();
+		password.setTitle("<span style='color:#ffffff;font-weight: 600;'>Password</span>");
+		password.setHint("Password");
+		password.setShowHintInField(true);
+		password.setWidth("*");
+		password.setHeight(30);
+
+		DynamicForm form = new DynamicForm();
+		form.setFields(username, password);
+		form.setWrapItemTitles(true);
+		form.setNumCols(2);
+		form.setColWidths("120", "300");
+		form.setCellPadding(10);
+
+		slogan = new Label();
+		slogan.setContents(
+				"<span style='color:#ffffff;font-weight: 600;font-size: 19px;'>MINISTRY OF EDUCATION AND SPORTS</span>");
+		slogan.setAutoHeight();
+		// slogan.setCursor(Cursor.HAND);
+		slogan.setLayoutAlign(Alignment.CENTER);
+		slogan.setAlign(Alignment.CENTER);
+		slogan.setWidth("500px");
+
+		slogan2 = new Label();
+		slogan2.setContents(
+				"<span style='color:#ffffff;font-weight: 600;font-size: 18px;'>TeLa System </span>");
+		slogan2.setAutoHeight();
+		slogan2.setLayoutAlign(Alignment.CENTER);
+		slogan2.setAlign(Alignment.CENTER);
+		slogan2.setWidth("500px");
+
+		forgotPasswordField = new Label();
+		forgotPasswordField.setContents("<span style='color:#ffffff;font-weight: 600;'>Forgot password</span>");
+		forgotPasswordField.setAutoHeight();
+		forgotPasswordField.setCursor(Cursor.HAND);
+
+		loginButton = new IButton();
+		loginButton.setTitle("Login");
+
+		signup = new Label();
+		signup.setContents("<span style='color:#ffffff;font-weight: 600;'>If you don't have an account? SignUp</span>");
+		signup.setAutoHeight();
+		signup.setPadding(5);
+		signup.setCursor(Cursor.HAND);
+		signup.setAlign(Alignment.CENTER);
+
+		VLayout sloganLayout = new VLayout();
+		sloganLayout.addMember(slogan);
+		sloganLayout.addMember(slogan2);
+		sloganLayout.setAutoHeight();
+		sloganLayout.setWidth100();
+		sloganLayout.setMembersMargin(10); 
+		sloganLayout.setMargin(5); 
+
+		HLayout loginbuttonLayout = new HLayout();
+		loginbuttonLayout.addMember(loginButton);
+		loginbuttonLayout.setAutoHeight();
+		loginbuttonLayout.setAutoWidth();
+
+		HLayout otherbuttonLayout = new HLayout();
+		otherbuttonLayout.addMember(forgotPasswordField);
+		otherbuttonLayout.addMember(signup);
+		otherbuttonLayout.setAutoHeight();
+		otherbuttonLayout.setAutoWidth();
+
+		VLayout buttonLayout = new VLayout();
+		buttonLayout.addMember(loginbuttonLayout);
+		buttonLayout.addMember(otherbuttonLayout);
+		buttonLayout.setStyleName("login-form-button");
+		buttonLayout.setAutoHeight();
+		buttonLayout.setAutoWidth();
+		buttonLayout.setMembersMargin(10);
+
+		// 00698C
+		VLayout layout = new VLayout();
+		layout.addMember(desLogo);
+		layout.addMember(sloganLayout);
+		layout.addMember(form);
+		layout.addMember(buttonLayout);
+		layout.setStyleName("login-form");
+		layout.setAutoHeight();
+		layout.setAutoWidth();
+
+		this.addMember(layout);
+		this.setOverflow(Overflow.AUTO);
+		this.setBackgroundColor("#f0f0f0");
+		/* this.setBackgroundColor("#ffffff"); */
 
 	}
 
@@ -128,12 +146,12 @@ public class LoginPane extends VLayout {
 		return password;
 	}
 
-	public Label getForgotPassword() {
-		return forgotPassword;
+	public Label getForgotPasswordField() {
+		return forgotPasswordField;
 	}
 
 	public Label getSignup() {
 		return signup;
-	}	
+	}
 
 }

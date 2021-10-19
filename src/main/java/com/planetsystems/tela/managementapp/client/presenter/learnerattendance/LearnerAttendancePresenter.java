@@ -5,56 +5,47 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+import com.planetsystems.tela.dto.AcademicTermDTO;
+import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.FilterDTO;
+import com.planetsystems.tela.dto.LearnerAttendanceDTO;
+import com.planetsystems.tela.dto.SchoolClassDTO;
+import com.planetsystems.tela.dto.SchoolDTO;
+import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.managementapp.client.gin.SessionManager;
+import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockInWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffattendance.FilterClockOutWindow;
-import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.StaffEnrollmentWindow;
-import com.planetsystems.tela.managementapp.client.widget.ComboBox;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
+import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
-import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
-import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
+import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.HoverEvent;
-import com.smartgwt.client.widgets.events.HoverHandler;
-import com.smartgwt.client.widgets.form.fields.TextAreaItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
-import com.planetsystems.tela.dto.AcademicTermDTO;
-import com.planetsystems.tela.dto.AcademicYearDTO;
-import com.planetsystems.tela.dto.DistrictDTO;
-import com.planetsystems.tela.dto.LearnerAttendanceDTO;
-import com.planetsystems.tela.dto.SchoolClassDTO;
-import com.planetsystems.tela.dto.SchoolDTO;
-import com.planetsystems.tela.dto.SchoolStaffDTO;
-import com.planetsystems.tela.dto.SystemFeedbackDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
-import com.planetsystems.tela.managementapp.client.place.NameTokens;
 
 public class LearnerAttendancePresenter
 		extends Presenter<LearnerAttendancePresenter.MyView, LearnerAttendancePresenter.MyProxy> {
@@ -72,8 +63,9 @@ public class LearnerAttendancePresenter
 
 	@Inject
 	private DispatchAsync dispatcher;
-	
-	DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+
+	DateTimeFormat dateTimeFormat = DateTimeFormat
+			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	@NameToken(NameTokens.learnerAttendance)
@@ -84,14 +76,13 @@ public class LearnerAttendancePresenter
 	@Inject
 	LearnerAttendancePresenter(EventBus eventBus, MyView view, MyProxy proxy) {
 		super(eventBus, view, proxy, MainPresenter.SLOT_Main);
-
 	}
 
 	@Override
 	protected void onBind() {
 		super.onBind();
 		setControlsPaneMenuButtons();
-		getAllLearnerAttendance();
+		//getAllLearnerAttendance();
 	}
 
 	public void setControlsPaneMenuButtons() {
@@ -99,93 +90,63 @@ public class LearnerAttendancePresenter
 		MenuButton edit = new MenuButton("Edit");
 		MenuButton delete = new MenuButton("Delete");
 		MenuButton filter = new MenuButton("Filter");
-		filter.setCanHover(true);
 
 		List<MenuButton> buttons = new ArrayList<>();
 		buttons.add(newButton);
-		buttons.add(edit);
-		buttons.add(delete);
+		//buttons.add(edit);
+		//buttons.add(delete);
 		buttons.add(filter);
 
-		getView().getControlsPane().addMenuButtons(buttons);
+		getView().getControlsPane().addMenuButtons("Learner Attendance",buttons);
+		loadAdvancedFilter();
 		addLearnerAttendance(newButton);
 		selectFilterOption(filter);
 
 	}
-	
-	
-	
+
 	private void selectFilterOption(final MenuButton filter) {
-	       final Menu menu = new Menu();
-	       MenuItem basic = new MenuItem("Base Filter");
-	       MenuItem advanced = new MenuItem("Advanced Filter");
-	       
-	       menu.setItems(basic , advanced);
-	      
-	       filter.addHoverHandler(new HoverHandler() {
+		final Menu menu = new Menu();
+		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem advanced = new MenuItem("Advanced Filter");
+
+		menu.setItems(basic, advanced);
+
+		filter.addClickHandler(new ClickHandler() {
+
 			@Override
-			public void onHover(HoverEvent event) {
-			 menu.showNextTo(filter, "bottom");
+			public void onClick(ClickEvent event) {
+				menu.showNextTo(filter, "bottom");
 			}
 		});
 
-	       basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			
+		basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-			SC.say("Basic Search");
+				getView().getAttendancePane().getLearnerAttendanceListGrid().setShowFilterEditor(true);
 			}
 		});
-	       
-	       advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-	   		
-	   		@Override
-	   		public void onClick(MenuItemClickEvent event) {
-	   		FilterLearnerAttendanceWindow window = new FilterLearnerAttendanceWindow();
-	   		loadFilterLearnerAttendanceAcademicYearCombo(window);
-	   		loadFilterLearnerAttendanceAcademicTermCombo(window);
-	   		loadFilterLearnerAttendanceDistrictCombo(window);
-	   		loadFilterLearnerAttendanceSchoolCombo(window);
-	   		window.show();
-	   		filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(window);
-	   		disableEnableFilterButton(window);
-	   		}		
-	   	});
-	       
-		}
 
-	
-	private void disableEnableFilterButton(final FilterLearnerAttendanceWindow window) {;
-	window.getFilterLearnerAttendancePane().getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
+		advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
-		@Override
-		public void onChanged(ChangedEvent event) {
-
-			if (window.getFilterLearnerAttendancePane().getAcademicTermCombo().getValueAsString() != null && window.getFilterLearnerAttendancePane().getSchoolCombo().getValueAsString() != null) {
-                window.getFilterButton().setDisabled(false);
-			}else {
-				window.getFilterButton().setDisabled(true);	
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				
+				loadAdvancedFilter();
 			}
-		}
-	});
+		});
 
-	window.getFilterLearnerAttendancePane().getSchoolCombo().addChangedHandler(new ChangedHandler() {
-
-		@Override
-		public void onChanged(ChangedEvent event) {
-			if (	window.getFilterLearnerAttendancePane().getAcademicTermCombo().getValueAsString() != null && window.getFilterLearnerAttendancePane().getSchoolCombo().getValueAsString() != null) {
-				window.getFilterButton().setDisabled(false);
-			}else {
-				window.getFilterButton().setDisabled(true);
-			}
-		}
-	});
-
-}
+	}
 	
-	
-	
-	
+	private void loadAdvancedFilter() {
+		FilterLearnerAttendanceWindow window = new FilterLearnerAttendanceWindow();
+		loadFilterLearnerAttendanceAcademicYearCombo(window);
+		loadFilterLearnerAttendanceAcademicTermCombo(window);
+		loadFilterLearnerAttendanceDistrictCombo(window);
+		loadFilterLearnerAttendanceSchoolCombo(window);
+		filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(window);
+		window.show();
+	}
 
 //////////////////////LEARNER Attendance
 
@@ -196,9 +157,15 @@ public class LearnerAttendancePresenter
 			public void onClick(ClickEvent event) {
 				LearnerAttendanceWindow window = new LearnerAttendanceWindow();
 				setTotalAbsentPresent(window);
-				loadAcademicTermCombo(window, null);
-				loadSchoolClassCombo(window, null);
-				loadSchoolStaffCombo(window, null);
+				String defaultValue = null;
+				loadAcademicYearCombo(window, defaultValue);
+				loadAcademicTermCombo(window, defaultValue);
+				loadDistrictCombo(window, defaultValue);
+				loadSchoolCombo(window, defaultValue);
+				loadSchoolClassCombo(window, defaultValue);
+				loadSchoolStaffCombo(window, defaultValue);
+				loadSchoolClassCombo(window, defaultValue);
+				loadSchoolStaffCombo(window, defaultValue);
 				window.show();
 
 				saveLearnerAttendance(window);
@@ -214,7 +181,7 @@ public class LearnerAttendancePresenter
 			@Override
 			public void onClick(ClickEvent event) {
 
-				if(checkIfNoLearnerAttendanceWindowFieldIsEmpty(window)) {
+				if (checkIfNoLearnerAttendanceWindowFieldIsEmpty(window)) {
 					LearnerAttendanceDTO dto = new LearnerAttendanceDTO();
 
 					dto.setBoysAbsent(Long.parseLong(window.getBoysAbsentField().getValueAsString()));
@@ -226,61 +193,30 @@ public class LearnerAttendancePresenter
 					dto.setAttendanceDate(dateFormat.format(new Date()));
 
 					AcademicTermDTO academicTermDTO = new AcademicTermDTO(
-							window.getAcademicTermComboBox().getValueAsString());
+							window.getAcademicTermCombo().getValueAsString());
 					dto.setAcademicTermDTO(academicTermDTO);
 
-					SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassComboBox().getValueAsString());
+					SchoolClassDTO schoolClassDTO = new SchoolClassDTO(window.getSchoolClassCombo().getValueAsString());
 					dto.setSchoolClassDTO(schoolClassDTO);
 
-					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffComboBox().getValueAsString());
+					SchoolStaffDTO schoolStaffDTO = new SchoolStaffDTO(window.getSchoolStaffCombo().getValueAsString());
 					dto.setSchoolStaffDTO(schoolStaffDTO);
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_LEARNER_ATTENDANCE, dto);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
+					map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_LEARNER_ATTENDANCE);
 
-					dispatcher.execute(new RequestAction(RequestConstant.SAVE_LEARNER_ATTENDANCE, map),
-							new AsyncCallback<RequestResult>() {
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-
-								}
-
-								@Override
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									
-									
-									if (result != null) {
-										SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-										if (feedbackDTO != null) {
-											if (feedbackDTO.isResponse()) {
-												clearAcademicYearWindowFields(window);
-												window.close();
-												// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-												getView().getAttendancePane().getLearnerAttendanceListGrid()
-														.addRecordsToGrid(result.getLearnerAttendanceDTOs());
-											} else {
-												SC.warn("Not Successful \n ERROR:",
-														result.getSystemFeedbackDTO().getMessage());
-											}
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
-				}else {
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							clearAcademicYearWindowFields(window);
+							window.close();
+							SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+							getAllLearnerAttendance();
+						}
+					});
+				} else {
 					SC.warn("Please fill all fields");
 				}
 
@@ -291,9 +227,12 @@ public class LearnerAttendancePresenter
 
 	private void clearAcademicYearWindowFields(LearnerAttendanceWindow window) {
 
-		window.getAcademicTermComboBox().clearValue();
-		window.getSchoolClassComboBox().clearValue();
-		window.getSchoolStaffComboBox().clearValue();
+		window.getAcademicYearCombo().clearValue();
+		window.getAcademicTermCombo().clearValue();
+		window.getDistrictCombo().clearValue();
+		window.getSchoolCombo().clearValue();
+		window.getSchoolClassCombo().clearValue();
+		window.getSchoolStaffCombo().clearValue();
 		window.getCommentField().clearValue();
 		window.getGirlsAbsentField().clearValue();
 		window.getBoysAbsentField().clearValue();
@@ -301,214 +240,131 @@ public class LearnerAttendancePresenter
 		window.getBoysPresentField().clearValue();
 		window.getTotalAbsentField().clearValue();
 		window.getTotalPresentField().clearValue();
-		
-	}
-	
-	private boolean checkIfNoLearnerAttendanceWindowFieldIsEmpty(LearnerAttendanceWindow window) {
-	    boolean flag = true;
 
-	    if(window.getAcademicTermComboBox().getValueAsString() == null) flag = false;
-	    
-	    if(window.getSchoolClassComboBox().getValueAsString() == null) flag = false;
-	    
-	    if(window.getSchoolStaffComboBox().getValueAsString() == null) flag = false;
-	    
+	}
+
+	private boolean checkIfNoLearnerAttendanceWindowFieldIsEmpty(LearnerAttendanceWindow window) {
+		boolean flag = true;
+
+		if (window.getAcademicTermCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getAcademicYearCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getDistrictCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolClassCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolStaffCombo().getValueAsString() == null)
+			flag = false;
+
 //	    if(window.getCommentField().getValueAsString() == null) flag = false;
-	    
-	    if(window.getGirlsAbsentField().getValueAsString() == null) flag = false;
-	    
-	    if(window.getBoysAbsentField().getValueAsString() == null) flag = false;
-	    
-	    if(window.getBoysPresentField().getValueAsString() == null) flag = false;
-	    
-	    if(window.getGirlsPresentField().getValueAsString() == null) flag = false;
-	    
-	    
+
+		if (window.getGirlsAbsentField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getBoysAbsentField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getBoysPresentField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getGirlsPresentField().getValueAsString() == null)
+			flag = false;
+
 		return flag;
 	}
-	
+
+	private void loadAcademicYearCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+		ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, defaultValue);
+	}
+
 	private void loadAcademicTermCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_ACADEMIC_TERM, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERM, map),
-				new AsyncCallback<RequestResult>() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadAcademicTermCombo(window.getAcademicTermCombo(), dispatcher, placeManager, defaultValue);
+			}
+		});
 
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
+	}
 
-					}
+	private void loadDistrictCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+	}
 
-					@Override
-					public void onSuccess(RequestResult result) {
+	private void loadSchoolCombo(final LearnerAttendanceWindow window, final String defaultValue) {
+		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
-									valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
-								}
-								window.getAcademicTermComboBox().setValueMap(valueMap);
-
-								if (defaultValue != null) {
-									window.getAcademicTermComboBox().setValue(defaultValue);
-								}
-
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+						placeManager, defaultValue);
+			}
+		});
 	}
 
 	private void loadSchoolStaffCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL_STAFF, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF, map),
-				new AsyncCallback<RequestResult>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-									String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName()
-											+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-									valueMap.put(schoolStaffDTO.getId(), fullName);
-								}
-								window.getSchoolStaffComboBox().setValueMap(valueMap);
-
-								if (defaultValue != null) {
-									window.getSchoolStaffComboBox().setValue(defaultValue);
-								}
-
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolStaffComboBySchool(window.getSchoolCombo(), window.getSchoolStaffCombo(),
+						dispatcher, placeManager, defaultValue);
+			}
+		});
 	}
 
 	private void loadSchoolClassCombo(final LearnerAttendanceWindow window, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_SCHOOL_CLASS, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_CLASS, map),
-				new AsyncCallback<RequestResult>() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (window.getAcademicTermCombo().getValueAsString() != null
+						&& window.getSchoolCombo().getValueAsString() != null) {
+					ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
+							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
+							defaultValue);
+				}
+			}
+		});
 
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
+		window.getAcademicTermCombo().addChangedHandler(new ChangedHandler() {
 
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-
-							if (result.getSystemFeedbackDTO() != null) {
-								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-								for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
-									valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-								}
-								window.getSchoolClassComboBox().setValueMap(valueMap);
-
-								if (defaultValue != null) {
-									window.getSchoolClassComboBox().setValue(defaultValue);
-								}
-
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-				});
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (window.getAcademicTermCombo().getValueAsString() != null
+						&& window.getSchoolCombo().getValueAsString() != null) {
+					ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
+							window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager,
+							defaultValue);
+				}
+			}
+		});
 	}
 
 	private void getAllLearnerAttendance() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(RequestConstant.GET_LEARNER_ATTENDANCE, null);
-		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-		SC.showPrompt("", "", new SwizimaLoader());
+		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCE);
+		else
+			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_ATTENDANCES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
 
-		dispatcher.execute(new RequestAction(RequestConstant.GET_LEARNER_ATTENDANCE, map),
-				new AsyncCallback<RequestResult>() {
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println(caught.getMessage());
-						SC.warn("ERROR", caught.getMessage());
-						GWT.log("ERROR " + caught.getMessage());
-						SC.clearPrompt();
-
-					}
-
-					@Override
-					public void onSuccess(RequestResult result) {
-
-						SC.clearPrompt();
-						SessionManager.getInstance().manageSession(result, placeManager);
-						if (result != null) {
-							SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-							if (feedbackDTO != null) {
-								if (feedbackDTO.isResponse()) {
-									// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-									getView().getAttendancePane().getLearnerAttendanceListGrid()
-											.addRecordsToGrid(result.getLearnerAttendanceDTOs());
-								} else {
-									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-								}
-							}
-						} else {
-							SC.warn("ERROR", "Unknow error");
-						}
-
-					}
-
-				});
-
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				getView().getAttendancePane().getLearnerAttendanceListGrid()
+						.addRecordsToGrid(result.getLearnerAttendanceDTOs());
+			}
+		});
 	}
 
 	public void setTotalAbsentPresent(final LearnerAttendanceWindow window) {
@@ -598,256 +454,90 @@ public class LearnerAttendancePresenter
 		});
 
 	}
-	
-	////////////////////////LOAD FILTER ATTENDANCE COMBOS
-	
-	//loads school combo in filter learner head count pane
-		private void loadFilterLearnerAttendanceSchoolCombo(final FilterLearnerAttendanceWindow window) {
-			window.getFilterLearnerAttendancePane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
-				@Override
-				public void onChanged(ChangedEvent event) {
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					String districtId = window.getFilterLearnerAttendancePane().getDistrictCombo().getValueAsString();
-					map.put(RequestConstant.GET_SCHOOLS_IN_DISTRICT, districtId);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
+	//////////////////////// LOAD FILTER ATTENDANCE COMBOS
 
-					dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOLS_IN_DISTRICT, map),
-							new AsyncCallback<RequestResult>() {
+	// loads school combo in filter learner head count pane
+	private void loadFilterLearnerAttendanceSchoolCombo(final FilterLearnerAttendanceWindow window) {
+		window.getFilterLearnerAttendancePane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadSchoolComboByDistrict(window.getFilterLearnerAttendancePane().getDistrictCombo(),
+						window.getFilterLearnerAttendancePane().getSchoolCombo(), dispatcher, placeManager, null);
+			}
+		});
 
-								}
+	}
 
-								@Override
-								public void onSuccess(RequestResult result) {
+	// loads district combo in filter learner head count pane
+	private void loadFilterLearnerAttendanceDistrictCombo(final FilterLearnerAttendanceWindow window) {
+		ComboUtil.loadDistrictCombo(window.getFilterLearnerAttendancePane().getDistrictCombo(), dispatcher,
+				placeManager, null);
+	}
 
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									if (result != null) {
+	// loads academic year combo in filter learner head count pane
+	private void loadFilterLearnerAttendanceAcademicYearCombo(final FilterLearnerAttendanceWindow window) {
+		ComboUtil.loadAcademicYearCombo(window.getFilterLearnerAttendancePane().getAcademicYearCombo(), dispatcher,
+				placeManager, null);
+	}
 
-										if (result.getSystemFeedbackDTO() != null) {
-											LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+	// loads academic year combo in filter learner head count pane
+	private void loadFilterLearnerAttendanceAcademicTermCombo(final FilterLearnerAttendanceWindow window) {
+		window.getFilterLearnerAttendancePane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
 
-											for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-												valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-											}
-											window.getFilterLearnerAttendancePane().getSchoolCombo().setValueMap(valueMap);
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
+			@Override
+			public void onChanged(ChangedEvent event) {
 
-								}
-							});
-				}
-			});
+				ComboUtil.loadAcademicTermComboByAcademicYear(
+						window.getFilterLearnerAttendancePane().getAcademicYearCombo(),
+						window.getFilterLearnerAttendancePane().getAcademicTermCombo(), dispatcher, placeManager, null);
+			}
+		});
 
-		}
+	}
 
-	//loads district combo in filter learner head count pane	
-		private void loadFilterLearnerAttendanceDistrictCombo(final FilterLearnerAttendanceWindow window) {
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestConstant.GET_DISTRICT, null);
-			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-			SC.showPrompt("", "", new SwizimaLoader());
+	////////////////////// END FILTER ATTENDANCE COMBOS
 
-			dispatcher.execute(new RequestAction(RequestConstant.GET_DISTRICT, map), new AsyncCallback<RequestResult>() {
+	// filter
+	private void filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(
+			final FilterLearnerAttendanceWindow window) {
+		window.getFilterButton().addClickHandler(new ClickHandler() {
 
-				@Override
-				public void onFailure(Throwable caught) {
-					System.out.println(caught.getMessage());
-					SC.warn("ERROR", caught.getMessage());
-					GWT.log("ERROR " + caught.getMessage());
-					SC.clearPrompt();
+			@Override
+			public void onClick(ClickEvent event) {
+				String academicYearId = window.getFilterLearnerAttendancePane().getAcademicYearCombo()
+						.getValueAsString();
+				String academicTermId = window.getFilterLearnerAttendancePane().getAcademicTermCombo()
+						.getValueAsString();
+				String districtId = window.getFilterLearnerAttendancePane().getDistrictCombo().getValueAsString();
+				String schoolId = window.getFilterLearnerAttendancePane().getSchoolCombo().getValueAsString();
+				String date = dateFormat
+						.format(window.getFilterLearnerAttendancePane().getAttendanceDateItem().getValueAsDate());
+				FilterDTO dto = new FilterDTO();
+				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
+				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+				dto.setDate(date);
 
-				}
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestDelimeters.FILTER_LEARNER_ATTENDANCES, dto);
 
-				@Override
-				public void onSuccess(RequestResult result) {
+				map.put(NetworkDataUtil.ACTION,
+						RequestConstant.FILTER_LEARNER_ATTENDANCE_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL);
 
-					SC.clearPrompt();
-					SessionManager.getInstance().manageSession(result, placeManager);
-					if (result != null) {
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-						if (result.getSystemFeedbackDTO() != null) {
-							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-							for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-								valueMap.put(districtDTO.getId(), districtDTO.getName());
-							}
-							window.getFilterLearnerAttendancePane().getDistrictCombo().setValueMap(valueMap);
-						}
-					} else {
-						SC.warn("ERROR", "Unknow error");
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						window.close();
+						getView().getAttendancePane().getLearnerAttendanceListGrid()
+								.addRecordsToGrid(result.getLearnerAttendanceDTOs());
 					}
-
-				}
-			});
-		}
-
-	//loads academic year combo in filter learner head count pane	
-		private void loadFilterLearnerAttendanceAcademicYearCombo(final FilterLearnerAttendanceWindow window) {
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestConstant.GET_ACADEMIC_YEAR, null);
-			map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-			SC.showPrompt("", "", new SwizimaLoader());
-
-			dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR, map),
-					new AsyncCallback<RequestResult>() {
-
-						@Override
-						public void onFailure(Throwable caught) {
-							System.out.println(caught.getMessage());
-							SC.warn("ERROR", caught.getMessage());
-							GWT.log("ERROR " + caught.getMessage());
-							SC.clearPrompt();
-
-						}
-
-						@Override
-						public void onSuccess(RequestResult result) {
-
-							SC.clearPrompt();
-							SessionManager.getInstance().manageSession(result, placeManager);
-							if (result != null) {
-
-								if (result.getSystemFeedbackDTO() != null) {
-									LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-									for (AcademicYearDTO academicYearDTO : result.getAcademicYearDTOs()) {
-										valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
-									}
-									window.getFilterLearnerAttendancePane().getAcademicYearCombo().setValueMap(valueMap);
-								}
-							} else {
-								SC.warn("ERROR", "Unknow error");
-							}
-
-						}
-					});
-		}
-
-	//loads academic year combo in filter learner head count pane	
-		private void loadFilterLearnerAttendanceAcademicTermCombo(final FilterLearnerAttendanceWindow window) {
-			window.getFilterLearnerAttendancePane().getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
-
-				@Override
-				public void onChanged(ChangedEvent event) {
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					String academicYearId = window.getFilterLearnerAttendancePane().getAcademicYearCombo().getValueAsString();
-					map.put(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, academicYearId);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
-
-					dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, map),
-							new AsyncCallback<RequestResult>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-
-								}
-
-								@Override
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									if (result != null) {
-
-										if (result.getSystemFeedbackDTO() != null) {
-											LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-											for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
-												valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
-											}
-											window.getFilterLearnerAttendancePane().getAcademicTermCombo().setValueMap(valueMap);
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-							});
-				}
-			});
-
-		}
-	
-	//////////////////////END FILTER ATTENDANCE COMBOS
-	
-	//filter
-		private void filterLearnerAttendanceByAcademicYearAcademicTermDistrictSchool(final FilterLearnerAttendanceWindow window) {
-			window.getFilterButton().addClickHandler(new ClickHandler() {
-				
-				@Override
-				public void onClick(ClickEvent event) {
-					String academicYearId = window.getFilterLearnerAttendancePane().getAcademicYearCombo().getValueAsString();
-					String academicTermId = window.getFilterLearnerAttendancePane().getAcademicTermCombo().getValueAsString();
-					String districtId = window.getFilterLearnerAttendancePane().getDistrictCombo().getValueAsString();
-					String schoolId = window.getFilterLearnerAttendancePane().getSchoolCombo().getValueAsString();
-					String date = dateFormat.format(window.getFilterLearnerAttendancePane().getAttendanceDateItem().getValueAsDate());
-					
-					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-					map.put(FilterLearnerAttendanceWindow.ACADEMIC_YEAR_ID, academicYearId);
-					map.put(FilterLearnerAttendanceWindow.ACADEMIC_TERM_ID, academicTermId);
-					map.put(FilterLearnerAttendanceWindow.DISTRICT_ID, districtId);
-					map.put(FilterLearnerAttendanceWindow.SCHOOL_ID, schoolId);
-					map.put(FilterLearnerAttendanceWindow.ATTENDANCE_DATE, date);
-					
-					map.put(RequestConstant.GET_LEARNER_ATTENDANCE_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL, map);
-					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-					SC.showPrompt("", "", new SwizimaLoader());
-
-					dispatcher.execute(new RequestAction(RequestConstant.GET_LEARNER_ATTENDANCE_IN_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL , map),
-							new AsyncCallback<RequestResult>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									System.out.println(caught.getMessage());
-									SC.warn("ERROR", caught.getMessage());
-									GWT.log("ERROR " + caught.getMessage());
-									SC.clearPrompt();
-
-								}
-
-								@Override
-								public void onSuccess(RequestResult result) {
-
-									SC.clearPrompt();
-									SessionManager.getInstance().manageSession(result, placeManager);
-									if (result != null) {
-			                            SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-										if ( feedbackDTO != null) {
-											window.close();
-											if (result.getSystemFeedbackDTO().isResponse()) {
-												// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-												getView().getAttendancePane().getLearnerAttendanceListGrid().addRecordsToGrid(result.getLearnerAttendanceDTOs());
-											} else {
-												SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-											}
-										}
-									} else {
-										SC.warn("ERROR", "Unknow error");
-									}
-
-								}
-
-							});
-					
-				}
-			});
-		}
-
+				});
+			}
+		});
+	}
 
 }

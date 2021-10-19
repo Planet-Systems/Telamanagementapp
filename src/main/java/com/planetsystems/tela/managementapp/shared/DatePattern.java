@@ -8,7 +8,10 @@ public enum DatePattern {
     YEAR_MONTH_DAY("yyyy/MM/dd"),	//2012-01-31
     YEAR_MONTH_DAY_HOUR_MINUTE_SECONDS("yyyy/MM/dd HH:mm:ss"),	//2012-01-31 23:59:59
     YEAR_MONTH_DAY_HOUR_MINUTE_SECOND_MILLISECONDS("yyyy/MM/dd HH:mm:ss.SSS"), //2012-01-31 23:59:59.999
-    HOUR_MINUTE_SECONDS("HH:mm:ss");  //17:14:08
+    HOUR_MINUTE_SECONDS("HH:mm:ss"),
+    DAY("EEEE"),
+    YEAR("yyyy"),
+    DAY_DATE("EEEE dd/MM/yyyy");  //17:14:08
 
 
     private final String pattern;

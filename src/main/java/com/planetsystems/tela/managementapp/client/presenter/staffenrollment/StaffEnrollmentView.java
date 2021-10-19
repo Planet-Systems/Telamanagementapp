@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.SchoolStaffPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -31,17 +32,17 @@ class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.M
     	controlsPane = new ControlsPane();
     	tabSet = new TabSet();
     	
-    	Tab staffTab = new Tab();
-    	staffTab.setTitle(STAFF_ENROLLMENT);
-    	staffTab.setPane(staffEnrollmentPane);
+    	Tab tab1 = new Tab();
+    	tab1.setTitle(STAFF_ENROLLMENT);
+    	tab1.setPane(staffEnrollmentPane);
     	
-    	Tab teacherTab = new Tab();
-    	teacherTab.setTitle(TEACHER_LIST);
-    	teacherTab.setPane(schoolStaffPane);
+    	Tab tab2 = new Tab();
+    	tab2.setTitle(TEACHER_LIST);
+    	tab2.setPane(schoolStaffPane);
     
-    	tabSet.addTab(teacherTab);
-    	tabSet.addTab(staffTab);
-    
+    	tabSet.addTab(tab2);
+    	tabSet.addTab(tab1);
+    	 
     	controlsPane.addMember(new Label("Menus"));
     	
     	panel.addMember(controlsPane);

@@ -3,9 +3,7 @@ package com.planetsystems.tela.managementapp.client.gin;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.SystemErrorDTO;
-import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
@@ -15,12 +13,8 @@ import com.smartgwt.client.widgets.Dialog;
 public class SessionManager {
 
 	private static SessionManager instance = new SessionManager();
-	
-	//private String defaultOrganisation;
-	
-	//private DispatchAsync dispatcher;
-	
-    
+	public static String ADMIN = "Admin";
+
 	private SessionManager() {
 
 	}
@@ -33,15 +27,14 @@ public class SessionManager {
 
 		if (result != null) {
 			SystemErrorDTO errorDTO = result.getSystemErrorDTO();
-//			GWT.log("Manager ERROR  "+errorDTO);
-			
-			if(errorDTO != null) {
+
+			if (errorDTO != null) {
 				if (errorDTO.getMessage() != null && errorDTO.getErrorCode() != 0) {
-					
-					GWT.log("result.getSystemError().getStatus(): "+errorDTO.getErrorCode());
-					
+
+					//GWT.log("result.getSystemError().getStatus(): " + errorDTO.getErrorCode());
+
 					if (errorDTO.getErrorCode() == 403) {
-						//token expired and authentication issues
+						// token expired and authentication issues
 
 						final Dialog dialogProperties = new Dialog();
 						dialogProperties.setShowCloseButton(false);
@@ -53,79 +46,71 @@ public class SessionManager {
 							public void execute(Boolean value) {
 
 								if (value) {
-									logOut(placeManager);							
+									logOut(placeManager);
 								}
 
 							}
 						}, dialogProperties);
 
 					} else if (errorDTO.getErrorCode() == 8082) {
-						GWT.log("ERROR "+ errorDTO.getMessage());
-						//processing exception
+						GWT.log("ERROR " + errorDTO.getMessage());
+						// processing exception
 						SC.warn("ERROR ", errorDTO.getMessage());
-						
-					} else if(errorDTO.getErrorCode() == 500) {
-						GWT.log("ERROR "+ errorDTO.getMessage());
+
+					} else if (errorDTO.getErrorCode() == 500) {
+						GWT.log("ERROR " + errorDTO.getMessage());
 						SC.warn("ERROR ", errorDTO.getMessage());
 					} else {
-						GWT.log("ERROR "+ errorDTO.getMessage());
-						//exception
+						GWT.log("ERROR " + errorDTO.getMessage());
+						// exception
 						SC.warn("ERROR", errorDTO.getMessage());
 					}
-			}
+				}
 			}
 		}
 	}
 
-//	public void manageServerResonse(final RequestResult result) {
-//
-//		if (result != null) {
-//
-//			if (result.getSystemFeedbackDTO() != null) {
-//				if (result.getSystemFeedbackDTO().getStatusCode() != null) {
-//					if (result.getSystemFeedbackDTO().getStatusCode().equalsIgnoreCase("8082")) {
-//						SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
-//					} else {
-//						SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
-//					}
-//				}
-//			}
-//		}
-//	}
-
-//	public void redirectToLoginPage(final PlaceManager placeManager) {
-//		Cookies.removeCookie(RequestConstant.LOGIN_TOKEN);
-//		Cookies.removeCookie(RequestConstant.LOGED_IN);
-//		placeManager.revealDefaultPlace();
-//	}
-
 	public String getLoginToken() {
 		return "Bearer " + Cookies.getCookie(RequestConstant.AUTH_TOKEN);
 	}
-	
+
 	public void logOut(PlaceManager placeManager) {
 		Cookies.removeCookie(RequestConstant.AUTH_TOKEN);
 		Cookies.removeCookie(RequestConstant.LOGED_IN);
-		placeManager.revealPlace(new PlaceRequest.Builder()
-				.nameToken(NameTokens.login).build());
+		Cookies.removeCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
+		placeManager.revealCurrentPlace();
 	}
 
-//	public String getDefaultOrganisation() {
-//		return defaultOrganisation;
-//	}
+	public String getLoggedInUserGroup() {
+		return Cookies.getCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
+	}
+	/*
+	 * else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_CLASS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
 
-//	public void setDefaultOrganisation(String defaultOrganisation) {
-//		this.defaultOrganisation = defaultOrganisation;
-//	}
+				Client client = ClientBuilder.newClient();
 
-//	public DispatchAsync getDispatcher() {
-//		return dispatcher;
-//	}
-//
-//	public void setDispatcher(DispatchAsync dispatcher) {
-//		this.dispatcher = dispatcher;
-//	}
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-	
-	
+				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("schoolclasses")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				System.out.println("RESPONSE " + responseDto);
+				System.out.println("RES DATA " + responseDto.getData());
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+	 */
+
 }

@@ -5,6 +5,8 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.category.SubjectCategoryPane;
+import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.subject.SubjectPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -16,7 +18,7 @@ class SubjectCategoryView extends ViewImpl implements SubjectCategoryPresenter.M
 	private VLayout panel;
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
-	private SubCategoryPane subCategoryPane;
+	private SubjectCategoryPane subjectCategoryPane;
 	private SubjectPane subjectPane;
 	
 	public static final String SUB_CATEGORY_TAB_TITLE= "Subject Categories";
@@ -26,13 +28,13 @@ class SubjectCategoryView extends ViewImpl implements SubjectCategoryPresenter.M
     SubjectCategoryView() {
     	panel = new VLayout();
     	controlsPane = new ControlsPane();
-    	subCategoryPane = new SubCategoryPane();
+    	subjectCategoryPane = new SubjectCategoryPane();
     	subjectPane = new SubjectPane();
     	tabSet = new TabSet();
     	
     	Tab subcategoryTab = new Tab();
     	subcategoryTab.setTitle(SUB_CATEGORY_TAB_TITLE);
-    	subcategoryTab.setPane(subCategoryPane);
+    	subcategoryTab.setPane(subjectCategoryPane);
     	
     	Tab subjecTabTab = new Tab();
     	subjecTabTab.setTitle(SUBJECT_TAB_TITLE);
@@ -63,8 +65,8 @@ class SubjectCategoryView extends ViewImpl implements SubjectCategoryPresenter.M
 		return tabSet;
 	}
 
-	public SubCategoryPane getSubCategoryPane() {
-		return subCategoryPane;
+	public SubjectCategoryPane getSubCategoryPane() {
+		return subjectCategoryPane;
 	}
 
 	public SubjectPane getSubjectPane() {

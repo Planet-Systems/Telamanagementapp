@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 class LoginView extends ViewImpl implements LoginPresenter.MyView {
@@ -14,29 +15,21 @@ class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	private LoginPane loginPane;
 	private static final String DEFAULT_MARGIN = "0px";
 
-    @Inject
-    LoginView( ) {
-    	panel = new VLayout();
+	@Inject
+	LoginView() {
+		panel = new VLayout();
 		loginPane = new LoginPane();
-		
-		
-		VLayout centerLayout = new VLayout();
-		centerLayout.setLayoutAlign(Alignment.CENTER);
-		centerLayout.setBorder("1px solid green");
-		centerLayout.setWidth("50%");
-		//centerLayout.setAutoHeight();
-		centerLayout.setHeight("70%");
-		centerLayout.setMargin(50);
-		centerLayout.addMember(loginPane);
 
-		panel.addMember(centerLayout);
+		panel.addMember(loginPane);
 		panel.setWidth100();
-		panel.setHeight("90%");
+		panel.setHeight("100%");
+		panel.setBackgroundColor("#f0f0f0");
+		/* panel.setBackgroundColor("#ffffff"); */
+
 		Window.enableScrolling(false);
 		Window.setMargin(DEFAULT_MARGIN);
-    }
-    
-    
+	}
+
 	public Widget asWidget() {
 		return panel;
 	}
@@ -44,6 +37,5 @@ class LoginView extends ViewImpl implements LoginPresenter.MyView {
 	public LoginPane getLoginPane() {
 		return loginPane;
 	}
-    
-    
+
 }

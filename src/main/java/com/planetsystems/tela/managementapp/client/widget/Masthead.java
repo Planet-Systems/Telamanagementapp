@@ -17,11 +17,7 @@ public class Masthead extends VLayout {
 	private static final String WEST_WIDTH = "50%";
 	private static final String EAST_WIDTH = "50%";
 	private static final String CENTER_WIDTH = "20%";
-
-	// GOVERNMENT OF UGANDA REFUGEE RESPONSE MONITORING SYSTEM
-	// private static final String NAME_LABEL = "OPM-DoR";
-	private static final String NAME_LABEL = "URRMS";
-
+ 
 	private Label logedInUser;
 	private Label logedInUserRole;
 
@@ -29,27 +25,13 @@ public class Masthead extends VLayout {
 	private Img menu;
 	
 
-	private static final String LOGO = "telalogo.png";
+	private static final String LOGO = "moes_logo.png";
+	
+	private static final String LOGO2 = "telalogo.png";
 
 	public Masthead() {
 		super();
-
-		Label name = new Label();
-		name.setStyleName("crm-Masthead-Name");
-		name.setContents(NAME_LABEL);
-		name.setAutoHeight();
-		// name.setIcon(LOGO);
-
-		Label slogan = new Label();
-		// slogan.setContents("Refugee Response Monitoring & Evaluation E-Reporting");
-		// slogan.setContents("Uganda Refugee Actors Monitoring System");
-		slogan.setContents("Government of Uganda Refugee Response Monitoring System");
-		// slogan.setContents("Soft lock");
-		slogan.setAutoHeight();
-		slogan.setStyleName("crm-Masthead-slogan");
-
-		// initialize the East layout container
-
+   
 		logedInUser = new Label();
 		logedInUser.setContents("");
 		logedInUser.setAutoHeight();
@@ -76,8 +58,11 @@ public class Masthead extends VLayout {
 		menu.setStyleName("menu-switcher");
 		// menu.setMargin(5);
 
-		Img logo = new Img(LOGO, 120, 45);
+		Img logo = new Img(LOGO, 60, 50);
 		logo.setMargin(5);
+		
+		Img logo2 = new Img(LOGO2, 100, 50);
+		logo2.setMargin(5);
 	
 
 		// initialize the West layout container
@@ -86,6 +71,7 @@ public class Masthead extends VLayout {
 		westLayout.setHeight(MASTHEAD_HEIGHT);
 //		westLayout.addMember(menu);
 	    westLayout.addMember(logo);
+	    westLayout.addMember(logo2);
 
 
 		VLayout eastLayout = new VLayout();
@@ -124,7 +110,7 @@ public class Masthead extends VLayout {
 		this.setStyleName("crm-Masthead");
 		// this.setAutoHeight();
 		this.setHeight(MASTHEAD_HEIGHT);
-		this.setBackgroundColor("#FFF101");
+		this.setBackgroundColor("#00698C");
 
 	}
 

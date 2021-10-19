@@ -16,8 +16,6 @@ public class TimetablePane extends VLayout {
 		header.setAutoHeight();
 		header.setMargin(10);
 		header.setAlign(Alignment.LEFT);
- 
-		//timeTableLessonListGrid  = new TimeTableLessonListGrid();
 		
 		timeTableListGrid = new TimeTableListGrid();
 		
