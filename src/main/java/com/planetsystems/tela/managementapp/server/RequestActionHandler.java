@@ -53,6 +53,7 @@ import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
+import com.planetsystems.tela.dto.UserAccountRequestDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
@@ -120,19 +121,39 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 								new GenericType<SystemResponseDTO<TokenFeedbackDTO>>() {
 								});
 
-				System.out.println("AUTH " + loginResponseDTO);
+				//// System.out.println("AUTH " + loginResponseDTO);
 
 				if (loginResponseDTO != null) {
-					System.out.println("LOGIN RESPONSE " + loginResponseDTO.getData());
+					// System.out.println("LOGIN RESPONSE " + loginResponseDTO.getData());
 					feedback = loginResponseDTO.getData();
 				}
 
 				client.close();
 				return new RequestResult(feedback);
 
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			}
-			if (action.getRequest().equalsIgnoreCase(RequestConstant.RESET_PASSWORD)) {
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.USER_ACCOUNT_REQUEST)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				UserAccountRequestDTO dto = (UserAccountRequestDTO) action.getRequestBody()
+						.get(RequestConstant.USER_ACCOUNT_REQUEST);
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
+						.path("userAccountRequests").request(MediaType.APPLICATION_JSON)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.RESET_PASSWORD)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
@@ -145,10 +166,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
 
-				System.out.println("AUTH " + responseDTO);
+				// System.out.println("AUTH " + responseDTO);
 
 				if (responseDTO != null) {
-					System.out.println("LOGIN RESPONSE " + responseDTO.getData());
+					// System.out.println("LOGIN RESPONSE " + responseDTO.getData());
 					feedback = responseDTO.getData();
 				}
 
@@ -156,8 +177,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			}
-			if (action.getRequest().equalsIgnoreCase(RequestConstant.CHANGE_PASSWORD)) {
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.CHANGE_PASSWORD)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				AuthenticationDTO dto = (AuthenticationDTO) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
@@ -175,10 +195,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
 
-				System.out.println("AUTH " + responseDTO);
+				// System.out.println("AUTH " + responseDTO);
 
 				if (responseDTO != null) {
-					System.out.println("LOGIN RESPONSE " + responseDTO.getData());
+					// System.out.println("LOGIN RESPONSE " + responseDTO.getData());
 					feedback = responseDTO.getData();
 					feedback.setResponse(responseDTO.isStatus());
 				}
@@ -282,8 +302,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				// System.out.println("RESPONSE " + responseDto);
-				// System.out.println("RES DATA " + responseDto.getData());
+				// //System.out.println("RESPONSE " + responseDto);
+				// //System.out.println("RES DATA " + responseDto.getData());
 
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
@@ -424,8 +444,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -452,8 +472,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -479,8 +499,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -542,7 +562,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				String id = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
-				System.out.println("DTO " + id);
+				// System.out.println("DTO " + id);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -580,8 +600,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -608,8 +628,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -648,7 +668,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				DistrictDTO dto = (DistrictDTO) action.getRequestBody().get(RequestConstant.UPDATE_DISTRICT);
 
-				System.out.println("DTO " + dto);
+				// System.out.println("DTO " + dto);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -711,8 +731,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -736,8 +756,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -761,8 +781,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -791,8 +811,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -819,8 +839,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -888,7 +908,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CATEGORY_ID);
-				System.out.println("DTO " + id);
+				// System.out.println("DTO " + id);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -927,8 +947,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -955,8 +975,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1059,8 +1079,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1086,8 +1106,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1116,8 +1136,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1147,8 +1167,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1174,8 +1194,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1204,8 +1224,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1246,8 +1266,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1349,8 +1369,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1376,8 +1396,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1407,8 +1427,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1437,8 +1457,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1542,8 +1562,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1646,8 +1666,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1672,8 +1692,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1700,8 +1720,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1788,14 +1808,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_SCHOOL_STAFF_BULK)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				
+
 				@SuppressWarnings("unchecked")
-				List<SchoolStaffDTO> dtos = (List<SchoolStaffDTO>) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
+				List<SchoolStaffDTO> dtos = (List<SchoolStaffDTO>) action.getRequestBody()
+						.get(RequestConstant.REQUEST_DATA);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -1836,8 +1857,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1864,8 +1885,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1890,8 +1911,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1918,8 +1939,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1949,8 +1970,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1980,8 +2001,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2087,8 +2108,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2112,8 +2133,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2144,8 +2165,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2182,8 +2203,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2291,8 +2312,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2319,8 +2340,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2353,8 +2374,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2391,8 +2412,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2493,8 +2514,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2519,8 +2540,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2552,8 +2573,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2589,8 +2610,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2617,8 +2638,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2648,8 +2669,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2680,8 +2701,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					feedback = postResponseDTO.getData();
 				}
 
-				System.out.println("RESPONSE " + feedback);
-				System.out.println("RES DATA " + feedback.getMessage());
+				// System.out.println("RESPONSE " + feedback);
+				// System.out.println("RES DATA " + feedback.getMessage());
 
 				client.close();
 				return new RequestResult(feedback);
@@ -2754,8 +2775,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2781,8 +2802,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2814,8 +2835,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2853,8 +2874,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2880,8 +2901,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2911,8 +2932,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3021,8 +3042,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3049,8 +3070,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3081,8 +3102,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3120,32 +3141,31 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
 				client.close();
 				return new RequestResult(feedback, list, null);
 			}
-			
-			
+
 			else if (action.getRequest().equalsIgnoreCase(
 					RequestConstant.FILTER_SMC_SUPERVISION_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
-				
+
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				
+
 				List<SMCSupervisionDTO> list = new ArrayList<SMCSupervisionDTO>();
-				
+
 				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestDelimeters.FILTER_DATA);
-				 
+
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-  
+
 				SystemResponseDTO<List<SMCSupervisionDTO>> responseDto = client.target(API_LINK).path("filter")
 						.path("smcSupervision").request(MediaType.APPLICATION_JSON).headers(headers)
 						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
@@ -3153,7 +3173,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 								});
 
 				list = responseDto.getData();
- 
+
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3207,8 +3227,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3235,8 +3255,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3317,8 +3337,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3361,7 +3381,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				if (list != null) {
 
-					System.out.println("list: " + list.size());
+					// System.out.println("list: " + list.size());
 				}
 
 				feedback.setResponse(responseDto.isStatus());
@@ -3436,8 +3456,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					systemUserProfileDTOs = responseDto.getData();
 					feedback.setResponse(responseDto.isStatus());
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("RESPONSE " + responseDto);
-					System.out.println("RES DATA " + responseDto.getData());
+					// System.out.println("RESPONSE " + responseDto);
+					// System.out.println("RES DATA " + responseDto.getData());
 				}
 
 				client.close();
@@ -3464,8 +3484,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					systemUserProfileDTO = responseDto.getData();
 					feedback.setResponse(responseDto.isStatus());
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("RESPONSE " + responseDto);
-					System.out.println("RES DATA " + responseDto.getData());
+					// System.out.println("RESPONSE " + responseDto);
+					// System.out.println("RES DATA " + responseDto.getData());
 				}
 
 				client.close();
@@ -3493,8 +3513,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				if (responseDto != null) {
 					feedback = responseDto.getData();
-					System.out.println("RESPONSE " + responseDto);
-					System.out.println("RES DATA " + responseDto.getData());
+					// System.out.println("RESPONSE " + responseDto);
+					// System.out.println("RES DATA " + responseDto.getData());
 				}
 
 				client.close();
@@ -3557,8 +3577,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3588,8 +3608,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3625,8 +3645,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3661,8 +3681,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3693,8 +3713,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3736,8 +3756,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3798,8 +3818,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("SUP RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("SUP RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3810,8 +3830,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.FILTER_STAFF_DAILY_SUPERVISIONS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
-				
-				
+
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyAttendanceSupervisionDTO> list = new ArrayList<StaffDailyAttendanceSupervisionDTO>();
 
@@ -3831,8 +3850,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("SUP RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("SUP RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3844,9 +3863,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			else if (action.getRequest().equalsIgnoreCase(
 					RequestConstant.GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
-				
-				System.out.println("GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE");
-				
+
+				// System.out.println("GET_STAFF_DAILY_SUPERVISIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS_SCHOOL_DATE");
+
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<StaffDailyAttendanceSupervisionDTO> list = new ArrayList<StaffDailyAttendanceSupervisionDTO>();
 
@@ -3859,8 +3878,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/schools/8a008082648d961401648dadbf0f0003?supervisionDate=18/03/2021
-				
-				//SystemUserProfile/StaffDailyAttendanceSupervisions/Schools/{schoolId}
+
+				// SystemUserProfile/StaffDailyAttendanceSupervisions/Schools/{schoolId}
 				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
 						.path("SystemUserProfile").path("StaffDailyAttendanceSupervisions").path("Schools")
 						.path(schoolId).queryParam("supervisionDate", supervisionDate)
@@ -3871,8 +3890,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("SUP RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("SUP RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3908,8 +3927,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("SUP RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("SUP RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3938,8 +3957,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto.getData() != null)
 					list = responseDto.getData();
 
-				System.out.println("SUP RESPONSE " + responseDto);
-				System.out.println("RES DATA " + responseDto.getData());
+				// System.out.println("SUP RESPONSE " + responseDto);
+				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -3969,7 +3988,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					feedback = postResponseDTO.getData();
 				}
 
-				System.out.println("Handler Time  " + dto);
+				// System.out.println("Handler Time " + dto);
 
 				client.close();
 				return new RequestResult(feedback);
@@ -4003,8 +4022,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_DISTRICT_SUMMARY_DASHBOARD)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
-				SystemFeedbackDTO systemFeedbackDTO=new SystemFeedbackDTO();
-				
+				SystemFeedbackDTO systemFeedbackDTO = new SystemFeedbackDTO();
+
 				DashboardSummaryDTO dashboardSummaryDTO = new DashboardSummaryDTO();
 
 				Client client = ClientBuilder.newClient();
@@ -4025,16 +4044,16 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					systemFeedbackDTO.setMessage(postResponseDTO.getMessage());
 					systemFeedbackDTO.setResponse(postResponseDTO.isStatus());
 					dashboardSummaryDTO = postResponseDTO.getData();
-					
-					System.out.println("DashboardSummaryDTO: is NOT====>>> null");
+
+					// System.out.println("DashboardSummaryDTO: is NOT====>>> null");
 
 				} else {
-					System.out.println("DashboardSummaryDTO: is null");
+					// System.out.println("DashboardSummaryDTO: is null");
 				}
 
 				client.close();
 
-				return new RequestResult(systemFeedbackDTO,dashboardSummaryDTO);
+				return new RequestResult(systemFeedbackDTO, dashboardSummaryDTO);
 
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_DEFAULT_ATTENDANCE_DASHBOARD)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
@@ -4056,11 +4075,11 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 					dashboardSummaryDTO = postResponseDTO.getData();
 
-					// System.out.println("DashboardSummaryDTO: " +
+					// //System.out.println("DashboardSummaryDTO: " +
 					// dashboardSummaryDTO.getTeacher());
 
 				} else {
-					System.out.println("DashboardSummaryDTO: is null");
+					// System.out.println("DashboardSummaryDTO: is null");
 				}
 
 				client.close();
@@ -4105,7 +4124,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			//
 			// List<SchoolDTO> dtos = (List<SchoolDTO>)
 			// action.getRequestBody().get(RequestConstant.DATA);
-			// System.out.println("Handler profileSchool "+dtos);
+			// //System.out.println("Handler profileSchool "+dtos);
 			// Client client = ClientBuilder.newClient();
 			//
 			// String token = (String)
@@ -4138,7 +4157,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				List<SchoolDTO> dtos = (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
-				System.out.println("Handler profileSchool  " + dtos);
+				// System.out.println("Handler profileSchool " + dtos);
 				Client client = ClientBuilder.newClient();
 				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
@@ -4193,7 +4212,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			//
 			// List<SchoolDTO> dtos = (List<SchoolDTO>)
 			// action.getRequestBody().get(RequestConstant.DATA);
-			// System.out.println("Handler profileSchool "+dtos);
+			// //System.out.println("Handler profileSchool "+dtos);
 			// Client client = ClientBuilder.newClient();
 			//
 			// String token = (String)
@@ -4228,7 +4247,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			//
 			// List<SchoolDTO> dtos = (List<SchoolDTO>)
 			// action.getRequestBody().get(RequestConstant.DATA);
-			// System.out.println("Handler profileSchool "+dtos);
+			// //System.out.println("Handler profileSchool "+dtos);
 			// Client client = ClientBuilder.newClient();
 			// String profileId = (String)
 			// action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
@@ -4310,7 +4329,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				System.out.println("MIGRATE_DATA_SUBJECTS");
+				// System.out.println("MIGRATE_DATA_SUBJECTS");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
@@ -4331,7 +4350,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
-				System.out.println("Entry SAVE_SystemMENU: ");
+				// System.out.println("Entry SAVE_SystemMENU: ");
 
 				@SuppressWarnings("unchecked")
 				List<SystemMenuDTO> systemMenuDTOs = (List<SystemMenuDTO>) action.getRequestBody()
@@ -4372,7 +4391,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				System.out.println("Entry DELETE_SystemMENU: ");
+				// System.out.println("Entry DELETE_SystemMENU: ");
 
 				@SuppressWarnings("unchecked")
 				List<SystemMenuDTO> list = (List<SystemMenuDTO>) action.getRequestBody()
@@ -4416,7 +4435,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			} else if (action.getRequest().equalsIgnoreCase(SystemMenuRequestConstant.GET_SYSTEM_MENUS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
-				System.out.println("GETTING SYSTEM mENUS ");
+				// System.out.println("GETTING SYSTEM mENUS ");
 
 				List<SystemMenuDTO> systemMenuDTOs = new ArrayList<SystemMenuDTO>();
 
@@ -4435,7 +4454,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				if (responseDTO != null) {
 					systemMenuDTOs = responseDTO.getData();
-					// System.out.println("MENUS "+systemMenuDTOs);
+					// //System.out.println("MENUS "+systemMenuDTOs);
 					feedback.setResponse(responseDTO.isStatus());
 					feedback.setMessage(responseDTO.getMessage());
 				}
@@ -4448,7 +4467,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					.equalsIgnoreCase(SystemUserGroupSystemMenuRequestConstant.SAVE_USER_GROUP_SYSTEM_MENU)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				System.out.println("Entry SAVE_USER_GROUP_SystemMENU: ");
+				// System.out.println("Entry SAVE_USER_GROUP_SystemMENU: ");
 				//
 				// SystemUserGroupDTO userGroup = (SystemUserGroupDTO) action.getRequestBody()
 				// .get(RequestConstant.GET_USER_GROUP);
@@ -4496,7 +4515,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(
 					SystemUserGroupSystemMenuRequestConstant.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU)) {
 
-				System.out.println("GET_USER_GROUP_SystemMENU");
+				// System.out.println("GET_USER_GROUP_SystemMENU");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -4507,7 +4526,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String userGroupId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_GROUP_ID);
 
-				System.out.println("GET_USER_GROUP_SystemMENU: " + userGroupId);
+				// System.out.println("GET_USER_GROUP_SystemMENU: " + userGroupId);
 
 				Client client = ClientBuilder.newClient();
 
@@ -4529,11 +4548,11 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LOGED_IN_USER_SYSTEM_MENUS)) {
 
-				System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS");
+				// System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS TOKEN " + token);
+				// System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS TOKEN " + token);
 
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
@@ -4554,13 +4573,13 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						list = data.getData();
 						feedback.setMessage(data.getMessage());
 						feedback.setResponse(data.isStatus());
-						System.out.println("GET_LOGEDIN_USER_SystemMENU list " + list.size());
+						// System.out.println("GET_LOGEDIN_USER_SystemMENU list " + list.size());
 					} else {
-						System.out.println("GET_LOGEDIN_USER_SystemMENU getData is null");
+						// System.out.println("GET_LOGEDIN_USER_SystemMENU getData is null");
 					}
 
 				} else {
-					System.out.println("GET_LOGEDIN_USER_SystemMENU list DATA IS NULL");
+					// System.out.println("GET_LOGEDIN_USER_SystemMENU list DATA IS NULL");
 				}
 
 				client.close();
@@ -4571,7 +4590,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LOGEDIN_USER_SystemMENU)) {
 
-				System.out.println("GET_LOGEDIN_USER_SystemMENU");
+				// System.out.println("GET_LOGEDIN_USER_SystemMENU");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
@@ -4591,9 +4610,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (data != null) {
 					if (data.getData() != null) {
 						list = data.getData();
-						System.out.println("GET_LOGEDIN_USER_SystemMENU list " + list.size());
+						// System.out.println("GET_LOGEDIN_USER_SystemMENU list " + list.size());
 					} else {
-						System.out.println("GET_LOGEDIN_USER_SystemMENU getData is null");
+						// System.out.println("GET_LOGEDIN_USER_SystemMENU getData is null");
 					}
 
 				}
@@ -4636,7 +4655,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// });
 
 				// list = getResponseDTO.getData();
-				// System.out.println("GET DTO " + getResponseDTO);
+				// //System.out.println("GET DTO " + getResponseDTO);
 
 				client.close();
 				return new RequestResult(feedback);
@@ -4672,7 +4691,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					// });
 					//
 					// list = getResponseDTO.getData();
-					// System.out.println("GET DTO " + getResponseDTO);
+					// //System.out.println("GET DTO " + getResponseDTO);
 				}
 
 				client.close();
@@ -4710,7 +4729,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					// });
 					//
 					// list = getResponseDTO.getData();
-					// System.out.println("GET DTO " + getResponseDTO);
+					// //System.out.println("GET DTO " + getResponseDTO);
 				}
 
 				client.close();
@@ -4722,14 +4741,16 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
 
-				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				// String token = (String)
+				// action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
-				headers.add(HttpHeaders.AUTHORIZATION, token);
+				// MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String,
+				// Object>();
+				// headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SystemUserGroupDTO>> responseDto = client.target(API_LINK)
-						.path("SystemUserGroups").request(MediaType.APPLICATION_JSON).headers(headers)
+						.path("SystemUserGroups").request(MediaType.APPLICATION_JSON)
 						.get(new GenericType<SystemResponseDTO<List<SystemUserGroupDTO>>>() {
 						});
 
@@ -4739,8 +4760,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					feedback.setMessage(responseDto.getMessage());
 				}
 
-				// System.out.println("RESPONSE " + responseDto);
-				// System.out.println("RES DATA " + responseDto.getData());
+				// //System.out.println("RESPONSE " + responseDto);
+				// //System.out.println("RES DATA " + responseDto.getData());
 
 				client.close();
 				return new RequestResult(feedback, list, null);
@@ -4799,10 +4820,10 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					list = responseDto.getData();
 					feedback.setResponse(responseDto.isStatus());
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				} else {
-					System.out.println("NULL RESPONSE");
+					// System.out.println("NULL RESPONSE");
 				}
 
 				client.close();
@@ -4833,8 +4854,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					list = responseDto.getData();
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -4842,7 +4863,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
-			
+
 			else if (action.getRequest()
 					.equalsIgnoreCase(ReportsRequestConstant.HeadTeacherEndOfWeekTimeAttendanceReport)) {
 
@@ -4867,8 +4888,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					list = responseDto.getData();
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -4876,7 +4897,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
-			
+
 			else if (action.getRequest()
 					.equalsIgnoreCase(ReportsRequestConstant.SchoolEndOfMonthTimeAttendanceREPORT)) {
 
@@ -4901,8 +4922,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					list = responseDto.getData();
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -4910,8 +4931,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
-			
-			
+
 			else if (action.getRequest()
 					.equalsIgnoreCase(ReportsRequestConstant.HeadTeacherEndOfMonthTimeAttendanceREPORT)) {
 
@@ -4936,8 +4956,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					list = responseDto.getData();
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -4968,12 +4988,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto != null) {
 					list = responseDto.getData();
 
-					System.out.println("SchoolEndOfTermTimeAttendanceDTO: " + list);
+					// System.out.println("SchoolEndOfTermTimeAttendanceDTO: " + list);
 
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -4981,8 +5001,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
-			
-			else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.HeadTeacherEndOfTermTimeAttendanceReport)) {
+
+			else if (action.getRequest()
+					.equalsIgnoreCase(ReportsRequestConstant.HeadTeacherEndOfTermTimeAttendanceReport)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<SchoolEndOfTermTimeAttendanceDTO> list = new ArrayList<SchoolEndOfTermTimeAttendanceDTO>();
@@ -5004,12 +5025,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (responseDto != null) {
 					list = responseDto.getData();
 
-					System.out.println("SchoolEndOfTermTimeAttendanceDTO: " + list);
+					// System.out.println("SchoolEndOfTermTimeAttendanceDTO: " + list);
 
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -5017,8 +5038,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
-			
-			
+
 			else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.HeadTeacherSupervisionReport)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
@@ -5032,19 +5052,19 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK)
-						.path("Reports").path("headTeacherSupervisionReport").request(MediaType.APPLICATION_JSON)
-						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
+						.path("headTeacherSupervisionReport").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<HeadTeacherSupervisionReportDTO>>() {
 								});
 
 				if (responseDto != null) {
 					reportDTO = responseDto.getData();
-  
+
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -5052,7 +5072,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
-			
+
 			else if (action.getRequest().equalsIgnoreCase(ReportsRequestConstant.SMCSupervisionReport)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
@@ -5066,19 +5086,19 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK)
-						.path("Reports").path("smcSupervisionReport").request(MediaType.APPLICATION_JSON)
-						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
+						.path("smcSupervisionReport").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SMCSupervisionReportDTO>>() {
 								});
 
 				if (responseDto != null) {
 					reportDTO = responseDto.getData();
-  
+
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					//System.out.println("REPORT1  " + responseDto);
-					//System.out.println("RESport1  " + responseDto.getData());
+					//// System.out.println("REPORT1 " + responseDto);
+					//// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -5112,8 +5132,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					list = responseDto.getData();
 					feedback.setResponse(true);
 					feedback.setMessage(responseDto.getMessage());
-					System.out.println("REPORT1  " + responseDto);
-					System.out.println("RESport1  " + responseDto.getData());
+					// System.out.println("REPORT1 " + responseDto);
+					// System.out.println("RESport1 " + responseDto.getData());
 				}
 
 				client.close();
@@ -5274,8 +5294,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
-			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.HeadTeacherTimeAttendanceReportExport)) {
 
 				System.out.print("HeadTeacherTimeAttendanceReportExport");
@@ -5327,8 +5346,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
-			 
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.HeadTeacherSupervidsionReportExport)) {
 
 				System.out.print("HeadTeacherSupervidsionReportExport");
@@ -5345,22 +5363,20 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
- 
-				
-				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK)
-						.path("Reports").path("headTeacherSupervisionReport").request(MediaType.APPLICATION_JSON)
-						.headers(headers).post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+
+				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
+						.path("headTeacherSupervisionReport").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<HeadTeacherSupervisionReportDTO>>() {
 								});
 
-			 
-				if (responseDto != null&&responseDto.getData()!=null) {
+				if (responseDto != null && responseDto.getData() != null) {
 
 					Gson gson = new Gson();
 					String jsonString = gson.toJson(responseDto.getData());
 
-					System.out.println("jsonString:::: "+jsonString);
-					
+					// System.out.println("jsonString:::: "+jsonString);
+
 					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
 					dto.setInputFileName("HeadTeacher Supervision");
 					dto.setJsonString(jsonString);
@@ -5383,7 +5399,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SMCSupervidsionReportExport)) {
 
 				System.out.print("SMCSupervidsionReportExport");
@@ -5400,22 +5416,20 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 				headers.add(HttpHeaders.AUTHORIZATION, token);
- 
-				
-				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK)
-						.path("Reports").path("smcSupervisionReport").request(MediaType.APPLICATION_JSON)
-						.headers(headers).post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
+
+				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
+						.path("smcSupervisionReport").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SMCSupervisionReportDTO>>() {
 								});
 
-			 
-				if (responseDto != null&&responseDto.getData()!=null) {
+				if (responseDto != null && responseDto.getData() != null) {
 
 					Gson gson = new Gson();
 					String jsonString = gson.toJson(responseDto.getData());
 
-					System.out.println("jsonString:::: "+jsonString);
-					
+					// System.out.println("jsonString:::: "+jsonString);
+
 					ReportPreviewRequestDTO dto = new ReportPreviewRequestDTO();
 					dto.setInputFileName("SMC Supervision");
 					dto.setJsonString(jsonString);
@@ -5488,8 +5502,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.HeadTeacherEndOfWeekTimeAttendanceReportExport)) {
+
+			else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.HeadTeacherEndOfWeekTimeAttendanceReportExport)) {
 
 				System.out.print("HeadTeacherEndOfWeekTimeAttendanceReportExport");
 
@@ -5588,8 +5603,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.HeadTeacherEndOfMonthTimeAttendanceReportExport)) {
+
+			else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.HeadTeacherEndOfMonthTimeAttendanceReportExport)) {
 
 				System.out.print("HeadTeacherEndOfMonthTimeAttendanceReportExport");
 
@@ -5688,8 +5704,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.HeadTeacherEndOfTermTimeAttendanceReportExport)) {
+
+			else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.HeadTeacherEndOfTermTimeAttendanceReportExport)) {
 
 				System.out.print("HeadTeacherEndOfTermTimeAttendanceReportExport");
 
@@ -6203,6 +6220,65 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_USER_ACCOUNT_REQUEST)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<UserAccountRequestDTO> list = new ArrayList<UserAccountRequestDTO>();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<UserAccountRequestDTO>> responseDto = client.target(API_LINK)
+						.path("userAccountRequests").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<UserAccountRequestDTO>>>() {
+						});
+
+				if (responseDto != null) {
+					list = responseDto.getData();
+				}
+
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.APPROVE_USER_ACCOUNT_REQUEST)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<UserAccountRequestDTO> list = new ArrayList<UserAccountRequestDTO>();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				UserAccountRequestDTO dto = (UserAccountRequestDTO) action.getRequestBody()
+						.get(RequestConstant.APPROVE_USER_ACCOUNT_REQUEST);
+
+				Client client = ClientBuilder.newClient();
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
+						.path("userAccountRequests").path("approve").request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 
 		} catch (ForbiddenException exception) {

@@ -25,6 +25,8 @@ import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
+import com.planetsystems.tela.managementapp.client.menu.ApprovalsData;
+import com.planetsystems.tela.managementapp.client.menu.ApprovalsDataSource;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageData;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageDataSource;
 import com.planetsystems.tela.managementapp.client.menu.IncentivesData;
@@ -295,9 +297,10 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				List<String> attendance = new ArrayList<String>();
 				List<String> timetable = new ArrayList<String>();
 				List<String> systemusers = new ArrayList<String>();
-				List<String> generatereports = new ArrayList<String>();
-				
+				List<String> generatereports = new ArrayList<String>(); 
 				List<String> supervision = new ArrayList<String>();
+				
+				List<String> approvals = new ArrayList<String>();
 
 				if (result.getSystemMenuDTOs().isEmpty()) {
 					SC.say("You don have any menu");
@@ -334,6 +337,10 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 						else if (systemMenuDTO.getNavigationMenu()
 								.equalsIgnoreCase(NavigationMenuDTO.SUPERVISION.getNavigationMenu()))
 							supervision.add(systemMenuDTO.getSubMenuItem());
+						
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.APPROVALS.getNavigationMenu()))
+							approvals.add(systemMenuDTO.getSubMenuItem());
 						 
 
 					}
@@ -389,6 +396,14 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_TIME_TABLES,
 								new NavigationPaneClickHandler());
 
+					}
+					
+					if (!approvals.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.APPROVALS,
+								ApprovalsDataSource.getInstance(ApprovalsData.getNewRecords(approvals)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.APPROVALS,
+								new NavigationPaneClickHandler());
 					}
 
 					if (!systemusers.isEmpty()) {

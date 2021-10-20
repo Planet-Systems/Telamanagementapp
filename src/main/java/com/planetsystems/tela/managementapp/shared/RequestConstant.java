@@ -9,14 +9,16 @@ public class RequestConstant {
 	public static final String SYSTEM_HEAD_TEAHCER_SUPERVISION = "Head Teacher Supervision";
 	public static final String SYSTEM_TEAHCER_DAILY_TASKS = "Teacher Daily Tasks";
 	public static final String SYSTEM_REPORTS = "Performance Reports";
-	public static final String SYSTEM_ATTENDANCE = "Attendance"; 
+	public static final String SYSTEM_ATTENDANCE = "Attendance";
 
 	public static final String CURRICULUM_COVERAGE = "Curriculum Coverage";
 	public static final String INCENTIVES = "Incentives";
 	public static final String UTILITY_MANAGER = "Utility Manager";
-	
+
 	public static final String SUPERVISION = "Supervision";
-	
+
+	public static final String APPROVALS = "Approvals";
+
 	public static final String SCHOOL_STATISTICS = "School Statistics";
 
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
@@ -90,7 +92,7 @@ public class RequestConstant {
 	public static final String LOGED_IN = "LOGED_IN";// status
 	public static final String AUTH_TOKEN = "AUTH_TOKEN"; // token key
 	public static final String USERNAME = "USERNAME"; // Username
-	
+
 	public static final String REQUEST_DATA = "REQUEST_DATA";
 
 	public static final String SAVE_SCHOOL_STAFF = "SAVE_SCHOOL_STAFF";
@@ -98,7 +100,7 @@ public class RequestConstant {
 	public static final String DELETE_SCHOOL_STAFF = "DELETE_SCHOOL_STAFF";
 	public static final String GET_SCHOOL_STAFF = "GET_SCHOOL_STAFF";
 	public static final String GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS";
-	
+
 	public static final String DELETE_SCHOOL_STAFF_BULK = "DELETE_SCHOOL_STAFF_BULK";
 
 	public static final String GET_STAFFS_IN_SCHOOL = "GET_STAFFS_IN_SCHOOL";
@@ -214,7 +216,7 @@ public class RequestConstant {
 
 	public static final String GET_DEFAULT_ENROLLMENT_DASHBOARD = "GET_DEFAULT_ENROLLMENT_DASHBOARD";
 	public static final String GET_DEFAULT_ATTENDANCE_DASHBOARD = "GET_DEFAULT_ATTENDANCE_DASHBOARD";
-	
+
 	public static final String GET_DISTRICT_SUMMARY_DASHBOARD = "GET_DISTRICT_SUMMARY_DASHBOARD";
 
 	/// SYSTEM_USER_PROFILE_SCHOOLS_PROFILE
@@ -225,7 +227,6 @@ public class RequestConstant {
 	public static final String GET_NOT_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE_DISTRICT = "GET_NOT_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE_DISTRICT";
 	public static final String DELETE_SYSTEM_USER_PROFILE_SCHOOLS = "DELETE_SYSTEM_USER_PROFILE_SCHOOLS";
 	public static final String DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE = "DELETE_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE";
- 
 
 	public static final String LOGGED_SYSTEM_USER_GROUP = "LOGGED_SYSTEM_USER_GROUP";
 	public static final String LOGGED_IN_SYSTEM_USER_GROUP_COOKIE = "LOGGED_IN_SYSTEM_USER_GROUP_COOKIE";
@@ -247,25 +248,23 @@ public class RequestConstant {
 	public static final String NationalEndOfMonthTimeAttendanceReport = "NationalEndOfMonthTimeAttendanceReport";
 	public static final String NationalEndOfTermTimeAttendanceReport = "NationalEndOfTermTimeAttendanceReport";
 	public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
-	
-	
-	public static final String TeacherTimeAttendanceReportExport = "TeacherTimeAttendanceReportExport"; 
-	
-	public static final String SchoolEndOfWeekTimeAttendanceReportExport  = "SchoolEndOfWeekTimeAttendanceReportExport";
-	public static final String SchoolEndOfMonthTimeAttendanceReportExport  = "SchoolEndOfMonthTimeAttendanceReportExport";
-	public static final String SchoolEndOfTermTimeAttendanceReportExport  = "SchoolEndOfTermTimeAttendanceReportExport";
-	
-	
-	public static final String HeadTeacherTimeAttendanceReportExport = "HeadTeacherTimeAttendanceReportExport";
-	public static final String HeadTeacherEndOfWeekTimeAttendanceReportExport  = "HeadTeacherEndOfWeekTimeAttendanceReportExport";
-	public static final String HeadTeacherEndOfMonthTimeAttendanceReportExport  = "HeadTeacherEndOfMonthTimeAttendanceReportExport";
-	public static final String HeadTeacherEndOfTermTimeAttendanceReportExport  = "HeadTeacherEndOfTermTimeAttendanceReportExport";
-	
-	public static final String HeadTeacherSupervidsionReportExport  = "HeadTeacherSupervidsionReportExport";
-	
-	public static final String SMCSupervidsionReportExport  = "SMCSupervidsionReportExport";
 
-	public static final String TimeOnTaskReportExport  = "TimeOnTaskReportExport";
+	public static final String TeacherTimeAttendanceReportExport = "TeacherTimeAttendanceReportExport";
+
+	public static final String SchoolEndOfWeekTimeAttendanceReportExport = "SchoolEndOfWeekTimeAttendanceReportExport";
+	public static final String SchoolEndOfMonthTimeAttendanceReportExport = "SchoolEndOfMonthTimeAttendanceReportExport";
+	public static final String SchoolEndOfTermTimeAttendanceReportExport = "SchoolEndOfTermTimeAttendanceReportExport";
+
+	public static final String HeadTeacherTimeAttendanceReportExport = "HeadTeacherTimeAttendanceReportExport";
+	public static final String HeadTeacherEndOfWeekTimeAttendanceReportExport = "HeadTeacherEndOfWeekTimeAttendanceReportExport";
+	public static final String HeadTeacherEndOfMonthTimeAttendanceReportExport = "HeadTeacherEndOfMonthTimeAttendanceReportExport";
+	public static final String HeadTeacherEndOfTermTimeAttendanceReportExport = "HeadTeacherEndOfTermTimeAttendanceReportExport";
+
+	public static final String HeadTeacherSupervidsionReportExport = "HeadTeacherSupervidsionReportExport";
+
+	public static final String SMCSupervidsionReportExport = "SMCSupervidsionReportExport";
+
+	public static final String TimeOnTaskReportExport = "TimeOnTaskReportExport";
 
 	public static final String FILTER_CLOCKINS = "FILTER_CLOCKINS";
 	public static final String FILTER_CLOCK_OUTS = "FILTER_CLOCK_OUTS";
@@ -273,10 +272,13 @@ public class RequestConstant {
 	public static final String FILTER_STAFF_DAILY_TIMETABLE_LESSONS = "FILTER_STAFF_DAILY_TIMETABLE_LESSONS";
 	public static final String FILTER_STAFF_DAILY_SUPERVISIONS = "FILTER_STAFF_DAILY_SUPERVISIONS";
 	public static final String FILTER_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS = "FILTER_STAFF_DAILY_ATTENDANCE_TASK_SUPERVISIONS";
-	
-	
+
 	public static final String FILTER_SMC_SUPERVISION_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL = "FILTER_SMC_SUPERVISION_BY_ACADEMIC_YEAR_ACADEMIC_TERM_DISTRICT_SCHOOL";
 
-	
+	public static final String USER_ACCOUNT_REQUEST = "USER_ACCOUNT_REQUEST";
+
+	public static final String GET_USER_ACCOUNT_REQUEST = "GET_USER_ACCOUNT_REQUEST";
+	public static final String APPROVE_USER_ACCOUNT_REQUEST = "APPROVE_USER_ACCOUNT_REQUEST";
+	public static final String REJECT_USER_ACCOUNT_REQUEST = "REJECT_USER_ACCOUNT_REQUEST";
 
 }

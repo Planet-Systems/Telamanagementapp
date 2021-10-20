@@ -76,9 +76,9 @@ public class LoginPane extends VLayout {
 		slogan2.setWidth("500px");
 
 		forgotPasswordField = new Label();
-		forgotPasswordField.setContents("<span style='color:#ffffff;font-weight: 600;'>Forgot password</span>");
+		forgotPasswordField.setContents("<span style='color:#ffffff;font-weight: 600; margin-left:10px;'>Forgot password</span>");
 		forgotPasswordField.setAutoHeight();
-		forgotPasswordField.setCursor(Cursor.HAND);
+		forgotPasswordField.setCursor(Cursor.HAND); 
 
 		loginButton = new IButton();
 		loginButton.setTitle("Login");
@@ -86,9 +86,10 @@ public class LoginPane extends VLayout {
 		signup = new Label();
 		signup.setContents("<span style='color:#ffffff;font-weight: 600;'>If you don't have an account? SignUp</span>");
 		signup.setAutoHeight();
-		signup.setPadding(5);
+		//signup.setPadding(5);
 		signup.setCursor(Cursor.HAND);
-		signup.setAlign(Alignment.CENTER);
+		signup.setAlign(Alignment.LEFT);
+		signup.setWidth("300px");
 
 		VLayout sloganLayout = new VLayout();
 		sloganLayout.addMember(slogan);
@@ -100,14 +101,15 @@ public class LoginPane extends VLayout {
 
 		HLayout loginbuttonLayout = new HLayout();
 		loginbuttonLayout.addMember(loginButton);
+		loginbuttonLayout.addMember(forgotPasswordField);
 		loginbuttonLayout.setAutoHeight();
-		loginbuttonLayout.setAutoWidth();
+		loginbuttonLayout.setWidth100();
 
 		HLayout otherbuttonLayout = new HLayout();
-		otherbuttonLayout.addMember(forgotPasswordField);
 		otherbuttonLayout.addMember(signup);
 		otherbuttonLayout.setAutoHeight();
 		otherbuttonLayout.setAutoWidth();
+		//otherbuttonLayout.setBackgroundColor("#000000");
 
 		VLayout buttonLayout = new VLayout();
 		buttonLayout.addMember(loginbuttonLayout);

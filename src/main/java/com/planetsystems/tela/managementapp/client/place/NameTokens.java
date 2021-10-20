@@ -2,6 +2,10 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String useraccountapproval = "User Account Requests";
+
+	public static final String useraccountrequest = "useraccountrequest";
+
 	public static final String smcperformance = "SMC Performance";
 
 	public static final String smcsupervision = "SMC Supervision";
@@ -164,6 +168,14 @@ public class NameTokens {
 
 	public static String getSmcperformance() {
 		return smcperformance;
+	}
+
+	public static String getUseraccountrequest() {
+		return useraccountrequest;
+	}
+
+	public static String getUseraccountapproval() {
+		return useraccountapproval;
 	}
 
 }

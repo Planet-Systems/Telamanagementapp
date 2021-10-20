@@ -66,6 +66,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 	protected void onBind() {
 		super.onBind();
 		logoIn();
+		signUp();
 		getView().getLoginPane().getForgotPasswordField().addClickHandler(new ClickHandler() {
 			
 			@Override
@@ -191,6 +192,19 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 	private void clearLoginFields() {
 		getView().getLoginPane().getUsername().clearValue();
 		getView().getLoginPane().getPassword().clearValue();
+	}
+	
+	
+	private void signUp() {
+		getView().getLoginPane().getSignup().addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				 
+				PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.useraccountrequest).build();
+				placeManager.revealPlace(placeRequest);
+			}
+		});
 	}
 
 }

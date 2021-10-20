@@ -23,6 +23,7 @@ import com.planetsystems.tela.managementapp.client.presenter.subjectcategory.Sub
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.SystemUserModule;
 import com.planetsystems.tela.managementapp.client.presenter.timeattendancesupervision.TimeAttendanceSupervisionModule;
 import com.planetsystems.tela.managementapp.client.presenter.timetable.TimeTableModule;
+import com.planetsystems.tela.managementapp.client.presenter.useraccountapproval.UserAccountApprovalModule;
 
 public class MainModule extends AbstractPresenterModule {
  
@@ -52,8 +53,9 @@ public class MainModule extends AbstractPresenterModule {
 		
 		install(new SMCSupervisionModule());
 		install(new SMCPerformanceModule());
+		
+		install(new UserAccountApprovalModule());
 		 
-
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
 
 	} 

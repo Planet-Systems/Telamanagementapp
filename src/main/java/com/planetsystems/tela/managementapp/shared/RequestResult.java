@@ -36,6 +36,7 @@ import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
+import com.planetsystems.tela.dto.UserAccountRequestDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
@@ -139,10 +140,19 @@ public class RequestResult implements Result {
 
 	private List<SMCSupervisionCriteria> smcSupervisionCriterias;
 
+	private List<UserAccountRequestDTO> userAccountRequestDTOs;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<UserAccountRequestDTO> userAccountRequestDTOs,
+			UserAccountRequestDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.userAccountRequestDTOs = userAccountRequestDTOs;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SMCSupervisionCriteria> smcSupervisionCriterias,
 			SMCSupervisionCriteria dto) {
@@ -755,6 +765,10 @@ public class RequestResult implements Result {
 
 	public List<SMCSupervisionCriteria> getSmcSupervisionCriterias() {
 		return smcSupervisionCriterias;
+	}
+
+	public List<UserAccountRequestDTO> getUserAccountRequestDTOs() {
+		return userAccountRequestDTOs;
 	}
 
 }
