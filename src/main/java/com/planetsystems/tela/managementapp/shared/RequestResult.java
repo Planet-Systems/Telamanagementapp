@@ -38,9 +38,11 @@ import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.UserAccountRequestDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
+import com.planetsystems.tela.dto.dashboard.DailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
+import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
@@ -142,10 +144,29 @@ public class RequestResult implements Result {
 
 	private List<UserAccountRequestDTO> userAccountRequestDTOs;
 
+	private List<DailyAttendanceEnrollmentSummaryDTO> dailyAttendanceEnrollmentSummaryDTOs;
+
+	private OverallDailyAttendanceEnrollmentSummaryDTO overallDailyAttendanceEnrollmentSummaryDTO;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			OverallDailyAttendanceEnrollmentSummaryDTO overallDailyAttendanceEnrollmentSummaryDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.overallDailyAttendanceEnrollmentSummaryDTO = overallDailyAttendanceEnrollmentSummaryDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<DailyAttendanceEnrollmentSummaryDTO> dailyAttendanceEnrollmentSummaryDTOs,
+			DailyAttendanceEnrollmentSummaryDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.dailyAttendanceEnrollmentSummaryDTOs = dailyAttendanceEnrollmentSummaryDTOs;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<UserAccountRequestDTO> userAccountRequestDTOs,
 			UserAccountRequestDTO dto) {
@@ -769,6 +790,14 @@ public class RequestResult implements Result {
 
 	public List<UserAccountRequestDTO> getUserAccountRequestDTOs() {
 		return userAccountRequestDTOs;
+	}
+
+	public List<DailyAttendanceEnrollmentSummaryDTO> getDailyAttendanceEnrollmentSummaryDTOs() {
+		return dailyAttendanceEnrollmentSummaryDTOs;
+	}
+
+	public OverallDailyAttendanceEnrollmentSummaryDTO getOverallDailyAttendanceEnrollmentSummaryDTO() {
+		return overallDailyAttendanceEnrollmentSummaryDTO;
 	}
 
 }

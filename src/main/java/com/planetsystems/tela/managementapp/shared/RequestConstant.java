@@ -218,6 +218,10 @@ public class RequestConstant {
 	public static final String GET_DEFAULT_ATTENDANCE_DASHBOARD = "GET_DEFAULT_ATTENDANCE_DASHBOARD";
 
 	public static final String GET_DISTRICT_SUMMARY_DASHBOARD = "GET_DISTRICT_SUMMARY_DASHBOARD";
+	
+	public static final String GET_OverallDailyAttendanceDashboard = "GET_OverallDailyAttendanceDashboard";
+	
+	 
 
 	/// SYSTEM_USER_PROFILE_SCHOOLS_PROFILE
 	// public static final String SAVE_SYSTEM_USER_PROFILE_SCHOOLS =

@@ -55,7 +55,9 @@ import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.UserAccountRequestDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
+import com.planetsystems.tela.dto.dashboard.DailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
+import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
@@ -4085,6 +4087,42 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 
 				return new RequestResult(dashboardSummaryDTO);
+
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_OverallDailyAttendanceDashboard)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				System.out.println("GET_OverallDailyAttendanceDashboard");
+
+				SystemFeedbackDTO systemFeedbackDTO = new SystemFeedbackDTO();
+
+				OverallDailyAttendanceEnrollmentSummaryDTO overallDailyAttendanceEnrollmentSummaryDTO = new OverallDailyAttendanceEnrollmentSummaryDTO();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				String attendanceDate = (String) action.getRequestBody()
+						.get(RequestConstant.GET_OverallDailyAttendanceDashboard);
+
+				SystemResponseDTO<OverallDailyAttendanceEnrollmentSummaryDTO> postResponseDTO = client.target(API_LINK)
+						.path("dailyAttendanceEnrollmentSummary").queryParam("attendanceDate", attendanceDate)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<OverallDailyAttendanceEnrollmentSummaryDTO>>() {
+						});
+
+				if (postResponseDTO != null) {
+					overallDailyAttendanceEnrollmentSummaryDTO = postResponseDTO.getData();
+					systemFeedbackDTO.setMessage(postResponseDTO.getMessage());
+					systemFeedbackDTO.setResponse(postResponseDTO.isStatus());
+				}
+
+				client.close();
+
+				return new RequestResult(systemFeedbackDTO, overallDailyAttendanceEnrollmentSummaryDTO);
 
 			}
 

@@ -198,7 +198,7 @@ public class StaffAttendancePresenter
 		loadFilterClockInDistrictCombo(window);
 		loadFilterClockInSchoolCombo(window);
 		
-		window.getFilterClockInPane().getTodayDateField().setValue(dayDateFormat.format(new Date()));
+		//window.getFilterClockInPane().getTodayDateField().setValue(dayDateFormat.format(new Date()));
 		filterClockInsByAcademicYearAcademicTermDistrictSchool(window);
 		window.show();
 		
@@ -588,15 +588,15 @@ public class StaffAttendancePresenter
 				String academicTermId = window.getFilterClockInPane().getAcademicTermCombo().getValueAsString();
 				String districtId = window.getFilterClockInPane().getDistrictCombo().getValueAsString();
 				String schoolId = window.getFilterClockInPane().getSchoolCombo().getValueAsString();
-				String fromDate = dateFormat.format(new Date());
-				//String toDate = dateFormat.format(window.getFilterClockInPane().getToDateItem().getValueAsDate());
+				//String fromDate = dateFormat.format(new Date());
+				String toDate = dateFormat.format(window.getFilterClockInPane().getToDateItem().getValueAsDate());
 
 				FilterDTO dto = new FilterDTO();
 				dto.setAcademicYearDTO(new AcademicYearDTO(academicYearId));
 				dto.setAcademicTermDTO(new AcademicTermDTO(academicTermId));
 				dto.setDistrictDTO(new DistrictDTO(districtId));
 				dto.setSchoolDTO(new SchoolDTO(schoolId));
-				dto.setFromDate(fromDate);
+				dto.setFromDate(toDate);
 				//dto.setToDate(toDate);
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();

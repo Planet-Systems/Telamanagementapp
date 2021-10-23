@@ -2,6 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.main;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicYearModule;
+import com.planetsystems.tela.managementapp.client.presenter.dailyattendancedashoard.DailyAttendanceDashoardModule;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardModule;
 import com.planetsystems.tela.managementapp.client.presenter.devicemanager.DeviceManagerModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
@@ -30,6 +31,8 @@ public class MainModule extends AbstractPresenterModule {
 	@Override
 	protected void configure() {
 
+		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
+		
 		install(new DashboardModule());
 		install(new AcademicYearModule());
 		install(new RegionModule());
@@ -55,8 +58,9 @@ public class MainModule extends AbstractPresenterModule {
 		install(new SMCPerformanceModule());
 		
 		install(new UserAccountApprovalModule());
+		install(new DailyAttendanceDashoardModule());
 		 
-		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
+		
 
 	} 
  
