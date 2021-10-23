@@ -109,10 +109,13 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
 
 			@Override
 			public void onClick(ClickEvent event) {
-				String userName = "admin@gmail.com"; //getView().getLoginPane().getUsername().getValueAsString();
-				String password = "password";getView().getLoginPane().getPassword().getValueAsString();
+				
+				String userName = getView().getLoginPane().getUsername().getValueAsString();
+				
+				String password =getView().getLoginPane().getPassword().getValueAsString();
+				
 				if (userName == null || password == null) {
-					SC.say("Enter both username and password");
+					SC.warn("ERROR","Enter both username and password");
 				} else {
 					final AuthenticationDTO dto = new AuthenticationDTO();
 					dto.setPassword(password);

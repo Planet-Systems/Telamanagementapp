@@ -57,8 +57,13 @@ public class SystemUserListGrid extends SuperListGrid {
 		ListGridField genderField = new ListGridField(GENDER, "Gender");
 
 		ListGridField nameAbbrevField = new ListGridField(NAME_ABBREV, "Name Abbreviation");
+		
+		ListGridField userGroupFieldId = new ListGridField(USER_GROUP_ID, "User Group Id");
+		userGroupFieldId.setHidden(true);
+		
+		ListGridField userGroupField = new ListGridField(USER_GROUP, "User Group");
 
-		this.setFields(idField, usernameField, firstNameField, lastNameField, emailField, phoneNumberField,
+		this.setFields(idField, usernameField, firstNameField, lastNameField, emailField, userGroupFieldId,userGroupField,phoneNumberField,
 				nationalIdField, dobField, genderField, enabledField, nameAbbrevField, configRoleField);
 
 		this.setDataSource(dataSource);
@@ -85,6 +90,11 @@ public class SystemUserListGrid extends SuperListGrid {
 			record.setAttribute(NATIONAL_ID, dto.getGeneralUserDetailDTO().getNationalId());
 			record.setAttribute(GENDER, dto.getGeneralUserDetailDTO().getGender());
 			record.setAttribute(PHONE_NUMBER, dto.getGeneralUserDetailDTO().getPhoneNumber());
+		}
+		
+		if(dto.getSystemUserGroupDTO()!=null) {
+			record.setAttribute(USER_GROUP_ID, dto.getSystemUserGroupDTO().getId());
+			record.setAttribute(USER_GROUP, dto.getSystemUserGroupDTO().getName());
 		}
 
 		return record;
