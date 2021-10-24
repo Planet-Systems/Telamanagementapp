@@ -129,10 +129,9 @@ public class StaffEnrollmentPresenter
 					buttons.add(delete);
 					buttons.add(filter);
 
-					getView().getControlsPane().addMenuButtons("Teacher Statistics", buttons);
+					getView().getControlsPane().addMenuButtons("Teacher Census", buttons);
 
 					loadTeacherStaticsFilter();
-					// getAllStaffEnrollments();
 
 					addStaffEnrollment(newButton);
 					selectFilterStaffEnrollmentOption(filter);
@@ -142,12 +141,14 @@ public class StaffEnrollmentPresenter
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Update");
 					MenuButton delete = new MenuButton("Delete");
+					MenuButton generateCode = new MenuButton("Re-Assign Code");
 					MenuButton filter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					buttons.add(delete);
+					buttons.add(generateCode);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons("Teachers' Details List", buttons);
@@ -159,6 +160,7 @@ public class StaffEnrollmentPresenter
 					editSchoolStaff(edit);
 					deleteStaff(delete);
 					selectFilterOption(filter);
+					reAssigCode(generateCode);
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -866,7 +868,7 @@ public class StaffEnrollmentPresenter
 				VLayout layout = new VLayout();
 				layout.addMember(district);
 				layout.addMember(school);
-				//layout.setAutoHeight();
+				// layout.setAutoHeight();
 
 				getView().getSchoolStaffPane().getHeaderinfor().setMembers(layout);
 
@@ -989,4 +991,241 @@ public class StaffEnrollmentPresenter
 			}
 		});
 	}
+
+	private void reAssigCode(final MenuButton button) {
+
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				final Menu menu = new Menu();
+				MenuItem selectedTeachers = new MenuItem("For Selected Teachers");
+				MenuItem school = new MenuItem("For Whole School");
+				MenuItem district = new MenuItem("For Whole District");
+
+				menu.setItems(selectedTeachers, school, district);
+
+				menu.showNextTo(button, "bottom");
+
+				assignCodeToSelectedTeachers(selectedTeachers);
+				loadSchoolFilterWindow(school);
+				loadDistrictFilterWindow(    district);
+			}
+		});
+
+	}
+
+	private void assignCodeToSelectedTeachers(final MenuItem menuItem) {
+		menuItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				if (getView().getSchoolStaffPane().getSchoolStaffListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to Re-Assign Staff codes to the selected record(s)?",
+							new BooleanCallback() {
+
+								@Override
+								public void execute(Boolean value) {
+									if (value) {
+
+										List<SchoolStaffDTO> dtos = new ArrayList<>();
+
+										for (ListGridRecord record : getView().getSchoolStaffPane()
+												.getSchoolStaffListGrid().getSelectedRecords()) {
+
+											SchoolStaffDTO dto = new SchoolStaffDTO();
+											dto.setId(record.getAttribute(SchoolStaffListGrid.ID));
+											dtos.add(dto);
+
+										}
+
+										if (!dtos.isEmpty()) {
+
+											LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+											map.put(RequestConstant.REQUEST_DATA, dtos);
+											map.put(NetworkDataUtil.ACTION, RequestConstant.RE_ASSIGN_STAFF_CODES);
+
+											NetworkDataUtil.callNetwork(dispatcher, placeManager, map,
+													new NetworkResult() {
+
+														@Override
+														public void onNetworkResult(RequestResult result) {
+
+															SC.say("SUCCESS",
+																	result.getSystemFeedbackDTO().getMessage(),
+																	new BooleanCallback() {
+
+																		@Override
+																		public void execute(Boolean value) {
+
+																			if (value) {
+																				loadStaffBySchool(schoolStaffFilterDTO);
+																			}
+
+																		}
+																	});
+
+														}
+													});
+										} else {
+											SC.warn("ERROR", "Please records to Re-Assign Teacher Codes");
+										}
+
+									}
+
+								}
+							});
+
+				} else {
+					SC.warn("ERROR", "Please records to Re-Assign Teacher Codes");
+				}
+
+			}
+		});
+	}
+
+	private void loadSchoolFilterWindow(final MenuItem menuItem) {
+		menuItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				final FilterStaffWindow window = new FilterStaffWindow();
+				loadFilterStaffDistrictCombo(window);
+				loadFilterStaffSchoolCombo(window);
+				reAssignSchoolTeacherCodes(window);
+				window.show();
+
+			}
+		});
+
+	}
+	
+	private void loadDistrictFilterWindow(final MenuItem menuItem) {
+		menuItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				final FilterStaffWindow window = new FilterStaffWindow();
+				window.getFilterStaffsPane().getSchoolCombo().hide();
+				loadFilterStaffDistrictCombo(window); 
+				reAssignDistrictTeacherCodes(window);
+				window.show();
+
+			}
+		});
+
+	}
+
+	private void reAssignSchoolTeacherCodes(final FilterStaffWindow window) {
+		window.getFilterButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SC.ask("Confirm", "Are you sure you want to Re-Assign Teacher codes for the whole selected school?",
+						new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+
+									String districtId = window.getFilterStaffsPane().getDistrictCombo()
+											.getValueAsString();
+									String schoolId = window.getFilterStaffsPane().getSchoolCombo().getValueAsString();
+
+									schoolStaffFilterDTO.setDistrictDTO(new DistrictDTO(districtId));
+									schoolStaffFilterDTO.setSchoolDTO(new SchoolDTO(schoolId));
+
+									LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+									map.put(RequestConstant.REQUEST_DATA, schoolStaffFilterDTO);
+									map.put(NetworkDataUtil.ACTION, RequestConstant.RE_ASSIGN_STAFF_CODES_SCHOOL_LEVEL);
+
+									NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+										@Override
+										public void onNetworkResult(RequestResult result) {
+
+											SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
+													new BooleanCallback() {
+
+														@Override
+														public void execute(Boolean value) {
+
+															if (value) {
+
+																loadStaffBySchool(schoolStaffFilterDTO);
+															}
+
+														}
+													});
+
+										}
+									});
+								}
+
+							}
+						});
+
+			}
+		});
+	}
+	
+	
+	private void reAssignDistrictTeacherCodes(final FilterStaffWindow window) {
+		window.getFilterButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SC.ask("Confirm", "Are you sure you want to Re-Assign Teacher codes for the whole selected school?",
+						new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+
+									String districtId = window.getFilterStaffsPane().getDistrictCombo()
+											.getValueAsString(); 
+									schoolStaffFilterDTO.setDistrictDTO(new DistrictDTO(districtId));
+									 
+
+									LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+									map.put(RequestConstant.REQUEST_DATA, schoolStaffFilterDTO);
+									map.put(NetworkDataUtil.ACTION, RequestConstant.RE_ASSIGN_STAFF_CODES_DISTRICT_LEVEL);
+
+									NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+										@Override
+										public void onNetworkResult(RequestResult result) {
+
+											SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
+													new BooleanCallback() {
+
+														@Override
+														public void execute(Boolean value) {
+
+															if (value) {
+
+																loadStaffBySchool(schoolStaffFilterDTO);
+															}
+
+														}
+													});
+
+										}
+									});
+								}
+
+							}
+						});
+
+			}
+		});
+	}
+
+
 }

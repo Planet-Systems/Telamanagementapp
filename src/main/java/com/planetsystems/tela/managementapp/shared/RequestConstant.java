@@ -1,6 +1,8 @@
 package com.planetsystems.tela.managementapp.shared;
 
 public class RequestConstant {
+	
+	public static final String DASHBOARD = "Dashboard";
 	public static final String SYSTEM_CONFIGURATION = "System Administration";
 	public static final String SYSTEM_ENROLLMENT = "Enrollment";
 	public static final String SYSTEM_SETTINGS = "Setting";
@@ -102,6 +104,11 @@ public class RequestConstant {
 	public static final String GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_SCHOOL_STAFFS_BY_SYSTEM_USER_PROFILE_SCHOOLS";
 
 	public static final String DELETE_SCHOOL_STAFF_BULK = "DELETE_SCHOOL_STAFF_BULK";
+	public static final String RE_ASSIGN_STAFF_CODES = "RE_ASSIGN_STAFF_CODES";
+	
+	public static final String RE_ASSIGN_STAFF_CODES_SCHOOL_LEVEL = "RE_ASSIGN_STAFF_CODES_SCHOOL_LEVEL";
+	
+	public static final String RE_ASSIGN_STAFF_CODES_DISTRICT_LEVEL = "RE_ASSIGN_STAFF_CODES_DISTRICT_LEVEL";
 
 	public static final String GET_STAFFS_IN_SCHOOL = "GET_STAFFS_IN_SCHOOL";
 	public static final String GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL = "GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL";

@@ -100,7 +100,7 @@ public class LearnerEnrollmentPresenter
 		//buttons.add(delete);
 		buttons.add(filter);
 
-		getView().getControlsPane().addMenuButtons("Learner Head Count",buttons);
+		getView().getControlsPane().addMenuButtons("Learner Census",buttons);
 		
 		learnerEnrolmentFilter();
 		addLearnerEnrollment(newButton);

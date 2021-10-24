@@ -13,7 +13,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class StaffEnrollmentWindow extends Window {
 
-
+//This the teacher Census. it is conducted termly.
+	
 	private ComboBox academicYearCombo;
 	private ComboBox academicTermCombo;
 	private ComboBox districtCombo;

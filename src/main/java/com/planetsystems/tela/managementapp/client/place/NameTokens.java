@@ -39,7 +39,7 @@ public class NameTokens {
 	public static final String login = "Login";
 	public static final String authentication = "Authentication";
 
-	public static final String dashboard = "Dashboard";
+	public static final String dashboard = "Overall Performance Dashboard";
 	public static final String assessmentperiod = "Assessment Periods";
 	public static final String locations = "Locations";
 	public static final String schoolClassCategory = "Schools";

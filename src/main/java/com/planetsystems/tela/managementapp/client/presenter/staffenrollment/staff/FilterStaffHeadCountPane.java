@@ -20,23 +20,23 @@ public class FilterStaffHeadCountPane extends HLayout {
 
 		districtCombo = new ComboBox();
 		districtCombo.setTitle("District");
-		districtCombo.setHint("Select A District");
+		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 		
 		
 		schoolCombo = new ComboBox();
 		schoolCombo.setTitle("School");
-		schoolCombo.setHint("Select A School");
+		schoolCombo.setHint("Select");
 		schoolCombo.setShowHintInField(true);
 		
 		academicYearCombo = new ComboBox();
 		academicYearCombo.setTitle("Academic year");
-		academicYearCombo.setHint("Select A Year");
+		academicYearCombo.setHint("Select");
 		academicYearCombo.setShowHintInField(true);
 		
 		academicTermCombo = new ComboBox();
 		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("Select A  Term");
+		academicTermCombo.setHint("Select");
 		academicTermCombo.setShowHintInField(true);
 		
 		

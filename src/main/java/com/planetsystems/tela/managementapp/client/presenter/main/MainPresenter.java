@@ -29,6 +29,8 @@ import com.planetsystems.tela.managementapp.client.menu.ApprovalsData;
 import com.planetsystems.tela.managementapp.client.menu.ApprovalsDataSource;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageData;
 import com.planetsystems.tela.managementapp.client.menu.CurriculumCoverageDataSource;
+import com.planetsystems.tela.managementapp.client.menu.DashboardData;
+import com.planetsystems.tela.managementapp.client.menu.DashboardDataSource;
 import com.planetsystems.tela.managementapp.client.menu.IncentivesData;
 import com.planetsystems.tela.managementapp.client.menu.IncentivesDataSource;
 import com.planetsystems.tela.managementapp.client.menu.ReportsData;
@@ -297,10 +299,17 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 				List<String> attendance = new ArrayList<String>();
 				List<String> timetable = new ArrayList<String>();
 				List<String> systemusers = new ArrayList<String>();
-				List<String> generatereports = new ArrayList<String>(); 
+				List<String> generatereports = new ArrayList<String>();
 				List<String> supervision = new ArrayList<String>();
-				
+
 				List<String> approvals = new ArrayList<String>();
+
+				List<String> dashboard = new ArrayList<String>();
+
+				List<String> curriculumCoverage = new ArrayList<String>();
+				List<String> schoolStatistics = new ArrayList<String>();
+				List<String> incentives = new ArrayList<String>();
+				List<String> utilityManager = new ArrayList<String>();
 
 				if (result.getSystemMenuDTOs().isEmpty()) {
 					SC.say("You don have any menu");
@@ -333,16 +342,43 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 						else if (systemMenuDTO.getNavigationMenu()
 								.equalsIgnoreCase(NavigationMenuDTO.GENERATE_REPORTS.getNavigationMenu()))
 							generatereports.add(systemMenuDTO.getSubMenuItem());
-						
+
 						else if (systemMenuDTO.getNavigationMenu()
 								.equalsIgnoreCase(NavigationMenuDTO.SUPERVISION.getNavigationMenu()))
 							supervision.add(systemMenuDTO.getSubMenuItem());
-						
+
 						else if (systemMenuDTO.getNavigationMenu()
 								.equalsIgnoreCase(NavigationMenuDTO.APPROVALS.getNavigationMenu()))
 							approvals.add(systemMenuDTO.getSubMenuItem());
-						 
 
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.DASHBOARD.getNavigationMenu()))
+							dashboard.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.CURRICULUM_COVERAGE.getNavigationMenu()))
+							curriculumCoverage.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.INCENTIVES.getNavigationMenu()))
+							incentives.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.UTILITY_MANAGER.getNavigationMenu()))
+							utilityManager.add(systemMenuDTO.getSubMenuItem());
+
+						else if (systemMenuDTO.getNavigationMenu()
+								.equalsIgnoreCase(NavigationMenuDTO.SCHOOL_STATISTICS.getNavigationMenu()))
+							schoolStatistics.add(systemMenuDTO.getSubMenuItem());
+
+					}
+
+					if (!dashboard.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.DASHBOARD,
+								DashboardDataSource.getInstance(DashboardData.getNewRecords(dashboard)));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.DASHBOARD,
+								new NavigationPaneClickHandler());
 					}
 
 					if (!systemConfig.isEmpty()) {
@@ -371,7 +407,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 								new NavigationPaneClickHandler());
 
 					}
-					
+
 					if (!supervision.isEmpty()) {
 						getView().getNavigationPane().addSection(RequestConstant.SUPERVISION,
 								SupervisionDataSource.getInstance(SupervisionData.getNewRecords(supervision)));
@@ -379,7 +415,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SUPERVISION,
 								new NavigationPaneClickHandler());
 					}
-					
+
 					if (!generatereports.isEmpty()) {
 						getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
 								ReportsDataSource.getInstance(ReportsData.getNewRecords(generatereports)));
@@ -397,7 +433,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 								new NavigationPaneClickHandler());
 
 					}
-					
+
 					if (!approvals.isEmpty()) {
 						getView().getNavigationPane().addSection(RequestConstant.APPROVALS,
 								ApprovalsDataSource.getInstance(ApprovalsData.getNewRecords(approvals)));
@@ -414,30 +450,39 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 								new NavigationPaneClickHandler());
 					}
 
-					
-					 
+					// Need to customize and load sub-menus dynamically
 
-					// Need to customize it
-					getView().getNavigationPane().addSection(RequestConstant.CURRICULUM_COVERAGE,
-							CurriculumCoverageDataSource.getInstance(CurriculumCoverageData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.CURRICULUM_COVERAGE,
-							new NavigationPaneClickHandler());
+					if (!curriculumCoverage.isEmpty()) {
 
-					getView().getNavigationPane().addSection(RequestConstant.SCHOOL_STATISTICS,
-							SchoolStatisticsDataSource.getInstance(SchoolStatisticsData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.SCHOOL_STATISTICS,
-							new NavigationPaneClickHandler());
+						getView().getNavigationPane().addSection(RequestConstant.CURRICULUM_COVERAGE,
+								CurriculumCoverageDataSource.getInstance(CurriculumCoverageData.getNewRecords()));
 
-					//
-					getView().getNavigationPane().addSection(RequestConstant.INCENTIVES,
-							IncentivesDataSource.getInstance(IncentivesData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.INCENTIVES,
-							new NavigationPaneClickHandler());
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.CURRICULUM_COVERAGE,
+								new NavigationPaneClickHandler());
+					}
 
-					getView().getNavigationPane().addSection(RequestConstant.UTILITY_MANAGER,
-							UtilityManagerDataSource.getInstance(UtilityManagerData.getNewRecords()));
-					getView().getNavigationPane().addRecordClickHandler(RequestConstant.UTILITY_MANAGER,
-							new NavigationPaneClickHandler());
+					if (!schoolStatistics.isEmpty()) {
+
+						getView().getNavigationPane().addSection(RequestConstant.SCHOOL_STATISTICS,
+								SchoolStatisticsDataSource.getInstance(SchoolStatisticsData.getNewRecords()));
+
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.SCHOOL_STATISTICS,
+								new NavigationPaneClickHandler());
+					}
+
+					if (!incentives.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.INCENTIVES,
+								IncentivesDataSource.getInstance(IncentivesData.getNewRecords()));
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.INCENTIVES,
+								new NavigationPaneClickHandler());
+					}
+
+					if (!utilityManager.isEmpty()) {
+						getView().getNavigationPane().addSection(RequestConstant.UTILITY_MANAGER,
+								UtilityManagerDataSource.getInstance(UtilityManagerData.getNewRecords()));
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.UTILITY_MANAGER,
+								new NavigationPaneClickHandler());
+					}
 
 				}
 			}
@@ -539,7 +584,7 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 										new NavigationPaneClickHandler());
 
 							}
-							
+
 							if (!generatereports.isEmpty()) {
 
 								getView().getNavigationPane().addSection(RequestConstant.SYSTEM_REPORTS,
@@ -548,7 +593,6 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_REPORTS,
 										new NavigationPaneClickHandler());
 							}
-							
 
 							if (!timetable.isEmpty()) {
 
@@ -568,8 +612,6 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 								getView().getNavigationPane().addRecordClickHandler(RequestConstant.SYSTEM_USERS,
 										new NavigationPaneClickHandler());
 							}
-
-							
 
 							/*
 							 * if (systemConfig.isEmpty() && enrollemnt.isEmpty() && attendance.isEmpty() &&

@@ -1841,6 +1841,90 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 			}
 
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.RE_ASSIGN_STAFF_CODES)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				@SuppressWarnings("unchecked")
+				List<SchoolStaffDTO> dtos = (List<SchoolStaffDTO>) action.getRequestBody()
+						.get(RequestConstant.REQUEST_DATA);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				Client client = ClientBuilder.newClient();
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.path("assigncodes").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dtos, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.RE_ASSIGN_STAFF_CODES_SCHOOL_LEVEL)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.path("assigncodes").path("schoollevel").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.RE_ASSIGN_STAFF_CODES_DISTRICT_LEVEL)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
+						.path("assigncodes").path("districtlevel").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+			}
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_STAFF)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();

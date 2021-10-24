@@ -19,8 +19,8 @@ class StaffEnrollmentView extends ViewImpl implements StaffEnrollmentPresenter.M
 	private SchoolStaffPane schoolStaffPane;
 	private TabSet tabSet;
 	private ControlsPane controlsPane;
-	public static final String STAFF_ENROLLMENT="Head Count";
-	public static final String TEACHER_LIST="Teacher List";
+	public static final String STAFF_ENROLLMENT="Teacher Cesus";
+	public static final String TEACHER_LIST="Teacher Enrolment";
 
     @Inject
     StaffEnrollmentView() {
