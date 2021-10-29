@@ -1,7 +1,9 @@
 package com.planetsystems.tela.managementapp.client.presenter.dailyattendancedashoard;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -31,6 +33,8 @@ import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.events.RecordDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.RecordDoubleClickHandler;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -74,21 +78,31 @@ public class DailyAttendanceDashoardPresenter
 
 	private void loadMenuButtons() {
 
+		String attendanceDate = dateFormat.format(new Date());
+
 		MenuButton filterButton = new MenuButton("Filter");
 		MenuButton refreshButton = new MenuButton("Refresh");
-		getView().getControlsPane().addTitle("Dashboard: Daily Attendace National Overview");
-		getView().getControlsPane().addMember(filterButton);
-		getView().getControlsPane().addMember(refreshButton);
+
+		List<MenuButton> list = new ArrayList<>();
+		list.add(filterButton);
+		list.add(refreshButton);
+
+		getView().getControlsPane().addMenuButtons("Dashboard: Daily Attendance National Overview-" + attendanceDate,
+				list);
+
+		// getView().getControlsPane().addTitle("Dashboard: Daily Attendance National
+		// Overview");
+		// getView().getControlsPane().addMember(filterButton);
+		// getView().getControlsPane().addMember(refreshButton);
 
 		refresh(refreshButton);
 		filter(filterButton);
 
-		String attendanceDate = dateFormat.format(new Date());
 		loadDashboard(attendanceDate);
 
 	}
 
-	private void loadDashboard(String attendanceDate) {
+	private void loadDashboard(final String attendanceDate) {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
@@ -118,6 +132,46 @@ public class DailyAttendanceDashoardPresenter
 							OverallDailyAttendanceDashboardGenerator.getInstance().generateDashboard(
 									getView().getDashboardPane(),
 									result.getOverallDailyAttendanceEnrollmentSummaryDTO());
+
+							OverallDailyAttendanceDashboardGenerator.getInstance().summaryListgrid
+									.addRecordDoubleClickHandler(new RecordDoubleClickHandler() {
+
+										@Override
+										public void onRecordDoubleClick(RecordDoubleClickEvent event) {
+
+											String districtId = event.getRecord()
+													.getAttribute(DailyAttendanceEnrollmentSummaryListgrid.ID);
+
+											String district = event.getRecord()
+													.getAttribute(DailyAttendanceEnrollmentSummaryListgrid.DISTRICT);
+
+											MenuButton filterButton = new MenuButton("Filter");
+											MenuButton refreshButton = new MenuButton("Back");
+
+											List<MenuButton> list = new ArrayList<>();
+											list.add(filterButton);
+											list.add(refreshButton);
+
+											getView().getControlsPane()
+													.addMenuButtons("Dashboard: Daily Attendance for " + district
+															+ " District -" + attendanceDate, list);
+
+											refreshButton.addClickHandler(new ClickHandler() {
+
+												@Override
+												public void onClick(ClickEvent event) {
+
+													loadMenuButtons();
+
+												}
+											});
+
+											DistrictDashboardfilter(filterButton, districtId);
+
+											loadDashboard(attendanceDate, districtId);
+
+										}
+									});
 
 						} else {
 							SC.warn("ERROR", "Unknow error");
@@ -161,6 +215,181 @@ public class DailyAttendanceDashoardPresenter
 
 				String attendanceDate = dateFormat.format(window.getAttendanceDate().getValueAsDate());
 				loadDashboard(attendanceDate);
+			}
+		});
+	}
+
+	private void loadDashboard(final String attendanceDate, final String districtId) {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(RequestConstant.ATTENDANCE_DATE, attendanceDate);
+		map.put(RequestConstant.DISTRICT_ID, districtId);
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_DistrictDailyAttendanceDashboard, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							DistrictDailyAttendanceDashboardGenerator.getInstance().generateDashboard(
+									getView().getDashboardPane(),
+									result.getDistrictDailyAttendanceEnrollmentSummaryDTO());
+
+							DistrictDailyAttendanceDashboardGenerator.getInstance().summaryListgrid
+									.addRecordDoubleClickHandler(new RecordDoubleClickHandler() {
+
+										@Override
+										public void onRecordDoubleClick(RecordDoubleClickEvent event) {
+
+											String schoolId = event.getRecord()
+													.getAttribute(DailyDistrictAttendanceEnrollmentSummaryListgrid.ID);
+
+											String school = event.getRecord().getAttribute(
+													DailyDistrictAttendanceEnrollmentSummaryListgrid.SCHOOL);
+
+											MenuButton filterButton = new MenuButton("Filter");
+											MenuButton refreshButton = new MenuButton("Back");
+
+											List<MenuButton> list = new ArrayList<>();
+											list.add(filterButton);
+											list.add(refreshButton);
+
+											getView().getControlsPane().addMenuButtons(
+													"Dashboard: Daily Attendance for " + school + " -" + attendanceDate,
+													list);
+
+											refreshButton.addClickHandler(new ClickHandler() {
+
+												@Override
+												public void onClick(ClickEvent event) {
+
+													loadMenuButtons();
+
+												}
+											});
+
+											loadSchoolDashboard(attendanceDate, schoolId);
+											SchoolDashboardfilter(filterButton, schoolId);
+
+										}
+									});
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+
+	}
+
+	private void DistrictDashboardfilter(final MenuButton filterButton, final String districtId) {
+		filterButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				final FilterWindow window = new FilterWindow();
+				loadDataDistrictDashboardByDate(window, districtId);
+				window.show();
+
+			}
+		});
+	}
+
+	private void loadDataDistrictDashboardByDate(final FilterWindow window, final String districtId) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				String attendanceDate = dateFormat.format(window.getAttendanceDate().getValueAsDate());
+
+				loadDashboard(attendanceDate, districtId);
+
+			}
+		});
+	}
+
+	private void loadSchoolDashboard(String attendanceDate, String schoolId) {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(RequestConstant.ATTENDANCE_DATE, attendanceDate);
+		map.put(RequestConstant.SCHOOL_ID, schoolId);
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_SchoolDailyAttendanceDashboard, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							SchoolDailyAttendanceEnrollmentSummaryGenerator.getInstance().generateDashboard(
+									getView().getDashboardPane(),
+									result.getSchoolDailyAttendanceEnrollmentSummaryDTO());
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+
+	}
+
+	private void SchoolDashboardfilter(final MenuButton filterButton, final String schoolId) {
+		filterButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				final FilterWindow window = new FilterWindow();
+				loadDataSchoolDashboardByDate(window, schoolId);
+				window.show();
+
+			}
+		});
+	}
+
+	private void loadDataSchoolDashboardByDate(final FilterWindow window, final String schoolId) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				String attendanceDate = dateFormat.format(window.getAttendanceDate().getValueAsDate());
+
+				loadSchoolDashboard(attendanceDate, schoolId);
+
 			}
 		});
 	}

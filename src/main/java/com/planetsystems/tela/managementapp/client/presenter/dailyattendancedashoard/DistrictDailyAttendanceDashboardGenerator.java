@@ -1,37 +1,30 @@
 package com.planetsystems.tela.managementapp.client.presenter.dailyattendancedashoard;
 
-import java.util.List;
-
-import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
-import com.planetsystems.tela.dto.dashboard.DailyAttendanceEnrollmentSummaryDTO;
-import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
-import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
-import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboarTestWindow;
-import com.planetsystems.tela.managementapp.client.presenter.dashboard.OverallAttendanceDashboardGenerator;
+import com.planetsystems.tela.dto.dashboard.DistrictDailyAttendanceEnrollmentSummaryDTO; 
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class OverallDailyAttendanceDashboardGenerator {
+public class DistrictDailyAttendanceDashboardGenerator {
 
-	private static OverallDailyAttendanceDashboardGenerator instance = new OverallDailyAttendanceDashboardGenerator();
 
-	private OverallDailyAttendanceDashboardGenerator() {
+
+	private static DistrictDailyAttendanceDashboardGenerator instance = new DistrictDailyAttendanceDashboardGenerator();
+
+	private DistrictDailyAttendanceDashboardGenerator() {
 
 	}
 
-	public static OverallDailyAttendanceDashboardGenerator getInstance() {
+	public static DistrictDailyAttendanceDashboardGenerator getInstance() {
 		return instance;
 	}
+	
+	DailyDistrictAttendanceEnrollmentSummaryListgrid summaryListgrid = new DailyDistrictAttendanceEnrollmentSummaryListgrid();
 
-	DailyAttendanceEnrollmentSummaryListgrid summaryListgrid = new DailyAttendanceEnrollmentSummaryListgrid();
-
-	public void generateDashboard(VLayout dashboardPane, OverallDailyAttendanceEnrollmentSummaryDTO dto) {
-
-		long enroledDistricts = dto.getEnroledDistricts();
-		long clockedDistricts = dto.getClockedDistricts();
+	public void generateDashboard(VLayout dashboardPane, DistrictDailyAttendanceEnrollmentSummaryDTO dto) {
+ 
 		long enroledSchools = dto.getEnroledSchools();
 		long clockedSchools = dto.getClockedSchools();
 		long clockedHeadteachers = dto.getClockedHeadteachers();
@@ -40,12 +33,11 @@ public class OverallDailyAttendanceDashboardGenerator {
 		long enroledLearners = dto.getEnroledLearners();
 		long clockedLearners = dto.getClockedLearners();
 
-		VLayout col1 = new VLayout();
-		col1.addMember(getCard("Total Number of Districts Clocked in", clockedDistricts + "", "#6495ED"));
+		VLayout col1 = new VLayout();  
 		col1.addMember(getCard("Total Number of Schools Clocked in", clockedSchools + "", "#6495ED"));
 		col1.addMember(getCard("Total Number of Headteachers Clocked in", clockedHeadteachers + "", "#f7b924"));
 		col1.addMember(getCard("Total Number of Teachers Clocked in", clockedInteachers + "", "#6495ED"));
-
+		
 		col1.setAutoHeight();
 		col1.setWidth("20%");
 		col1.setPadding(5);
@@ -53,7 +45,8 @@ public class OverallDailyAttendanceDashboardGenerator {
 		col1.setMargin(10);
 
 		VLayout chart1 = new VLayout();
-		summaryListgrid.addRecordsToGrid(dto.getDailyAttendanceEnrollmentSummaryDTOs());
+		
+		summaryListgrid.addRecordsToGrid(dto.getDailyDistrictAttendanceEnrollmentSummaryDTOs());
 		summaryListgrid.setHeight(470);
 		chart1.addMember(summaryListgrid);
 
@@ -122,7 +115,7 @@ public class OverallDailyAttendanceDashboardGenerator {
 		label.setAlign(Alignment.CENTER);
 		label.setValign(VerticalAlignment.CENTER);
 		label.setWrap(true);
-		label.setContents("<div style='box-sizing: border-box; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);border-radius: 0.5rem;"
+		label.setContents("<div style='box-sizing: border-box; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"
 				+ "background-color: #ffffff;padding: 2px;font-family: \"Lucida Grande\", \"Lucida Sans Unicode\", Arial, Helvetica, sans-serif; width:250px;'>"
 				+ "<h4 style='font-weight: bold; font-size: 0.9rem;font-color:#ADA4AC'>" + cardTitle + "</h4>"
 				+ "<h4 style='color:" + color + " !important;'> <span style='font-size: 0.8rem; font-weight: bold;'>"
@@ -135,5 +128,6 @@ public class OverallDailyAttendanceDashboardGenerator {
 
 		return layout;
 	}
+
 
 }

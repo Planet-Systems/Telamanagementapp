@@ -23,6 +23,12 @@ public class RequestConstant {
 
 	public static final String SCHOOL_STATISTICS = "School Statistics";
 
+	
+	//Params
+	public static final String DISTRICT_ID = "DISTRICT_ID";
+	public static final String SCHOOL_ID = "SCHOOL_ID";
+	public static final String ATTENDANCE_DATE="ATTENDANCE_DATE";
+	
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";
 	public static final String DELETE_ACADEMIC_YEAR = "DELETE_ACADEMIC_YEAR";
@@ -227,6 +233,10 @@ public class RequestConstant {
 	public static final String GET_DISTRICT_SUMMARY_DASHBOARD = "GET_DISTRICT_SUMMARY_DASHBOARD";
 	
 	public static final String GET_OverallDailyAttendanceDashboard = "GET_OverallDailyAttendanceDashboard";
+	
+	public static final String GET_DistrictDailyAttendanceDashboard = "GET_DistrictDailyAttendanceDashboard";
+	
+	public static final String GET_SchoolDailyAttendanceDashboard = "GET_SchoolDailyAttendanceDashboard";
 	
 	 
 

@@ -1,50 +1,37 @@
 package com.planetsystems.tela.managementapp.client.presenter.dailyattendancedashoard;
 
-import java.util.List;
-
-import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
-import com.planetsystems.tela.dto.dashboard.DailyAttendanceEnrollmentSummaryDTO;
-import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
-import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
-import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboarTestWindow;
-import com.planetsystems.tela.managementapp.client.presenter.dashboard.OverallAttendanceDashboardGenerator;
+import com.planetsystems.tela.dto.dashboard.SchoolDailyAttendanceEnrollmentSummaryDTO;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class OverallDailyAttendanceDashboardGenerator {
+public class SchoolDailyAttendanceEnrollmentSummaryGenerator {
 
-	private static OverallDailyAttendanceDashboardGenerator instance = new OverallDailyAttendanceDashboardGenerator();
+	private static SchoolDailyAttendanceEnrollmentSummaryGenerator instance = new SchoolDailyAttendanceEnrollmentSummaryGenerator();
 
-	private OverallDailyAttendanceDashboardGenerator() {
+	private SchoolDailyAttendanceEnrollmentSummaryGenerator() {
 
 	}
 
-	public static OverallDailyAttendanceDashboardGenerator getInstance() {
+	public static SchoolDailyAttendanceEnrollmentSummaryGenerator getInstance() {
 		return instance;
 	}
 
-	DailyAttendanceEnrollmentSummaryListgrid summaryListgrid = new DailyAttendanceEnrollmentSummaryListgrid();
+	public void generateDashboard(VLayout dashboardPane, SchoolDailyAttendanceEnrollmentSummaryDTO dto) {
 
-	public void generateDashboard(VLayout dashboardPane, OverallDailyAttendanceEnrollmentSummaryDTO dto) {
-
-		long enroledDistricts = dto.getEnroledDistricts();
-		long clockedDistricts = dto.getClockedDistricts();
-		long enroledSchools = dto.getEnroledSchools();
-		long clockedSchools = dto.getClockedSchools();
-		long clockedHeadteachers = dto.getClockedHeadteachers();
+		boolean headteacherststaut = dto.isHeadteacherClockInStatus();
 		long enrolledTeachers = dto.getEnrolledTeachers();
 		long clockedInteachers = dto.getClockedInteachers();
 		long enroledLearners = dto.getEnroledLearners();
 		long clockedLearners = dto.getClockedLearners();
 
 		VLayout col1 = new VLayout();
-		col1.addMember(getCard("Total Number of Districts Clocked in", clockedDistricts + "", "#6495ED"));
-		col1.addMember(getCard("Total Number of Schools Clocked in", clockedSchools + "", "#6495ED"));
-		col1.addMember(getCard("Total Number of Headteachers Clocked in", clockedHeadteachers + "", "#f7b924"));
+		col1.addMember(getCard("Total Number of Teachers Enrolled", enrolledTeachers + "", "#6495ED"));
 		col1.addMember(getCard("Total Number of Teachers Clocked in", clockedInteachers + "", "#6495ED"));
+		col1.addMember(getCard("Total Number of Learners Enrolled", enroledLearners + "", "#6495ED"));
+		col1.addMember(getCard("Total Number of Learner Attendance Recorded", clockedLearners + "", "#f7b924"));
 
 		col1.setAutoHeight();
 		col1.setWidth("20%");
@@ -53,7 +40,8 @@ public class OverallDailyAttendanceDashboardGenerator {
 		col1.setMargin(10);
 
 		VLayout chart1 = new VLayout();
-		summaryListgrid.addRecordsToGrid(dto.getDailyAttendanceEnrollmentSummaryDTOs());
+		DailySchoolAttendanceEnrollmentSummaryListgrid summaryListgrid = new DailySchoolAttendanceEnrollmentSummaryListgrid();
+		summaryListgrid.addRecordsToGrid(dto.getDailySchoolAttendanceEnrollmentSummaryDTOs());
 		summaryListgrid.setHeight(470);
 		chart1.addMember(summaryListgrid);
 
@@ -122,7 +110,7 @@ public class OverallDailyAttendanceDashboardGenerator {
 		label.setAlign(Alignment.CENTER);
 		label.setValign(VerticalAlignment.CENTER);
 		label.setWrap(true);
-		label.setContents("<div style='box-sizing: border-box; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);border-radius: 0.5rem;"
+		label.setContents("<div style='box-sizing: border-box; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"
 				+ "background-color: #ffffff;padding: 2px;font-family: \"Lucida Grande\", \"Lucida Sans Unicode\", Arial, Helvetica, sans-serif; width:250px;'>"
 				+ "<h4 style='font-weight: bold; font-size: 0.9rem;font-color:#ADA4AC'>" + cardTitle + "</h4>"
 				+ "<h4 style='color:" + color + " !important;'> <span style='font-size: 0.8rem; font-weight: bold;'>"

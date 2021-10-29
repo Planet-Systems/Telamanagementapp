@@ -39,10 +39,14 @@ import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.UserAccountRequestDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DailyAttendanceEnrollmentSummaryDTO;
+import com.planetsystems.tela.dto.dashboard.DailyDistrictAttendanceEnrollmentSummaryDTO;
+import com.planetsystems.tela.dto.dashboard.DailySchoolAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
+import com.planetsystems.tela.dto.dashboard.DistrictDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
+import com.planetsystems.tela.dto.dashboard.SchoolDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
@@ -148,10 +152,48 @@ public class RequestResult implements Result {
 
 	private OverallDailyAttendanceEnrollmentSummaryDTO overallDailyAttendanceEnrollmentSummaryDTO;
 
+	private DistrictDailyAttendanceEnrollmentSummaryDTO districtDailyAttendanceEnrollmentSummaryDTO;
+
+	private List<DailyDistrictAttendanceEnrollmentSummaryDTO> dailyDistrictAttendanceEnrollmentSummaryDTOs;
+
+	private SchoolDailyAttendanceEnrollmentSummaryDTO schoolDailyAttendanceEnrollmentSummaryDTO;
+
+	private List<DailySchoolAttendanceEnrollmentSummaryDTO> dailySchoolAttendanceEnrollmentSummaryDTOs;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<DailySchoolAttendanceEnrollmentSummaryDTO> dailySchoolAttendanceEnrollmentSummaryDTOs,
+			DailySchoolAttendanceEnrollmentSummaryDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.dailySchoolAttendanceEnrollmentSummaryDTOs = dailySchoolAttendanceEnrollmentSummaryDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			SchoolDailyAttendanceEnrollmentSummaryDTO schoolDailyAttendanceEnrollmentSummaryDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.schoolDailyAttendanceEnrollmentSummaryDTO = schoolDailyAttendanceEnrollmentSummaryDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<DailyDistrictAttendanceEnrollmentSummaryDTO> dailyDistrictAttendanceEnrollmentSummaryDTOs,
+			DailyDistrictAttendanceEnrollmentSummaryDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.dailyDistrictAttendanceEnrollmentSummaryDTOs = dailyDistrictAttendanceEnrollmentSummaryDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			DistrictDailyAttendanceEnrollmentSummaryDTO districtDailyAttendanceEnrollmentSummaryDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.districtDailyAttendanceEnrollmentSummaryDTO = districtDailyAttendanceEnrollmentSummaryDTO;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			OverallDailyAttendanceEnrollmentSummaryDTO overallDailyAttendanceEnrollmentSummaryDTO) {
@@ -798,6 +840,22 @@ public class RequestResult implements Result {
 
 	public OverallDailyAttendanceEnrollmentSummaryDTO getOverallDailyAttendanceEnrollmentSummaryDTO() {
 		return overallDailyAttendanceEnrollmentSummaryDTO;
+	}
+
+	public DistrictDailyAttendanceEnrollmentSummaryDTO getDistrictDailyAttendanceEnrollmentSummaryDTO() {
+		return districtDailyAttendanceEnrollmentSummaryDTO;
+	}
+
+	public List<DailyDistrictAttendanceEnrollmentSummaryDTO> getDailyDistrictAttendanceEnrollmentSummaryDTOs() {
+		return dailyDistrictAttendanceEnrollmentSummaryDTOs;
+	}
+
+	public SchoolDailyAttendanceEnrollmentSummaryDTO getSchoolDailyAttendanceEnrollmentSummaryDTO() {
+		return schoolDailyAttendanceEnrollmentSummaryDTO;
+	}
+
+	public List<DailySchoolAttendanceEnrollmentSummaryDTO> getDailySchoolAttendanceEnrollmentSummaryDTOs() {
+		return dailySchoolAttendanceEnrollmentSummaryDTOs;
 	}
 
 }

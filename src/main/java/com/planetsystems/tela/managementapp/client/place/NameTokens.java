@@ -2,7 +2,7 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
-	public static final String dailyattendacedashboard = "Daily Attendace Dashboard";
+	public static final String dailyattendacedashboard = "Daily Attendance Dashboard";
 
 	public static final String useraccountapproval = "User Account Requests";
 

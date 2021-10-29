@@ -28,7 +28,7 @@ public class ControlsPane extends ToolStrip {
 		header.setAutoHeight();
 		header.setAlign(Alignment.LEFT);
 
-		this.addMember(header);
+		this.setMembers(header);
 	}
 	
 	
