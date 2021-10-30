@@ -7,6 +7,7 @@ import com.planetsystems.tela.managementapp.client.presenter.dashboard.Dashboard
 import com.planetsystems.tela.managementapp.client.presenter.devicemanager.DeviceManagerModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.LearnerEnrollmentModule;
+import com.planetsystems.tela.managementapp.client.presenter.loginaudit.LoginAuditModule;
 import com.planetsystems.tela.managementapp.client.presenter.region.RegionModule;
 import com.planetsystems.tela.managementapp.client.presenter.reports.districtperformacereport.DistrictPerformaceReportModule;
 import com.planetsystems.tela.managementapp.client.presenter.reports.headteacherperformance.HeadTeacherPerformanceModule;
@@ -27,12 +28,12 @@ import com.planetsystems.tela.managementapp.client.presenter.timetable.TimeTable
 import com.planetsystems.tela.managementapp.client.presenter.useraccountapproval.UserAccountApprovalModule;
 
 public class MainModule extends AbstractPresenterModule {
- 
+
 	@Override
 	protected void configure() {
 
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class, MainView.class, MainPresenter.MyProxy.class);
-		
+
 		install(new DashboardModule());
 		install(new AcademicYearModule());
 		install(new RegionModule());
@@ -53,15 +54,15 @@ public class MainModule extends AbstractPresenterModule {
 		install(new SmsMessageModule());
 		install(new DeviceManagerModule());
 		install(new HeadTeacherPerformanceModule());
-		
+
 		install(new SMCSupervisionModule());
 		install(new SMCPerformanceModule());
-		
+
 		install(new UserAccountApprovalModule());
 		install(new DailyAttendanceDashoardModule());
-		 
-		
 
-	} 
- 
+		install(new LoginAuditModule());
+
+	}
+
 }

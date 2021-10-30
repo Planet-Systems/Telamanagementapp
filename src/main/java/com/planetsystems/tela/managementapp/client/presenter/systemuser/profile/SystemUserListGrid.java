@@ -27,7 +27,10 @@ public class SystemUserListGrid extends SuperListGrid {
 	public static final String USER_GROUP = "USER_GROUP";
 	public static final String USER_GROUP_ID = "USER_GROUP_ID";
 
-    SystemUserDataSource dataSource;
+	public static final String STATUS = "STATUS";
+
+	SystemUserDataSource dataSource;
+
 	public SystemUserListGrid() {
 		super();
 
@@ -51,20 +54,26 @@ public class SystemUserListGrid extends SuperListGrid {
 		ListGridField emailField = new ListGridField(EMAIL, "Email");
 
 		ListGridField dobField = new ListGridField(DOB, "D.O.B");
+		dobField.setHidden(true);
 
 		ListGridField nationalIdField = new ListGridField(NATIONAL_ID, "NationalId");
 
 		ListGridField genderField = new ListGridField(GENDER, "Gender");
 
 		ListGridField nameAbbrevField = new ListGridField(NAME_ABBREV, "Name Abbreviation");
-		
+		nameAbbrevField.setHidden(true);
+
 		ListGridField userGroupFieldId = new ListGridField(USER_GROUP_ID, "User Group Id");
 		userGroupFieldId.setHidden(true);
-		
+
 		ListGridField userGroupField = new ListGridField(USER_GROUP, "User Group");
 
-		this.setFields(idField, usernameField, firstNameField, lastNameField, emailField, userGroupFieldId,userGroupField,phoneNumberField,
-				nationalIdField, dobField, genderField, enabledField, nameAbbrevField, configRoleField);
+		ListGridField status = new ListGridField(STATUS, "Status");
+		ListGridField enabled = new ListGridField(ENABLED, "Enbled?");
+
+		this.setFields(idField, usernameField, firstNameField, lastNameField, emailField, userGroupFieldId,
+				userGroupField, phoneNumberField, nationalIdField, dobField, genderField, enabledField, nameAbbrevField,
+				configRoleField, status, enabled);
 
 		this.setDataSource(dataSource);
 	}
@@ -91,11 +100,14 @@ public class SystemUserListGrid extends SuperListGrid {
 			record.setAttribute(GENDER, dto.getGeneralUserDetailDTO().getGender());
 			record.setAttribute(PHONE_NUMBER, dto.getGeneralUserDetailDTO().getPhoneNumber());
 		}
-		
-		if(dto.getSystemUserGroupDTO()!=null) {
+
+		if (dto.getSystemUserGroupDTO() != null) {
 			record.setAttribute(USER_GROUP_ID, dto.getSystemUserGroupDTO().getId());
 			record.setAttribute(USER_GROUP, dto.getSystemUserGroupDTO().getName());
 		}
+
+		record.setAttribute(STATUS, dto.getStatus());
+		record.setAttribute(enabled, dto.getSystemUserDTO().isEnabled());
 
 		return record;
 	}
@@ -110,7 +122,6 @@ public class SystemUserListGrid extends SuperListGrid {
 		this.setData(records);
 		dataSource.setTestData(records);
 	}
-
 
 	public static class SystemUserDataSource extends DataSource {
 
@@ -150,13 +161,12 @@ public class SystemUserListGrid extends SuperListGrid {
 
 			DataSourceTextField nameAbbrevField = new DataSourceTextField(NAME_ABBREV, "Name Abbreviation");
 
-
-			this.setFields(idField , usernameField , firstNameField , lastNameField , emailField , phoneNumberField , nationalIdField , dobField , genderField , enabledField , nameAbbrevField , configRoleField);
+			this.setFields(idField, usernameField, firstNameField, lastNameField, emailField, phoneNumberField,
+					nationalIdField, dobField, genderField, enabledField, nameAbbrevField, configRoleField);
 
 			setClientOnly(true);
 
 		}
 	}
-
 
 }

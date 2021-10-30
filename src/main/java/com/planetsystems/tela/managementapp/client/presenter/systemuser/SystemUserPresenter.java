@@ -153,26 +153,33 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 					MenuButton newButton = new MenuButton("New");
 					MenuButton edit = new MenuButton("Edit");
-					MenuButton delete = new MenuButton("Delete");
+					MenuButton activate = new MenuButton("Activate");
+					MenuButton delete = new MenuButton("Deactivate");
+					MenuButton passwordReset = new MenuButton("Reset Password");
 					MenuButton details = new MenuButton("Details");
 					MenuButton permission = new MenuButton("Manage User");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
+					buttons.add(activate);
 					buttons.add(delete);
+					buttons.add(passwordReset);
 					buttons.add(details);
 					buttons.add(permission);
 
 					addSystemUserPermission(permission);
 
-					getView().getControlsPane().addMenuButtons("System user details", buttons);
+					getView().getControlsPane().addMenuButtons("System User Details", buttons);
 
 					onNewButtonCLicked(newButton);
 
-					// onUpdateButtonCLicked(edit);
-					// onDeleteButtonCLicked(delete);
+					onEditButtonCLicked(edit);
 					// onDetailsButtonCLicked(details);
+					onPasswordResetButtonCLicked(passwordReset);
+					onDeactivateButtonCLicked(delete);
+					onActivateButtonCLicked(activate);
+
 					getSystemUserProfiles();
 				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_MENU_SETUP)) {
 
@@ -243,7 +250,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 													profileRecord.getAttribute(SystemUserListGrid.ID));
 											map.put(RequestConstant.REQUEST_DATA, schoolDTOs);
 
-											NetworkDataUtil.callNetwork(dispatcher, placeManager, map,	new NetworkResult() {
+											NetworkDataUtil.callNetwork(dispatcher, placeManager, map,
+													new NetworkResult() {
 
 														@Override
 														public void onNetworkResult(RequestResult result) {
@@ -275,10 +283,11 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			ListGridRecord profileRecord) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID, profileRecord.getAttributeAsObject(SystemUserListGrid.ID));
-//		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-//			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
-//		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
+		// if
+		// (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+		// map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
+		// else
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -358,7 +367,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 								}
 							});
 
-							//saving system user profile schools
+							// saving system user profile schools
 
 							profileSchoolWindow.getAddSchoolsButton().addClickHandler(new ClickHandler() {
 
@@ -432,13 +441,14 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 							systemUserGroupDTO.setDescription(window.getDescriptionField().getValueAsString());
 							systemUserGroupDTO.setName(window.getNameField().getValueAsString());
 
+							systemUserGroupDTO.setDefaultGroup(
+									Boolean.parseBoolean(window.getDefaultRoleRadio().getValueAsString()));
 
-							systemUserGroupDTO.setDefaultGroup(Boolean.parseBoolean(window.getDefaultRoleRadio().getValueAsString()));
+							systemUserGroupDTO.setReceiveAlerts(
+									Boolean.parseBoolean(window.getReceiveAlertRadio().getValueAsString()));
 
-
-							systemUserGroupDTO.setReceiveAlerts(Boolean.parseBoolean(window.getReceiveAlertRadio().getValueAsString()));
-
-							systemUserGroupDTO.setAdministrativeRole(Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
+							systemUserGroupDTO.setAdministrativeRole(
+									Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
 
 							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 							map.put(SystemUserGroupRequestConstant.DATA, systemUserGroupDTO);
@@ -511,64 +521,65 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	}
 
 	// @Deprecated
-//	private void onSaveUserGroup(final SystemUserGroupWindow window) {
-//		window.getSaveButton().addClickHandler(new ClickHandler() {
-//
-//			@Override
-//			public void onClick(ClickEvent event) {
-//
-//				SystemUserGroupDTO userGroup = new SystemUserGroupDTO();
-//
-//				userGroup.setCode(window.getRoleCode().getValueAsString());
-//
-//				userGroup.setDescription(window.getDescription().getValueAsString());
-//				userGroup.setName(window.getRoleName().getValueAsString());
-//				userGroup.setDefaultGroup(window.getDefaultRole().getValueAsBoolean());
-//				userGroup.setReceiveAlerts(window.getReceiveAlerts().getValueAsBoolean());
-//
-//				userGroup.setAdministrativeRole(window.getAdministrativeRole().getValueAsBoolean());
-//
-//				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-//				map.put(RequestConstant.SAVE_USER_GROUP, userGroup);
-//				map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//				SC.showPrompt("", "", new SwizimaLoader());
-//
-//				dispatcher.execute(new RequestAction(RequestConstant.SAVE_USER_GROUP, map),
-//						new AsyncCallback<RequestResult>() {
-//							public void onFailure(Throwable caught) {
-//								System.out.println(caught.getMessage());
-//								SC.clearPrompt();
-//								SC.say("ERROR", caught.getMessage());
-//							}
-//
-//							public void onSuccess(RequestResult result) {
-//
-//								SC.clearPrompt();
-//
-//								SessionManager.getInstance().manageSession(result, placeManager);
-//								if (result != null) {
-//									if (result.getSystemFeedbackDTO().isResponse()) {
-//
-//										SC.say("Message", result.getSystemFeedbackDTO().getMessage());
-//
-//										getView().getUserGroupPane().getListgrid()
-//												.addRecordsToGrid(result.getSystemUserGroupDTOs());
-//
-//									} else {
-//										SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
-//									}
-//
-//								} else {
-//									SC.say("ERROR", "Unknow error");
-//								}
-//
-//							}
-//						});
-//
-//			}
-//		});
-//	}
+	// private void onSaveUserGroup(final SystemUserGroupWindow window) {
+	// window.getSaveButton().addClickHandler(new ClickHandler() {
+	//
+	// @Override
+	// public void onClick(ClickEvent event) {
+	//
+	// SystemUserGroupDTO userGroup = new SystemUserGroupDTO();
+	//
+	// userGroup.setCode(window.getRoleCode().getValueAsString());
+	//
+	// userGroup.setDescription(window.getDescription().getValueAsString());
+	// userGroup.setName(window.getRoleName().getValueAsString());
+	// userGroup.setDefaultGroup(window.getDefaultRole().getValueAsBoolean());
+	// userGroup.setReceiveAlerts(window.getReceiveAlerts().getValueAsBoolean());
+	//
+	// userGroup.setAdministrativeRole(window.getAdministrativeRole().getValueAsBoolean());
+	//
+	// LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+	// map.put(RequestConstant.SAVE_USER_GROUP, userGroup);
+	// map.put(RequestConstant.LOGIN_TOKEN,
+	// SessionManager.getInstance().getLoginToken());
+	//
+	// SC.showPrompt("", "", new SwizimaLoader());
+	//
+	// dispatcher.execute(new RequestAction(RequestConstant.SAVE_USER_GROUP, map),
+	// new AsyncCallback<RequestResult>() {
+	// public void onFailure(Throwable caught) {
+	// System.out.println(caught.getMessage());
+	// SC.clearPrompt();
+	// SC.say("ERROR", caught.getMessage());
+	// }
+	//
+	// public void onSuccess(RequestResult result) {
+	//
+	// SC.clearPrompt();
+	//
+	// SessionManager.getInstance().manageSession(result, placeManager);
+	// if (result != null) {
+	// if (result.getSystemFeedbackDTO().isResponse()) {
+	//
+	// SC.say("Message", result.getSystemFeedbackDTO().getMessage());
+	//
+	// getView().getUserGroupPane().getListgrid()
+	// .addRecordsToGrid(result.getSystemUserGroupDTOs());
+	//
+	// } else {
+	// SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
+	// }
+	//
+	// } else {
+	// SC.say("ERROR", "Unknow error");
+	// }
+	//
+	// }
+	// });
+	//
+	// }
+	// });
+	// }
 
 	private void getAllSystemUserGroups() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
@@ -581,29 +592,30 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			}
 		});
 
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_USER_GROUP, map), new AsyncCallback<RequestResult>() {
-//			public void onFailure(Throwable caught) {
-//				System.out.println(caught.getMessage());
-//
-//				SC.clearPrompt();
-//				SC.say("ERROR", caught.getMessage());
-//			}
-//
-//			public void onSuccess(RequestResult result) {
-//
-//				SC.clearPrompt();
-//
-//				SessionManager.getInstance().manageSession(result, placeManager);
-//				if (result != null) {
-//
-//					getView().getUserGroupPane().getListgrid().addRecordsToGrid(result.getSystemUserGroupDTOs());
-//
-//				} else {
-//					SC.say("ERROR", "Unknow error");
-//				}
-//
-//			}
-//		});
+		// dispatcher.execute(new RequestAction(RequestConstant.GET_USER_GROUP, map),
+		// new AsyncCallback<RequestResult>() {
+		// public void onFailure(Throwable caught) {
+		// System.out.println(caught.getMessage());
+		//
+		// SC.clearPrompt();
+		// SC.say("ERROR", caught.getMessage());
+		// }
+		//
+		// public void onSuccess(RequestResult result) {
+		//
+		// SC.clearPrompt();
+		//
+		// SessionManager.getInstance().manageSession(result, placeManager);
+		// if (result != null) {
+		//
+		// getView().getUserGroupPane().getListgrid().addRecordsToGrid(result.getSystemUserGroupDTOs());
+		//
+		// } else {
+		// SC.say("ERROR", "Unknow error");
+		// }
+		//
+		// }
+		// });
 	}
 
 	private void onUpdateUserGroup(final SystemUserGroupWindow window) {
@@ -626,7 +638,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				userGroup.setDefaultGroup(Boolean.parseBoolean(window.getDefaultRoleRadio().getValueAsString()));
 				userGroup.setReceiveAlerts(Boolean.parseBoolean(window.getReceiveAlertRadio().getValueAsString()));
 
-				userGroup.setAdministrativeRole(Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
+				userGroup.setAdministrativeRole(
+						Boolean.parseBoolean(window.getAdministrativeRoleRadio().getValueAsString()));
 
 				SC.showPrompt("", "", new SwizimaLoader());
 
@@ -795,6 +808,130 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 	}
 
+	private void onEditButtonCLicked(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
+					SystemUserProfileWindow window = new SystemUserProfileWindow();
+					loadEnabledRadioGroupItem(window);
+					loadGenderComboBox(window);
+					loadUserGroupsCombo(window);
+					loadRecordToEdit(window);
+					updateSystemUserProfile(window);
+					window.show();
+
+				} else {
+					SC.warn("ERROR", "Please select record to edit");
+				}
+
+			}
+
+		});
+
+	}
+
+	private void onDeactivateButtonCLicked(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
+
+					SC.ask("Confirm", "Are you sure you want to deactivate the selected system user?",
+							new BooleanCallback() {
+
+								@Override
+								public void execute(Boolean value) {
+
+									if (value) {
+										deactivate();
+									}
+								}
+							});
+
+				} else {
+					SC.warn("ERROR", "Please select record to edit");
+				}
+
+			}
+
+		});
+
+	}
+
+	private void onActivateButtonCLicked(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
+
+					SC.ask("Confirm", "Are you sure you want to Activate the selected system user?",
+							new BooleanCallback() {
+
+								@Override
+								public void execute(Boolean value) {
+
+									if (value) {
+										activate();
+									}
+								}
+							});
+
+				} else {
+					SC.warn("ERROR", "Please select record to edit");
+				}
+
+			}
+
+		});
+
+	}
+
+	private void onPasswordResetButtonCLicked(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getSystemUserPane().getSystemUserListGrid().anySelected()) {
+
+					SC.ask("Confirm", "Are you sure you want to deactivate the selected system user?",
+							new BooleanCallback() {
+
+								@Override
+								public void execute(Boolean value) {
+
+									if (value) {
+										resetPassword();
+									}
+								}
+							});
+
+				} else {
+					SC.warn("ERROR", "Please select record to edit");
+				}
+
+			}
+
+		});
+
+	}
+
+	private void loadRecordToEdit(final SystemUserProfileWindow window) {
+
+		ListGridRecord record = getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord();
+
+		window.getFirstNameField().setValue(record.getAttribute(SystemUserListGrid.FIRST_NAME));
+		window.getLastNameField().setValue(record.getAttribute(SystemUserListGrid.LAST_NAME));
+		window.getPhoneNumberField().setValue(record.getAttribute(SystemUserListGrid.PHONE_NUMBER));
+		window.getEmailField().setValue(record.getAttribute(SystemUserListGrid.EMAIL));
+		window.getGenderCombo().setValue(record.getAttribute(SystemUserListGrid.GENDER));
+		window.getSystemUserGroupCombo().setValue(record.getAttribute(SystemUserListGrid.USER_GROUP_ID));
+
+	}
+
 	private void loadUserGroupsCombo(final SystemUserProfileWindow window) {
 
 		// ComboUtil.loadSystemUserGroupCombo(window.getSystemUserGroupCombo() ,
@@ -814,34 +951,35 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			}
 		});
 
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_USER_GROUP, map), new AsyncCallback<RequestResult>() {
-//			public void onFailure(Throwable caught) {
-//				System.out.println(caught.getMessage());
-//
-//				SC.clearPrompt();
-//				SC.say("ERROR", caught.getMessage());
-//			}
-//
-//			public void onSuccess(RequestResult result) {
-//
-//				SC.clearPrompt();
-//
-//				SessionManager.getInstance().manageSession(result, placeManager);
-//				if (result != null) {
-//
-//					LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
-//					for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
-//						hashMap.put(dto.getId(), dto.getName());
-//					}
-//
-//					window.getSystemUserGroupCombo().setValueMap(hashMap);
-//
-//				} else {
-//					SC.say("ERROR", "Unknow error");
-//				}
-//
-//			}
-//		});
+		// dispatcher.execute(new RequestAction(RequestConstant.GET_USER_GROUP, map),
+		// new AsyncCallback<RequestResult>() {
+		// public void onFailure(Throwable caught) {
+		// System.out.println(caught.getMessage());
+		//
+		// SC.clearPrompt();
+		// SC.say("ERROR", caught.getMessage());
+		// }
+		//
+		// public void onSuccess(RequestResult result) {
+		//
+		// SC.clearPrompt();
+		//
+		// SessionManager.getInstance().manageSession(result, placeManager);
+		// if (result != null) {
+		//
+		// LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
+		// for (SystemUserGroupDTO dto : result.getSystemUserGroupDTOs()) {
+		// hashMap.put(dto.getId(), dto.getName());
+		// }
+		//
+		// window.getSystemUserGroupCombo().setValueMap(hashMap);
+		//
+		// } else {
+		// SC.say("ERROR", "Unknow error");
+		// }
+		//
+		// }
+		// });
 	}
 
 	public void loadEnabledRadioGroupItem(SystemUserProfileWindow window) {
@@ -855,10 +993,11 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	@Deprecated
 	public void loadGenderComboBox(SystemUserProfileWindow window) {
 		Map<String, String> valueMap = new LinkedHashMap<String, String>();
-		valueMap.put("female", "Female");
-		valueMap.put("male", "Male");
+		valueMap.put("Female", "Female");
+		valueMap.put("Male", "Male");
+		valueMap.put("Others", "Others");
 
-		//window.getGenderCombo().setValueMap(valueMap);
+		window.getGenderCombo().setValueMap(valueMap);
 	}
 
 	private void saveSystemUserProfile(final SystemUserProfileWindow window) {
@@ -871,46 +1010,60 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					SystemUserProfileDTO dto = new SystemUserProfileDTO();
 					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
 					SystemUserDTO systemUserDTO = new SystemUserDTO();
-					systemUserDTO.setEnabled(Boolean.parseBoolean(window.getEnabledRadioGroupItem().getValueAsString()));
+					systemUserDTO
+							.setEnabled(Boolean.parseBoolean(window.getEnabledRadioGroupItem().getValueAsString()));
 					systemUserDTO.setUserName(window.getEmailField().getValueAsString());
 					systemUserDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
 
 					// dto.setPassword(window.getPasswordField().getValueAsString());
 
 					GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
-//					generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
-//					generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+					generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+					generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
 					generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
-//					generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
-//					generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
-//					generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
-//					generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
-//					generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+					// generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+					generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
+					// generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
+					// generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+					generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
 
 					SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
 					systemUserGroupDTO.setId(window.getSystemUserGroupCombo().getValueAsString());
-
 
 					dto.setSystemUserDTO(systemUserDTO);
 					dto.setSystemUserGroupDTO(systemUserGroupDTO);
 					dto.setGeneralUserDetailDTO(generalUserDetailDTO);
 
-						LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-						map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.SAVE_SYSTEM_USER_PROFILE);
-						map.put(SystemUserProfileRequestConstant.DATA, dto);
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.SAVE_SYSTEM_USER_PROFILE);
+					map.put(SystemUserProfileRequestConstant.DATA, dto);
 
-						NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-							@Override
-							public void onNetworkResult(RequestResult result) {
-								clearSystemUserWindowFields(window);
-								window.close();
-								getAllSystemUserProfiles();
+						@Override
+						public void onNetworkResult(RequestResult result) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+								if (result.getSystemFeedbackDTO().isResponse()) {
+									SC.say("Success", result.getSystemFeedbackDTO().getMessage(),
+											new BooleanCallback() {
+
+												@Override
+												public void execute(Boolean value) {
+													if (value) {
+														clearSystemUserWindowFields(window);
+														getAllSystemUserProfiles();
+													}
+
+												}
+											});
+								}
 							}
-						});
 
+						}
+					});
 
-				}else {
+				} else {
 					SC.say("Fill all the fields");
 				}
 
@@ -918,30 +1071,210 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 		});
 	}
 
+	private void updateSystemUserProfile(final SystemUserProfileWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (checkIfNoSystemUserWindowFieldIsEmpty(window)) {
+
+					SystemUserProfileDTO dto = new SystemUserProfileDTO();
+					dto.setId(getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord()
+							.getAttribute(SystemUserListGrid.ID));
+
+					dto.setCreatedDateTime(dateTimeFormat.format(new Date()));
+					SystemUserDTO systemUserDTO = new SystemUserDTO();
+					systemUserDTO
+							.setEnabled(Boolean.parseBoolean(window.getEnabledRadioGroupItem().getValueAsString()));
+					systemUserDTO.setUserName(window.getEmailField().getValueAsString());
+					systemUserDTO.setCreatedDateTime(dateTimeFormat.format(new Date()));
+
+					// dto.setPassword(window.getPasswordField().getValueAsString());
+
+					GeneralUserDetailDTO generalUserDetailDTO = new GeneralUserDetailDTO();
+					generalUserDetailDTO.setFirstName(window.getFirstNameField().getValueAsString());
+					generalUserDetailDTO.setLastName(window.getLastNameField().getValueAsString());
+					generalUserDetailDTO.setEmail(window.getEmailField().getValueAsString());
+					// generalUserDetailDTO.setDob(dateFormat.format(window.getDobItem().getValueAsDate()));
+					generalUserDetailDTO.setGender(window.getGenderCombo().getValueAsString());
+					// generalUserDetailDTO.setNameAbbrev(window.getNameAbbrevField().getValueAsString());
+					// generalUserDetailDTO.setNationalId(window.getNationalIdField().getValueAsString());
+					generalUserDetailDTO.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+
+					SystemUserGroupDTO systemUserGroupDTO = new SystemUserGroupDTO();
+					systemUserGroupDTO.setId(window.getSystemUserGroupCombo().getValueAsString());
+
+					dto.setSystemUserDTO(systemUserDTO);
+					dto.setSystemUserGroupDTO(systemUserGroupDTO);
+					dto.setGeneralUserDetailDTO(generalUserDetailDTO);
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.UPDATE_SYSTEM_USER_PROFILE);
+					map.put(SystemUserProfileRequestConstant.DATA, dto);
+
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+						@Override
+						public void onNetworkResult(RequestResult result) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+								if (result.getSystemFeedbackDTO().isResponse()) {
+									SC.say("Success", result.getSystemFeedbackDTO().getMessage(),
+											new BooleanCallback() {
+
+												@Override
+												public void execute(Boolean value) {
+													if (value) {
+														window.close();
+														getAllSystemUserProfiles();
+													}
+
+												}
+											});
+								}
+							}
+
+						}
+					});
+
+				} else {
+					SC.say("Fill all the fields");
+				}
+
+			}
+		});
+	}
+
+	private void deactivate() {
+
+		SystemUserProfileDTO dto = new SystemUserProfileDTO();
+		dto.setId(getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord()
+				.getAttribute(SystemUserListGrid.ID));
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.DEACTIVATE_SYSTEM_USER_PROFILE);
+		map.put(SystemUserProfileRequestConstant.DATA, dto);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				if (result.getSystemFeedbackDTO() != null) {
+					if (result.getSystemFeedbackDTO().isResponse()) {
+						SC.say("Success", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									getAllSystemUserProfiles();
+								}
+
+							}
+						});
+					}
+				}
+
+			}
+		});
+
+	}
+
+	private void activate() {
+
+		SystemUserProfileDTO dto = new SystemUserProfileDTO();
+		dto.setId(getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord()
+				.getAttribute(SystemUserListGrid.ID));
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.ACTIVATE_SYSTEM_USER_PROFILE);
+		map.put(SystemUserProfileRequestConstant.DATA, dto);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				if (result.getSystemFeedbackDTO() != null) {
+					if (result.getSystemFeedbackDTO().isResponse()) {
+						SC.say("Success", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									getAllSystemUserProfiles();
+								}
+
+							}
+						});
+					}
+				}
+
+			}
+		});
+
+	}
+
+	private void resetPassword() {
+
+		SystemUserProfileDTO dto = new SystemUserProfileDTO();
+		dto.setId(getView().getSystemUserPane().getSystemUserListGrid().getSelectedRecord()
+				.getAttribute(SystemUserListGrid.ID));
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION, SystemUserProfileRequestConstant.RESET_PASSWORD_SYSTEM_USER_PROFILE);
+		map.put(SystemUserProfileRequestConstant.DATA, dto);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				if (result.getSystemFeedbackDTO() != null) {
+					if (result.getSystemFeedbackDTO().isResponse()) {
+						SC.say("Success", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									getAllSystemUserProfiles();
+								}
+
+							}
+						});
+					}
+				}
+
+			}
+		});
+
+	}
+
 	@Deprecated
 	private boolean checkIfProfileFieldsNotEmpty(SystemUserProfileWindow window) {
 		boolean status = true;
 
-//		if (window.getFirstNameField().getValueAsString() == null)
-//			status = false;
+		// if (window.getFirstNameField().getValueAsString() == null)
+		// status = false;
 
-//		if (window.getLastNameField().getValueAsString() == null)
-//			status = false;
+		// if (window.getLastNameField().getValueAsString() == null)
+		// status = false;
 
-//		if (window.getPhoneNumberField().getValueAsString() == null)
-//			status = false;
+		// if (window.getPhoneNumberField().getValueAsString() == null)
+		// status = false;
 
 		if (window.getEmailField().getValueAsString() == null)
 			status = false;
 
-//		if (window.getDobItem().getValueAsDate() == null)
-//			status = false;
+		// if (window.getDobItem().getValueAsDate() == null)
+		// status = false;
 
-//		if (window.getNationalIdField().getValueAsString() == null)
-//			status = false;
-//
-//		if (window.getGenderCombo().getValueAsString() == null)
-//			status = false;
+		// if (window.getNationalIdField().getValueAsString() == null)
+		// status = false;
+		//
+		// if (window.getGenderCombo().getValueAsString() == null)
+		// status = false;
 
 		if (window.getSystemUserGroupCombo().getValueAsString() == null)
 			status = false;
@@ -967,40 +1300,40 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 	}
 
 	private void clearSystemUserWindowFields(SystemUserProfileWindow window) {
-//		window.getFirstNameField().clearValue();
-//		window.getLastNameField().clearValue();
-//		window.getPhoneNumberField().clearValue();
+		// window.getFirstNameField().clearValue();
+		// window.getLastNameField().clearValue();
+		// window.getPhoneNumberField().clearValue();
 		window.getEmailField().clearValue();
-//		window.getDobItem().clearValue();
-//		window.getNationalIdField().clearValue();
-//		window.getGenderCombo().clearValue();
-//		window.getNameAbbrevField().clearValue();
+		// window.getDobItem().clearValue();
+		// window.getNationalIdField().clearValue();
+		// window.getGenderCombo().clearValue();
+		// window.getNameAbbrevField().clearValue();
 		window.getEnabledRadioGroupItem().clearValue();
 	}
 
 	protected boolean checkIfNoSystemUserWindowFieldIsEmpty(SystemUserProfileWindow window) {
 		boolean flag = true;
 
-//		if (window.getFirstNameField().getValueAsString() == null)
-//			flag = false;
-//
-//		if (window.getLastNameField().getValueAsString() == null)
-//			flag = false;
-//
-//		if (window.getPhoneNumberField().getValueAsString() == null)
-//			flag = false;
+		// if (window.getFirstNameField().getValueAsString() == null)
+		// flag = false;
+		//
+		// if (window.getLastNameField().getValueAsString() == null)
+		// flag = false;
+		//
+		// if (window.getPhoneNumberField().getValueAsString() == null)
+		// flag = false;
 
 		if (window.getEmailField().getValueAsString() == null)
 			flag = false;
 
-//		if (window.getDobItem().getValueAsDate() == null)
-//			flag = false;
-//
-//		if (window.getNationalIdField().getValueAsString() == null)
-//			flag = false;
-//
-//		if (window.getGenderCombo().getValueAsString() == null)
-//			flag = false;
+		// if (window.getDobItem().getValueAsDate() == null)
+		// flag = false;
+		//
+		// if (window.getNationalIdField().getValueAsString() == null)
+		// flag = false;
+		//
+		// if (window.getGenderCombo().getValueAsString() == null)
+		// flag = false;
 
 		return flag;
 	}
@@ -1017,39 +1350,40 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			}
 		});
 
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_ALL_SYSTEM_USERS, map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//
-//						if (result != null) {
-//
-//							getView().getSystemUserPane().getSystemUserListGrid()
-//									.addRecordsToGrid(result.getSystemUserProfileDTOs());
-//
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//
-//				});
+		// SC.showPrompt("", "", new SwizimaLoader());
+		//
+		// dispatcher.execute(new RequestAction(RequestConstant.GET_ALL_SYSTEM_USERS,
+		// map),
+		// new AsyncCallback<RequestResult>() {
+		//
+		// @Override
+		// public void onFailure(Throwable caught) {
+		// System.out.println(caught.getMessage());
+		// SC.warn("ERROR", caught.getMessage());
+		// GWT.log("ERROR " + caught.getMessage());
+		// SC.clearPrompt();
+		//
+		// }
+		//
+		// @Override
+		// public void onSuccess(RequestResult result) {
+		//
+		// SC.clearPrompt();
+		//
+		// SessionManager.getInstance().manageSession(result, placeManager);
+		//
+		// if (result != null) {
+		//
+		// getView().getSystemUserPane().getSystemUserListGrid()
+		// .addRecordsToGrid(result.getSystemUserProfileDTOs());
+		//
+		// } else {
+		// SC.warn("ERROR", "Unknow error");
+		// }
+		//
+		// }
+		//
+		// });
 
 	}
 
@@ -1099,10 +1433,10 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			}
 		});
 
-//		for (SubMenuItemDTO dto : SubMenuItemDTO.values()) {
-//			valueMap.put(dto.getSystemMenuItem(), dto.getSystemMenuItem());
-//
-//		}
+		// for (SubMenuItemDTO dto : SubMenuItemDTO.values()) {
+		// valueMap.put(dto.getSystemMenuItem(), dto.getSystemMenuItem());
+		//
+		// }
 
 	}
 
@@ -1139,41 +1473,41 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 						}
 					});
 
-//					SC.showPrompt("", "", new SwizimaLoader());
-//
-//					dispatcher.execute(new RequestAction(RequestConstant.SAVE_SystemMENU, map),
-//							new AsyncCallback<RequestResult>() {
-//								public void onFailure(Throwable caught) {
-//									System.out.println(caught.getMessage());
-//									SC.say("ERROR", caught.getMessage());
-//									SC.clearPrompt();
-//								}
-//
-//								public void onSuccess(RequestResult result) {
-//
-//									SC.clearPrompt();
-//
-//									SessionManager.getInstance().manageSession(result, placeManager);
-//									if (result != null) {
-//
-//										if (result.getSystemFeedbackDTO() != null) {
-//											if (result.getSystemFeedbackDTO().isResponse()) {
-//												SC.say("Sucess", result.getSystemFeedbackDTO().getMessage());
-//												getView().getSystemMenuPane().getListgrid()
-//														.addRecordsToGrid(result.getSystemMenuDTOs());
-//											} else {
-//												SC.say("ERROR", result.getSystemFeedbackDTO().getMessage());
-//											}
-//										} else {
-//											SC.say("ERROR", "Feedback is null");
-//										}
-//
-//									} else {
-//										SC.say("ERROR", "Unknow error");
-//									}
-//
-//								}
-//							});
+					// SC.showPrompt("", "", new SwizimaLoader());
+					//
+					// dispatcher.execute(new RequestAction(RequestConstant.SAVE_SystemMENU, map),
+					// new AsyncCallback<RequestResult>() {
+					// public void onFailure(Throwable caught) {
+					// System.out.println(caught.getMessage());
+					// SC.say("ERROR", caught.getMessage());
+					// SC.clearPrompt();
+					// }
+					//
+					// public void onSuccess(RequestResult result) {
+					//
+					// SC.clearPrompt();
+					//
+					// SessionManager.getInstance().manageSession(result, placeManager);
+					// if (result != null) {
+					//
+					// if (result.getSystemFeedbackDTO() != null) {
+					// if (result.getSystemFeedbackDTO().isResponse()) {
+					// SC.say("Sucess", result.getSystemFeedbackDTO().getMessage());
+					// getView().getSystemMenuPane().getListgrid()
+					// .addRecordsToGrid(result.getSystemMenuDTOs());
+					// } else {
+					// SC.say("ERROR", result.getSystemFeedbackDTO().getMessage());
+					// }
+					// } else {
+					// SC.say("ERROR", "Feedback is null");
+					// }
+					//
+					// } else {
+					// SC.say("ERROR", "Unknow error");
+					// }
+					//
+					// }
+					// });
 				}
 
 			}
@@ -1194,30 +1528,31 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			}
 		});
 
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SystemMENU, map), new AsyncCallback<RequestResult>() {
-//			public void onFailure(Throwable caught) {
-//				System.out.println(caught.getMessage());
-//				SC.say("ERROR", caught.getMessage());
-//				SC.clearPrompt();
-//			}
-//
-//			public void onSuccess(RequestResult result) {
-//
-//				SC.clearPrompt();
-//
-//				SessionManager.getInstance().manageSession(result, placeManager);
-//				if (result != null) {
-//
-//					getView().getSystemMenuPane().getListgrid().addRecordsToGrid(result.getSystemMenuDTOs());
-//
-//				} else {
-//					SC.say("ERROR", "Unknow error");
-//				}
-//
-//			}
-//		});
+		// SC.showPrompt("", "", new SwizimaLoader());
+		//
+		// dispatcher.execute(new RequestAction(RequestConstant.GET_SystemMENU, map),
+		// new AsyncCallback<RequestResult>() {
+		// public void onFailure(Throwable caught) {
+		// System.out.println(caught.getMessage());
+		// SC.say("ERROR", caught.getMessage());
+		// SC.clearPrompt();
+		// }
+		//
+		// public void onSuccess(RequestResult result) {
+		//
+		// SC.clearPrompt();
+		//
+		// SessionManager.getInstance().manageSession(result, placeManager);
+		// if (result != null) {
+		//
+		// getView().getSystemMenuPane().getListgrid().addRecordsToGrid(result.getSystemMenuDTOs());
+		//
+		// } else {
+		// SC.say("ERROR", "Unknow error");
+		// }
+		//
+		// }
+		// });
 
 	}
 
@@ -1237,7 +1572,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 								for (ListGridRecord record : getView().getSystemMenuPane().getListgrid()
 										.getSelectedRecords()) {
-									
+
 									SystemMenuDTO dto = new SystemMenuDTO();
 									dto.setId(record.getAttribute(SystemMenuListgrid.ID));
 
@@ -1340,30 +1675,32 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 				}
 			});
 
-//			dispatcher.execute(new RequestAction(SystemUserGroupSystemMenuRequestConstant.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU , map),
-//					new AsyncCallback<RequestResult>() {
-//						public void onFailure(Throwable caught) {
-//							System.out.println(caught.getMessage());
-//							SC.say("ERROR", caught.getMessage());
-//							SC.clearPrompt();
-//						}
-//
-//						public void onSuccess(RequestResult result) {
-//
-//							SC.clearPrompt();
-//
-//							SessionManager.getInstance().manageSession(result, placeManager);
-//							if (result != null) {
-//
-//								window.getListgrid().addRecordsToGrid(result.getSystemUserGroupSystemMenuDTOs());
-//								window.getListgrid().selectActiveRecords();
-//
-//							} else {
-//								SC.say("ERROR", "Unknow error");
-//							}
-//
-//						}
-//					});
+			// dispatcher.execute(new
+			// RequestAction(SystemUserGroupSystemMenuRequestConstant.GET_SELECTED_UNSELECTED_USER_GROUP_SYSTEM_MENU
+			// , map),
+			// new AsyncCallback<RequestResult>() {
+			// public void onFailure(Throwable caught) {
+			// System.out.println(caught.getMessage());
+			// SC.say("ERROR", caught.getMessage());
+			// SC.clearPrompt();
+			// }
+			//
+			// public void onSuccess(RequestResult result) {
+			//
+			// SC.clearPrompt();
+			//
+			// SessionManager.getInstance().manageSession(result, placeManager);
+			// if (result != null) {
+			//
+			// window.getListgrid().addRecordsToGrid(result.getSystemUserGroupSystemMenuDTOs());
+			// window.getListgrid().selectActiveRecords();
+			//
+			// } else {
+			// SC.say("ERROR", "Unknow error");
+			// }
+			//
+			// }
+			// });
 		} else {
 			SC.warn("ERROR", "Please select a group");
 		}
@@ -1405,7 +1742,8 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 						/**
 						 * This item was once selected , but now user has unselected it
 						 *
-						 * @param Id not null
+						 * @param Id
+						 *            not null
 						 * @return to be deleted
 						 */
 						if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
@@ -1421,52 +1759,52 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 						}
 					}
 
-//					boolean selected = window.getListgrid().isSelected(record);
-//
-//					if (selected) {
-//
-//						SystemUserGroupSystemMenuDTO dto = new SystemUserGroupSystemMenuDTO();
-//
-//						if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
-//							dto.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID));
-//						}
-//
-//						SystemMenuDTO systemMenu = new SystemMenuDTO();
-//						systemMenu.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
-//
-//						dto.setSystemMenuDTO(systemMenu);
-//						dto.setSystemUserGroupDTO(userGroup);
-//						dto.setDisabled(false);
-//
-//						dtos.add(dto);
-//
-//					} else {
-//
-//						if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
-//
-//							SystemUserGroupSystemMenuDTO dto = new SystemUserGroupSystemMenuDTO();
-//
-//							if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
-//								dto.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID));
-//							}
-//
-//							SystemMenuDTO systemMenuDTO = new SystemMenuDTO();
-//							systemMenuDTO.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
-//
-//							dto.setSystemMenuDTO(systemMenuDTO);
-//							dto.setSystemUserGroupDTO(userGroup);
-//							dto.setDisabled(true);
-//
-//							dtos.add(dto);
-//						}
-//					}
+					// boolean selected = window.getListgrid().isSelected(record);
+					//
+					// if (selected) {
+					//
+					// SystemUserGroupSystemMenuDTO dto = new SystemUserGroupSystemMenuDTO();
+					//
+					// if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
+					// dto.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID));
+					// }
+					//
+					// SystemMenuDTO systemMenu = new SystemMenuDTO();
+					// systemMenu.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
+					//
+					// dto.setSystemMenuDTO(systemMenu);
+					// dto.setSystemUserGroupDTO(userGroup);
+					// dto.setDisabled(false);
+					//
+					// dtos.add(dto);
+					//
+					// } else {
+					//
+					// if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
+					//
+					// SystemUserGroupSystemMenuDTO dto = new SystemUserGroupSystemMenuDTO();
+					//
+					// if (record.getAttribute(SystemUserGroupSystemMenuListgrid.ID) != null) {
+					// dto.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.ID));
+					// }
+					//
+					// SystemMenuDTO systemMenuDTO = new SystemMenuDTO();
+					// systemMenuDTO.setId(record.getAttribute(SystemUserGroupSystemMenuListgrid.SystemMenuId));
+					//
+					// dto.setSystemMenuDTO(systemMenuDTO);
+					// dto.setSystemUserGroupDTO(userGroup);
+					// dto.setDisabled(true);
+					//
+					// dtos.add(dto);
+					// }
+					// }
 				}
 
 				if (!dtos.isEmpty()) {
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(SystemUserGroupSystemMenuRequestConstant.DATA, dtos);
-//					map.put(RequestDelimeters.SYSTEM_USER_GROUP_ID, userGroup);
+					// map.put(RequestDelimeters.SYSTEM_USER_GROUP_ID, userGroup);
 					map.put(NetworkDataUtil.ACTION,
 							SystemUserGroupSystemMenuRequestConstant.SAVE_USER_GROUP_SYSTEM_MENU);
 					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -1474,55 +1812,57 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 						@Override
 						public void onNetworkResult(RequestResult result) {
 							getSelectedUnSelectedSystemUserGroupMenu(window);
-//							window.getListgrid().addRecordsToGrid(result.getSystemUserGroupSystemMenuDTOs());
-//							window.getListgrid().selectActiveRecords();	
+							// window.getListgrid().addRecordsToGrid(result.getSystemUserGroupSystemMenuDTOs());
+							// window.getListgrid().selectActiveRecords();
 							window.close();
 						}
 					});
 
-//					map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//					SC.showPrompt("", "", new SwizimaLoader());
-//
-//					dispatcher.execute(new RequestAction(RequestConstant.SAVE_USER_GROUP_SystemMENU, map),
-//							new AsyncCallback<RequestResult>() {
-//								public void onFailure(Throwable caught) {
-//									System.out.println(caught.getMessage());
-//									SC.say("ERROR", caught.getMessage());
-//									SC.clearPrompt();
-//								}
-//
-//								public void onSuccess(RequestResult result) {
-//
-//									SC.clearPrompt();
-//
-//									SessionManager.getInstance().manageSession(result, placeManager);
-//									if (result != null) {
-//
-//										if (result.getSystemFeedbackDTO() != null) {
-//											if (result.getSystemFeedbackDTO().isResponse()) {
-//												SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
-//														new BooleanCallback() {
-//
-//															@Override
-//															public void execute(Boolean value) {
-//
-//																if (value) {
-//																	window.close();
-//																}
-//
-//															}
-//														});
-//											} else {
-//												SC.say("ERROR", result.getSystemFeedbackDTO().getMessage());
-//											}
-//										}
-//									} else {
-//										SC.say("ERROR", "Unknow error");
-//									}
-//
-//								}
-//							});
+					// map.put(RequestConstant.LOGIN_TOKEN,
+					// SessionManager.getInstance().getLoginToken());
+					//
+					// SC.showPrompt("", "", new SwizimaLoader());
+					//
+					// dispatcher.execute(new
+					// RequestAction(RequestConstant.SAVE_USER_GROUP_SystemMENU, map),
+					// new AsyncCallback<RequestResult>() {
+					// public void onFailure(Throwable caught) {
+					// System.out.println(caught.getMessage());
+					// SC.say("ERROR", caught.getMessage());
+					// SC.clearPrompt();
+					// }
+					//
+					// public void onSuccess(RequestResult result) {
+					//
+					// SC.clearPrompt();
+					//
+					// SessionManager.getInstance().manageSession(result, placeManager);
+					// if (result != null) {
+					//
+					// if (result.getSystemFeedbackDTO() != null) {
+					// if (result.getSystemFeedbackDTO().isResponse()) {
+					// SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
+					// new BooleanCallback() {
+					//
+					// @Override
+					// public void execute(Boolean value) {
+					//
+					// if (value) {
+					// window.close();
+					// }
+					//
+					// }
+					// });
+					// } else {
+					// SC.say("ERROR", result.getSystemFeedbackDTO().getMessage());
+					// }
+					// }
+					// } else {
+					// SC.say("ERROR", "Unknow error");
+					// }
+					//
+					// }
+					// });
 				} else {
 					SC.warn("ERROR", "Please select at least one permission and try again.");
 				}

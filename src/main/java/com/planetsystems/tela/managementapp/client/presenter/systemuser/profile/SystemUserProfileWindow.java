@@ -18,14 +18,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 public class SystemUserProfileWindow extends Window {
 
-//	private TextItem firstNameField;
-//	private TextItem lastNameField;
-//	private TextItem phoneNumberField;
+	private TextItem firstNameField;
+	private TextItem lastNameField;
+	private TextItem phoneNumberField;
 	private TextItem emailField;
-//	private DateItem dobItem;
-//	private TextItem nationalIdField;
-//	private ComboBox genderCombo;
-//	private TextItem nameAbbrevField;
+	// private DateItem dobItem;
+	// private TextItem nationalIdField;
+	private ComboBox genderCombo;
+	// private TextItem nameAbbrevField;
 	private RadioGroupItem enabledRadioGroupItem;
 
 	private ComboBox systemUserGroupCombo;
@@ -41,64 +41,64 @@ public class SystemUserProfileWindow extends Window {
 		enabledRadioGroupItem.setTitle("Is User Enabled");
 		enabledRadioGroupItem.setDefaultValue(true);
 
-
 		MatchesFieldValidator validator = new MatchesFieldValidator();
 		validator.setOtherField("confirmPassword");
 		validator.setErrorMessage("Passwords do not match");
-//
-//		firstNameField = new TextItem();
-//		firstNameField.setTitle("First Name");
-//		firstNameField.setHint("First Name");
-//		firstNameField.setShowHintInField(true);
+		//
+		firstNameField = new TextItem();
+		firstNameField.setTitle("First Name");
+		firstNameField.setHint("First Name");
+		firstNameField.setShowHintInField(true);
 
-//		lastNameField = new TextItem();
-//		lastNameField.setTitle("Last Name");
-//		lastNameField.setHint("Last Name");
-//		lastNameField.setShowHintInField(true);
+		lastNameField = new TextItem();
+		lastNameField.setTitle("Last Name");
+		lastNameField.setHint("Last Name");
+		lastNameField.setShowHintInField(true);
 
-//		phoneNumberField = new TextItem();
-//		phoneNumberField.setTitle("Phone Number");
-//		phoneNumberField.setMask("#### ###-###");
-//		phoneNumberField.setHint("#### ###-###");
-//		phoneNumberField.setShowHintInField(true);
+		phoneNumberField = new TextItem();
+		phoneNumberField.setTitle("Phone Number");
+		phoneNumberField.setMask("#### ###-###");
+		phoneNumberField.setHint("#### ###-###");
+		phoneNumberField.setShowHintInField(true);
 
 		emailField = new TextItem();
 		emailField.setTitle("Email");
 		emailField.setHint("Email");
 		emailField.setShowHintInField(true);
 
-//		dobItem = new DateItem();
-//		dobItem.setTitle("DOB");
-//		dobItem.setStartDate(dateFormat.parse("01/01/1996"));
+		// dobItem = new DateItem();
+		// dobItem.setTitle("DOB");
+		// dobItem.setStartDate(dateFormat.parse("01/01/1996"));
 
-//		nationalIdField = new TextItem();
-//		nationalIdField.setTitle("National Id");
-//		nationalIdField.setHint("NIN");
-//		nationalIdField.setShowHintInField(true);
+		// nationalIdField = new TextItem();
+		// nationalIdField.setTitle("National Id");
+		// nationalIdField.setHint("NIN");
+		// nationalIdField.setShowHintInField(true);
 
-//		nameAbbrevField = new TextItem();
-//		nameAbbrevField.setTitle("Name Abbreviation");
-//		nameAbbrevField.setHint("Name Abbreviation");
-//		nameAbbrevField.setShowHintInField(true);
-//		nameAbbrevField.hide();
+		// nameAbbrevField = new TextItem();
+		// nameAbbrevField.setTitle("Name Abbreviation");
+		// nameAbbrevField.setHint("Name Abbreviation");
+		// nameAbbrevField.setShowHintInField(true);
+		// nameAbbrevField.hide();
 
-//		genderCombo = new ComboBox();
-//		genderCombo.setTitle("Gender");
-//		genderCombo.setHint("Gender");
-//		genderCombo.setShowHintInField(true);
+		genderCombo = new ComboBox();
+		genderCombo.setTitle("Gender");
+		genderCombo.setHint("Gender");
+		genderCombo.setShowHintInField(true);
 
 		systemUserGroupCombo = new ComboBox();
 		systemUserGroupCombo.setTitle("User Group");
 
-		//nameAbbrevField
+		// nameAbbrevField
 		DynamicForm form = new DynamicForm();
-		form.setFields(emailField ,  enabledRadioGroupItem , systemUserGroupCombo);
-		form.setWrapItemTitles(false);
+		form.setFields(emailField, firstNameField, lastNameField, phoneNumberField, genderCombo, systemUserGroupCombo);
+		form.setWrapItemTitles(true);
 		form.setCellPadding(10);
-		form.setColWidths("150", "250" , "150", "250" , "150", "250" );
+		form.setColWidths("150", "300");
 
 		saveButton = new IButton("Save");
-		cancelButton = new IButton("Close");
+		cancelButton = new IButton("Cancel");
+		cancelButton.setBaseStyle("cancel-button");
 
 		HLayout buttonLayout = new HLayout();
 		buttonLayout.setMembers(cancelButton, saveButton);
@@ -116,7 +116,7 @@ public class SystemUserProfileWindow extends Window {
 		this.setWidth("40%");
 		this.setHeight("50%");
 		this.setAutoCenter(true);
-		this.setTitle("Create Profile");
+		this.setTitle("Create User Profile");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		closeWindow(this);
@@ -149,10 +149,28 @@ public class SystemUserProfileWindow extends Window {
 		return saveButton;
 	}
 
-	
-	
-	
+	public TextItem getFirstNameField() {
+		return firstNameField;
+	}
 
-	
+	public TextItem getLastNameField() {
+		return lastNameField;
+	}
+
+	public TextItem getPhoneNumberField() {
+		return phoneNumberField;
+	}
+
+	public ComboBox getGenderCombo() {
+		return genderCombo;
+	}
+
+	public DateTimeFormat getDateFormat() {
+		return dateFormat;
+	}
+
+	public IButton getCancelButton() {
+		return cancelButton;
+	}
 
 }

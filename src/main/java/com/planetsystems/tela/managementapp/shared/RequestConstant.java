@@ -29,6 +29,9 @@ public class RequestConstant {
 	public static final String SCHOOL_ID = "SCHOOL_ID";
 	public static final String ATTENDANCE_DATE="ATTENDANCE_DATE";
 	
+	
+	public static final String GET_LOGIN_TRAIL_BY_DATE="GET_LOGIN_TRAIL_BY_DATE";
+	
 	public static final String SAVE_ACADEMIC_YEAR = "SAVE_ACADEMIC_YEAR";
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";
 	public static final String DELETE_ACADEMIC_YEAR = "DELETE_ACADEMIC_YEAR";

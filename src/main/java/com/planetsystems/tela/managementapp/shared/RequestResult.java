@@ -7,10 +7,12 @@ import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
+import com.planetsystems.tela.dto.DateFilterDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
+import com.planetsystems.tela.dto.LoginAuditDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SMCSupervisionDTO;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
@@ -160,10 +162,26 @@ public class RequestResult implements Result {
 
 	private List<DailySchoolAttendanceEnrollmentSummaryDTO> dailySchoolAttendanceEnrollmentSummaryDTOs;
 
+	private List<LoginAuditDTO> loginAuditDTOs;
+
+	private DateFilterDTO dateFilterDTO;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, DateFilterDTO dateFilterDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.dateFilterDTO = dateFilterDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<LoginAuditDTO> loginAuditDTOs, LoginAuditDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.loginAuditDTOs = loginAuditDTOs;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<DailySchoolAttendanceEnrollmentSummaryDTO> dailySchoolAttendanceEnrollmentSummaryDTOs,
@@ -856,6 +874,14 @@ public class RequestResult implements Result {
 
 	public List<DailySchoolAttendanceEnrollmentSummaryDTO> getDailySchoolAttendanceEnrollmentSummaryDTOs() {
 		return dailySchoolAttendanceEnrollmentSummaryDTOs;
+	}
+
+	public List<LoginAuditDTO> getLoginAuditDTOs() {
+		return loginAuditDTOs;
+	}
+
+	public DateFilterDTO getDateFilterDTO() {
+		return dateFilterDTO;
 	}
 
 }
