@@ -26,6 +26,7 @@ public class SystemUserListGrid extends SuperListGrid {
 
 	public static final String USER_GROUP = "USER_GROUP";
 	public static final String USER_GROUP_ID = "USER_GROUP_ID";
+	public static final String USER_GROUP_LEVEL = "USER_GROUP_LEVEL";
 
 	public static final String STATUS = "STATUS";
 
@@ -67,13 +68,17 @@ public class SystemUserListGrid extends SuperListGrid {
 		userGroupFieldId.setHidden(true);
 
 		ListGridField userGroupField = new ListGridField(USER_GROUP, "User Group");
+		ListGridField level = new ListGridField(USER_GROUP_LEVEL, "Level");
+		level.setHidden(true); 
+		
+		
 
 		ListGridField status = new ListGridField(STATUS, "Status");
 		ListGridField enabled = new ListGridField(ENABLED, "Enbled?");
 
 		this.setFields(idField, usernameField, firstNameField, lastNameField, emailField, userGroupFieldId,
 				userGroupField, phoneNumberField, nationalIdField, dobField, genderField, enabledField, nameAbbrevField,
-				configRoleField, status, enabled);
+				configRoleField, status, enabled,level);
 
 		this.setDataSource(dataSource);
 	}
@@ -102,8 +107,10 @@ public class SystemUserListGrid extends SuperListGrid {
 		}
 
 		if (dto.getSystemUserGroupDTO() != null) {
+			
 			record.setAttribute(USER_GROUP_ID, dto.getSystemUserGroupDTO().getId());
-			record.setAttribute(USER_GROUP, dto.getSystemUserGroupDTO().getName());
+			record.setAttribute(USER_GROUP, dto.getSystemUserGroupDTO().getName()); 
+			record.setAttribute(USER_GROUP_LEVEL, dto.getSystemUserGroupDTO().getUserLevel());
 		}
 
 		record.setAttribute(STATUS, dto.getStatus());

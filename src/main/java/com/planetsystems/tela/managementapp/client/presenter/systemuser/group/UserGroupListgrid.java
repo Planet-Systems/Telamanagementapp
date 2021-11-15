@@ -18,6 +18,8 @@ public class UserGroupListgrid extends SuperListGrid {
 
 	public static String ReceiveNotifications = "receiveNotifications";
 	public static String ManageData = "ManageData";
+	
+	public static String Level = "Level";
 
 	public UserGroupListgrid() {
 
@@ -34,8 +36,10 @@ public class UserGroupListgrid extends SuperListGrid {
 		ListGridField receiveNotifications = new ListGridField(ReceiveNotifications, "Receive Notifications");
 
 		ListGridField manageData = new ListGridField(ManageData, "Manage Data");
+		
+		ListGridField level = new ListGridField(Level, "Level");
 
-		this.setFields(id, code, name, description, defaultRole, receiveNotifications, manageData);
+		this.setFields(id, code, name, description, defaultRole, receiveNotifications, manageData,level);
 
 	}
 
@@ -48,6 +52,7 @@ public class UserGroupListgrid extends SuperListGrid {
 		record.setAttribute(DefaultRole, dto.isDefaultGroup());
 		record.setAttribute(ReceiveNotifications, dto.isReceiveAlerts());
 		record.setAttribute(ManageData, dto.isAdministrativeRole());
+		record.setAttribute(Level, dto.getUserLevel());
 		return record;
 	}
 

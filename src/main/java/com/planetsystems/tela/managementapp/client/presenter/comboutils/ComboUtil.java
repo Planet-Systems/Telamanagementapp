@@ -251,12 +251,9 @@ public class ComboUtil {
 
 	public static void loadRegionCombo(final ComboBox comboBox, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>(); 
 			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGIONS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
-
+		  
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -310,8 +307,13 @@ public class ComboUtil {
 					//comboBox.setValueMap(valueMap);
 				}
 
-				if (defaultValue != null) {
+				if (defaultValue != null&&defaultValue.length()!=0) {
 					comboBox.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(comboBox.getJsObj());
+					comboBox.fireEvent(event1);
+				}else {
+					
+					comboBox.setValue(result.getRegionDtos().get(0).getId()); 
 					ChangedEvent event1 = new ChangedEvent(comboBox.getJsObj());
 					comboBox.fireEvent(event1);
 				}
@@ -371,12 +373,9 @@ public class ComboUtil {
 	public static void loadDistrictCombo(final ComboBox districtCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase("Admin"))
+ 
 			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
-
+		  
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -432,8 +431,12 @@ public class ComboUtil {
 					//districtCombo.setValueMap(valueMap);	
 				}
 
-				if (defaultValue != null) {
+				if (defaultValue != null&&defaultValue.length()!=0) {
 					districtCombo.setValue(defaultValue); 
+					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
+					districtCombo.fireEvent(event1);
+				}else {
+					districtCombo.setValue(result.getDistrictDTOs().get(0).getId());  
 					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
 					districtCombo.fireEvent(event1);
 				}
@@ -484,12 +487,9 @@ public class ComboUtil {
 			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.REGION_ID, regionCombo.getValueAsString());
-		
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
+		 
 			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_IN_REGION);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_IN_REGION);
-		
+		  
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -545,8 +545,12 @@ public class ComboUtil {
 					//districtCombo.setValueMap(valueMap);
 				}
 				
-				if (defaultValue != null) {
+				if (defaultValue != null&&defaultValue.length()!=0) {
 					districtCombo.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
+					districtCombo.fireEvent(event1);
+				}else {
+					districtCombo.setValue(result.getDistrictDTOs().get(0).getId()); 
 					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
 					districtCombo.fireEvent(event1);
 				}

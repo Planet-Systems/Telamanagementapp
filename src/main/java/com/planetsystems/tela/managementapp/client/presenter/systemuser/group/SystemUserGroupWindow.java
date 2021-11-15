@@ -1,6 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.systemuser.group;
   
 import com.google.gwt.user.client.ui.Tree;
+import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
@@ -22,6 +23,8 @@ public class SystemUserGroupWindow extends Window {
 	private RadioGroupItem receiveAlertRadio;
 	
 	private RadioGroupItem administrativeRoleRadio;
+	
+	private ComboBox userLevelField;
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -61,11 +64,14 @@ public class SystemUserGroupWindow extends Window {
 		administrativeRoleRadio.setVertical(false);
 		administrativeRoleRadio.setValueMap("true" , "false");
 		
+		userLevelField=new ComboBox();
+		userLevelField.setTitle("Level"); 
+		
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Close");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(codeField, nameField, descriptionField, defaultRoleRadio, receiveAlertRadio, administrativeRoleRadio);
+		form.setFields(codeField, nameField, descriptionField, defaultRoleRadio, receiveAlertRadio, administrativeRoleRadio,userLevelField);
 		form.setWrapItemTitles(false);
 		form.setCellPadding(8);
 		form.setColWidths("150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250" , "150", "250");
@@ -148,6 +154,14 @@ public class SystemUserGroupWindow extends Window {
 
 	public IButton getSaveButton() {
 		return saveButton;
+	}
+
+	public ComboBox getUserLevelField() {
+		return userLevelField;
+	}
+
+	public IButton getCancelButton() {
+		return cancelButton;
 	}
 
 

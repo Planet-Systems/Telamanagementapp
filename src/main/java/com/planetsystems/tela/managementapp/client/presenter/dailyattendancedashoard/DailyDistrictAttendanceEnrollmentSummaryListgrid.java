@@ -46,7 +46,11 @@ public class DailyDistrictAttendanceEnrollmentSummaryListgrid extends SuperListG
 
 		record.setAttribute(SCHOOL, dto.getSchool());
 
-		record.setAttribute(HEAD_TEACHER_STATUS, dto.isHeadteacherStatus());
+		if (dto.isHeadteacherStatus()) {
+			record.setAttribute(HEAD_TEACHER_STATUS, "Present");
+		} else {
+			record.setAttribute(HEAD_TEACHER_STATUS, "Absent");
+		}
 
 		record.setAttribute(ENROLED_TEACHERS, dto.getEnrolledTeachers());
 		record.setAttribute(CLOCKIN_TEACHERS, dto.getClockedInteachers());

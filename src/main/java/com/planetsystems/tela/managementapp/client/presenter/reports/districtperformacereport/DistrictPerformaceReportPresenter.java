@@ -93,7 +93,7 @@ public class DistrictPerformaceReportPresenter
 
 		final ComboBox selectFilter = new ComboBox();
 		selectFilter.setTitle("District");
-		ComboUtil.loadDistrictCombo(selectFilter, dispatcher, placeManager, "Select");
+		ComboUtil.loadDistrictCombo(selectFilter, dispatcher, placeManager, "");
 
 		getView().getControlsPane().addMenuButtons("District Performance", selectFilter, buttons);
 
@@ -115,8 +115,10 @@ public class DistrictPerformaceReportPresenter
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String id = selectFilter.getValueAsString();
-
-				loadDistrictDashboard(id);
+				if(id!=null&&id.length()!=0) {
+					loadDistrictDashboard(id);
+				}
+ 
 
 			}
 		});

@@ -29,6 +29,7 @@ import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
+import com.planetsystems.tela.dto.SystemUserAdministrationUnitDTO;
 import com.planetsystems.tela.dto.SystemUserDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
@@ -165,12 +166,21 @@ public class RequestResult implements Result {
 	private List<LoginAuditDTO> loginAuditDTOs;
 
 	private DateFilterDTO dateFilterDTO;
+	
+	private List<SystemUserAdministrationUnitDTO> systemUserAdministrationUnitDTOs;
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserAdministrationUnitDTO> systemUserAdministrationUnitDTOs, SystemUserAdministrationUnitDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.systemUserAdministrationUnitDTOs = systemUserAdministrationUnitDTOs;
+	}
+	
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, DateFilterDTO dateFilterDTO) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
@@ -882,6 +892,10 @@ public class RequestResult implements Result {
 
 	public DateFilterDTO getDateFilterDTO() {
 		return dateFilterDTO;
+	}
+
+	public List<SystemUserAdministrationUnitDTO> getSystemUserAdministrationUnitDTOs() {
+		return systemUserAdministrationUnitDTOs;
 	}
 
 }

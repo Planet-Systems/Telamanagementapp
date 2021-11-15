@@ -129,7 +129,7 @@ public class StaffEnrollmentPresenter
 					buttons.add(delete);
 					buttons.add(filter);
 
-					getView().getControlsPane().addMenuButtons("Teacher Census", buttons);
+					getView().getControlsPane().addMenuButtons("Teacher Head Count", buttons);
 
 					loadTeacherStaticsFilter();
 

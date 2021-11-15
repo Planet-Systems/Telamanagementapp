@@ -12,7 +12,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class FilterSchoolsRegionDistrictWindow extends Window {
    FilterRegionDistrict filterRegionDistrict;
 	private IButton cancelButton;
-	private IButton loadSchoolsButton;
+	private IButton saveButton;
 	public FilterSchoolsRegionDistrictWindow() {
 		super();
 		
@@ -23,10 +23,12 @@ public class FilterSchoolsRegionDistrictWindow extends Window {
 		buttonHLayout.setAlign(Alignment.CENTER);
 		buttonHLayout.setMembersMargin(5);
 		
-	    cancelButton = new IButton("Close");        
-        loadSchoolsButton = new IButton("Load");
+	    cancelButton = new IButton("Cancel");
+		cancelButton.setBaseStyle("cancel-button");
+		
+	    saveButton = new IButton("Assign");
         
-        buttonHLayout.setMembers(loadSchoolsButton , cancelButton);
+        buttonHLayout.setMembers(cancelButton,saveButton);
         
         VLayout layout = new VLayout();
         layout.setWidth100();
@@ -37,7 +39,7 @@ public class FilterSchoolsRegionDistrictWindow extends Window {
 		this.setWidth("40%");
 		this.setHeight("40%");
 		this.setAutoCenter(true);
-		this.setTitle("Filter Schools By Region and District");
+		this.setTitle("Assign District to User");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		closeWindow(this);
@@ -59,12 +61,14 @@ public class FilterSchoolsRegionDistrictWindow extends Window {
 		return filterRegionDistrict;
 	}
 
-	public IButton getLoadSchoolsButton() {
-		return loadSchoolsButton;
+	public IButton getCancelButton() {
+		return cancelButton;
 	}
 
-	
-	
+	public IButton getSaveButton() {
+		return saveButton;
+	}
+ 
 	
 	
 	

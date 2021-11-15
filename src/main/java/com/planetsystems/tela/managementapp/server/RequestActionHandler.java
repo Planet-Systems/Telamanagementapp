@@ -48,6 +48,7 @@ import com.planetsystems.tela.dto.SystemErrorDTO;
 import com.planetsystems.tela.dto.SystemFeedbackDTO;
 import com.planetsystems.tela.dto.SystemMenuDTO;
 import com.planetsystems.tela.dto.SystemResponseDTO;
+import com.planetsystems.tela.dto.SystemUserAdministrationUnitDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserProfileDTO;
@@ -598,7 +599,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				SystemResponseDTO<List<RegionDto>> responseDto = client.target(API_LINK).path("regions")
+				 
+				SystemResponseDTO<List<RegionDto>> responseDto = client.target(API_LINK).path("regions").path("logedInUser")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<RegionDto>>>() {
 						});
@@ -5044,6 +5046,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SystemUserGroupDTO dto = (SystemUserGroupDTO) action.getRequestBody()
 						.get(SystemUserGroupRequestConstant.DATA);
+
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
@@ -5140,6 +5143,127 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_USER_ADMIN_UNITS)) {
+
+				List<SystemUserAdministrationUnitDTO> dtos = new ArrayList<>();
+				
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SystemUserAdministrationUnitDTO dto = (SystemUserAdministrationUnitDTO) action.getRequestBody()
+						.get(RequestConstant.SAVE_USER_ADMIN_UNITS);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> saveResponseDTO = client.target(API_LINK)
+						.path("systemUserAdministrationUnits").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (saveResponseDTO != null) {
+					feedback = saveResponseDTO.getData();
+					
+					
+					SystemResponseDTO<List<SystemUserAdministrationUnitDTO>> responseDTO = client.target(API_LINK)
+							.path("systemUserAdministrationUnits").path("userprofile")
+							.path(dto.getSystemUserProfile().getId()).request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<SystemUserAdministrationUnitDTO>>>() {
+							});
+					if (responseDTO != null) {
+						dtos = responseDTO.getData();
+					}
+
+				}
+
+				client.close();
+				return new RequestResult(feedback,dtos,null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_USER_ADMIN_UNITS)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<SystemUserAdministrationUnitDTO> dtos = new ArrayList<>();
+
+				String id = (String) action.getRequestBody().get(RequestConstant.GET_USER_ADMIN_UNITS);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SystemUserAdministrationUnitDTO>> responseDTO = client.target(API_LINK)
+						.path("systemUserAdministrationUnits").path("userprofile").path(id)
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SystemUserAdministrationUnitDTO>>>() {
+						});
+
+				if (responseDTO != null) {
+					dtos = responseDTO.getData();
+					feedback.setResponse(responseDTO.isStatus());
+					feedback.setMessage(responseDTO.getMessage());
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, dtos, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.DELETE_USER_ADMIN_UNITS)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<SystemUserAdministrationUnitDTO> dtos = new ArrayList<>();
+
+				SystemUserAdministrationUnitDTO dto = (SystemUserAdministrationUnitDTO) action.getRequestBody()
+						.get(RequestConstant.DELETE_USER_ADMIN_UNITS);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
+						.path("systemUserAdministrationUnits").path(dto.getId()).request(MediaType.APPLICATION_JSON)
+						.headers(headers).delete(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+
+					feedback = deleteResponseDTO.getData();
+
+					SystemResponseDTO<List<SystemUserAdministrationUnitDTO>> responseDTO = client.target(API_LINK)
+							.path("systemUserAdministrationUnits").path("userprofile")
+							.path(dto.getSystemUserProfile().getId()).request(MediaType.APPLICATION_JSON)
+							.headers(headers)
+							.get(new GenericType<SystemResponseDTO<List<SystemUserAdministrationUnitDTO>>>() {
+							});
+					if (responseDTO != null) {
+						dtos = responseDTO.getData();
+					}
+
+				}
+
+				client.close();
+				return new RequestResult(feedback, dtos, null);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
@@ -6657,7 +6781,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LOGIN_TRAIL_BY_DATE)) {
 
 				System.out.println("GET_LOGIN_TRAIL_BY_DATE");
-				
+
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<LoginAuditDTO> list = new ArrayList<LoginAuditDTO>();
 
@@ -6665,7 +6789,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				DateFilterDTO dto = (DateFilterDTO) action.getRequestBody()
 						.get(RequestConstant.GET_LOGIN_TRAIL_BY_DATE);
-				
+
 				System.out.println("GET_LOGIN_TRAIL_BY_DATE 2");
 
 				Client client = ClientBuilder.newClient();

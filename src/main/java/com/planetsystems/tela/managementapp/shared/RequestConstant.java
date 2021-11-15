@@ -304,5 +304,9 @@ public class RequestConstant {
 	public static final String GET_USER_ACCOUNT_REQUEST = "GET_USER_ACCOUNT_REQUEST";
 	public static final String APPROVE_USER_ACCOUNT_REQUEST = "APPROVE_USER_ACCOUNT_REQUEST";
 	public static final String REJECT_USER_ACCOUNT_REQUEST = "REJECT_USER_ACCOUNT_REQUEST";
+	
+	public static final String SAVE_USER_ADMIN_UNITS = "SAVE_USER_ADMIN_UNITS"; 
+	public static final String GET_USER_ADMIN_UNITS = "GET_USER_ADMIN_UNITS";
+	public static final String DELETE_USER_ADMIN_UNITS = "DELETE_USER_ADMIN_UNITS";
 
 }
