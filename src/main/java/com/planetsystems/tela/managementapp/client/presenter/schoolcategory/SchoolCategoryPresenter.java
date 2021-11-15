@@ -6,7 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -30,13 +34,12 @@ import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEven
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
-import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterRegionDistrictSchoolCategory;
-import com.planetsystems.tela.managementapp.client.presenter.filterpaneutils.FilterYearTermDistrictSchool;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.AddSchoolWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.FilterSchoolWindow;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolImportWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolPane;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.schoolcategory.SchCategoryPane;
@@ -48,16 +51,17 @@ import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.scho
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.schoolclass.SchoolClassWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
+import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.UtilityManager;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -91,7 +95,7 @@ public class SchoolCategoryPresenter
 
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
-	
+
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	@Inject
@@ -156,11 +160,13 @@ public class SchoolCategoryPresenter
 					MenuButton edit = new MenuButton("Edit");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton filter = new MenuButton("Filter");
+					MenuButton importbutton = new MenuButton("Import");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					// buttons.add(delete);
+					buttons.add(importbutton);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);
@@ -170,6 +176,8 @@ public class SchoolCategoryPresenter
 					editSchool(edit);
 					getAllSchools();
 					selectFilterSchoolOption(filter);
+
+					importSchools(importbutton);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CLASSES_TAB_TITLE)) {
 
@@ -230,7 +238,7 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-//	   		SC.say("Advanced Search");
+				// SC.say("Advanced Search");
 				FilterSchoolWindow window = new FilterSchoolWindow();
 				loadFilterRegionCombo(window);
 				loadFilterDistrictCombo(window);
@@ -270,7 +278,7 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-//	   		SC.say("Advanced Search");
+				// SC.say("Advanced Search");
 				FilterSchoolClassWindow window = new FilterSchoolClassWindow();
 				loadFilterAcademicYearCombo(window);
 				loadFilterDistrictCombo(window);
@@ -282,9 +290,6 @@ public class SchoolCategoryPresenter
 		});
 
 	}
-
-	///////////////////////////////////////////////// SCHOOL
-	///////////////////////////////////////////////// CATEGORY//////////////////////////////////////////////////////////
 
 	private void addSchoolCategory(MenuButton menuButton) {
 		menuButton.addClickHandler(new ClickHandler() {
@@ -449,10 +454,8 @@ public class SchoolCategoryPresenter
 
 	private void getAllSchoolCategories() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CATEGORY);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CATEGORIES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CATEGORY);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -492,7 +495,8 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				ComboUtil.loadDistrictComboByRegion(window.getRegionCombo(),window.getDistrictCombo(), dispatcher, placeManager, defaultValue);
+				ComboUtil.loadDistrictComboByRegion(window.getRegionCombo(), window.getDistrictCombo(), dispatcher,
+						placeManager, defaultValue);
 			}
 		});
 	}
@@ -563,14 +567,14 @@ public class SchoolCategoryPresenter
 				if (window.getSchoolCode().getValueAsString() == null)
 					flag = false;
 
-//				if (window.getLatitude().getValueAsString() == null)
-//					flag = false;
-//
-//				if (window.getLongtitude().getValueAsString() == null)
-//					flag = false;
+				// if (window.getLatitude().getValueAsString() == null)
+				// flag = false;
+				//
+				// if (window.getLongtitude().getValueAsString() == null)
+				// flag = false;
 
-//				if (window.getDeviceNumber().getValueAsString() == null)
-//					flag = false;
+				// if (window.getDeviceNumber().getValueAsString() == null)
+				// flag = false;
 
 				return flag;
 			}
@@ -585,15 +589,14 @@ public class SchoolCategoryPresenter
 				if (getView().getSchoolPane().getListGrid().anySelected()) {
 					AddSchoolWindow window = new AddSchoolWindow();
 					window.getSaveButton().setTitle("Update");
-					
+
 					loadRegionCombo(window, null);
 					loadSchoolCategoryCombo(window, null);
 					loadDistrictComboByRegion(window, null);
-					
-					loadFieldsToEdit(window);  
+
+					loadFieldsToEdit(window);
 					updateSchool(window);
 					window.show();
-					 
 
 				} else {
 					SC.say("Please select record to update");
@@ -739,10 +742,9 @@ public class SchoolCategoryPresenter
 
 	private void getAllSchools() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOLS);
+
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
@@ -1027,10 +1029,7 @@ public class SchoolCategoryPresenter
 
 	private void getAllSchoolClasses() {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		if (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(SessionManager.ADMIN))
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASS);
-		else
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_BY_SYSTEM_USER_PROFILE_SCHOOLS);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASS);
 
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -1061,8 +1060,8 @@ public class SchoolCategoryPresenter
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
-//				map.put(RequestDelimeters.DISTRICT_ID, districtId);
-//				map.put(RequestDelimeters.REGION_ID, regionId);
+				// map.put(RequestDelimeters.DISTRICT_ID, districtId);
+				// map.put(RequestDelimeters.REGION_ID, regionId);
 				map.put(RequestDelimeters.FILTER_SCHOOL, dto);
 				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_SCHOOLS_BY_SCHOOL_CATEGORY_REGION_DISTRICT);
 				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -1110,6 +1109,130 @@ public class SchoolCategoryPresenter
 
 			}
 		});
+	}
+
+	private void importSchools(final MenuButton importbutton) {
+		importbutton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				fileUpload();
+			}
+		});
+	}
+
+	private void fileUpload() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_FILE_UPLOAD_LINK, map),
+				new AsyncCallback<RequestResult>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.say("ERROR", caught.getMessage());
+						SC.clearPrompt();
+					}
+
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+ 
+								//SC.say("GET_FILE_UPLOAD_LINK:: "+result.getSystemFeedbackDTO().getMessage());
+								
+								SchoolImportWindow window = new SchoolImportWindow();
+								loadRegionCombo(window, null);
+								loadDistrictComboByRegion(window, null); 
+								uploadFile(window, result.getSystemFeedbackDTO().getMessage()); 
+								window.show();
+
+							}
+
+						} else {
+							SC.say("ERROR", "Unknow error");
+						}
+
+					}
+				});
+	}
+
+	private void loadRegionCombo(final SchoolImportWindow window, String defaultValue) {
+		ComboUtil.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
+	}
+
+	private void loadDistrictComboByRegion(final SchoolImportWindow window, final String defaultValue) {
+		window.getRegion().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadDistrictComboByRegion(window.getRegion(), window.getDistrict(), dispatcher, placeManager,
+						defaultValue);
+			}
+		});
+	}
+
+	private void uploadFile(final SchoolImportWindow window, final String link) {
+
+		window.getUploadButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+
+				final String fileName = window.getUpload().getFilename();
+
+				String fileExtension = UtilityManager.getInstance().getFileExtension(fileName);
+
+				if (fileExtension.equalsIgnoreCase("xlsx")) {
+
+					final String districtId = window.getDistrict().getValueAsString();
+
+					SC.showPrompt("", "", new SwizimaLoader());
+
+					final StringBuilder url = new StringBuilder();
+
+					
+					url.append(link + "importSchools").append("?");
+
+					String arg0Name = URL.encodeQueryString("fileName");
+					url.append(arg0Name);
+					url.append("=");
+					String arg0Value = URL.encodeQueryString(fileName);
+					url.append(arg0Value);
+					url.append("&" + "districtId" + "=" + districtId);
+
+					window.getUploadForm().setAction(url.toString());
+					window.getUploadForm().submit();
+					 
+					
+				} else {
+					SC.warn("ERROR", "Only xlsx files allowed");
+				}
+
+			}
+		});
+
+		window.getUploadForm().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+			public void onSubmitComplete(SubmitCompleteEvent event) {
+
+				SC.clearPrompt();
+
+				String serverResponse = event.getResults();
+
+				SC.say(serverResponse);
+
+				window.close();
+
+			}
+
+		});
+
 	}
 
 }

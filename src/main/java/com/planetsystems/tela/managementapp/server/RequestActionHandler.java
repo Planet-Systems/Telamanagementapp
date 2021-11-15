@@ -599,9 +599,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				 
-				SystemResponseDTO<List<RegionDto>> responseDto = client.target(API_LINK).path("regions").path("logedInUser")
-						.request(MediaType.APPLICATION_JSON).headers(headers)
+				SystemResponseDTO<List<RegionDto>> responseDto = client.target(API_LINK).path("regions")
+						.path("logedInUser").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<RegionDto>>>() {
 						});
 
@@ -5150,7 +5149,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_USER_ADMIN_UNITS)) {
 
 				List<SystemUserAdministrationUnitDTO> dtos = new ArrayList<>();
-				
+
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				SystemUserAdministrationUnitDTO dto = (SystemUserAdministrationUnitDTO) action.getRequestBody()
@@ -5171,8 +5170,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				if (saveResponseDTO != null) {
 					feedback = saveResponseDTO.getData();
-					
-					
+
 					SystemResponseDTO<List<SystemUserAdministrationUnitDTO>> responseDTO = client.target(API_LINK)
 							.path("systemUserAdministrationUnits").path("userprofile")
 							.path(dto.getSystemUserProfile().getId()).request(MediaType.APPLICATION_JSON)
@@ -5186,7 +5184,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				}
 
 				client.close();
-				return new RequestResult(feedback,dtos,null);
+				return new RequestResult(feedback, dtos, null);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
@@ -6811,7 +6809,15 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_FILE_UPLOAD_LINK)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				feedback.setResponse(true);
+				feedback.setMessage(API_LINK);
+
+				return new RequestResult(feedback);
+ 
 			}
 
 		} catch (ForbiddenException exception) {
