@@ -27,6 +27,7 @@ import com.planetsystems.tela.dto.GeneralUserDetailDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.StaffEnrollmentDto;
+import com.planetsystems.tela.dto.exports.SchoolStaffExportDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUtil;
@@ -46,6 +47,7 @@ import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.planetsystems.tela.managementapp.shared.UtilityManager;
 import com.planetsystems.tela.managementapp.shared.requestconstants.StaffEnrollmentRequest;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
@@ -143,6 +145,7 @@ public class StaffEnrollmentPresenter
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton generateCode = new MenuButton("Re-Assign Code");
 					MenuButton filter = new MenuButton("Filter");
+					MenuButton export = new MenuButton("Export");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -150,6 +153,7 @@ public class StaffEnrollmentPresenter
 					buttons.add(delete);
 					buttons.add(generateCode);
 					buttons.add(filter);
+					buttons.add(export);
 
 					getView().getControlsPane().addMenuButtons("Teachers' Details List", buttons);
 
@@ -161,6 +165,8 @@ public class StaffEnrollmentPresenter
 					deleteStaff(delete);
 					selectFilterOption(filter);
 					reAssigCode(generateCode);
+
+					exportStaff(export);
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -1010,7 +1016,7 @@ public class StaffEnrollmentPresenter
 
 				assignCodeToSelectedTeachers(selectedTeachers);
 				loadSchoolFilterWindow(school);
-				loadDistrictFilterWindow(    district);
+				loadDistrictFilterWindow(district);
 			}
 		});
 
@@ -1102,7 +1108,7 @@ public class StaffEnrollmentPresenter
 		});
 
 	}
-	
+
 	private void loadDistrictFilterWindow(final MenuItem menuItem) {
 		menuItem.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
@@ -1111,7 +1117,7 @@ public class StaffEnrollmentPresenter
 
 				final FilterStaffWindow window = new FilterStaffWindow();
 				window.getFilterStaffsPane().getSchoolCombo().hide();
-				loadFilterStaffDistrictCombo(window); 
+				loadFilterStaffDistrictCombo(window);
 				reAssignDistrictTeacherCodes(window);
 				window.show();
 
@@ -1173,8 +1179,7 @@ public class StaffEnrollmentPresenter
 			}
 		});
 	}
-	
-	
+
 	private void reAssignDistrictTeacherCodes(final FilterStaffWindow window) {
 		window.getFilterButton().addClickHandler(new ClickHandler() {
 
@@ -1189,13 +1194,13 @@ public class StaffEnrollmentPresenter
 								if (value) {
 
 									String districtId = window.getFilterStaffsPane().getDistrictCombo()
-											.getValueAsString(); 
+											.getValueAsString();
 									schoolStaffFilterDTO.setDistrictDTO(new DistrictDTO(districtId));
-									 
 
 									LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 									map.put(RequestConstant.REQUEST_DATA, schoolStaffFilterDTO);
-									map.put(NetworkDataUtil.ACTION, RequestConstant.RE_ASSIGN_STAFF_CODES_DISTRICT_LEVEL);
+									map.put(NetworkDataUtil.ACTION,
+											RequestConstant.RE_ASSIGN_STAFF_CODES_DISTRICT_LEVEL);
 
 									NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
@@ -1227,5 +1232,54 @@ public class StaffEnrollmentPresenter
 		});
 	}
 
+	private void exportStaff(final MenuButton button) {
+
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>(); 
+				map.put(NetworkDataUtil.ACTION, RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
+				map.put(RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL, schoolStaffFilterDTO);
+
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						export(result.getSchoolStaffExportDTOs());
+
+					}
+				});
+
+			}
+		});
+
+	}
+
+	private void export(List<SchoolStaffExportDTO> dtos) {
+		
+		List<SchoolStaffExportDTO> list = new ArrayList<SchoolStaffExportDTO>();
+
+		for (SchoolStaffExportDTO dto : dtos) {
+
+			list.add(dto);
+
+		}
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>(); 
+		map.put(NetworkDataUtil.ACTION, RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
+		map.put(RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL, list);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				UtilityManager.getInstance().download(result.getSystemFeedbackDTO().getMessage());
+			}
+		});
+	}
 
 }

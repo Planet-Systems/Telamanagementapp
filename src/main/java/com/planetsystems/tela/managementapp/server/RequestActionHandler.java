@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -58,11 +59,13 @@ import com.planetsystems.tela.dto.TimeTableLessonDTO;
 import com.planetsystems.tela.dto.TokenFeedbackDTO;
 import com.planetsystems.tela.dto.UserAccountRequestDTO;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
-import com.planetsystems.tela.dto.dashboard.DailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DashboardSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DistrictDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.SchoolDailyAttendanceEnrollmentSummaryDTO;
+import com.planetsystems.tela.dto.exports.DataExportRequestDTO;
+import com.planetsystems.tela.dto.exports.DataExportResponseDTO;
+import com.planetsystems.tela.dto.exports.SchoolStaffExportDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
@@ -108,23 +111,38 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 	final String REPORT_GEN_API = APIGateWay.getInstance().getReportGeneratorLink();
 
 	@Inject
+	HttpServletRequest requestProvider;
+
+	@Inject
 	public RequestActionHandler() {
 		super();
 	}
 
 	@Override
 	public RequestResult execute(RequestAction action, ExecutionContext context) throws ActionException {
+		
+		//String url=requestProvider.getRequestURI(); 
 
 		try {
+			
+			String host = action.getHost(); 
+			
+			System.out.println("Action Request host::: "+host); 
+			
+			System.out.println("Action Request:: "+action.getRequest()); 
+			
+			MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+			headers.add("hostName", host);
+			
 			if (action.getRequest().equalsIgnoreCase(RequestConstant.LOGIN)) {
 				TokenFeedbackDTO feedback = new TokenFeedbackDTO();
 
 				AuthenticationDTO dto = action.getAuthenticationDTO();
-
+				  
 				Client client = ClientBuilder.newClient();
 
 				SystemResponseDTO<TokenFeedbackDTO> loginResponseDTO = client.target(API_LINK).path("authenticate")
-						.request(MediaType.APPLICATION_JSON).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+						.request(MediaType.APPLICATION_JSON).headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<TokenFeedbackDTO>>() {
 								});
 
@@ -148,7 +166,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
-						.path("userAccountRequests").request(MediaType.APPLICATION_JSON)
+						.path("userAccountRequests").request(MediaType.APPLICATION_JSON).headers(headers)
 						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
@@ -168,7 +186,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("ResetPassword")
-						.request(MediaType.APPLICATION_JSON).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+						.request(MediaType.APPLICATION_JSON).headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
 
@@ -192,7 +210,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("ChangePassword")
@@ -221,7 +239,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("academicyears")
@@ -248,7 +266,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("academicyears")
@@ -274,7 +292,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicyears")
@@ -298,7 +316,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<AcademicYearDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -324,7 +342,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("academicterms")
@@ -350,7 +368,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("academicterms")
@@ -374,7 +392,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicterms")
@@ -396,7 +414,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicterms")
@@ -418,7 +436,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicterms")
@@ -440,7 +458,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<AcademicTermDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -468,7 +486,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<AcademicTermDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -495,7 +513,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/academictermsby/academicyears/{id}
 				SystemResponseDTO<List<AcademicTermDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -519,7 +537,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				RegionDto dto = (RegionDto) action.getRequestBody().get(RequestConstant.SAVE_REGION);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -545,7 +563,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				RegionDto dto = (RegionDto) action.getRequestBody().get(RequestConstant.UPDATE_REGION);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -571,7 +589,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("DTO " + id);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -594,7 +612,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<RegionDto> list = new ArrayList<RegionDto>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -622,7 +640,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<RegionDto> list = new ArrayList<RegionDto>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -649,7 +667,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictDTO dto = (DistrictDTO) action.getRequestBody().get(RequestConstant.SAVE_DISTRICT);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -677,7 +695,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("DTO " + dto);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -702,7 +720,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -725,12 +743,12 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
 
-				SystemResponseDTO<List<DistrictDTO>> responseDto = client.target(API_LINK).path("districts")
+				SystemResponseDTO<List<DistrictDTO>> responseDto = client.target(API_LINK).path("loggedInUserdistricts")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<DistrictDTO>>>() {
 						});
@@ -750,7 +768,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -775,7 +793,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -804,7 +822,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String regionId = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -833,7 +851,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -863,7 +881,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.SAVE_SCHOOL_CATEGORY);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -892,7 +910,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -917,7 +935,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("DTO " + id);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -943,7 +961,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolCategoryDTO>> responseDto = client.target(API_LINK)
@@ -971,7 +989,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolCategoryDTO>> responseDto = client.target(API_LINK)
@@ -1001,7 +1019,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("schools")
@@ -1025,7 +1043,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(RequestConstant.UPDATE_SCHOOL);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1052,7 +1070,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schools")
@@ -1075,7 +1093,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("schools")
@@ -1102,7 +1120,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("districts").path(id)
@@ -1131,7 +1149,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK)
@@ -1162,7 +1180,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK)
@@ -1190,7 +1208,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -1219,7 +1237,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("schoolcategories")
@@ -1243,37 +1261,26 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					.equalsIgnoreCase(RequestConstant.FILTER_SCHOOLS_BY_SCHOOL_CATEGORY_REGION_DISTRICT)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				// String districtId = (String)
-				// action.getRequestBody().get(RequestDelimeters.DISTRICT_ID) != null ? (String)
-				// action.getRequestBody().get(RequestDelimeters.DISTRICT_ID) : "";
-				// String regionId = (String)
-				// action.getRequestBody().get(RequestDelimeters.REGION_ID) != null ? (String)
-				// action.getRequestBody().get(RequestDelimeters.REGION_ID) : "" ;
-				// String schoolCategoryId = (String)
-				// action.getRequestBody().get(RequestDelimeters.SCHOOL_CATEGORY_ID) != null ?
-				// (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CATEGORY_ID) :
-				// "";
-				//
+
 				FilterDTO filterDTO = (FilterDTO) action.getRequestBody().get(RequestDelimeters.FILTER_SCHOOL);
 				List<SchoolDTO> list = new ArrayList<SchoolDTO>();
 
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				/// filter/schoolsby/schoolcategories/{schoolCategoryId}/regions/{region}/districts/{districtId}
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("filter").path("schools")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.post(Entity.entity(filterDTO, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<List<SchoolDTO>>>() {
 								});
 
-				list = responseDto.getData();
+				if (responseDto != null) {
+					list = responseDto.getData();
+				}
 
-				// System.out.println("RESPONSE " + responseDto);
-				// System.out.println("RES DATA " + responseDto.getData());
 				feedback.setResponse(true);
 				feedback.setMessage(responseDto.getMessage());
 
@@ -1292,7 +1299,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("schoolclasses")
@@ -1317,7 +1324,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("schoolclasses")
@@ -1340,7 +1347,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CLASS_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1365,7 +1372,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("schoolclasses")
@@ -1393,7 +1400,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
 						.path("SchoolClasses").request(MediaType.APPLICATION_JSON).headers(headers)
@@ -1419,7 +1426,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/*
 				 * /academicterms/ff80818177f1b9680177f1bfcd040002/schools/
@@ -1452,7 +1459,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/schoolclasses
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -1484,7 +1491,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("subjectcategories")
@@ -1509,7 +1516,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.UPDATE_SUBJECT_CATEGORY);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1534,7 +1541,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.SUBJECT_CATEGORY_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1558,7 +1565,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SubjectCategoryDTO>> responseDto = client.target(API_LINK)
@@ -1588,7 +1595,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("subjects")
@@ -1614,7 +1621,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("subjects")
@@ -1637,7 +1644,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.SUBJECT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1662,7 +1669,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(API_LINK).path("subjects")
@@ -1688,7 +1695,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// subjectcategories/{subjectCategoryID}/subjects
 				SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(API_LINK).path("subjectcategories")
@@ -1716,7 +1723,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/subjectsby/subjectcategories/{subjectCategoryID)
 				SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -1746,7 +1753,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("schoolstaffs")
@@ -1773,7 +1780,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("SchoolStaff")
@@ -1796,7 +1803,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(StaffEnrollmentRequest.ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1825,7 +1832,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.REQUEST_DATA);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1855,7 +1862,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.REQUEST_DATA);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1885,7 +1892,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
@@ -1912,7 +1919,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
@@ -1937,7 +1944,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("schoolstaffs")
@@ -1965,7 +1972,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK)
@@ -1991,7 +1998,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// schools/ff80818177f1b9680177f1c3329e000b/schoolstaffs
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("schools").path(id)
@@ -2018,7 +2025,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// districts/{districtId}/schools/ff80818177f1b9680177f1c3329e000b/schoolstaffs
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("districts")
@@ -2049,7 +2056,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// filter/schoolstaffsby/districts/{districtId}/schools/{schoolId}
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -2068,6 +2075,35 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				
+				List<SchoolStaffExportDTO> list = new ArrayList<SchoolStaffExportDTO>();
+				
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
+				 
+
+				Client client = ClientBuilder.newClient(); 
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SchoolStaffExportDTO>> responseDto = client.target(API_LINK).path("export")
+						.path("schoolstaffs").request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<List<SchoolStaffExportDTO>>>() {
+								});
+
+				list = responseDto.getData();
+ 
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ABSENT_SCHOOL_STAFF_BY_TERM_SCHOOL_DATE)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
@@ -2080,7 +2116,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// /academicterms/{academicTermId}/schools/{schoolId}/absents
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -2112,7 +2148,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("staffenrollments")
@@ -2139,7 +2175,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -2162,7 +2198,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.STAFF_ENROLLMENT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2188,7 +2224,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK)
@@ -2213,7 +2249,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK)
@@ -2243,7 +2279,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK).path("academicyears")
@@ -2282,7 +2318,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// filter/staffenrollmentsby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK).path("filter")
@@ -2315,7 +2351,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -2342,7 +2378,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -2365,7 +2401,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.LEARNER_ENROLLMENT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2392,7 +2428,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK)
@@ -2420,7 +2456,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK)
@@ -2452,7 +2488,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK)
@@ -2491,7 +2527,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/learnerenrollmentsby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -2521,7 +2557,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("clockins")
@@ -2546,7 +2582,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("clockins")
@@ -2569,7 +2605,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_IN_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2594,7 +2630,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("clockins")
@@ -2620,7 +2656,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -2651,7 +2687,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -2688,7 +2724,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// action.getRequestBody().get(RequestDelimeters.CLOCKIN_DATE);
 				Client client = ClientBuilder.newClient();
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// filter/clockinsby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}
@@ -2717,7 +2753,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestDelimeters.FILTER_CLOCK_INS);
 				Client client = ClientBuilder.newClient();
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("filterClockIns")
@@ -2748,7 +2784,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -2778,7 +2814,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("clockouts")
@@ -2807,7 +2843,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("clockouts")
@@ -2830,7 +2866,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_OUT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2855,7 +2891,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("clockouts")
@@ -2882,7 +2918,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -2913,7 +2949,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -2953,7 +2989,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -2980,7 +3016,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -3011,7 +3047,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -3045,7 +3081,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3072,7 +3108,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -3095,7 +3131,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.LEARNER_ATTENDANCE_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -3122,7 +3158,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -3150,7 +3186,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -3180,7 +3216,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -3218,7 +3254,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// filter/learnerattendancesby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}"
@@ -3253,7 +3289,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SMCSupervisionDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -3282,7 +3318,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("timetables")
@@ -3307,7 +3343,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<TimeTableDTO>> responseDto = client.target(API_LINK).path("timetables")
@@ -3335,7 +3371,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<TimeTableDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -3365,7 +3401,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// timetables/{id}/timetablelessons
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("timetables")
@@ -3389,7 +3425,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.TIME_TABLE_LESSON_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -3415,7 +3451,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// timetables/{id}/timetablelessons
 
@@ -3450,7 +3486,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/*
 				 * http://localhost:8070/academicyears/1/academicterms/
@@ -3496,7 +3532,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3540,7 +3576,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3585,7 +3621,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3629,7 +3665,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3672,7 +3708,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3712,7 +3748,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SystemUserProfileDTO>> responseDto = client.target(API_LINK)
@@ -3740,7 +3776,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemUserProfileDTO> responseDto = client.target(API_LINK).path("Logged")
@@ -3770,7 +3806,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> responseDto = client.target(API_LINK).path("Logged")
@@ -3801,7 +3837,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3832,7 +3868,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
@@ -3864,7 +3900,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
@@ -3900,7 +3936,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
@@ -3936,7 +3972,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
@@ -3969,7 +4005,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
@@ -4005,7 +4041,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/*
@@ -4045,7 +4081,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -4072,7 +4108,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/schools/8a008082648d961401648dadbf0f0003?supervisionDate=18/03/2021
 				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
@@ -4107,7 +4143,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
 						.path("filterStaffDailyAttendanceSupervisions").request(MediaType.APPLICATION_JSON)
@@ -4143,7 +4179,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/schools/8a008082648d961401648dadbf0f0003?supervisionDate=18/03/2021
 
@@ -4181,7 +4217,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/{}/schoolstaffs/8a008082648d961401648dadbf0f0003/staffDailyAttendancetaskSupervisions?supervisionDate=18/03/2021
 				SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> responseDto = client.target(API_LINK)
@@ -4213,7 +4249,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> responseDto = client.target(API_LINK)
@@ -4243,7 +4279,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -4269,7 +4305,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<DashboardSummaryDTO> postResponseDTO = client.target(API_LINK)
@@ -4297,7 +4333,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String id = (String) action.getRequestBody().get(RequestConstant.GET_DISTRICT_SUMMARY_DASHBOARD);
@@ -4331,7 +4367,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<AttendanceDashboardSummaryDTO> postResponseDTO = client.target(API_LINK)
@@ -4368,7 +4404,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String attendanceDate = (String) action.getRequestBody()
@@ -4402,7 +4438,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String attendanceDate = (String) action.getRequestBody().get(RequestConstant.ATTENDANCE_DATE);
@@ -4439,7 +4475,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String attendanceDate = (String) action.getRequestBody().get(RequestConstant.ATTENDANCE_DATE);
@@ -4472,7 +4508,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				List<SchoolDTO> dtos = (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -4537,7 +4573,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
@@ -4658,7 +4694,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateData(headers);
@@ -4675,7 +4711,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateTeacherAttendance(headers);
@@ -4691,7 +4727,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateTimeTables(headers);
@@ -4709,7 +4745,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateSubjects(headers);
@@ -4737,7 +4773,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					Client client = ClientBuilder.newClient();
 
 					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					
 					headers.add(HttpHeaders.AUTHORIZATION, token);
 
 					SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("SystemMenus")
@@ -4778,7 +4814,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (list != null) {
 
 					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					
 					headers.add(HttpHeaders.AUTHORIZATION, token);
 
 					Client client = ClientBuilder.newClient();
@@ -4818,7 +4854,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -4855,7 +4891,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (dtos != null) {
 
 					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-					MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+					
 					headers.add(HttpHeaders.AUTHORIZATION, token);
 
 					Client client = ClientBuilder.newClient();
@@ -4894,7 +4930,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("GET_USER_GROUP_SystemMENU");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<SystemUserGroupSystemMenuDTO> list = new ArrayList<SystemUserGroupSystemMenuDTO>();
@@ -4930,7 +4966,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				// System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS TOKEN " + token);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<SystemMenuDTO> list = new ArrayList<SystemMenuDTO>();
@@ -4969,7 +5005,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("GET_LOGEDIN_USER_SystemMENU");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<SystemUserGroupSystemMenuDTO> list = new ArrayList<SystemUserGroupSystemMenuDTO>();
@@ -5007,7 +5043,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -5050,7 +5086,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -5088,7 +5124,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
@@ -5159,7 +5195,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> saveResponseDTO = client.target(API_LINK)
@@ -5201,7 +5237,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SystemUserAdministrationUnitDTO>> responseDTO = client.target(API_LINK)
@@ -5236,7 +5272,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
@@ -5275,7 +5311,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemUserGroupDTO> responseDto = client.target(API_LINK)
@@ -5304,7 +5340,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<TeacherClockInSummaryDTO>> responseDto = client.target(API_LINK).path("Reports")
@@ -5338,7 +5374,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfWeekTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5372,7 +5408,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfWeekTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5406,7 +5442,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfMonthTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5440,7 +5476,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfMonthTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5473,7 +5509,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfTermTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5510,7 +5546,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfTermTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5546,7 +5582,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -5580,7 +5616,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -5614,7 +5650,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				// SchoolTimeOnTaskSummaryDTO
@@ -5650,7 +5686,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.DistrictEndOfWeekTimeAttendance);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<DistrictEndOfWeekTimeAttendanceDTO> list = new ArrayList<DistrictEndOfWeekTimeAttendanceDTO>();
@@ -5683,7 +5719,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.DistrictEndOfMonthTimeAttendance);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<DistrictEndOfMonthTimeAttendanceDTO> list = new ArrayList<DistrictEndOfMonthTimeAttendanceDTO>();
@@ -5716,7 +5752,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.DistrictEndOfTermTimeAttendance);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<DistrictEndOfTermTimeAttendanceDTO> list = new ArrayList<DistrictEndOfTermTimeAttendanceDTO>();
@@ -5754,7 +5790,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// Reports/TeacherClockInSummary/print
@@ -5806,7 +5842,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// Reports/TeacherClockInSummary/print
@@ -5858,7 +5894,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -5911,7 +5947,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -5964,7 +6000,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndWeekTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6015,7 +6051,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndWeekTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6065,7 +6101,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndMonthTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6116,7 +6152,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndMonthTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6166,7 +6202,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndTermTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6217,7 +6253,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndTermTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6266,7 +6302,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				TeacherTimeOnTaskReport responseDto = client.target(API_LINK).path("Reports")
@@ -6316,7 +6352,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DailyDistrictReport responseDto = client.target(API_LINK).path("districtEndOfWeekTimeAttendanceReport")
@@ -6365,7 +6401,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DistrictWeeklyReport responseDto = client.target(API_LINK)
@@ -6413,7 +6449,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DistrictTermReport responseDto = client.target(API_LINK).path("districtEndOfTermTimeAttendanceReport")
@@ -6459,7 +6495,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfWeekTimeAttendance);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<NationalEndOfWeekTimeAttendanceDTO> list = new ArrayList<NationalEndOfWeekTimeAttendanceDTO>();
@@ -6496,7 +6532,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfWeekTimeAttendanceReport);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				NationalWeeklyReport responseDto = client.target(API_LINK).path("nationalEndOfWeekTimeAttendanceReport")
@@ -6539,7 +6575,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfMonthTimeAttendance);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<NationalEndOfMonthTimeAttendanceDTO> list = new ArrayList<NationalEndOfMonthTimeAttendanceDTO>();
@@ -6576,7 +6612,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfMonthTimeAttendanceReport);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				NationalMonthlyReport responseDto = client.target(API_LINK)
@@ -6622,7 +6658,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfTermTimeAttendance);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<NationalEndOfTermTimeAttendanceDTO> list = new ArrayList<NationalEndOfTermTimeAttendanceDTO>();
@@ -6653,7 +6689,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SmsSchoolStaffDTO dto = (SmsSchoolStaffDTO) action.getRequestBody().get(SmsRequest.DATA);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("SmsSchoolStaff")
@@ -6685,7 +6721,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfTermTimeAttendanceReport);
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				NationalTermlyReport responseDto = client.target(API_LINK).path("nationalEndOfTermTimeAttendanceReport")
@@ -6717,6 +6753,44 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
+			}else if (action.getRequest().equalsIgnoreCase(RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				
+				
+				
+				
+				@SuppressWarnings("unchecked")
+				List<SchoolStaffExportDTO> list = (List<SchoolStaffExportDTO>) action.getRequestBody()
+						.get(RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
+				
+				String refId = "kfredrick";
+				
+				Gson gson = new Gson();
+				String jsonString = gson.toJson(list);
+
+				// System.out.println("jsonString: " + jsonString);
+
+				DataExportRequestDTO dto = new DataExportRequestDTO();
+				dto.setJson(jsonString);
+				dto.setFileName("staff_list.csv");
+				dto.setRefId(refId);
+
+				Client client = ClientBuilder.newClient();
+
+				DataExportResponseDTO response = client.target(REPORT_GEN_API).path("generatefile")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON), DataExportResponseDTO.class);
+
+				if (response != null) {
+					feedback.setResponse(response.isResponse());
+					feedback.setMessage(response.getMessage());
+				}
+				client.close();
+
+				return new RequestResult(feedback);
+				  
+				 
 			}
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_USER_ACCOUNT_REQUEST)) {
@@ -6728,7 +6802,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<UserAccountRequestDTO>> responseDto = client.target(API_LINK)
@@ -6759,7 +6833,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.APPROVE_USER_ACCOUNT_REQUEST);
 
 				Client client = ClientBuilder.newClient();
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -6792,7 +6866,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LoginAuditDTO>> updateResponseDTO = client.target(API_LINK).path("login")
@@ -6817,7 +6891,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				feedback.setMessage(API_LINK);
 
 				return new RequestResult(feedback);
- 
+
 			}
 
 		} catch (ForbiddenException exception) {

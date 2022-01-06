@@ -43,7 +43,8 @@ public class SchoolImportWindow extends Window {
 		uploadForm.setEncoding(FormPanel.ENCODING_MULTIPART);
 		uploadForm.setMethod(FormPanel.METHOD_POST);
 		uploadForm.add(upload);
-		uploadForm.getElement().setAttribute("accept", ".xlsx");
+		//uploadForm.getElement().setAttribute("accept", ".xlsx");
+		//uploadForm.
 
 		DynamicForm form = new DynamicForm();
 		form.setFields(region, district);

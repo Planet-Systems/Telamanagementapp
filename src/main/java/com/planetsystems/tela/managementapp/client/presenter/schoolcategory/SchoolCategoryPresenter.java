@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -165,7 +166,7 @@ public class SchoolCategoryPresenter
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
-					// buttons.add(delete);
+					buttons.add(delete);
 					buttons.add(importbutton);
 					buttons.add(filter);
 
@@ -704,7 +705,7 @@ public class SchoolCategoryPresenter
 		window.getDistrictCombo().clearValue();
 	}
 
-	private void deleteSchool(MenuButton button) {
+	private void deleteSchool(final MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -715,6 +716,7 @@ public class SchoolCategoryPresenter
 						@Override
 						public void execute(Boolean value) {
 							if (value) {
+								
 								ListGridRecord record = getView().getSchoolPane().getListGrid().getSelectedRecord();
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 								map.put(RequestDelimeters.SCHOOL_ID, record.getAttributeAsString("id"));
@@ -1116,7 +1118,7 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				fileUpload();
 			}
 		});
@@ -1144,13 +1146,13 @@ public class SchoolCategoryPresenter
 						if (result != null) {
 
 							if (result.getSystemFeedbackDTO() != null) {
- 
-								//SC.say("GET_FILE_UPLOAD_LINK:: "+result.getSystemFeedbackDTO().getMessage());
-								
+
+								// SC.say("GET_FILE_UPLOAD_LINK:: "+result.getSystemFeedbackDTO().getMessage());
+
 								SchoolImportWindow window = new SchoolImportWindow();
 								loadRegionCombo(window, null);
-								loadDistrictComboByRegion(window, null); 
-								uploadFile(window, result.getSystemFeedbackDTO().getMessage()); 
+								loadDistrictComboByRegion(window, null);
+								uploadFile(window, result.getSystemFeedbackDTO().getMessage());
 								window.show();
 
 							}
@@ -1187,16 +1189,15 @@ public class SchoolCategoryPresenter
 				final String fileName = window.getUpload().getFilename();
 
 				String fileExtension = UtilityManager.getInstance().getFileExtension(fileName);
+				final String districtId = window.getDistrict().getValueAsString();
+				final String regionId = window.getRegion().getValueAsString();
 
 				if (fileExtension.equalsIgnoreCase("xlsx")) {
-
-					final String districtId = window.getDistrict().getValueAsString();
 
 					SC.showPrompt("", "", new SwizimaLoader());
 
 					final StringBuilder url = new StringBuilder();
 
-					
 					url.append(link + "importSchools").append("?");
 
 					String arg0Name = URL.encodeQueryString("fileName");
@@ -1208,29 +1209,61 @@ public class SchoolCategoryPresenter
 
 					window.getUploadForm().setAction(url.toString());
 					window.getUploadForm().submit();
-					 
-					
+
 				} else {
 					SC.warn("ERROR", "Only xlsx files allowed");
 				}
 
+				window.getUploadForm().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+
+						SC.clearPrompt();
+
+						// String serverResponse = event.getResults();
+
+						SC.say("Sucess", "Upload Successful", new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									window.close();
+
+									loadSchools(regionId, districtId);
+								}
+
+							}
+						});
+
+						GWT.log("serverResponse::::: " + event.getResults());
+
+					}
+
+				});
+
 			}
+
 		});
 
-		window.getUploadForm().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+	}
 
-			public void onSubmitComplete(SubmitCompleteEvent event) {
+	private void loadSchools(String regionId, String districtId) {
 
-				SC.clearPrompt();
+		FilterDTO dto = new FilterDTO();
+		dto.setDistrictDTO(new DistrictDTO(districtId));
+		dto.setRegionDto(new RegionDto(regionId));
 
-				String serverResponse = event.getResults();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
-				SC.say(serverResponse);
+		map.put(RequestDelimeters.FILTER_SCHOOL, dto);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_SCHOOLS_BY_SCHOOL_CATEGORY_REGION_DISTRICT);
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-				window.close();
+			@Override
+			public void onNetworkResult(RequestResult result) {
 
+				getView().getSchoolPane().getListGrid().addRecordsToGrid(result.getSchoolDTOs());
 			}
-
 		});
 
 	}

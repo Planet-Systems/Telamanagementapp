@@ -101,6 +101,7 @@ public class RequestConstant {
 	public static final String LOGED_IN = "LOGED_IN";// status
 	public static final String AUTH_TOKEN = "AUTH_TOKEN"; // token key
 	public static final String USERNAME = "USERNAME"; // Username
+	public static final String TENANT_URL = "TENANT_URL"; // Username
 
 	public static final String REQUEST_DATA = "REQUEST_DATA";
 
@@ -121,6 +122,9 @@ public class RequestConstant {
 	public static final String GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL = "GET_SCHOOL_STAFFS_IN_DISTRICT_SCHOOL";
 	public static final String FILTER_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL = "FILTER_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL";
 	public static final String GET_ABSENT_SCHOOL_STAFF_BY_TERM_SCHOOL_DATE = "GET_ABSENT_SCHOOL_STAFF_BY_TERM_SCHOOL_DATE";
+	public static final String EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL = "EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL";
+	
+	public static final String EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL = "EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL";
 
 	public static final String SAVE_LEARNER_ENROLLMENT = "SAVE_LEARNER_ENROLLMENT";
 	public static final String UPDATE_LEARNER_ENROLLMENT = "UPDATE_LEARNER_ENROLLMENT";

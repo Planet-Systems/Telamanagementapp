@@ -9,6 +9,7 @@ import com.planetsystems.tela.managementapp.client.presenter.region.region.Regio
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -61,6 +62,8 @@ public class SchoolListGrid extends SuperListGrid {
 		this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , categoryField, districtField , attendanceTrackedField , locationField , 
 				latitudeField , latitudeField);
 		this.setDataSource(dataSource);
+		this.setSelectionType(SelectionStyle.SIMPLE);
+		this.setWrapHeaderTitles(true);
 
 	}
 

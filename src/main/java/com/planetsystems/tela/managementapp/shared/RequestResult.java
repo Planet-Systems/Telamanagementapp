@@ -50,6 +50,7 @@ import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
 import com.planetsystems.tela.dto.dashboard.DistrictDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.SchoolDailyAttendanceEnrollmentSummaryDTO;
+import com.planetsystems.tela.dto.exports.SchoolStaffExportDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
@@ -166,21 +167,26 @@ public class RequestResult implements Result {
 	private List<LoginAuditDTO> loginAuditDTOs;
 
 	private DateFilterDTO dateFilterDTO;
-	
+
 	private List<SystemUserAdministrationUnitDTO> systemUserAdministrationUnitDTOs;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private List<SchoolStaffExportDTO> schoolStaffExportDTOs;
 
-	
-	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SystemUserAdministrationUnitDTO> systemUserAdministrationUnitDTOs, SystemUserAdministrationUnitDTO dto) {
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolStaffExportDTO> schoolStaffExportDTOs,
+			SchoolStaffExportDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.schoolStaffExportDTOs = schoolStaffExportDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<SystemUserAdministrationUnitDTO> systemUserAdministrationUnitDTOs,
+			SystemUserAdministrationUnitDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.systemUserAdministrationUnitDTOs = systemUserAdministrationUnitDTOs;
 	}
-	
+
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, DateFilterDTO dateFilterDTO) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
@@ -762,10 +768,6 @@ public class RequestResult implements Result {
 		return dashboardSummaryDTO;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public List<DataOutPutDTO> getStaffEnrolledByRegion() {
 		return staffEnrolledByRegion;
 	}
@@ -896,6 +898,10 @@ public class RequestResult implements Result {
 
 	public List<SystemUserAdministrationUnitDTO> getSystemUserAdministrationUnitDTOs() {
 		return systemUserAdministrationUnitDTOs;
+	}
+
+	public List<SchoolStaffExportDTO> getSchoolStaffExportDTOs() {
+		return schoolStaffExportDTOs;
 	}
 
 }
