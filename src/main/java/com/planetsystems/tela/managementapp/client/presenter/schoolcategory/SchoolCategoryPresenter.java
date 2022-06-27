@@ -364,7 +364,7 @@ public class SchoolCategoryPresenter
 			public void onClick(ClickEvent event) {
 				if (getView().getSchoolCategoryPane().getListGrid().anySelected()) {
 					SchoolCategoryWindow window = new SchoolCategoryWindow();
-					window.getSaveButton().setTitle("Update");
+					window.getSaveButton().setTitle("Save");
 					loadFieldsToEdit(window);
 					updateSchCategory(window);
 					window.show();
@@ -589,7 +589,7 @@ public class SchoolCategoryPresenter
 			public void onClick(ClickEvent event) {
 				if (getView().getSchoolPane().getListGrid().anySelected()) {
 					AddSchoolWindow window = new AddSchoolWindow();
-					window.getSaveButton().setTitle("Update");
+					window.getSaveButton().setTitle("Save");
 
 					loadRegionCombo(window, null);
 					loadSchoolCategoryCombo(window, null);
@@ -849,7 +849,7 @@ public class SchoolCategoryPresenter
 			public void onClick(ClickEvent event) {
 				if (getView().getSchoolClassPane().getListGrid().anySelected()) {
 					SchoolClassWindow window = new SchoolClassWindow();
-					window.getSaveButton().setTitle("Update");
+					window.getSaveButton().setTitle("Save");
 					loadFieldsToEdit(window);
 					updateSchoolClass(window);
 					window.show();
@@ -904,13 +904,14 @@ public class SchoolCategoryPresenter
 		window.getCodeField().setValue(record.getAttribute(SchoolClassListGrid.CODE));
 		window.getClassNameField().setValue(record.getAttribute(SchoolClassListGrid.NAME));
 		window.getSchoolCombo().setValue(record.getAttribute(SchoolClassListGrid.SCHOOL));
-		window.getSchoolCombo().setValue(record.getAttribute(SchoolClassListGrid.DISTRICT));
-		window.getAcademicTermCombo().setValue(record.getAttribute(SchoolClassListGrid.ACADEMIC_TERM));
-		window.getAcademicTermCombo().setValue(record.getAttribute(SchoolClassListGrid.ACADEMIC_YEAR));
-
+		window.getSchoolCombo().setValue(record.getAttribute(SchoolClassListGrid.DISTRICT)); 
+		window.getAcademicTermCombo().setValue(record.getAttribute(SchoolClassListGrid.ACADEMIC_TERM_ID));
+ 
 		loadSchoolCombo(window, record.getAttribute(SchoolClassListGrid.SCHOOL_ID));
 		loadDistrictCombo(window, record.getAttribute(SchoolClassListGrid.DISTRICT_ID));
+		loadAcademicYearCombo(window,record.getAttribute(SchoolClassListGrid.ACADEMIC_YEAR_ID));
 		loadAcademicTermCombo(window, record.getAttribute(SchoolClassListGrid.ACADEMIC_TERM_ID));
+		 
 	}
 
 	//////////////////////////////// FILTER SCHOOL CLASS COMBOS

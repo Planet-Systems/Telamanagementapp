@@ -48,12 +48,12 @@ public class SchoolClassWindow extends Window {
 		
 		academicTermCombo = new ComboBox();
 		academicTermCombo.setTitle("Academic Term");
-		academicTermCombo.setHint("Academic Term");
+		academicTermCombo.setHint("Select");
 		academicTermCombo.setShowHintInField(true);
 		
 		academicYearCombo = new ComboBox();
 		academicYearCombo.setTitle("Academic Year");
-		academicYearCombo.setHint("Academic Year");
+		academicYearCombo.setHint("Select");
 		academicYearCombo.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
@@ -83,7 +83,7 @@ public class SchoolClassWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("70%");
+		this.setHeight("55%");
 		this.setAutoCenter(true);
 		this.setTitle("Classes");
 		this.setIsModal(true);

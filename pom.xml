@@ -215,7 +215,8 @@
 
 	<build>
 
-		<finalName>tela</finalName>
+		<!-- <finalName>tela</finalName> -->
+		<finalName>ROOT</finalName>
 
 		<!-- Output classes directly into the webapp, so that IDEs and "mvn process-classes" 
 			update them in DevMode -->
