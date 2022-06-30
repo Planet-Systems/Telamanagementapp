@@ -9,27 +9,25 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-
 public class FilterSchoolClassWindow extends Window {
-	
+
 	private IButton filterButton;
 	private IButton cancelButton;
 	private FilterYearTermDistrictSchool filterYearTermDistrictSchool;
 
 	public FilterSchoolClassWindow() {
 		super();
-		
+
 		filterYearTermDistrictSchool = new FilterYearTermDistrictSchool();
 		filterYearTermDistrictSchool.getForm().setNumCols(2);
-		
+
 		cancelButton = new IButton("Close");
 		cancelButton.setBaseStyle("cancel-button");
-		
+
 		filterButton = new IButton("Filter");
-		
-		
+
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(cancelButton , filterButton);
+		buttonLayout.setMembers(cancelButton, filterButton);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
@@ -43,7 +41,7 @@ public class FilterSchoolClassWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("50%");
+		this.setHeight("40%");
 		this.setAutoCenter(true);
 		this.setTitle("Filter Classes");
 		this.setIsModal(true);
@@ -53,7 +51,7 @@ public class FilterSchoolClassWindow extends Window {
 
 	private void cancel(final Window window) {
 		cancelButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				window.close();
@@ -65,8 +63,6 @@ public class FilterSchoolClassWindow extends Window {
 		return cancelButton;
 	}
 
-
-
 	public FilterYearTermDistrictSchool getFilterYearTermDistrictSchool() {
 		return filterYearTermDistrictSchool;
 	}
@@ -75,7 +71,4 @@ public class FilterSchoolClassWindow extends Window {
 		return filterButton;
 	}
 
-	
-	
-	
 }

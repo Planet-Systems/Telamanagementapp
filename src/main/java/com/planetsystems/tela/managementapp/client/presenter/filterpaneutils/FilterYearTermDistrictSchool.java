@@ -14,17 +14,7 @@ public class FilterYearTermDistrictSchool extends VLayout {
 
 	public FilterYearTermDistrictSchool() {
 		super();
-
-		Label schoolLabel = new Label("School: ");
-		schoolLabel.setAutoHeight();
-		schoolLabel.setAutoWidth();
-		schoolLabel.setPadding(2);
-
-		Label dayLabel = new Label("Day: ");
-		dayLabel.setAutoHeight();
-		dayLabel.setAutoWidth();
-		dayLabel.setPadding(2);
-
+ 
 		form = new DynamicForm();
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
@@ -33,13 +23,13 @@ public class FilterYearTermDistrictSchool extends VLayout {
 		form.setNumCols(4);
 
 		academicYearCombo = new ComboBox();
-		academicYearCombo.setTitle("AcademicYear");
-		academicYearCombo.setHint("Year");
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Select");
 		academicYearCombo.setShowHintInField(true);
 
 		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Select");
 		academicTermCombo.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
@@ -52,7 +42,7 @@ public class FilterYearTermDistrictSchool extends VLayout {
 		schoolCombo.setHint("School");
 		schoolCombo.setShowHintInField(true);
 
-		form.setFields(academicYearCombo, districtCombo, academicTermCombo, schoolCombo);
+		form.setFields(academicYearCombo,  academicTermCombo, districtCombo,schoolCombo);
 
 		this.addMember(form);
 		this.setWidth100();

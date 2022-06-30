@@ -23,9 +23,10 @@ class SchoolCategoryView extends ViewImpl implements SchoolCategoryPresenter.MyV
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
 	
-	public static final String SCHOOL_CATEGORY_TAB_TITLE = "School Categories";
+	public static final String SCHOOL_CATEGORY_TAB_TITLE = "School Foundation Bodies";
 	public static final String SCHOOL_TAB_TITLE = "Schools";
-	public static final String SCHOOL_CLASSES_TAB_TITLE = "Classes";
+	public static final String SCHOOL_CLASSES_TAB_TITLE = "Classes & Streams";
+	 
 
     @Inject
     SchoolCategoryView() {

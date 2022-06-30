@@ -26,6 +26,11 @@ public class SchoolClassListGrid extends SuperListGrid {
 	public static String ACADEMIC_YEAR = "Academic Year";
 	public static String ACADEMIC_YEAR_ID = "Academic Year ID";
 
+	public static String HasStreams = "hasStreams";
+	public static String ClassLevel = "classLevel";
+	public static String SchoolClassId = "SchoolClassId";
+	public static String SchoolClassCode = "SchoolClassCode";
+
 	private SchoolClassDataSource dataSource;
 
 	public SchoolClassListGrid() {
@@ -51,12 +56,22 @@ public class SchoolClassListGrid extends SuperListGrid {
 		ListGridField academicTermIdField = new ListGridField(ACADEMIC_TERM_ID, "Academic Term id");
 		academicTermIdField.setHidden(true);
 
-		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR , "Academic Year");
+		ListGridField academicYearField = new ListGridField(ACADEMIC_YEAR, "Academic Year");
 		ListGridField academicYearIdField = new ListGridField(ACADEMIC_YEAR_ID, "Academic Year id");
 		academicYearIdField.setHidden(true);
 
+		ListGridField hasStreams = new ListGridField(HasStreams, "Has Streams");
+
+		ListGridField classLevel = new ListGridField(ClassLevel, "Is Parent Class");
+
+		ListGridField schoolClassId = new ListGridField(SchoolClassId, "ParentId");
+		schoolClassId.setHidden(true);
+
+		ListGridField schoolClassCode = new ListGridField(SchoolClassCode, "Parent");
+
 		this.setFields(idField, academicYearIdField, academicTermIdField, districtIdField, schoolIdField,
-				academicYearField, academicTermField, districtField, schoolField, codeField, nameField);
+				academicYearField, academicTermField, districtField, schoolField, codeField, nameField, hasStreams,
+				classLevel, schoolClassId, schoolClassCode);
 		this.setDataSource(dataSource);
 	}
 
@@ -66,26 +81,40 @@ public class SchoolClassListGrid extends SuperListGrid {
 		record.setAttribute(CODE, schoolClassDTO.getCode());
 		record.setAttribute(NAME, schoolClassDTO.getName());
 
-		if(schoolClassDTO.getSchoolDTO() != null) {
+		if (schoolClassDTO.getSchoolDTO() != null) {
 			record.setAttribute(SCHOOL, schoolClassDTO.getSchoolDTO().getName());
 			record.setAttribute(SCHOOL_ID, schoolClassDTO.getSchoolDTO().getId());
 
-			if(schoolClassDTO.getSchoolDTO().getDistrictDTO() != null) {
+			if (schoolClassDTO.getSchoolDTO().getDistrictDTO() != null) {
 				record.setAttribute(DISTRICT, schoolClassDTO.getSchoolDTO().getDistrictDTO().getName());
-				record.setAttribute(DISTRICT_ID, schoolClassDTO.getSchoolDTO().getDistrictDTO().getId());			
+				record.setAttribute(DISTRICT_ID, schoolClassDTO.getSchoolDTO().getDistrictDTO().getId());
+			}
+
 		}
-		
-		}
-		
-		if(schoolClassDTO.getAcademicTermDTO() != null) {
-			record.setAttribute(ACADEMIC_TERM , schoolClassDTO.getAcademicTermDTO().getTerm());
-			record.setAttribute(ACADEMIC_TERM_ID , schoolClassDTO.getAcademicTermDTO().getId());
-			if(schoolClassDTO.getAcademicTermDTO().getAcademicYearDTO() != null) {
-				record.setAttribute(ACADEMIC_YEAR , schoolClassDTO.getAcademicTermDTO().getAcademicYearDTO().getName());
-				record.setAttribute(ACADEMIC_YEAR_ID , schoolClassDTO.getAcademicTermDTO().getAcademicYearDTO().getId());	
+
+		if (schoolClassDTO.getAcademicTermDTO() != null) {
+			record.setAttribute(ACADEMIC_TERM, schoolClassDTO.getAcademicTermDTO().getTerm());
+			record.setAttribute(ACADEMIC_TERM_ID, schoolClassDTO.getAcademicTermDTO().getId());
+			if (schoolClassDTO.getAcademicTermDTO().getAcademicYearDTO() != null) {
+				record.setAttribute(ACADEMIC_YEAR, schoolClassDTO.getAcademicTermDTO().getAcademicYearDTO().getName());
+				record.setAttribute(ACADEMIC_YEAR_ID, schoolClassDTO.getAcademicTermDTO().getAcademicYearDTO().getId());
 			}
 		}
-		
+
+		record.setAttribute(HasStreams, schoolClassDTO.isHasStreams());
+		record.setAttribute(ClassLevel, schoolClassDTO.isClassLevel());
+
+		if (!schoolClassDTO.isClassLevel()) {
+			if (schoolClassDTO.getParentSchoolClass() != null) {
+				record.setAttribute(SchoolClassId, schoolClassDTO.getParentSchoolClass().getId());
+				record.setAttribute(SchoolClassCode, schoolClassDTO.getParentSchoolClass().getCode());
+			} else {
+				record.setAttribute(SchoolClassCode, "NA");
+			}
+		}else {
+			record.setAttribute(SchoolClassCode, "NA");
+		}
+
 		return record;
 	}
 

@@ -2,7 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.schoolcategory.sch
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
-import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Alignment; 
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -21,72 +21,104 @@ public class AddSchoolWindow extends Window {
 
 	private TextField latitude;
 	private TextField longtitude;
-	
+
 	private TextField deviceNumber;
-	
+
+	private ComboBox schoolLevel;
+	private ComboBox schoolOwnership;
+	private ComboBox schoolType;
+	private ComboBox schoolGenderCategory;
+	private ComboBox licensed;
 
 	private IButton saveButton;
 	private IButton cancelButton;
 
-
-
 	public AddSchoolWindow() {
 		super();
 		schoolCode = new TextField();
-		schoolCode.setTitle("Code");
-		schoolCode.setHint("code");
+		schoolCode.setTitle("School Code");
+		schoolCode.setHint("School Code");
 		schoolCode.setShowHintInField(true);
 
 		schoolName = new TextField();
-		schoolName.setTitle("Name");
-		schoolName.setHint("name");
+		schoolName.setTitle("School Name");
+		schoolName.setHint("School Name");
 		schoolName.setShowHintInField(true);
 
 		schoolCategoryCombo = new ComboBox();
-		schoolCategoryCombo.setTitle("Category");
-		schoolCategoryCombo.setHint("category");
+		schoolCategoryCombo.setTitle("Foundation Body");
+		schoolCategoryCombo.setHint("Select");
 		schoolCategoryCombo.setShowHintInField(true);
 
 		latitude = new TextField();
 		latitude.setTitle("Latitude");
-		latitude.setHint("latitude");
+		latitude.setHint("Latitude");
 		latitude.setShowHintInField(true);
 
 		longtitude = new TextField();
 		longtitude.setTitle("Longtitude");
-		longtitude.setHint("longtitude");
+		longtitude.setHint("Longtitude");
 		longtitude.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
 		districtCombo.setTitle("District");
-		districtCombo.setHint("district");
+		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
-		
+
 		regionCombo = new ComboBox();
 		regionCombo.setTitle("Region");
-		regionCombo.setHint("region");
+		regionCombo.setHint("Select");
 		regionCombo.setShowHintInField(true);
-		
-		deviceNumber= new TextField();
-		deviceNumber.setTitle("Device Number");
-		deviceNumber.setHint("device number");
+
+		deviceNumber = new TextField();
+		deviceNumber.setTitle("Tela Phone Number");
+		deviceNumber.setHint("Tela Phone Number");
 		deviceNumber.setShowHintInField(true);
-	
+
+		schoolLevel = new ComboBox();
+		schoolLevel.setTitle("School Level");
+		schoolLevel.setHint("Select");
+		schoolLevel.setShowHintInField(true);
+
+		schoolOwnership = new ComboBox();
+		schoolOwnership.setTitle("School Ownership");
+		schoolOwnership.setHint("Select");
+		schoolOwnership.setShowHintInField(true);
+
+		schoolType = new ComboBox();
+		schoolType.setTitle("School Type");
+		schoolType.setHint("Select");
+		schoolType.setShowHintInField(true);
+
+		schoolGenderCategory = new ComboBox();
+		schoolGenderCategory.setTitle("Gender Category");
+		schoolGenderCategory.setHint("Select");
+		schoolGenderCategory.setShowHintInField(true);
+
+		licensed = new ComboBox();
+		licensed.setTitle("Is Licensed");
+		licensed.setHint("Select");
+		licensed.setShowHintInField(true);
 
 		saveButton = new IButton("Save");
-		
+
 		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
+		// schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed
+
 		DynamicForm form = new DynamicForm();
-		form.setFields(schoolCategoryCombo , regionCombo , districtCombo , schoolCode, schoolName , latitude, longtitude,deviceNumber);
-		form.setWrapItemTitles(false);
+		form.setFields(schoolLevel, schoolOwnership, schoolType, schoolGenderCategory, schoolCategoryCombo, regionCombo,
+				districtCombo, deviceNumber, schoolCode, schoolName, licensed, latitude, longtitude);
+
+		form.setWrapItemTitles(true);
 		form.setMargin(10);
-		form.setColWidths("150","250");
-		form.setCellPadding(10);
+		form.setColWidths("150", "350");
+		form.setCellPadding(8);
+		form.setTitleAlign(Alignment.LEFT);
 
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(cancelButton , saveButton);
+		buttonLayout.setMembers(cancelButton, saveButton);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
@@ -102,7 +134,7 @@ public class AddSchoolWindow extends Window {
 		this.setWidth("50%");
 		this.setHeight("90%");
 		this.setAutoCenter(true);
-		this.setTitle("Add School");
+		this.setTitle("School Detail");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);
@@ -110,14 +142,14 @@ public class AddSchoolWindow extends Window {
 
 	private void cancel(final Window window) {
 		cancelButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				window.close();
 			}
 		});
 	}
-	
+
 	public TextField getSchoolCode() {
 		return schoolCode;
 	}
@@ -138,8 +170,6 @@ public class AddSchoolWindow extends Window {
 		return deviceNumber;
 	}
 
-
-
 	public IButton getSaveButton() {
 		return saveButton;
 	}
@@ -156,6 +186,24 @@ public class AddSchoolWindow extends Window {
 		return regionCombo;
 	}
 
-	
+	public ComboBox getSchoolLevel() {
+		return schoolLevel;
+	}
+
+	public ComboBox getSchoolOwnership() {
+		return schoolOwnership;
+	}
+
+	public ComboBox getSchoolType() {
+		return schoolType;
+	}
+
+	public ComboBox getSchoolGenderCategory() {
+		return schoolGenderCategory;
+	}
+
+	public ComboBox getLicensed() {
+		return licensed;
+	}
 
 }

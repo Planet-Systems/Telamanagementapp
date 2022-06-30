@@ -13,7 +13,7 @@ private SchoolCategoryListGrid listGrid;
 		Label header = new Label();
 		
 		header.setStyleName("crm-ContextArea-Header-Label");
-		header.setContents("Categories");
+		header.setContents("School Foundation Bodies");
 		header.setWidth("100%");
 		header.setAutoHeight();
 		header.setMargin(10);

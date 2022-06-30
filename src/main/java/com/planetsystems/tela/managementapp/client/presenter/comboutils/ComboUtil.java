@@ -3,7 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.comboutils;
 import java.util.LinkedHashMap;
 
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
-import com.gwtplatform.mvp.client.proxy.PlaceManager; 
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
@@ -15,7 +15,6 @@ import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
-import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
@@ -52,56 +51,22 @@ public class ComboUtil {
 						valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
 					}
 
-					
-					if(academicYearComboBox.getValueAsString() != null) {
+					if (academicYearComboBox.getValueAsString() != null) {
 						academicYearComboBox.clearValue();
 						academicYearComboBox.setValueMap(valueMap);
-					}else {
+					} else {
 						academicYearComboBox.setValueMap(valueMap);
 					}
 
 					if (defaultValue != null) {
 						academicYearComboBox.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(academicYearComboBox.getJsObj());
+						academicYearComboBox.fireEvent(event1);
 					}
 				}
 			}
 		});
 
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_YEAR, map),
-//				new AsyncCallback<RequestResult>() {
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//					}
-//
-//					public void onSuccess(RequestResult result) {
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//
-//						if (result != null) {
-//							GWT.log("PRESENTER LIST " + result.getAcademicYearDTOs());
-//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//							for (AcademicYearDTO academicYearDTO : result.getAcademicYearDTOs()) {
-//								valueMap.put(academicYearDTO.getId(), academicYearDTO.getName());
-//							}
-//
-//							academicYearComboBox.setValueMap(valueMap);
-//
-//							if (defaultValue != null) {
-//								academicYearComboBox.setValue(defaultValue);
-//							}
-//
-//						} else {
-//							SC.warn("ERROR", "Service Down");
-//						}
-//
-//					}
-//				});
 	}
 
 	// ACADEMIC TERM COMBO
@@ -118,62 +83,28 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				
+
 				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 				for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
 					valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
 				}
- 
-				
-				if(academicTermCombo.getValueAsString() != null) {
+
+				if (academicTermCombo.getValueAsString() != null) {
 					academicTermCombo.clearValue();
 					academicTermCombo.setValueMap(valueMap);
-				}else {
+				} else {
 					academicTermCombo.setValueMap(valueMap);
 				}
- 
+
 				if (defaultValue != null) {
 					academicTermCombo.setValue(defaultValue);
-				}else {
+
+				} else {
 					academicTermCombo.clearValue();
 				}
 			}
 		});
-
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERMS_IN_ACADEMIC_YEAR, map),
-//				new AsyncCallback<RequestResult>() {
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//					}
-//
-//					public void onSuccess(RequestResult result) {
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//
-//						if (result != null) {
-//
-//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//							for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
-//								valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
-//							}
-//							academicTermCombo.setValueMap(valueMap);
-//							if (defaultValue != null) {
-//								academicTermCombo.setValue(defaultValue);
-//							}
-//
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
 
 	}
 
@@ -192,58 +123,18 @@ public class ComboUtil {
 				for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
 					valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
 				}
-				if(academicTermCombo.getValueAsString() != null) {
+				if (academicTermCombo.getValueAsString() != null) {
 					academicTermCombo.clearValue();
 					academicTermCombo.setValueMap(valueMap);
-				}else {
+				} else {
 					academicTermCombo.setValueMap(valueMap);
 				}
-				
-				
+
 				if (defaultValue != null) {
 					academicTermCombo.setValue(defaultValue);
 				}
 			}
 		});
-
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_ACADEMIC_TERM, map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							if (result.getSystemFeedbackDTO() != null) {
-//								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//								for (AcademicTermDTO academicTermDTO : result.getAcademicTermDTOs()) {
-//									valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
-//								}
-//								academicTermCombo.setValueMap(valueMap);
-//								if (defaultValue != null) {
-//									academicTermCombo.setValue(defaultValue);
-//								}
-//							}
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
 
 	}
 
@@ -251,26 +142,25 @@ public class ComboUtil {
 
 	public static void loadRegionCombo(final ComboBox comboBox, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>(); 
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
-		  
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_REGION);
+
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-				
-				
+				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
 				DataSource records = new DataSource();
-				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField idField = new DataSourceTextField("id", "Id");
 				DataSourceTextField nameField = new DataSourceTextField("name", "Region");
 				records.setFields(idField, nameField);
 				records.setClientOnly(true);
 
-				for (RegionDto regionDto : result.getRegionDtos()) { 
+				for (RegionDto regionDto : result.getRegionDtos()) {
 					Record record = new Record();
-					record.setAttribute("id", regionDto.getId()); 
-					record.setAttribute("name", regionDto.getName()); 
+					record.setAttribute("id", regionDto.getId());
+					record.setAttribute("name", regionDto.getName());
 					records.addData(record);
 
 				}
@@ -284,7 +174,7 @@ public class ComboUtil {
 				pickListProperties.setFixedRecordHeights(false);
 
 				ListGridField id = new ListGridField("id", "Id");
-				id.setHidden(true); 
+				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "Region");
 
 				comboBox.setOptionDataSource(records);
@@ -294,78 +184,31 @@ public class ComboUtil {
 				comboBox.setPickListFields(id, name);
 				comboBox.setPickListProperties(pickListProperties);
 				comboBox.setPickListWidth(300);
-				
-				
 
-				/*for (RegionDto regionDto : result.getRegionDtos()) {
-					valueMap.put(regionDto.getId(), regionDto.getName());
-				}*/
-				if(comboBox.getValueAsString() != null) {
+				/*
+				 * for (RegionDto regionDto : result.getRegionDtos()) {
+				 * valueMap.put(regionDto.getId(), regionDto.getName()); }
+				 */
+				if (comboBox.getValueAsString() != null) {
 					comboBox.clearValue();
-					//comboBox.setValueMap(valueMap);
-				}else {
-					//comboBox.setValueMap(valueMap);
+					// comboBox.setValueMap(valueMap);
+				} else {
+					// comboBox.setValueMap(valueMap);
 				}
 
-				if (defaultValue != null&&defaultValue.length()!=0) {
+				if (defaultValue != null && defaultValue.length() != 0) {
 					comboBox.setValue(defaultValue);
 					ChangedEvent event1 = new ChangedEvent(comboBox.getJsObj());
 					comboBox.fireEvent(event1);
-				}else {
-					
-					comboBox.setValue(result.getRegionDtos().get(0).getId()); 
+				} else {
+
+					comboBox.setValue(result.getRegionDtos().get(0).getId());
 					ChangedEvent event1 = new ChangedEvent(comboBox.getJsObj());
 					comboBox.fireEvent(event1);
 				}
 			}
 		});
-//		
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_REGION, map), new AsyncCallback<RequestResult>() {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				System.out.println(caught.getMessage());
-//				SC.warn("ERROR", caught.getMessage());
-//				GWT.log("ERROR " + caught.getMessage());
-//				SC.clearPrompt();
-//
-//			}
-//
-//			@Override
-//			public void onSuccess(RequestResult result) {
-//
-//				SC.clearPrompt();
-//				SessionManager.getInstance().manageSession(result, placeManager);
-//
-//				if (result != null) {
-//
-//					SystemFeedbackDTO feedbackDTO = result.getSystemFeedbackDTO();
-//					if (feedbackDTO != null) {
-//						if (result.getSystemFeedbackDTO().isResponse()) {
-//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//							for (RegionDto regionDto : result.getRegionDtos()) {
-//								valueMap.put(regionDto.getId(), regionDto.getName());
-//							}
-//							comboBox.setValueMap(valueMap);
-//
-//							if (defaultValue != null) {
-//								comboBox.setValue(defaultValue);
-//							}
-//
-//						} else {
-//							SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-//						}
-//					}
-//				} else {
-//					SC.warn("ERROR", "Service Down");
-//					// SC.warn("ERROR", "Unknown error");
-//				}
-//
-//			}
-//		});
+
 	}
 
 	//////////////////////////////////// DISTRICT COMBOS
@@ -373,25 +216,24 @@ public class ComboUtil {
 	public static void loadDistrictCombo(final ComboBox districtCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
- 
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
-		  
+
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICT);
+
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				
-				 
+
 				DataSource records = new DataSource();
-				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField idField = new DataSourceTextField("id", "Id");
 				DataSourceTextField nameField = new DataSourceTextField("name", "District");
 				records.setFields(idField, nameField);
 				records.setClientOnly(true);
 
-				for (DistrictDTO districtDTO : result.getDistrictDTOs()) { 
+				for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
 					Record record = new Record();
-					record.setAttribute("id", districtDTO.getId()); 
-					record.setAttribute("name", districtDTO.getName()); 
+					record.setAttribute("id", districtDTO.getId());
+					record.setAttribute("name", districtDTO.getName());
 					records.addData(record);
 
 				}
@@ -405,7 +247,7 @@ public class ComboUtil {
 				pickListProperties.setFixedRecordHeights(false);
 
 				ListGridField id = new ListGridField("id", "Id");
-				id.setHidden(true); 
+				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "District");
 
 				districtCombo.setOptionDataSource(records);
@@ -415,98 +257,58 @@ public class ComboUtil {
 				districtCombo.setPickListFields(id, name);
 				districtCombo.setPickListProperties(pickListProperties);
 				districtCombo.setPickListWidth(300);
- 
-				 
-				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-				  
 
-				/*for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-					valueMap.put(districtDTO.getId(), districtDTO.getName());
-				}*/
-				
-				if(districtCombo.getValueAsString() != null) {
+				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+				/*
+				 * for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
+				 * valueMap.put(districtDTO.getId(), districtDTO.getName()); }
+				 */
+
+				if (districtCombo.getValueAsString() != null) {
 					districtCombo.clearValue();
-					//districtCombo.setValueMap(valueMap);
-				}else {
-					//districtCombo.setValueMap(valueMap);	
+					// districtCombo.setValueMap(valueMap);
+				} else {
+					// districtCombo.setValueMap(valueMap);
 				}
 
-				if (defaultValue != null&&defaultValue.length()!=0) {
-					districtCombo.setValue(defaultValue); 
+				if (defaultValue != null && defaultValue.length() != 0) {
+					districtCombo.setValue(defaultValue);
 					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
 					districtCombo.fireEvent(event1);
-				}else {
-					districtCombo.setValue(result.getDistrictDTOs().get(0).getId());  
+				} else {
+					districtCombo.setValue(result.getDistrictDTOs().get(0).getId());
 					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
 					districtCombo.fireEvent(event1);
 				}
 			}
 		});
 
-//		SC.showPrompt("", "", new SwizimaLoader());
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_DISTRICT, map), new AsyncCallback<RequestResult>() {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				System.out.println(caught.getMessage());
-//				SC.warn("ERROR", caught.getMessage());
-//				GWT
-//
-//						.log("ERROR " + caught.getMessage());
-//				SC.clearPrompt();
-//
-//			}
-//
-//			@Override
-//			public void onSuccess(RequestResult result) {
-//
-//				SC.clearPrompt();
-//				SessionManager.getInstance().manageSession(result, placeManager);
-//				if (result != null) {
-//
-//					if (result.getSystemFeedbackDTO() != null) {
-//						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//						for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-//							valueMap.put(districtDTO.getId(), districtDTO.getName());
-//						}
-//						districtCombo.setValueMap(valueMap);
-//						if (defaultValue != null) {
-//							districtCombo.setValue(defaultValue);
-//						}
-//					}
-//				} else {
-//					SC.warn("ERROR", "Unknow error");
-//				}
-//
-//			}
-//		});
 	}
 
 	public static void loadDistrictComboByRegion(final ComboBox regionCombo, final ComboBox districtCombo,
 			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.REGION_ID, regionCombo.getValueAsString());
-		 
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_IN_REGION);
-		  
+
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_DISTRICTS_IN_REGION);
+
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-				
-				
+				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
 				DataSource records = new DataSource();
-				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField idField = new DataSourceTextField("id", "Id");
 				DataSourceTextField nameField = new DataSourceTextField("name", "District");
 				records.setFields(idField, nameField);
 				records.setClientOnly(true);
 
-				for (DistrictDTO districtDTO : result.getDistrictDTOs()) { 
+				for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
 					Record record = new Record();
-					record.setAttribute("id", districtDTO.getId()); 
-					record.setAttribute("name", districtDTO.getName()); 
+					record.setAttribute("id", districtDTO.getId());
+					record.setAttribute("name", districtDTO.getName());
 					records.addData(record);
 
 				}
@@ -520,7 +322,7 @@ public class ComboUtil {
 				pickListProperties.setFixedRecordHeights(false);
 
 				ListGridField id = new ListGridField("id", "Id");
-				id.setHidden(true); 
+				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "District");
 
 				districtCombo.setOptionDataSource(records);
@@ -530,72 +332,31 @@ public class ComboUtil {
 				districtCombo.setPickListFields(id, name);
 				districtCombo.setPickListProperties(pickListProperties);
 				districtCombo.setPickListWidth(300);
-				
-				
-				
 
-				/*for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-					valueMap.put(districtDTO.getId(), districtDTO.getName());
-				}*/
-				
-				if(districtCombo.getValueAsString() != null) {
+				/*
+				 * for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
+				 * valueMap.put(districtDTO.getId(), districtDTO.getName()); }
+				 */
+
+				if (districtCombo.getValueAsString() != null) {
 					districtCombo.clearValue();
-					//districtCombo.setValueMap(valueMap);
-				}else {
-					//districtCombo.setValueMap(valueMap);
+					// districtCombo.setValueMap(valueMap);
+				} else {
+					// districtCombo.setValueMap(valueMap);
 				}
-				
-				if (defaultValue != null&&defaultValue.length()!=0) {
+
+				if (defaultValue != null && defaultValue.length() != 0) {
 					districtCombo.setValue(defaultValue);
 					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
 					districtCombo.fireEvent(event1);
-				}else {
-					districtCombo.setValue(result.getDistrictDTOs().get(0).getId()); 
+				} else {
+					districtCombo.setValue(result.getDistrictDTOs().get(0).getId());
 					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
 					districtCombo.fireEvent(event1);
 				}
 			}
 		});
 
-//		SC.showPrompt("", "", new SwizimaLoader());
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_DISTRICTS_IN_REGION, map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT
-//
-//								.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							if (result.getSystemFeedbackDTO() != null) {
-//								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//								for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-//									valueMap.put(districtDTO.getId(), districtDTO.getName());
-//								}
-//								districtCombo.setValueMap(valueMap);
-//								if (defaultValue != null) {
-//									districtCombo.setValue(defaultValue);
-//								}
-//							}
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
 	}
 
 	///////////////////////////// SCHOOL COMBOS
@@ -609,19 +370,18 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
-				
 				DataSource records = new DataSource();
-				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField idField = new DataSourceTextField("id", "Id");
 				DataSourceTextField nameField = new DataSourceTextField("name", "School");
 				records.setFields(idField, nameField);
 				records.setClientOnly(true);
 
-				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) { 
+				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
 					Record record = new Record();
-					record.setAttribute("id", schoolDTO.getId()); 
-					record.setAttribute("name", schoolDTO.getName()); 
+					record.setAttribute("id", schoolDTO.getId());
+					record.setAttribute("name", schoolDTO.getName());
 					records.addData(record);
 
 				}
@@ -635,7 +395,7 @@ public class ComboUtil {
 				pickListProperties.setFixedRecordHeights(false);
 
 				ListGridField id = new ListGridField("id", "Id");
-				id.setHidden(true); 
+				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "School");
 
 				schoolCombo.setOptionDataSource(records);
@@ -645,18 +405,19 @@ public class ComboUtil {
 				schoolCombo.setPickListFields(id, name);
 				schoolCombo.setPickListProperties(pickListProperties);
 				schoolCombo.setPickListWidth(400);
-				
-				/*for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-				}*/
-				
-				if(schoolCombo.getValueAsString() != null) {
+
+				/*
+				 * for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
+				 * valueMap.put(schoolDTO.getId(), schoolDTO.getName()); }
+				 */
+
+				if (schoolCombo.getValueAsString() != null) {
 					schoolCombo.clearValue();
-					//schoolCombo.setValueMap(valueMap);
-				}else {
-					//schoolCombo.setValueMap(valueMap);
+					// schoolCombo.setValueMap(valueMap);
+				} else {
+					// schoolCombo.setValueMap(valueMap);
 				}
-				
+
 				if (defaultValue != null) {
 					schoolCombo.setValue(defaultValue);
 					ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
@@ -665,44 +426,6 @@ public class ComboUtil {
 			}
 		});
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOLS, map), new AsyncCallback<RequestResult>() {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				System.out.println(caught.getMessage());
-//				SC.warn("ERROR", caught.getMessage());
-//				GWT.log("ERROR " + caught.getMessage());
-//				SC.clearPrompt();
-//
-//			}
-//
-//			@Override
-//			public void onSuccess(RequestResult result) {
-//
-//				SC.clearPrompt();
-//				SessionManager.getInstance().manageSession(result, placeManager);
-//				if (result != null) {
-//
-//					if (result.getSystemFeedbackDTO() != null) {
-//						LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//						for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-//							valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-//						}
-//						schoolCombo.setValueMap(valueMap);
-//						if (defaultValue != null) {
-//							schoolCombo.setValue(defaultValue);
-//						}
-//					}
-//				} else {
-//					SC.warn("ERROR", "Unknow error");
-//				}
-//
-//			}
-//		});
 	}
 
 	public static void loadSchoolComboByDistrict(final ComboBox districtCombo, final ComboBox schoolCombo,
@@ -716,19 +439,18 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-				
-				
+				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
 				DataSource records = new DataSource();
-				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField idField = new DataSourceTextField("id", "Id");
 				DataSourceTextField nameField = new DataSourceTextField("name", "School");
 				records.setFields(idField, nameField);
 				records.setClientOnly(true);
 
-				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) { 
+				for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
 					Record record = new Record();
-					record.setAttribute("id", schoolDTO.getId()); 
-					record.setAttribute("name", schoolDTO.getName()); 
+					record.setAttribute("id", schoolDTO.getId());
+					record.setAttribute("name", schoolDTO.getName());
 					records.addData(record);
 
 				}
@@ -742,7 +464,7 @@ public class ComboUtil {
 				pickListProperties.setFixedRecordHeights(false);
 
 				ListGridField id = new ListGridField("id", "Id");
-				id.setHidden(true); 
+				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "School");
 
 				schoolCombo.setOptionDataSource(records);
@@ -752,65 +474,29 @@ public class ComboUtil {
 				schoolCombo.setPickListFields(id, name);
 				schoolCombo.setPickListProperties(pickListProperties);
 				schoolCombo.setPickListWidth(400);
-				
 
-				/*for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-					valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-				}*/
-				
-				if(schoolCombo.getValueAsString() != null) {
-					schoolCombo.clearValue();
-					//schoolCombo.setValueMap(valueMap);
-				}else {
-					//schoolCombo.setValueMap(valueMap);
-				}
+				/*
+				 * for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
+				 * valueMap.put(schoolDTO.getId(), schoolDTO.getName()); }
+				 */
 
+				/*
+				 * if (schoolCombo.getValueAsString() != null) { schoolCombo.clearValue();
+				 * 
+				 * } else {
+				 * 
+				 * }
+				 */
 
 				if (defaultValue != null) {
 					schoolCombo.setValue(defaultValue);
 					ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
 					schoolCombo.fireEvent(event1);
+				} else {
+					schoolCombo.clearValue();
 				}
 			}
 		});
-
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOLS_IN_DISTRICT, map),
-//				new AsyncCallback<RequestResult>() {
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//					}
-//
-//					public void onSuccess(RequestResult result) {
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//
-//						if (result != null) {
-//
-//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//							for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-//								valueMap.put(schoolDTO.getId(), schoolDTO.getName());
-//							}
-//
-//							schoolCombo.setValueMap(valueMap);
-//
-//							if (defaultValue != null) {
-//								schoolCombo.setValue(defaultValue);
-//							}
-//
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
 
 	}
 
@@ -827,24 +513,22 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-				
-				
-				
+				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
 				DataSource records = new DataSource();
-				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField idField = new DataSourceTextField("id", "Id");
 				DataSourceTextField nameField = new DataSourceTextField("name", "Teacher Name");
 				records.setFields(idField, nameField);
 				records.setClientOnly(true);
 
-				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { 
-					
+				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+
 					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
 							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-					
+
 					Record record = new Record();
-					record.setAttribute("id", schoolStaffDTO.getId()); 
-					record.setAttribute("name", fullName); 
+					record.setAttribute("id", schoolStaffDTO.getId());
+					record.setAttribute("name", fullName);
 					records.addData(record);
 
 				}
@@ -858,7 +542,7 @@ public class ComboUtil {
 				pickListProperties.setFixedRecordHeights(false);
 
 				ListGridField id = new ListGridField("id", "Id");
-				id.setHidden(true); 
+				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "Teacher Name");
 
 				schoolStaffCombo.setOptionDataSource(records);
@@ -869,29 +553,29 @@ public class ComboUtil {
 				schoolStaffCombo.setPickListProperties(pickListProperties);
 				schoolStaffCombo.setPickListWidth(400);
 
-				/*for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
-							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-					valueMap.put(schoolStaffDTO.getId(), fullName);
-				}*/
-				
-				if(schoolStaffCombo.getValueAsString() != null) {
+				/*
+				 * for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { String
+				 * fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " " +
+				 * schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+				 * valueMap.put(schoolStaffDTO.getId(), fullName); }
+				 */
+
+				if (schoolStaffCombo.getValueAsString() != null) {
 					schoolStaffCombo.clearValue();
-					//schoolStaffCombo.setValueMap(valueMap);
-				}else {
-					//schoolStaffCombo.setValueMap(valueMap);
+					// schoolStaffCombo.setValueMap(valueMap);
+				} else {
+					// schoolStaffCombo.setValueMap(valueMap);
 				}
 
-
 				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue); 
+					schoolStaffCombo.setValue(defaultValue);
 					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
 					schoolStaffCombo.fireEvent(event1);
 				}
 			}
 		});
 	}
-	
+
 	public static void loadHeadteacherComboBySchool(final ComboBox schoolCombo, final ComboBox schoolStaffCombo,
 			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
 
@@ -907,21 +591,20 @@ public class ComboUtil {
 				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-					if(schoolStaffDTO.getStaffType().equalsIgnoreCase("Head teacher")) {
+					if (schoolStaffDTO.getStaffType().equalsIgnoreCase("Head teacher")) {
 						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
 								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
 						valueMap.put(schoolStaffDTO.getId(), fullName);
 					}
-					
-				}
-				
-				if(schoolStaffCombo.getValueAsString() != null) {
-					schoolStaffCombo.clearValue();
-					schoolStaffCombo.setValueMap(valueMap);
-				}else {
-					schoolStaffCombo.setValueMap(valueMap);
+
 				}
 
+				if (schoolStaffCombo.getValueAsString() != null) {
+					schoolStaffCombo.clearValue();
+					schoolStaffCombo.setValueMap(valueMap);
+				} else {
+					schoolStaffCombo.setValueMap(valueMap);
+				}
 
 				if (defaultValue != null) {
 					schoolStaffCombo.setValue(defaultValue);
@@ -931,82 +614,42 @@ public class ComboUtil {
 			}
 		});
 	}
-		
-		
-		public static void loadSchoolStaffMultiComboBySchool(final ComboBox schoolCombo, final MultiComboBoxItem schoolStaffCombo,
-				final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
 
-			String schoolId = schoolCombo.getValueAsString();
-			LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-			map.put(RequestDelimeters.SCHOOL_ID, schoolId);
-			map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
+	public static void loadSchoolStaffMultiComboBySchool(final ComboBox schoolCombo,
+			final MultiComboBoxItem schoolStaffCombo, final DispatchAsync dispatcher, final PlaceManager placeManager,
+			final String defaultValue) {
 
-			NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+		String schoolId = schoolCombo.getValueAsString();
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_STAFFS_IN_SCHOOL);
 
-				@Override
-				public void onNetworkResult(RequestResult result) {
-					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-					for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-						String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
-								+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-						valueMap.put(schoolStaffDTO.getId(), fullName);
-					}
-					
-					if(schoolStaffCombo.getValues() != null) {
-						schoolStaffCombo.clearValue();
-						schoolStaffCombo.setValueMap(valueMap);
-					}else {
-						schoolStaffCombo.setValueMap(valueMap);
-					}
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
-					if (defaultValue != null) {
-						schoolStaffCombo.setValue(defaultValue);
-						ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
-						schoolStaffCombo.fireEvent(event1);
-					}
+				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
+							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+					valueMap.put(schoolStaffDTO.getId(), fullName);
 				}
-			});
-		
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_STAFFS_IN_SCHOOL, map),
-//				new AsyncCallback<RequestResult>() {
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//					}
-//
-//					public void onSuccess(RequestResult result) {
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//
-//						if (result != null) {
-//
-//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//							for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-//								String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
-//										+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-//								valueMap.put(schoolStaffDTO.getId(), fullName);
-//							}
-//							schoolStaffCombo.setValueMap(valueMap);
-//
-//							if (defaultValue != null) {
-//								schoolStaffCombo.setValue(defaultValue);
-//							}
-//
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
+				if (schoolStaffCombo.getValues() != null) {
+					schoolStaffCombo.clearValue();
+					schoolStaffCombo.setValueMap(valueMap);
+				} else {
+					schoolStaffCombo.setValueMap(valueMap);
+				}
+
+				if (defaultValue != null) {
+					schoolStaffCombo.setValue(defaultValue);
+					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+					schoolStaffCombo.fireEvent(event1);
+				}
+			}
+		});
 
 	}
 
@@ -1020,23 +663,22 @@ public class ComboUtil {
 
 			@Override
 			public void onNetworkResult(RequestResult result) {
-				//LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-				
-				
+				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
 				DataSource records = new DataSource();
-				DataSourceTextField idField = new DataSourceTextField("id", "Id"); 
+				DataSourceTextField idField = new DataSourceTextField("id", "Id");
 				DataSourceTextField nameField = new DataSourceTextField("name", "Teacher Name");
 				records.setFields(idField, nameField);
 				records.setClientOnly(true);
 
-				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { 
-					
+				for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
+
 					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " "
 							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-					
+
 					Record record = new Record();
-					record.setAttribute("id", schoolStaffDTO.getId()); 
-					record.setAttribute("name", fullName); 
+					record.setAttribute("id", schoolStaffDTO.getId());
+					record.setAttribute("name", fullName);
 					records.addData(record);
 
 				}
@@ -1050,7 +692,7 @@ public class ComboUtil {
 				pickListProperties.setFixedRecordHeights(false);
 
 				ListGridField id = new ListGridField("id", "Id");
-				id.setHidden(true); 
+				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "Teacher Name");
 
 				schoolStaffCombo.setOptionDataSource(records);
@@ -1060,21 +702,20 @@ public class ComboUtil {
 				schoolStaffCombo.setPickListFields(id, name);
 				schoolStaffCombo.setPickListProperties(pickListProperties);
 				schoolStaffCombo.setPickListWidth(400);
-				
 
-				/*for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-					String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName()
-							+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-					valueMap.put(schoolStaffDTO.getId(), fullName);
-				}*/
-				
-				if(schoolStaffCombo.getValueAsString() != null) {
+				/*
+				 * for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { String
+				 * fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() +
+				 * schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
+				 * valueMap.put(schoolStaffDTO.getId(), fullName); }
+				 */
+
+				if (schoolStaffCombo.getValueAsString() != null) {
 					schoolStaffCombo.clearValue();
-					//SchoolStaffCombo.setValueMap(valueMap);
-				}else {
-					//SchoolStaffCombo.setValueMap(valueMap);
+					// SchoolStaffCombo.setValueMap(valueMap);
+				} else {
+					// SchoolStaffCombo.setValueMap(valueMap);
 				}
-
 
 				if (defaultValue != null) {
 					schoolStaffCombo.setValue(defaultValue);
@@ -1084,49 +725,6 @@ public class ComboUtil {
 			}
 		});
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-////		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_STAFF, map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							if (result.getSystemFeedbackDTO() != null) {
-//								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//								for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) {
-//									String fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName()
-//											+ schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-//									valueMap.put(schoolStaffDTO.getId(), fullName);
-//								}
-//								SchoolStaffCombo.setValueMap(valueMap);
-//
-//								if (defaultValue != null) {
-//									SchoolStaffCombo.setValue(defaultValue);
-//								}
-//
-//							}
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
 	}
 
 	/////////////////////// SCHOOL CATEGORY COMBOS
@@ -1148,10 +746,10 @@ public class ComboUtil {
 					valueMap.put(schoolCategoryDTO.getId(), schoolCategoryDTO.getName());
 				}
 
-				if(schoolCategoryCombo.getValueAsString() != null) {
+				if (schoolCategoryCombo.getValueAsString() != null) {
 					schoolCategoryCombo.clearValue();
 					schoolCategoryCombo.setValueMap(valueMap);
-				}else {
+				} else {
 					schoolCategoryCombo.setValueMap(valueMap);
 				}
 
@@ -1161,54 +759,6 @@ public class ComboUtil {
 			}
 		});
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_CATEGORY, map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							if (result.getSystemFeedbackDTO() != null) {
-//								if (result.getSystemFeedbackDTO().isResponse()) {
-//
-//									LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//									for (SchoolCategoryDTO schoolCategoryDTO : result.getSchoolCategoryDTOs()) {
-//										valueMap.put(schoolCategoryDTO.getId(), schoolCategoryDTO.getName());
-//									}
-//
-//									schoolCategoryCombo.setValueMap(valueMap);
-//
-//									if (defaultValue != null) {
-//										schoolCategoryCombo.setValue(defaultValue);
-//									}
-//
-//								} else {
-//									SC.warn("Not Successful \n ERROR:", result.getSystemFeedbackDTO().getMessage());
-//								}
-//							}
-//						} else {
-//							SC.warn("ERROR", "Service Down");
-//							// SC.warn("ERROR", "Unknown error");
-//						}
-//
-//					}
-//				});
 	}
 
 	///////////////////////////// SUBJECT CATEGORY
@@ -1229,11 +779,10 @@ public class ComboUtil {
 					valueMap.put(subjectCategoryDTO.getId(), subjectCategoryDTO.getName());
 				}
 
-				
-				if(subjectCategoryCombo.getValueAsString() != null) {
+				if (subjectCategoryCombo.getValueAsString() != null) {
 					subjectCategoryCombo.clearValue();
 					subjectCategoryCombo.setValueMap(valueMap);
-				}else {
+				} else {
 					subjectCategoryCombo.setValueMap(valueMap);
 				}
 
@@ -1243,44 +792,6 @@ public class ComboUtil {
 			}
 		});
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SUBJECT_CATEGORY, map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						SC.clearPrompt();
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							if (result.getSystemFeedbackDTO() != null) {
-//								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//								for (SubjectCategoryDTO subjectCategoryDTO : result.getSubjectCategoryDTOs()) {
-//									valueMap.put(subjectCategoryDTO.getId(), subjectCategoryDTO.getName());
-//								}
-//								subjectCategoryCombo.setValueMap(valueMap);
-//								if (defaultValue != null) {
-//									subjectCategoryCombo.setValue(defaultValue);
-//								}
-//							}
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
 	}
 
 	////////////////////////////////////////// SCHOOL CLASS COMBOS
@@ -1301,62 +812,20 @@ public class ComboUtil {
 				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
 					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
 				}
-				
-				if(schoolClassCombo.getValueAsString() != null) {
+
+				if (schoolClassCombo.getValueAsString() != null) {
 					schoolClassCombo.clearValue();
 					schoolClassCombo.setValueMap(valueMap);
-				}else {
-					schoolClassCombo.setValueMap(valueMap);	
+				} else {
+					schoolClassCombo.setValueMap(valueMap);
 				}
-				
+
 				if (defaultValue != null) {
 					schoolClassCombo.setValue(defaultValue);
 				}
 			}
 		});
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_CLASS, map),
-//				new AsyncCallback<RequestResult>() {
-//
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//
-//					}
-//
-//					@Override
-//					public void onSuccess(RequestResult result) {
-//
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//						if (result != null) {
-//
-//							if (result.getSystemFeedbackDTO() != null) {
-//								LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//								for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
-//									valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-//								}
-//								schoolClassCombo.setValueMap(valueMap);
-//								if (defaultValue != null) {
-//									schoolClassCombo.setValue(defaultValue);
-//								}
-//							}
-//						} else {//
-////					}
-////					});
-//							//
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//				});
 	}
 
 	public static void loadSchoolClassesComboBySchool(final ComboBox schoolCombo, final ComboBox schoolClassComboBox,
@@ -1375,58 +844,19 @@ public class ComboUtil {
 				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
 					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
 				}
-				
-				if(schoolClassComboBox.getValueAsString() != null) {
+
+				if (schoolClassComboBox.getValueAsString() != null) {
 					schoolClassComboBox.clearValue();
 					schoolClassComboBox.setValueMap(valueMap);
-				}else {
+				} else {
 					schoolClassComboBox.setValueMap(valueMap);
 				}
-
 
 				if (defaultValue != null) {
 					schoolClassComboBox.setValue(defaultValue);
 				}
 			}
 		});
-
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL, map),
-//				new AsyncCallback<RequestResult>() {
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//					}
-//
-//					public void onSuccess(RequestResult result) {
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//
-//						if (result != null) {
-//
-//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//							for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
-//								valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-//							}
-//							schoolClassComboBox.setValueMap(valueMap);
-//
-//							if (defaultValue != null) {
-//								schoolClassComboBox.setValue(defaultValue);
-//							}
-//
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//
-//				});
 
 	}
 
@@ -1447,14 +877,13 @@ public class ComboUtil {
 				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
 					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
 				}
-				
-				if(schoolClassCombo.getValueAsString() != null) {
+
+				if (schoolClassCombo.getValueAsString() != null) {
 					schoolClassCombo.clearValue();
 					schoolClassCombo.setValueMap(valueMap);
-				}else {
+				} else {
 					schoolClassCombo.setValueMap(valueMap);
 				}
-				
 
 				if (defaultValue != null) {
 					schoolClassCombo.setValue(defaultValue);
@@ -1462,47 +891,9 @@ public class ComboUtil {
 			}
 		});
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM, map),
-//				new AsyncCallback<RequestResult>() {
-//					public void onFailure(Throwable caught) {
-//						System.out.println(caught.getMessage());
-//						SC.warn("ERROR", caught.getMessage());
-//						GWT.log("ERROR " + caught.getMessage());
-//						SC.clearPrompt();
-//					}
-//
-//					public void onSuccess(RequestResult result) {
-//						SC.clearPrompt();
-//						SessionManager.getInstance().manageSession(result, placeManager);
-//
-//						if (result != null) {
-//
-//							LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//							for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
-//								valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
-//							}
-//							schoolClassCombo.setValueMap(valueMap);
-//
-//							if (defaultValue != null) {
-//								schoolClassCombo.setValue(defaultValue);
-//							}
-//
-//						} else {
-//							SC.warn("ERROR", "Unknow error");
-//						}
-//
-//					}
-//
-//				});
-
 	}
 
-////////////////////////////////////SUBJECT COMBOS
+	//////////////////////////////////// SUBJECT COMBOS
 	public static void loadSubjectCombo(final ComboBox subjectCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
 
@@ -1518,14 +909,13 @@ public class ComboUtil {
 				for (SubjectDTO subjectDTO : result.getSubjectDTOs()) {
 					valueMap.put(subjectDTO.getId(), subjectDTO.getName());
 				}
-				
-				if(subjectCombo.getValueAsString() != null) {
+
+				if (subjectCombo.getValueAsString() != null) {
 					subjectCombo.clearValue();
 					subjectCombo.setValueMap(valueMap);
-				}else {
+				} else {
 					subjectCombo.setValueMap(valueMap);
 				}
-
 
 				if (defaultValue != null) {
 					subjectCombo.setValue(defaultValue);
@@ -1533,50 +923,14 @@ public class ComboUtil {
 			}
 		});
 
-//		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
-//
-//		SC.showPrompt("", "", new SwizimaLoader());
-//
-//		dispatcher.execute(new RequestAction(RequestConstant.GET_SUBJECT, map), new AsyncCallback<RequestResult>() {
-//			public void onFailure(Throwable caught) {
-//				System.out.println(caught.getMessage());
-//				SC.warn("ERROR", caught.getMessage());
-//				GWT.log("ERROR " + caught.getMessage());
-//				SC.clearPrompt();
-//			}
-//
-//			public void onSuccess(RequestResult result) {
-//				SC.clearPrompt();
-//				SessionManager.getInstance().manageSession(result, placeManager);
-//
-//				if (result != null) {
-//
-//					LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-//
-//					for (SubjectDTO subjectDTO : result.getSubjectDTOs()) {
-//						valueMap.put(subjectDTO.getId(), subjectDTO.getName());
-//					}
-//					subjectCombo.setValueMap(valueMap);
-//
-//					if (defaultValue != null) {
-//						subjectCombo.setValue(defaultValue);
-//					}
-//
-//				} else {
-//					SC.warn("ERROR", "Unknow error");
-//				}
-//
-//			}
-//
-//		});
 	}
 
 	public static void loadSystemUserGroupCombo(final ComboBox systemUserGroupCombo, DispatchAsync dispatcher,
 			PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		map.put(NetworkDataUtil.ACTION , SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
+		map.put(NetworkDataUtil.ACTION, SystemUserGroupRequestConstant.GET_SYSTEM_USER_GROUPS);
 		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
-			
+
 			@Override
 			public void onNetworkResult(RequestResult result) {
 				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
@@ -1584,20 +938,55 @@ public class ComboUtil {
 					valueMap.put(dto.getId(), dto.getName());
 				}
 
-				
-				if(systemUserGroupCombo.getValueAsString() != null) {
+				if (systemUserGroupCombo.getValueAsString() != null) {
 					systemUserGroupCombo.clearValue();
 					systemUserGroupCombo.setValueMap(valueMap);
-				}else {
+				} else {
 					systemUserGroupCombo.setValueMap(valueMap);
 				}
-				
+
 				if (defaultValue != null) {
 					systemUserGroupCombo.setValue(defaultValue);
 				}
 			}
 		});
-		
+
+	}
+
+	public static void loadSchoolClassesComboBySchoolAcademicTermByLevel(final ComboBox academicTermCombo,
+			final ComboBox schoolCombo, final ComboBox schoolClassCombo, final DispatchAsync dispatcher,
+			final PlaceManager placeManager, final String defaultValue) {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+
+		map.put(RequestDelimeters.SCHOOL_ID, schoolCombo.getValueAsString());
+		map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermCombo.getValueAsString());
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
+					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
+				}
+
+				if (schoolClassCombo.getValueAsString() != null) {
+					
+					schoolClassCombo.setValueMap(valueMap);
+				} else {
+					schoolClassCombo.setValueMap(valueMap);
+				}
+
+				if (defaultValue != null) {
+					schoolClassCombo.setValue(defaultValue);
+				}else {
+					schoolClassCombo.clearValue();
+				}
+			}
+		});
 	}
 
 }

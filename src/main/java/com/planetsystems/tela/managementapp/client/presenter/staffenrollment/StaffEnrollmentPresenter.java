@@ -652,6 +652,8 @@ public class StaffEnrollmentPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
+				
+				 
 				SchoolStaffWindow window = new SchoolStaffWindow();
 				loadGenderCombo(window, null);
 				loadRegisteredCombo(window, null);

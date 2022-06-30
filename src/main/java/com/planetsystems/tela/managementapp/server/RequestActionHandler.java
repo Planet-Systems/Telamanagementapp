@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
 import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
-import com.gwtplatform.dispatch.shared.ActionException;
+import com.gwtplatform.dispatch.shared.ActionException; 
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.AuthenticationDTO;
@@ -1314,7 +1314,37 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_SCHOOL_CLASS)
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SCHOOL_INITIAL_CLASSESS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				@SuppressWarnings("unchecked")
+				List<SchoolClassDTO> dto = (List<SchoolClassDTO>) action.getRequestBody().get(RequestConstant.SAVE_SCHOOL_INITIAL_CLASSESS);
+				    
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+				
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("initiliseschoolclasses")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_SCHOOL_CLASS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
@@ -1418,7 +1448,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
@@ -1428,10 +1460,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-				/*
-				 * /academicterms/ff80818177f1b9680177f1bfcd040002/schools/
-				 * ff80818177f1b9680177f1c3329e000b/schoolclasses
-				 */
+				
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("academicterms")
 						.path(academicTermId).path("schools").path(schoolId).path("schoolclasses")
 						.request(MediaType.APPLICATION_JSON).headers(headers)

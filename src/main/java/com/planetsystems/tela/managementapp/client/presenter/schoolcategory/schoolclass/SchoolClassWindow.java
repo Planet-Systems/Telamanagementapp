@@ -8,6 +8,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -19,7 +20,10 @@ public class SchoolClassWindow extends Window {
 	private ComboBox schoolCombo;
 	private TextField codeField;
 	private TextField classNameField;
-	
+
+	private CheckboxItem hasStreams;
+	private CheckboxItem classLevel;
+	private ComboBox parentSchoolClass;
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -40,36 +44,50 @@ public class SchoolClassWindow extends Window {
 		schoolCombo.setTitle("School");
 		schoolCombo.setHint("School");
 		schoolCombo.setShowHintInField(true);
-		
+
 		districtCombo = new ComboBox();
 		districtCombo.setTitle("District");
 		districtCombo.setHint("District");
 		districtCombo.setShowHintInField(true);
-		
+
 		academicTermCombo = new ComboBox();
 		academicTermCombo.setTitle("Academic Term");
 		academicTermCombo.setHint("Select");
 		academicTermCombo.setShowHintInField(true);
-		
+
 		academicYearCombo = new ComboBox();
 		academicYearCombo.setTitle("Academic Year");
 		academicYearCombo.setHint("Select");
 		academicYearCombo.setShowHintInField(true);
 
+		hasStreams = new CheckboxItem();
+		hasStreams.setTitle("Has Streams"); 
+
+		classLevel = new CheckboxItem();
+		classLevel.setTitle("Is Parent Class?"); 
+
+		parentSchoolClass = new ComboBox();
+		parentSchoolClass.setTitle("Parent Class");
+		parentSchoolClass.setHint("Select");
+		parentSchoolClass.setShowHintInField(true);
+
+		//hasStreams,classLevel,parentSchoolClass
+
 		saveButton = new IButton("Save");
-		
+
 		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(academicYearCombo , academicTermCombo  ,districtCombo , schoolCombo ,codeField , classNameField );
+		form.setFields(academicYearCombo, academicTermCombo, districtCombo, schoolCombo, codeField, classNameField,
+				hasStreams, classLevel, parentSchoolClass);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
-		form.setColWidths("150","250");
+		form.setColWidths("150", "250");
 		form.setCellPadding(10);
 
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(cancelButton , saveButton);
+		buttonLayout.setMembers(cancelButton, saveButton);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
@@ -83,17 +101,17 @@ public class SchoolClassWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("55%");
+		this.setHeight("70%");
 		this.setAutoCenter(true);
-		this.setTitle("Classes");
+		this.setTitle("Class Details");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);
 	}
-	
+
 	private void cancel(final Window window) {
 		cancelButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				window.close();
@@ -133,5 +151,16 @@ public class SchoolClassWindow extends Window {
 		return cancelButton;
 	}
 
+	public CheckboxItem getHasStreams() {
+		return hasStreams;
+	}
+
+	public CheckboxItem getClassLevel() {
+		return classLevel;
+	}
+
+	public ComboBox getParentSchoolClass() {
+		return parentSchoolClass;
+	}
 
 }
