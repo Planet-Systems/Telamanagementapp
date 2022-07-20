@@ -21,8 +21,18 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.PublicHolidayDTO;
+import com.planetsystems.tela.dto.SchoolCalendarDTO;
+import com.planetsystems.tela.dto.SchoolCalendarWeekDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.CalendarWeekWindow;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.CalendarWeeksListgrid;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.PublicHolidayWindow;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.PublicHolidaysListgrid;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.SchoolCalendarListgrid;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.SchoolCalendarPane;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.SchoolCalendarWindow;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermPane;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermWindow;
@@ -47,7 +57,6 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -67,12 +76,13 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 		public AcademicTermPane getAcademicTermPane();
 
-		public VLayout getVlayout();
+		public SchoolCalendarPane getSchoolCalendarPane();
 
 	}
 
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
+
 	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
 
 	private DispatchAsync dispatcher;
@@ -102,8 +112,6 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 	protected void onBind() {
 		super.onBind();
 		onTabSelected();
-		getAllAcademicYears();
-		getAllAcademicTerms();
 	}
 
 	@Override
@@ -124,21 +132,31 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_YEAR_TAB_TITLE)) {
 					getView().getAcademicTermPane().getListGrid().setShowFilterEditor(false);
-					
+
+					MenuButton newAcademicYear = new MenuButton("New");
 					MenuButton editAcademicYearButton = new MenuButton("Edit");
 					MenuButton deleteAcademicYearButton = new MenuButton("Delete");
-					MenuButton newAcademicYear = new MenuButton("New");
+
+					MenuButton activateAcademicYearButton = new MenuButton("Activate");
+					MenuButton deactivateAcademicYearButton = new MenuButton("Deactivate");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newAcademicYear);
 					buttons.add(editAcademicYearButton);
 					buttons.add(deleteAcademicYearButton);
 
-					getView().getControlsPane().addMenuButtons("Academic Years",buttons);
+					buttons.add(activateAcademicYearButton);
+					buttons.add(deactivateAcademicYearButton);
+
+					getView().getControlsPane().addMenuButtons("Academic Years", buttons);
+
+					getAllAcademicYears();
 
 					addAcademicYear(newAcademicYear);
 					deleteAcademicYear(deleteAcademicYearButton);
 					editAcademicYear(editAcademicYearButton);
+					activateAcademicYear(activateAcademicYearButton);
+					deactivateAcademicYear(deactivateAcademicYearButton);
 
 				} else if (selectedTab.equalsIgnoreCase(AcademicYearView.ACADEMIC_TERM_TAB_TITLE)) {
 
@@ -156,19 +174,52 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					buttons.add(activate);
 					buttons.add(deactivate);
 					buttons.add(filter);
-					getView().getControlsPane().addMenuButtons("Academic Terms",buttons);
+					getView().getControlsPane().addMenuButtons("Academic Terms", buttons);
 
 					addAcademicTerm(newButton);
 					editAcademicTerm(edit);
 					deleteAcademicTerm(delete);
-					selectFilterOption(filter); 
+					selectFilterOption(filter);
 					activateAcademicTerm(activate);
 					deactivateAcademicTerm(deactivate);
+					getAllAcademicTerms();
 
-				} else { 
-					
+				}
+
+				else if (selectedTab.equalsIgnoreCase(AcademicYearView.CALENDAR_TAB_TITLE)) {
+
+					MenuButton newButton = new MenuButton("New");
+
+					MenuButton edit = new MenuButton("Edit");
+					MenuButton delete = new MenuButton("Delete");
+					MenuButton activate = new MenuButton("Activate");
+					MenuButton deactivate = new MenuButton("Deactivate");
+					MenuButton view = new MenuButton("View");
+
 					List<MenuButton> buttons = new ArrayList<>();
-					 
+					buttons.add(newButton);
+					buttons.add(edit);
+					buttons.add(delete);
+					buttons.add(activate);
+					buttons.add(deactivate);
+					buttons.add(view);
+					getView().getControlsPane().addMenuButtons("School Calendar Configuration", buttons);
+
+					addSchoolCalendar(newButton);
+					getAllSchoolCalendars();
+					onViewCalenda(view);
+
+					// editAcademicTerm(edit);
+					// deleteAcademicTerm(delete);
+					// selectFilterOption(filter);
+					// activateAcademicTerm(activate);
+					// deactivateAcademicTerm(deactivate);
+					// getAllAcademicTerms();
+
+				} else {
+
+					List<MenuButton> buttons = new ArrayList<>();
+
 					getView().getControlsPane().addMenuButtons(buttons);
 
 				}
@@ -205,7 +256,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-//   		SC.say("Advanced Search");
+				// SC.say("Advanced Search");
 				FilterAcademicTermWindow window = new FilterAcademicTermWindow();
 				loadFilterAcademicYearCombo(window);
 				window.show();
@@ -222,7 +273,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				placeManager, null);
 	}
 
-///////////////////////////////////////////////////////ACADEMIC YEAR/////////////////////////////////////////////////////////	
+	/////////////////////////////////////////////////////// ACADEMIC
+	/////////////////////////////////////////////////////// YEAR/////////////////////////////////////////////////////////
 
 	private void addAcademicYear(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
@@ -297,7 +349,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				if (getView().getAcademicYearPane().getListGrid().anySelected()) {
 					AcademicYearWindow window = new AcademicYearWindow();
-					window.getSaveButton().setTitle("Update");
+					window.getSaveButton().setTitle("Save");
 					loadFieldsToEdit(window);
 					updateAcademicYear(window);
 					window.show();
@@ -314,8 +366,14 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		ListGridRecord record = getView().getAcademicYearPane().getListGrid().getSelectedRecord();
 		window.getYearCode().setValue(record.getAttribute(AcademicYearListGrid.CODE));
 		window.getYearName().setValue(record.getAttribute(AcademicYearListGrid.NAME));
-		window.getStartDate().setValue(record.getAttribute(AcademicYearListGrid.START_DATE));
-		window.getEndDate().setValue(record.getAttribute(AcademicYearListGrid.END_DATE));
+
+		if (record.getAttribute(AcademicYearListGrid.START_DATE) != null) {
+			window.getStartDate().setValue(dateFormat.parse(record.getAttribute(AcademicYearListGrid.START_DATE)));
+		}
+
+		if (record.getAttribute(AcademicYearListGrid.END_DATE) != null) {
+			window.getEndDate().setValue(dateFormat.parse(record.getAttribute(AcademicYearListGrid.END_DATE)));
+		}
 
 	}
 
@@ -415,6 +473,10 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		ComboUtil.loadAcademicYearCombo(window.getYearComboBox(), dispatcher, placeManager, defaultValue);
 	}
 
+	public void loadAssessmentPeriodTypeCombo(final AcademicTermWindow window, final String defaultValue) {
+		ComboUtil.loadAssessmentPeriodTypeCombo(window.getTypeComboBox(), defaultValue);
+	}
+
 	///////////////////////////////////////////////////////////// ACADEMIC
 	///////////////////////////////////////////////////////////// TERM////////////////////////////////////////////////////////////////////
 
@@ -425,6 +487,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			public void onClick(ClickEvent event) {
 				AcademicTermWindow window = new AcademicTermWindow();
 				loadAcademicYearCombo(window, null);
+				loadAssessmentPeriodTypeCombo(window, null);
 				saveAcademicTerm(window);
 				window.show();
 			}
@@ -450,6 +513,9 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 					academicTermDTO.setAcademicYearDTO(academicYearDTO);
 					GWT.log("ID" + academicYearDTO.getId());
+
+					academicTermDTO.setAssessmentPeriodType(window.getTypeComboBox().getValueAsString());
+					academicTermDTO.setDisplayName(window.getDisplayNameField().getValueAsString());
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_ACADEMIC_TERM, academicTermDTO);
@@ -509,7 +575,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			public void onClick(ClickEvent event) {
 				if (getView().getAcademicTermPane().getListGrid().anySelected()) {
 					AcademicTermWindow window = new AcademicTermWindow();
-					window.getSaveButton().setTitle("Update");
+					window.getSaveButton().setTitle("Save");
 					loadFieldsToEdit(window);
 					updateAcademicTerm(window);
 					window.show();
@@ -543,6 +609,9 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				academicTermDTO.setAcademicYearDTO(academicYearDTO);
 				GWT.log("ID" + academicYearDTO.getId());
+
+				academicTermDTO.setAssessmentPeriodType(window.getTypeComboBox().getValueAsString());
+				academicTermDTO.setDisplayName(window.getDisplayNameField().getValueAsString());
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_ACADEMIC_TERM, academicTermDTO);
@@ -595,7 +664,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 
 	}
-	
+
 	private void activateAcademicTerm(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -617,7 +686,15 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 									@Override
 									public void onNetworkResult(RequestResult result) {
-										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
+												new BooleanCallback() {
+
+													@Override
+													public void execute(Boolean value) {
+														getAllAcademicTerms();
+
+													}
+												});
 									}
 								});
 							}
@@ -630,7 +707,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		});
 
 	}
-	
+
 	private void deactivateAcademicTerm(MenuButton button) {
 		button.addClickHandler(new ClickHandler() {
 
@@ -652,7 +729,16 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 									@Override
 									public void onNetworkResult(RequestResult result) {
-										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
+												new BooleanCallback() {
+
+													@Override
+													public void execute(Boolean value) {
+
+														getAllAcademicTerms();
+
+													}
+												});
 									}
 								});
 							}
@@ -672,10 +758,19 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 		window.getTermCodeField().setValue(record.getAttribute(AcademicTermListGrid.CODE));
 		window.getTermNameField().setValue(record.getAttribute(AcademicTermListGrid.NAME));
-		window.getStartDateItem().setValue(record.getAttribute(AcademicTermListGrid.START_DATE));
-		window.getEndDateItem().setValue(record.getAttribute(AcademicTermListGrid.END_DATE));
+
+		if (record.getAttribute(AcademicTermListGrid.START_DATE) != null) {
+			window.getStartDateItem().setValue(dateFormat.parse(record.getAttribute(AcademicTermListGrid.START_DATE)));
+		}
+
+		if (record.getAttribute(AcademicTermListGrid.END_DATE) != null) {
+			window.getEndDateItem().setValue(dateFormat.parse(record.getAttribute(AcademicTermListGrid.END_DATE)));
+		}
 
 		loadAcademicYearCombo(window, record.getAttribute(AcademicTermListGrid.YEAR_ID));
+
+		loadAssessmentPeriodTypeCombo(window, record.getAttribute(AcademicTermListGrid.TYPE));
+		window.getDisplayNameField().setValue(record.getAttribute(AcademicTermListGrid.DISPLAY_NAME));
 
 	}
 
@@ -712,6 +807,357 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 				});
 			}
 		});
+
+	}
+
+	private void activateAcademicYear(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicYearPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to activate the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicYearPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_YEAR_ID, record.getAttributeAsString("id"));
+								map.put(NetworkDataUtil.ACTION, RequestConstant.ACTIVATE_ACADEMIC_YEAR);
+
+								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+									@Override
+									public void onNetworkResult(RequestResult result) {
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
+												new BooleanCallback() {
+
+													@Override
+													public void execute(Boolean value) {
+														getAllAcademicYears();
+
+													}
+												});
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+
+	private void deactivateAcademicYear(MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (getView().getAcademicYearPane().getListGrid().anySelected()) {
+					SC.ask("Confirm", "Are you sure you want to deactivate the selected record", new BooleanCallback() {
+
+						@Override
+						public void execute(Boolean value) {
+							if (value) {
+								ListGridRecord record = getView().getAcademicYearPane().getListGrid()
+										.getSelectedRecord();
+								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+								map.put(RequestDelimeters.ACADEMIC_YEAR_ID, record.getAttributeAsString("id"));
+								map.put(NetworkDataUtil.ACTION, RequestConstant.DEACTIVATE_ACADEMIC_YEAR);
+
+								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+									@Override
+									public void onNetworkResult(RequestResult result) {
+										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(),
+												new BooleanCallback() {
+
+													@Override
+													public void execute(Boolean value) {
+														getAllAcademicYears();
+
+													}
+												});
+
+									}
+								});
+							}
+						}
+					});
+				} else {
+					SC.warn("Please check atleast one record");
+				}
+			}
+		});
+
+	}
+
+	private void addSchoolCalendar(final MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SchoolCalendarWindow window = new SchoolCalendarWindow();
+				loadAcademicYearCombo(window, null);
+				loadAssessmentPeriodCombo(window, null);
+				addWeek(window);
+				addPublicHoliday(window);
+				onSaveCalendar(window);
+				window.show();
+			}
+		});
+	}
+
+	public void loadAcademicYearCombo(final SchoolCalendarWindow window, final String defaultValue) {
+		ComboUtil.loadAcademicYearCombo(window.getAcademicYear(), dispatcher, placeManager, defaultValue);
+	}
+
+	public void loadAssessmentPeriodCombo(final SchoolCalendarWindow window, final String defaultValue) {
+
+		window.getAcademicYear().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+
+				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYear(), window.getAcademicTerm(),
+						dispatcher, placeManager, defaultValue);
+			}
+		});
+
+	}
+
+	private void addWeek(final SchoolCalendarWindow window) {
+		window.getAddWeekButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				CalendarWeekWindow calendarWeekWindow = new CalendarWeekWindow();
+				ComboUtil.loadMonthsCombo(calendarWeekWindow.getCalendarMonth());
+				ComboUtil.loadWeeksCombo(calendarWeekWindow.getCalendarWeek());
+
+				addWeekDTO(window, calendarWeekWindow);
+
+				calendarWeekWindow.show();
+
+			}
+		});
+	}
+
+	private void addWeekDTO(final SchoolCalendarWindow calendarWindow, final CalendarWeekWindow weekWindow) {
+		weekWindow.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SchoolCalendarWeekDTO dto = new SchoolCalendarWeekDTO();
+
+				dto.setCalendarMonth(weekWindow.getCalendarMonth().getValueAsString());
+				dto.setCalendarWeek(weekWindow.getCalendarWeek().getValueAsString());
+
+				dto.setStartDate(dateFormat.format(weekWindow.getStartDate().getValueAsDate()));
+				dto.setEndDate(dateFormat.format(weekWindow.getEndDate().getValueAsDate()));
+
+				dto.setExpectedHours(Integer.parseInt(weekWindow.getExpectedHours().getValueAsString()));
+
+				calendarWindow.getSchoolCalendarWeeksListgrid().addRecordsToGrid(dto);
+
+			}
+		});
+	}
+
+	private void addPublicHoliday(final SchoolCalendarWindow calendarWindow) {
+		calendarWindow.getAddPublicDayButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				final PublicHolidayWindow window = new PublicHolidayWindow();
+
+				window.getSaveButton().addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+
+						PublicHolidayDTO dto = new PublicHolidayDTO();
+
+						dto.setDate(dateFormat.format(window.getPublicHolidayDate().getValueAsDate()));
+						dto.setDescription(window.getDescription().getValueAsString());
+
+						calendarWindow.getPublicHolidayListgrid().addRecordsToGrid(dto);
+
+					}
+				});
+
+				window.show();
+
+			}
+		});
+
+	}
+
+	private void onSaveCalendar(final SchoolCalendarWindow calendarWindow) {
+		calendarWindow.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SchoolCalendarDTO schoolCalendarDTO = new SchoolCalendarDTO();
+				AcademicTermDTO academicTerm = new AcademicTermDTO();
+				academicTerm.setId(calendarWindow.getAcademicTerm().getValueAsString());
+
+				schoolCalendarDTO.setAcademicTerm(academicTerm);
+
+				schoolCalendarDTO.setDescription(calendarWindow.getDescription().getValueAsString());
+
+				schoolCalendarDTO.setExpectedDailyHours(
+						Integer.parseInt(calendarWindow.getExpectedDailyHours().getValueAsString()));
+				schoolCalendarDTO.setExpectedWeeklyHours(
+						Integer.parseInt(calendarWindow.getExpectedMonthlyHours().getValueAsString()));
+				schoolCalendarDTO.setExpectedMonthlyHours(
+						Integer.parseInt(calendarWindow.getExpectedMonthlyHours().getValueAsString()));
+				schoolCalendarDTO.setExpectedTermlyHours(
+						Integer.parseInt(calendarWindow.getExpectedTermlyHours().getValueAsString()));
+
+				List<PublicHolidayDTO> publicHolidayDTOs = new ArrayList<>();
+				List<SchoolCalendarWeekDTO> schoolCalendarWeekDTOs = new ArrayList<>();
+
+				for (ListGridRecord record : calendarWindow.getSchoolCalendarWeeksListgrid().getRecords()) {
+
+					SchoolCalendarWeekDTO dto = new SchoolCalendarWeekDTO();
+
+					dto.setCalendarMonth(record.getAttribute(CalendarWeeksListgrid.CalendarMonth));
+					dto.setCalendarWeek(record.getAttribute(CalendarWeeksListgrid.CalendarWeek));
+
+					dto.setStartDate(record.getAttribute(CalendarWeeksListgrid.StartDate));
+					dto.setEndDate(record.getAttribute(CalendarWeeksListgrid.EndDate));
+					dto.setExpectedHours(Integer.parseInt(record.getAttribute(CalendarWeeksListgrid.ExpectedHours)));
+
+					schoolCalendarWeekDTOs.add(dto);
+
+				}
+
+				for (ListGridRecord record : calendarWindow.getPublicHolidayListgrid().getRecords()) {
+
+					PublicHolidayDTO dto = new PublicHolidayDTO();
+
+					dto.setDate(record.getAttribute(PublicHolidaysListgrid.Date));
+					dto.setDescription(record.getAttribute(PublicHolidaysListgrid.Description));
+
+					publicHolidayDTOs.add(dto);
+
+				}
+
+				schoolCalendarDTO.setPublicHolidayDTOs(publicHolidayDTOs);
+				schoolCalendarDTO.setSchoolCalendarWeekDTOs(schoolCalendarWeekDTOs);
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.SAVE_SCHOOL_CALENDAR, schoolCalendarDTO);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_SCHOOL_CALENDAR);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						if (result.getSystemFeedbackDTO() != null) {
+
+							if (result.getSystemFeedbackDTO().isResponse()) {
+								SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+									@Override
+									public void execute(Boolean value) {
+
+										calendarWindow.close();
+
+									}
+								});
+							} else {
+								SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
+							}
+
+						} else {
+							SC.warn("ERROR", "Unknown error");
+						}
+
+						// getAllAcademicTerms();
+					}
+				});
+
+			}
+		});
+	}
+
+	public void getAllSchoolCalendars() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.RETRIEVE_SCHOOL_CALENDAR, null);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.RETRIEVE_SCHOOL_CALENDAR);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				getView().getSchoolCalendarPane().getListGrid().addRecordsToGrid(result.getSchoolCalendarDTOs());
+			}
+		});
+	}
+
+	private void onViewCalenda(final MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				SchoolCalendarWindow window = new SchoolCalendarWindow();
+				window.getSaveButton().hide(); 
+				loadSchoolCalendaToEdit(window);
+				 
+				 
+				window.show();
+
+			}
+		});
+	}
+
+	private void loadSchoolCalendaToEdit(final SchoolCalendarWindow calendarWindow) {
+
+		ListGridRecord record = getView().getSchoolCalendarPane().getListGrid().getSelectedRecord();
+
+		String calendarId=record.getAttribute(SchoolCalendarListgrid.ID);
+		
+		calendarWindow.getDescription().setValue(record.getAttribute(SchoolCalendarListgrid.Description));
+		calendarWindow.getExpectedDailyHours().setValue(record.getAttribute(SchoolCalendarListgrid.ExpectedDailyHours));
+		calendarWindow.getExpectedMonthlyHours()
+				.setValue(record.getAttribute(SchoolCalendarListgrid.ExpectedMonthlyHours));
+		calendarWindow.getExpectedWeeklyHours()
+				.setValue(record.getAttribute(SchoolCalendarListgrid.ExpectedWeeklyHours));
+		calendarWindow.getExpectedTermlyHours()
+				.setValue(record.getAttribute(SchoolCalendarListgrid.ExpectedTermlyHours));
+
+		loadAcademicYearCombo(calendarWindow, record.getAttribute(SchoolCalendarListgrid.AcademicYearId)); 
+		
+		loadAssessmentPeriodCombo(calendarWindow, record.getAttribute(SchoolCalendarListgrid.AcademicTermId));
+		
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS, calendarId);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				calendarWindow.getSchoolCalendarWeeksListgrid().addRecordsToGrid(result.getSchoolCalendarWeekDTOs());
+				calendarWindow.getPublicHolidayListgrid().addRecordsToGrid(result.getPublicHolidayDTOs());
+				 
+			}
+		});
+		 
 
 	}
 

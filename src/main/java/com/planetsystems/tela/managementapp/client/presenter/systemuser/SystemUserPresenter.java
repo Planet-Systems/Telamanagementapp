@@ -37,6 +37,7 @@ import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUti
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.FilterSchoolWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupSystemMenuListgrid;
 import com.planetsystems.tela.managementapp.client.presenter.systemuser.group.SystemUserGroupSystemMenuWindow;
@@ -72,6 +73,9 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.TabSet;
 import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
 import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
@@ -160,6 +164,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					MenuButton passwordReset = new MenuButton("Reset Password");
 					MenuButton details = new MenuButton("Details");
 					MenuButton permission = new MenuButton("Manage User");
+					MenuButton filter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
@@ -169,6 +174,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					buttons.add(passwordReset);
 					buttons.add(details);
 					buttons.add(permission);
+					buttons.add(filter);
 
 					addSystemUserPermission(permission);
 
@@ -180,9 +186,11 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 					// onDetailsButtonCLicked(details);
 					onPasswordResetButtonCLicked(passwordReset);
 					onDeactivateButtonCLicked(delete);
-					onActivateButtonCLicked(activate);
-
+					onActivateButtonCLicked(activate); 
 					getSystemUserProfiles();
+					
+					selectFilterUserOption(filter);
+					
 				} else if (selectedTab.equalsIgnoreCase(SystemUserView.SYSTEM_MENU_SETUP)) {
 
 					MenuButton newButton = new MenuButton("New");
@@ -202,24 +210,34 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 
 		});
 	}
+	
+	
+	private void selectFilterUserOption(final MenuButton filter) {
+		final Menu menu = new Menu();
+		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem advanced = new MenuItem("Advanced Filter");
 
-	/*
-	 * public void getSchoolsBySystemUserProfile(final
-	 * SystemUserProfilePermissionWindow window, ListGridRecord profileRecord) {
-	 * LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-	 * map.put(RequestDelimeters.SYSTEM_USER_PROFILE_ID,
-	 * profileRecord.getAttributeAsObject(SystemUserListGrid.ID)); // if //
-	 * (SessionManager.getInstance().getLoggedInUserGroup().equalsIgnoreCase(
-	 * SessionManager.ADMIN)) // map.put(NetworkDataUtil.ACTION,
-	 * RequestConstant.GET_SCHOOLS); // else map.put(NetworkDataUtil.ACTION,
-	 * RequestConstant.GET_SCHOOLS_BY_SYSTEM_USER_PROFILE_SCHOOLS_PROFILE);
-	 * NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new
-	 * NetworkResult() {
-	 * 
-	 * @Override public void onNetworkResult(RequestResult result) {
-	 * window.getSystemUserSchoolPane().getSchoolDistrictListGrid().addRecordsToGrid
-	 * (result.getSchoolDTOs()); } }); }
-	 */
+		menu.setItems(basic, advanced);
+
+		filter.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				menu.showNextTo(filter, "bottom");
+			}
+		});
+
+		basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				getView().getSystemUserPane().getSystemUserListGrid().setShowFilterEditor(true);
+			}
+		}); 
+
+	}
+
+	 
 	private void editSystemUserGroup(MenuButton edit) {
 		edit.addClickHandler(new ClickHandler() {
 
@@ -1301,40 +1319,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			}
 		});
 
-		// SC.showPrompt("", "", new SwizimaLoader());
-		//
-		// dispatcher.execute(new RequestAction(RequestConstant.GET_ALL_SYSTEM_USERS,
-		// map),
-		// new AsyncCallback<RequestResult>() {
-		//
-		// @Override
-		// public void onFailure(Throwable caught) {
-		// System.out.println(caught.getMessage());
-		// SC.warn("ERROR", caught.getMessage());
-		// GWT.log("ERROR " + caught.getMessage());
-		// SC.clearPrompt();
-		//
-		// }
-		//
-		// @Override
-		// public void onSuccess(RequestResult result) {
-		//
-		// SC.clearPrompt();
-		//
-		// SessionManager.getInstance().manageSession(result, placeManager);
-		//
-		// if (result != null) {
-		//
-		// getView().getSystemUserPane().getSystemUserListGrid()
-		// .addRecordsToGrid(result.getSystemUserProfileDTOs());
-		//
-		// } else {
-		// SC.warn("ERROR", "Unknow error");
-		// }
-		//
-		// }
-		//
-		// });
+		 
 
 	}
 

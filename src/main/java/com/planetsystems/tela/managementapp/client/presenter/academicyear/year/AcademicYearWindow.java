@@ -17,7 +17,7 @@ public class AcademicYearWindow extends Window {
 	private TextField yearName;
 	private DateItem startDate;
 	private DateItem endDate;
-
+	   
 	private IButton saveButton;
 	private IButton cancelButton;
 
@@ -69,7 +69,7 @@ public class AcademicYearWindow extends Window {
 		layout.setMargin(10);
 		this.addItem(layout);
 		this.setWidth("40%");
-		this.setHeight("60%");
+		this.setHeight("50%");
 		this.setAutoCenter(true);
 		this.setTitle("Academic year");
 		this.setIsModal(true);

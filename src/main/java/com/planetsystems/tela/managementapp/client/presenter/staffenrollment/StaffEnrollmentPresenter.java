@@ -386,6 +386,7 @@ public class StaffEnrollmentPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
+				
 				StaffEnrollmentWindow window = new StaffEnrollmentWindow();
 				setStaffTotal(window);
 
@@ -676,6 +677,8 @@ public class StaffEnrollmentPresenter
 		valueMap.put("Head teacher", "Head teacher");
 		valueMap.put("Deputy head teacher", "Deputy head teacher");
 		valueMap.put("Smc", "Smc");
+		valueMap.put("Principal", "Principal");
+		
 		window.getRoleCombo().setValueMap(valueMap);
 
 	}

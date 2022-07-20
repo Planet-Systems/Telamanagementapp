@@ -15,10 +15,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class AcademicTermWindow extends Window { 
 
 	private TextField termCodeField;
-	private TextField termNameField;
+	private TextField termNameField; 
 	private DateItem startDateItem;
 	private DateItem endDateItem;
 	private ComboBox yearComboBox;
+	
+	
+	private TextField displayNameField;
+	private ComboBox typeComboBox;
 
 	private IButton saveButton;
 	private IButton cancelButton;
@@ -31,28 +35,38 @@ public class AcademicTermWindow extends Window {
 		termCodeField.setShowHintInField(true);
 
 		termNameField = new TextField();
-		termNameField.setTitle("Academic term");
-		termNameField.setHint("Term");
+		termNameField.setTitle("Academic Term Name");
+		termNameField.setHint("Name");
 		termNameField.setShowHintInField(true);
 		
 		startDateItem = new DateItem();
-		startDateItem.setTitle("Start date");
+		startDateItem.setTitle("Start Date");
 		
 		endDateItem = new DateItem();
-		endDateItem.setTitle("End date");
+		endDateItem.setTitle("End Date");
 
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
 		
 		yearComboBox = new ComboBox();
-		yearComboBox.setTitle("AcademicYear");
-		yearComboBox.setHint("Year");
+		yearComboBox.setTitle("Academic Year");
+		yearComboBox.setHint("Select");
 		yearComboBox.setShowHintInField(true);
+		
+		displayNameField=new TextField();
+		displayNameField.setTitle("Display Name");
+		displayNameField.setHint("Display Name");
+		displayNameField.setShowHintInField(true);
+		
+		typeComboBox=new ComboBox();
+		typeComboBox.setTitle("Type");
+		typeComboBox.setHint("Select");
+		typeComboBox.setShowHintInField(true);
 		
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(yearComboBox , termCodeField, termNameField , startDateItem , endDateItem);
+		form.setFields(yearComboBox , termCodeField, termNameField ,displayNameField,typeComboBox, startDateItem , endDateItem);
 		form.setWrapItemTitles(false);
 		form.setMargin(10);
 		form.setAutoFocus(true);
@@ -76,10 +90,10 @@ public class AcademicTermWindow extends Window {
 		
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("50%");
-		this.setHeight("70%");
+		this.setWidth("35%");
+		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("Timetable Lesson");
+		this.setTitle("Assessment Period");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);
@@ -121,6 +135,14 @@ public class AcademicTermWindow extends Window {
 
 	public IButton getCancelButton() {
 		return cancelButton;
+	}
+
+	public TextField getDisplayNameField() {
+		return displayNameField;
+	}
+
+	public ComboBox getTypeComboBox() {
+		return typeComboBox;
 	}
 
 

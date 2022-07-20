@@ -15,6 +15,10 @@ import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectCategoryDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
+import com.planetsystems.tela.dto.enums.CalendarWeek;
+import com.planetsystems.tela.dto.enums.GuardianRelationship;
+import com.planetsystems.tela.dto.enums.OrphanCategory;
+import com.planetsystems.tela.dto.enums.monthEnum;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
@@ -98,10 +102,16 @@ public class ComboUtil {
 				}
 
 				if (defaultValue != null) {
+					
 					academicTermCombo.setValue(defaultValue);
+					
+					ChangedEvent event1 = new ChangedEvent(academicTermCombo.getJsObj());
+					academicTermCombo.fireEvent(event1);
 
 				} else {
 					academicTermCombo.clearValue();
+					
+					 
 				}
 			}
 		});
@@ -860,6 +870,7 @@ public class ComboUtil {
 
 	}
 
+	 
 	public static void loadSchoolClassesComboBySchoolAcademicTerm(final ComboBox academicTermCombo,
 			final ComboBox schoolCombo, final ComboBox schoolClassCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
@@ -886,8 +897,53 @@ public class ComboUtil {
 				}
 
 				if (defaultValue != null) {
-					schoolClassCombo.setValue(defaultValue);
+					schoolClassCombo.setValue(defaultValue); 
+					ChangedEvent event1 = new ChangedEvent(schoolClassCombo.getJsObj());
+					schoolClassCombo.fireEvent(event1);
+					
 				}
+				
+				 
+			}
+		});
+
+	}
+	
+	
+	public static void loadSchoolClassesComboBySchoolAcademicTerm(final String academicTermId,
+			final String schoolId, final ComboBox schoolClassCombo, final DispatchAsync dispatcher,
+			final PlaceManager placeManager, final String defaultValue) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		
+		map.put(RequestDelimeters.SCHOOL_ID, schoolId);
+		map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
+		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+				LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+				for (SchoolClassDTO schoolClassDTO : result.getSchoolClassDTOs()) {
+					valueMap.put(schoolClassDTO.getId(), schoolClassDTO.getName());
+				}
+
+				if (schoolClassCombo.getValueAsString() != null) {
+					schoolClassCombo.clearValue();
+					schoolClassCombo.setValueMap(valueMap);
+				} else {
+					schoolClassCombo.setValueMap(valueMap);
+				}
+
+				if (defaultValue != null) {
+					schoolClassCombo.setValue(defaultValue); 
+					ChangedEvent event1 = new ChangedEvent(schoolClassCombo.getJsObj());
+					schoolClassCombo.fireEvent(event1);
+					
+				}
+				
+				 
 			}
 		});
 
@@ -974,7 +1030,7 @@ public class ComboUtil {
 				}
 
 				if (schoolClassCombo.getValueAsString() != null) {
-					
+
 					schoolClassCombo.setValueMap(valueMap);
 				} else {
 					schoolClassCombo.setValueMap(valueMap);
@@ -982,11 +1038,74 @@ public class ComboUtil {
 
 				if (defaultValue != null) {
 					schoolClassCombo.setValue(defaultValue);
-				}else {
+				} else {
 					schoolClassCombo.clearValue();
 				}
 			}
 		});
+	}
+
+	public static void loadGuardianRelationshipCombo(final ComboBox combo) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		for (GuardianRelationship relationship : GuardianRelationship.values()) {
+			valueMap.put(relationship.getRelationShip(), relationship.getRelationShip());
+		}
+		combo.setValueMap(valueMap);
+	}
+
+	public static void loadOrphanStatusCombo(final ComboBox combo) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		for (OrphanCategory category : OrphanCategory.values()) {
+			valueMap.put(category.getOrphanCategory(), category.getOrphanCategory());
+		}
+		combo.setValueMap(valueMap);
+	}
+
+	public static void loadSpecialNeedsCombo(final ComboBox combo) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+		valueMap.put("No", "No");
+		valueMap.put("Yes", "Yes");
+
+		combo.setValueMap(valueMap);
+	}
+	
+	public static void loadGendaCombo(final ComboBox combo) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		valueMap.put("Male", "Male");
+		valueMap.put("Female", "Female");
+		combo.setValueMap(valueMap);
+	}
+	
+	
+	public static void loadAssessmentPeriodTypeCombo(final ComboBox combo,final String defaultValue) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		valueMap.put("Academic Term", "Academic Term");
+		valueMap.put("Semester", "Semester");
+		combo.setValueMap(valueMap);
+		
+		if (defaultValue != null) {
+			combo.setValue(defaultValue);
+		} else {
+			combo.clearValue();
+		}
+	}
+	
+	
+	public static void loadMonthsCombo(final ComboBox combo) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		for (monthEnum month : monthEnum.values()) {
+			valueMap.put(month.getMonth(), month.getMonth());
+		}
+		combo.setValueMap(valueMap);
+	}
+	
+	public static void loadWeeksCombo(final ComboBox combo) {
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+		for (CalendarWeek week : CalendarWeek.values()) {
+			valueMap.put(week.getWeek(), week.getWeek());
+		}
+		combo.setValueMap(valueMap);
 	}
 
 }

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.planetsystems.tela.managementapp.client.presenter.academicyear.schoolCalendar.SchoolCalendarPane;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.term.AcademicTermPane;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.year.AcademicYearPane;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
@@ -17,6 +18,8 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	
 	private AcademicYearPane academicYearPane;
 	private AcademicTermPane academicTermPane;
+	
+	private SchoolCalendarPane schoolCalendarPane;
 
 	private VLayout panel;
 	private ControlsPane controlsPane;
@@ -25,10 +28,8 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 	
 	public static final String ACADEMIC_YEAR_TAB_TITLE="Academic Year";
 	public static final String ACADEMIC_TERM_TAB_TITLE="Academic Term";
-	
-	private AcademicYearDashboardPane academicYearDashboardPane;
-	
-	VLayout vlayout;
+	public static final String CALENDAR_TAB_TITLE="School Calendar Configuration";
+	  
    
  @Inject	
   AcademicYearView() {
@@ -36,11 +37,9 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
     	panel = new VLayout();
     	academicYearPane = new AcademicYearPane();
     	academicTermPane = new AcademicTermPane();
+    	schoolCalendarPane=new SchoolCalendarPane(); 
     	controlsPane = new ControlsPane();
-    	vlayout=new VLayout();
-    	
-    	vlayout.setMembers(academicTermPane);
-
+    	   
 		tabSet = new TabSet();
 	
 
@@ -50,11 +49,17 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 
 		Tab academicTermTab = new Tab();
 		//tab2.setPane(assessmentPeriodPane);
-		academicTermTab.setPane(vlayout);
+		academicTermTab.setPane(academicTermPane);
 		academicTermTab.setTitle(ACADEMIC_TERM_TAB_TITLE);
+		
+		
+		Tab calendarTab = new Tab(); 
+		calendarTab.setPane(schoolCalendarPane);
+		calendarTab.setTitle(CALENDAR_TAB_TITLE);
 
 		tabSet.addTab(academicYearTab);
 		tabSet.addTab(academicTermTab);
+		tabSet.addTab(calendarTab);
 
 		tabSet.setMargin(0);
 		tabSet.setPadding(0);
@@ -91,9 +96,9 @@ class AcademicYearView extends ViewImpl implements AcademicYearPresenter.MyView 
 		return academicTermPane;
 	}
 
-	public VLayout getVlayout() {
-		return vlayout;
+	public SchoolCalendarPane getSchoolCalendarPane() {
+		return schoolCalendarPane;
 	}
-
+ 
 	
 }

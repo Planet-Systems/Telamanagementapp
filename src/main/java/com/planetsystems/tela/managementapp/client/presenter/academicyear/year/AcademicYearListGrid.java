@@ -11,6 +11,7 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 public class AcademicYearListGrid extends SuperListGrid {
+	
 	public static String ID = "id";
 	public static String CODE = "code";
 	public static String NAME = "name";
@@ -18,27 +19,30 @@ public class AcademicYearListGrid extends SuperListGrid {
 	public static String ACTIVATION_STATUS = "activationStatus";
 	public static String END_DATE = "endDate";
 	public static String START_DATE = "startDate";
-	
 
 	private AcademicYearDatasource datasource;
-		
-	public AcademicYearListGrid() { 
+
+	public AcademicYearListGrid() {
 		super();
-		
-		datasource = AcademicYearDatasource.getInstance();
-		
+
 		ListGridField idField = new ListGridField(ID, "Id");
 		idField.setHidden(true);
 
 		ListGridField codeField = new ListGridField(CODE, "Code");
-		ListGridField nameField = new ListGridField(NAME, "Academic year");
-		ListGridField statusField= new ListGridField(STATUS, "Status");
-		ListGridField startDateField = new ListGridField(START_DATE, "Start date");
-		ListGridField endDateField= new ListGridField(END_DATE, "End date");
+		ListGridField nameField = new ListGridField(NAME, "Academic Year");
+
+		ListGridField startDateField = new ListGridField(START_DATE, "Start Date (DD/MM/YYYY)");
+		startDateField.setHidden(true);
 		
-		
-        this.setDataSource(datasource);
-		this.setFields(idField, codeField , nameField  ,startDateField , endDateField ,statusField);
+		ListGridField endDateField = new ListGridField(END_DATE, "End Date (DD/MM/YYYY)");
+		endDateField.setHidden(true);
+
+		ListGridField statusField = new ListGridField(STATUS, "Status");
+
+		this.setFields(idField, codeField, nameField, startDateField, endDateField, statusField);
+
+		datasource = AcademicYearDatasource.getInstance();
+		this.setDataSource(datasource);
 
 	}
 
@@ -46,14 +50,13 @@ public class AcademicYearListGrid extends SuperListGrid {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute(ID, academicYearDTO.getId());
 		record.setAttribute(CODE, academicYearDTO.getCode());
-		
+
 		record.setAttribute(NAME, academicYearDTO.getName());
 		record.setAttribute(START_DATE, academicYearDTO.getStartDate());
-		record.setAttribute(END_DATE, academicYearDTO.getEndDate() );
-		
-			record.setAttribute(STATUS, academicYearDTO.getActivationStatus());
-		
-		
+		record.setAttribute(END_DATE, academicYearDTO.getEndDate());
+
+		record.setAttribute(STATUS, academicYearDTO.getActivationStatus());
+
 		return record;
 	}
 
@@ -67,37 +70,35 @@ public class AcademicYearListGrid extends SuperListGrid {
 		this.setData(records);
 		datasource.setTestData(records);
 	}
-	
-	
+
 	public static class AcademicYearDatasource extends DataSource {
 
-		 private static AcademicYearDatasource instance = null;  
-		  
-		    public static AcademicYearDatasource getInstance() {  
-		        if (instance == null) {  
-		            instance = new AcademicYearDatasource("AcademicYearDatasource");  
-		        }  
-		        return instance;  
-		    }
+		private static AcademicYearDatasource instance = null;
 
-			public AcademicYearDatasource(String id) {
-				setID(id);
+		public static AcademicYearDatasource getInstance() {
+			if (instance == null) {
+				instance = new AcademicYearDatasource("AcademicYearDatasource");
+			}
+			return instance;
+		}
 
-				DataSourceTextField idField = new DataSourceTextField(ID, "Id");
-				idField.setHidden(true);
-				idField.setPrimaryKey(true);
+		public AcademicYearDatasource(String id) {
+			setID(id);
 
-				DataSourceTextField codeField = new DataSourceTextField(CODE, "Code");
-				DataSourceTextField nameField = new DataSourceTextField(NAME, "Academic year");
-				DataSourceTextField statusField= new DataSourceTextField(STATUS, "Status");
-				DataSourceDateField startDateField = new DataSourceDateField(START_DATE, "Start date");
-				DataSourceDateField endDateField= new DataSourceDateField(END_DATE, "End date");
+			DataSourceTextField idField = new DataSourceTextField(ID, "Id");
+			idField.setHidden(true);
+			idField.setPrimaryKey(true);
 
-				this.setFields(idField, codeField , nameField  ,startDateField , endDateField ,statusField);
-				
-				setClientOnly(true);
-			} 
+			DataSourceTextField codeField = new DataSourceTextField(CODE, "Code");
+			DataSourceTextField nameField = new DataSourceTextField(NAME, "Academic year");
+			DataSourceTextField statusField = new DataSourceTextField(STATUS, "Status");
+			DataSourceDateField startDateField = new DataSourceDateField(START_DATE, "Start date");
+			DataSourceDateField endDateField = new DataSourceDateField(END_DATE, "End date");
 
-		
+			this.setFields(idField, codeField, nameField, startDateField, endDateField, statusField);
+
+			setClientOnly(true);
+		}
+
 	}
 }

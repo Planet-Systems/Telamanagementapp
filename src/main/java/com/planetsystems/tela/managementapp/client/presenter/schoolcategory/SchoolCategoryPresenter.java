@@ -230,7 +230,7 @@ public class SchoolCategoryPresenter
 
 	private void selectFilterSchoolOption(final MenuButton filter) {
 		final Menu menu = new Menu();
-		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem basic = new MenuItem("Basic Filter");
 		MenuItem advanced = new MenuItem("Advanced Filter");
 
 		menu.setItems(basic, advanced);
@@ -270,7 +270,7 @@ public class SchoolCategoryPresenter
 
 	private void selectFilterSchoolClassOption(final MenuButton filter) {
 		final Menu menu = new Menu();
-		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem basic = new MenuItem("Basic Filter");
 		MenuItem advanced = new MenuItem("Advanced Filter");
 
 		menu.setItems(basic, advanced);
@@ -1565,6 +1565,13 @@ public class SchoolCategoryPresenter
 		valueMap.put("Head teacher", "Head teacher");
 		valueMap.put("Deputy head teacher", "Deputy head teacher");
 		valueMap.put("Smc", "Smc");
+		valueMap.put("Principal", "Principal"); 
+		valueMap.put("Bursar", "Bursar");
+		valueMap.put("Librarian", "Librarian");
+		valueMap.put("Lab technician", "Lab technician");
+		valueMap.put("Others", "Others"); 
+		 
+		
 		window.getRoleCombo().setValueMap(valueMap);
 
 	}

@@ -11,10 +11,15 @@ import com.planetsystems.tela.dto.DateFilterDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
+import com.planetsystems.tela.dto.LearnerDetailDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
+import com.planetsystems.tela.dto.LearnerRegistrationDTO;
 import com.planetsystems.tela.dto.LoginAuditDTO;
+import com.planetsystems.tela.dto.PublicHolidayDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SMCSupervisionDTO;
+import com.planetsystems.tela.dto.SchoolCalendarDTO;
+import com.planetsystems.tela.dto.SchoolCalendarWeekDTO;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
@@ -171,6 +176,53 @@ public class RequestResult implements Result {
 	private List<SystemUserAdministrationUnitDTO> systemUserAdministrationUnitDTOs;
 
 	private List<SchoolStaffExportDTO> schoolStaffExportDTOs;
+
+	private List<LearnerDetailDTO> learnerDetailDTOs;
+
+	private List<LearnerRegistrationDTO> learnerRegistrationDTOs;
+
+	private LearnerRegistrationDTO learnerRegistrationDTO;
+
+	private List<SchoolCalendarDTO> schoolCalendarDTOs;
+
+	private List<SchoolCalendarWeekDTO> schoolCalendarWeekDTOs;
+
+	private List<PublicHolidayDTO> publicHolidayDTOs;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolCalendarWeekDTO> schoolCalendarWeekDTOs,
+			List<PublicHolidayDTO> publicHolidayDTOs) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.schoolCalendarWeekDTOs = schoolCalendarWeekDTOs;
+		this.publicHolidayDTOs = publicHolidayDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolCalendarDTO> schoolCalendarDTOs,
+			SchoolCalendarDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.schoolCalendarDTOs = schoolCalendarDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, LearnerRegistrationDTO learnerRegistrationDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.learnerRegistrationDTO = learnerRegistrationDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<LearnerRegistrationDTO> learnerRegistrationDTOs,
+			LearnerRegistrationDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.learnerRegistrationDTOs = learnerRegistrationDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<LearnerDetailDTO> learnerDetailDTOs,
+			LearnerDetailDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.learnerDetailDTOs = learnerDetailDTOs;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolStaffExportDTO> schoolStaffExportDTOs,
 			SchoolStaffExportDTO dto) {
@@ -902,6 +954,30 @@ public class RequestResult implements Result {
 
 	public List<SchoolStaffExportDTO> getSchoolStaffExportDTOs() {
 		return schoolStaffExportDTOs;
+	}
+
+	public List<LearnerDetailDTO> getLearnerDetailDTOs() {
+		return learnerDetailDTOs;
+	}
+
+	public List<LearnerRegistrationDTO> getLearnerRegistrationDTOs() {
+		return learnerRegistrationDTOs;
+	}
+
+	public LearnerRegistrationDTO getLearnerRegistrationDTO() {
+		return learnerRegistrationDTO;
+	}
+
+	public List<SchoolCalendarDTO> getSchoolCalendarDTOs() {
+		return schoolCalendarDTOs;
+	}
+
+	public List<SchoolCalendarWeekDTO> getSchoolCalendarWeekDTOs() {
+		return schoolCalendarWeekDTOs;
+	}
+
+	public List<PublicHolidayDTO> getPublicHolidayDTOs() {
+		return publicHolidayDTOs;
 	}
 
 }

@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.gwtplatform.dispatch.rpc.server.ExecutionContext;
 import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
-import com.gwtplatform.dispatch.shared.ActionException; 
+import com.gwtplatform.dispatch.shared.ActionException;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.AuthenticationDTO;
@@ -29,10 +29,15 @@ import com.planetsystems.tela.dto.DateFilterDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
+import com.planetsystems.tela.dto.LearnerDetailDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
+import com.planetsystems.tela.dto.LearnerRegistrationDTO;
 import com.planetsystems.tela.dto.LoginAuditDTO;
+import com.planetsystems.tela.dto.PublicHolidayDTO;
 import com.planetsystems.tela.dto.RegionDto;
 import com.planetsystems.tela.dto.SMCSupervisionDTO;
+import com.planetsystems.tela.dto.SchoolCalendarDTO;
+import com.planetsystems.tela.dto.SchoolCalendarWeekDTO;
 import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
@@ -120,29 +125,30 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 	@Override
 	public RequestResult execute(RequestAction action, ExecutionContext context) throws ActionException {
-		
-		//String url=requestProvider.getRequestURI(); 
+
+		// String url=requestProvider.getRequestURI();
 
 		try {
-			
-			String host = action.getHost(); 
-			
-			System.out.println("Action Request host::: "+host); 
-			
-			System.out.println("Action Request:: "+action.getRequest()); 
-			
+
+			String host = action.getHost();
+
+			System.out.println("Action Request host::: " + host);
+
+			System.out.println("Action Request:: " + action.getRequest());
+
 			MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 			headers.add("hostName", host);
-			
+
 			if (action.getRequest().equalsIgnoreCase(RequestConstant.LOGIN)) {
 				TokenFeedbackDTO feedback = new TokenFeedbackDTO();
 
 				AuthenticationDTO dto = action.getAuthenticationDTO();
-				  
+
 				Client client = ClientBuilder.newClient();
 
 				SystemResponseDTO<TokenFeedbackDTO> loginResponseDTO = client.target(API_LINK).path("authenticate")
-						.request(MediaType.APPLICATION_JSON).headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<TokenFeedbackDTO>>() {
 								});
 
@@ -186,7 +192,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("ResetPassword")
-						.request(MediaType.APPLICATION_JSON).headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
 
@@ -210,7 +217,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("ChangePassword")
@@ -239,7 +245,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("academicyears")
@@ -266,7 +271,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("academicyears")
@@ -292,7 +296,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicyears")
@@ -308,7 +311,55 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ACADEMIC_YEAR)) {
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.ACTIVATE_ACADEMIC_YEAR)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicyears")
+						.path("activate").path(id).request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.DEACTIVATE_ACADEMIC_YEAR)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+				String id = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_YEAR_ID);
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicyears")
+						.path("deactivate").path(id).request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+						});
+
+				if (deleteResponseDTO != null) {
+					feedback = deleteResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_ACADEMIC_YEAR)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				List<AcademicYearDTO> list = new ArrayList<AcademicYearDTO>();
@@ -316,7 +367,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<AcademicYearDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -342,7 +392,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("academicterms")
@@ -368,7 +418,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("academicterms")
@@ -392,7 +442,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicterms")
@@ -414,7 +464,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicterms")
@@ -436,7 +486,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("academicterms")
@@ -458,7 +508,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<AcademicTermDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -486,7 +536,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<AcademicTermDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -513,7 +563,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/academictermsby/academicyears/{id}
 				SystemResponseDTO<List<AcademicTermDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -532,12 +582,112 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_REGION)) {
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SCHOOL_CALENDAR)) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				SchoolCalendarDTO dto = (SchoolCalendarDTO) action.getRequestBody()
+						.get(RequestConstant.SAVE_SCHOOL_CALENDAR);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("schoolCalendars")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (responseDTO != null) {
+					feedback = responseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.RETRIEVE_SCHOOL_CALENDAR)) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<SchoolCalendarDTO> list = new ArrayList<SchoolCalendarDTO>();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<SchoolCalendarDTO>> responseDto = client.target(API_LINK).path("schoolCalendars")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SchoolCalendarDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS)) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<SchoolCalendarWeekDTO> weeksList = new ArrayList<SchoolCalendarWeekDTO>();
+
+				List<PublicHolidayDTO> publicDaysList = new ArrayList<PublicHolidayDTO>();
+ 
+				String calendarId = (String) action.getRequestBody()
+						.get(RequestConstant.RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS);
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				Client client = ClientBuilder.newClient();
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				/// schoolCalendars/calendarWeeks/{schoolCalendarId}/schoolCalendarId
+
+				SystemResponseDTO<List<SchoolCalendarWeekDTO>> responseDto = client.target(API_LINK)
+						.path("schoolCalendars").path("calendarWeeks").path(calendarId).path("schoolCalendarId")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<SchoolCalendarWeekDTO>>>() {
+						});
+
+				SystemResponseDTO<List<PublicHolidayDTO>> responseDto2 = client.target(API_LINK).path("schoolCalendars")
+						.path("publicHoliday").path(calendarId).path("schoolCalendarId")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<PublicHolidayDTO>>>() {
+						});
+
+				weeksList = responseDto.getData();
+				publicDaysList = responseDto2.getData();
+
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, weeksList, publicDaysList);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_REGION)) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 				RegionDto dto = (RegionDto) action.getRequestBody().get(RequestConstant.SAVE_REGION);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -563,7 +713,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				RegionDto dto = (RegionDto) action.getRequestBody().get(RequestConstant.UPDATE_REGION);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -589,7 +739,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("DTO " + id);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -612,7 +762,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<RegionDto> list = new ArrayList<RegionDto>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -640,7 +790,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<RegionDto> list = new ArrayList<RegionDto>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -667,7 +817,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictDTO dto = (DistrictDTO) action.getRequestBody().get(RequestConstant.SAVE_DISTRICT);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -695,7 +845,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("DTO " + dto);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -720,7 +870,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.DISTRICT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -743,7 +893,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -768,7 +918,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<DistrictDTO> list = new ArrayList<DistrictDTO>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -793,7 +943,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -822,7 +972,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String regionId = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -851,7 +1001,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.REGION_ID);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -881,7 +1030,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.SAVE_SCHOOL_CATEGORY);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -910,7 +1059,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -935,7 +1084,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("DTO " + id);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -961,7 +1110,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolCategoryDTO>> responseDto = client.target(API_LINK)
@@ -989,7 +1138,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolCategoryDTO>> responseDto = client.target(API_LINK)
@@ -1019,7 +1168,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("schools")
@@ -1043,7 +1192,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SchoolDTO dto = (SchoolDTO) action.getRequestBody().get(RequestConstant.UPDATE_SCHOOL);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1070,7 +1219,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schools")
@@ -1093,7 +1242,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("schools")
@@ -1120,7 +1269,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("districts").path(id)
@@ -1149,7 +1298,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK)
@@ -1180,7 +1329,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK)
@@ -1208,7 +1357,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -1237,7 +1386,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("schoolcategories")
@@ -1268,7 +1417,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolDTO>> responseDto = client.target(API_LINK).path("filter").path("schools")
@@ -1299,7 +1448,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("schoolclasses")
@@ -1315,23 +1464,24 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_SCHOOL_INITIAL_CLASSESS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				@SuppressWarnings("unchecked")
-				List<SchoolClassDTO> dto = (List<SchoolClassDTO>) action.getRequestBody().get(RequestConstant.SAVE_SCHOOL_INITIAL_CLASSESS);
-				    
+				List<SchoolClassDTO> dto = (List<SchoolClassDTO>) action.getRequestBody()
+						.get(RequestConstant.SAVE_SCHOOL_INITIAL_CLASSESS);
+
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("initiliseschoolclasses")
-						.request(MediaType.APPLICATION_JSON).headers(headers)
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
+						.path("initiliseschoolclasses").request(MediaType.APPLICATION_JSON).headers(headers)
 						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
@@ -1343,7 +1493,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 			}
-			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_SCHOOL_CLASS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
@@ -1354,7 +1504,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("schoolclasses")
@@ -1377,7 +1527,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_CLASS_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1402,7 +1552,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("schoolclasses")
@@ -1430,7 +1580,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
 						.path("SchoolClasses").request(MediaType.APPLICATION_JSON).headers(headers)
@@ -1448,9 +1598,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
-				
+
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				
+
 				List<SchoolClassDTO> list = new ArrayList<SchoolClassDTO>();
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
@@ -1458,9 +1608,9 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
-				
+
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("academicterms")
 						.path(academicTermId).path("schools").path(schoolId).path("schoolclasses")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
@@ -1488,7 +1638,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/schoolclasses
 				SystemResponseDTO<List<SchoolClassDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -1520,7 +1670,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("subjectcategories")
@@ -1545,7 +1695,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.UPDATE_SUBJECT_CATEGORY);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1570,7 +1720,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.SUBJECT_CATEGORY_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1594,7 +1744,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SubjectCategoryDTO>> responseDto = client.target(API_LINK)
@@ -1624,7 +1774,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("subjects")
@@ -1650,7 +1800,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("subjects")
@@ -1673,7 +1823,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.SUBJECT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1698,7 +1848,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(API_LINK).path("subjects")
@@ -1724,7 +1874,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// subjectcategories/{subjectCategoryID}/subjects
 				SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(API_LINK).path("subjectcategories")
@@ -1752,7 +1902,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/subjectsby/subjectcategories/{subjectCategoryID)
 				SystemResponseDTO<List<SubjectDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -1782,7 +1932,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("schoolstaffs")
@@ -1809,7 +1959,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("SchoolStaff")
@@ -1832,7 +1982,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(StaffEnrollmentRequest.ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1861,7 +2011,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.REQUEST_DATA);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1891,7 +2041,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.REQUEST_DATA);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -1921,7 +2071,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
@@ -1948,7 +2098,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK).path("schoolstaffs")
@@ -1973,7 +2123,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("schoolstaffs")
@@ -2001,7 +2151,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK)
@@ -2027,7 +2177,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// schools/ff80818177f1b9680177f1c3329e000b/schoolstaffs
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("schools").path(id)
@@ -2054,7 +2204,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// districts/{districtId}/schools/ff80818177f1b9680177f1c3329e000b/schoolstaffs
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("districts")
@@ -2085,7 +2235,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// filter/schoolstaffsby/districts/{districtId}/schools/{schoolId}
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -2104,19 +2254,19 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback, list, null);
 			}
-			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				
-				List<SchoolStaffExportDTO> list = new ArrayList<SchoolStaffExportDTO>();
-				
-				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
-				 
 
-				Client client = ClientBuilder.newClient(); 
+				List<SchoolStaffExportDTO> list = new ArrayList<SchoolStaffExportDTO>();
+
+				FilterDTO dto = (FilterDTO) action.getRequestBody()
+						.get(RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
+
+				Client client = ClientBuilder.newClient();
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffExportDTO>> responseDto = client.target(API_LINK).path("export")
@@ -2126,7 +2276,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 								});
 
 				list = responseDto.getData();
- 
+
 				feedback.setResponse(responseDto.isStatus());
 				feedback.setMessage(responseDto.getMessage());
 
@@ -2145,7 +2295,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				// /academicterms/{academicTermId}/schools/{schoolId}/absents
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolStaffDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -2177,7 +2327,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("staffenrollments")
@@ -2204,7 +2354,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -2227,7 +2377,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.STAFF_ENROLLMENT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2253,7 +2403,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK)
@@ -2278,7 +2428,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK)
@@ -2308,7 +2458,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK).path("academicyears")
@@ -2347,7 +2497,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// filter/staffenrollmentsby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}
 				SystemResponseDTO<List<StaffEnrollmentDto>> responseDto = client.target(API_LINK).path("filter")
@@ -2380,7 +2530,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -2407,7 +2557,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -2430,7 +2580,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.LEARNER_ENROLLMENT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2457,7 +2607,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK)
@@ -2476,6 +2626,36 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 			}
 
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_LEARNER_DETAILS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				// kasoma
+				LearnerRegistrationDTO dto = (LearnerRegistrationDTO) action.getRequestBody()
+						.get(RequestConstant.SAVE_LEARNER_DETAILS);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("leanerDetails")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
+			}
+
 			else if (action.getRequest()
 					.equalsIgnoreCase(RequestConstant.GET_LEARNER_ENROLLMENTS_BY_SYSTEM_USER_PROFILE_SCHOOLS)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
@@ -2485,7 +2665,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK)
@@ -2517,7 +2697,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK)
@@ -2556,7 +2736,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// filter/learnerenrollmentsby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}
 				SystemResponseDTO<List<LearnerEnrollmentDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -2574,6 +2754,65 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.FILTER_LEARNER_DETAILS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				System.out.println("FILTER_LEARNER_DETAILS");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<LearnerDetailDTO> list = new ArrayList<LearnerDetailDTO>();
+
+				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestDelimeters.FILTER_LEARNER_DETAILS);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				SystemResponseDTO<List<LearnerDetailDTO>> responseDto = client.target(API_LINK).path("leanerDetails")
+						.path(dto.getSchoolDTO().getId()).path("schoolId").request(MediaType.APPLICATION_JSON)
+						.headers(headers).get(new GenericType<SystemResponseDTO<List<LearnerDetailDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LEARNER_DETAILS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				System.out.println("GET_LEARNER_DETAILS");
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				LearnerRegistrationDTO dto = new LearnerRegistrationDTO();
+
+				String learnerId = (String) action.getRequestBody().get(RequestConstant.GET_LEARNER_DETAILS);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+				SystemResponseDTO<LearnerRegistrationDTO> responseDto = client.target(API_LINK).path("leanerDetails")
+						.path(learnerId).path("learnerId").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<LearnerRegistrationDTO>>() {
+						});
+
+				dto = responseDto.getData();
+
+				feedback.setResponse(responseDto.isStatus());
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, dto);
+
 			}
 			/////////////// CLOCK IN
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SAVE_CLOCK_IN)
@@ -2586,7 +2825,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("clockins")
@@ -2611,7 +2850,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("clockins")
@@ -2634,7 +2873,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_IN_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2659,7 +2898,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("clockins")
@@ -2685,7 +2924,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -2716,7 +2955,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -2753,7 +2992,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// action.getRequestBody().get(RequestDelimeters.CLOCKIN_DATE);
 				Client client = ClientBuilder.newClient();
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// filter/clockinsby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}
@@ -2782,7 +3021,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				FilterDTO dto = (FilterDTO) action.getRequestBody().get(RequestDelimeters.FILTER_CLOCK_INS);
 				Client client = ClientBuilder.newClient();
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("filterClockIns")
@@ -2813,7 +3052,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockInDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -2843,7 +3082,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("clockouts")
@@ -2872,7 +3111,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK).path("clockouts")
@@ -2895,7 +3134,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.CLOCK_OUT_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -2920,7 +3159,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("clockouts")
@@ -2947,7 +3186,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -2978,7 +3217,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("academicyears")
@@ -3018,7 +3257,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -3045,7 +3284,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -3076,7 +3315,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<ClockOutDTO>> responseDto = client.target(API_LINK).path("academicterms")
@@ -3110,7 +3349,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3137,7 +3376,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -3160,7 +3399,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.LEARNER_ATTENDANCE_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -3187,7 +3426,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -3215,7 +3454,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -3245,7 +3484,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LearnerAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -3283,7 +3522,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// filter/learnerattendancesby/academicyears/{academicYearId}/academicterms/{academicTermId}/districts/{districtId}/schools/{schoolId}"
@@ -3318,7 +3557,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SMCSupervisionDTO>> responseDto = client.target(API_LINK).path("filter")
@@ -3347,7 +3586,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("timetables")
@@ -3372,7 +3611,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<TimeTableDTO>> responseDto = client.target(API_LINK).path("timetables")
@@ -3400,7 +3639,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<TimeTableDTO>> responseDto = client.target(API_LINK).path("SystemUserProfile")
@@ -3430,7 +3669,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// timetables/{id}/timetablelessons
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("timetables")
@@ -3454,7 +3693,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String id = (String) action.getRequestBody().get(RequestDelimeters.TIME_TABLE_LESSON_ID);
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -3480,7 +3719,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/// timetables/{id}/timetablelessons
 
@@ -3515,7 +3754,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				/*
 				 * http://localhost:8070/academicyears/1/academicterms/
@@ -3561,7 +3800,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3605,7 +3844,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3650,7 +3889,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3694,7 +3933,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3737,7 +3976,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3777,7 +4016,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SystemUserProfileDTO>> responseDto = client.target(API_LINK)
@@ -3805,7 +4044,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemUserProfileDTO> responseDto = client.target(API_LINK).path("Logged")
@@ -3835,7 +4074,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> responseDto = client.target(API_LINK).path("Logged")
@@ -3866,7 +4105,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -3897,7 +4136,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
@@ -3929,7 +4168,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
@@ -3965,7 +4204,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableDTO>> responseDto = client.target(API_LINK)
@@ -4001,7 +4240,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
@@ -4034,7 +4273,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyTimeTableLessonDTO>> responseDto = client.target(API_LINK)
@@ -4070,7 +4309,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/*
@@ -4110,7 +4349,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -4137,7 +4376,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/schools/8a008082648d961401648dadbf0f0003?supervisionDate=18/03/2021
 				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
@@ -4172,7 +4411,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				SystemResponseDTO<List<StaffDailyAttendanceSupervisionDTO>> responseDto = client.target(API_LINK)
 						.path("filterStaffDailyAttendanceSupervisions").request(MediaType.APPLICATION_JSON)
@@ -4208,7 +4447,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/schools/8a008082648d961401648dadbf0f0003?supervisionDate=18/03/2021
 
@@ -4246,7 +4485,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 				// http://localhost:8070/staffDailyAttendanceSupervisions/{}/schoolstaffs/8a008082648d961401648dadbf0f0003/staffDailyAttendancetaskSupervisions?supervisionDate=18/03/2021
 				SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> responseDto = client.target(API_LINK)
@@ -4278,7 +4517,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<StaffDailyAttendanceTaskSupervisionDTO>> responseDto = client.target(API_LINK)
@@ -4308,7 +4547,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -4334,7 +4573,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<DashboardSummaryDTO> postResponseDTO = client.target(API_LINK)
@@ -4362,7 +4601,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String id = (String) action.getRequestBody().get(RequestConstant.GET_DISTRICT_SUMMARY_DASHBOARD);
@@ -4396,7 +4635,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<AttendanceDashboardSummaryDTO> postResponseDTO = client.target(API_LINK)
@@ -4433,7 +4672,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String attendanceDate = (String) action.getRequestBody()
@@ -4467,7 +4706,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String attendanceDate = (String) action.getRequestBody().get(RequestConstant.ATTENDANCE_DATE);
@@ -4504,7 +4743,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				String attendanceDate = (String) action.getRequestBody().get(RequestConstant.ATTENDANCE_DATE);
@@ -4537,7 +4776,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				List<SchoolDTO> dtos = (List<SchoolDTO>) action.getRequestBody().get(RequestConstant.REQUEST_DATA);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK)
@@ -4602,7 +4841,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				Client client = ClientBuilder.newClient();
 				String profileId = (String) action.getRequestBody().get(RequestDelimeters.SYSTEM_USER_PROFILE_ID);
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
@@ -4723,7 +4962,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateData(headers);
@@ -4740,7 +4978,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateTeacherAttendance(headers);
@@ -4756,7 +4993,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateTimeTables(headers);
@@ -4774,7 +5010,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DataMigrationUtility.getInstance().migrateSubjects(headers);
@@ -4802,7 +5037,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 					Client client = ClientBuilder.newClient();
 
 					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-					
+
 					headers.add(HttpHeaders.AUTHORIZATION, token);
 
 					SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("SystemMenus")
@@ -4843,7 +5078,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (list != null) {
 
 					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-					
+
 					headers.add(HttpHeaders.AUTHORIZATION, token);
 
 					Client client = ClientBuilder.newClient();
@@ -4883,7 +5118,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -4920,7 +5155,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				if (dtos != null) {
 
 					String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-					
+
 					headers.add(HttpHeaders.AUTHORIZATION, token);
 
 					Client client = ClientBuilder.newClient();
@@ -4959,7 +5194,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("GET_USER_GROUP_SystemMENU");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<SystemUserGroupSystemMenuDTO> list = new ArrayList<SystemUserGroupSystemMenuDTO>();
@@ -4995,7 +5230,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				// System.out.println("GET_LOGED_IN_USER_SYSTEM_MENUS TOKEN " + token);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<SystemMenuDTO> list = new ArrayList<SystemMenuDTO>();
@@ -5034,7 +5268,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// System.out.println("GET_LOGEDIN_USER_SystemMENU");
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<SystemUserGroupSystemMenuDTO> list = new ArrayList<SystemUserGroupSystemMenuDTO>();
@@ -5072,7 +5306,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				// List<SystemUserGroupDTO> list = new ArrayList<SystemUserGroupDTO>();
 
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				Client client = ClientBuilder.newClient();
@@ -5115,7 +5349,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -5153,7 +5386,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
@@ -5224,7 +5456,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> saveResponseDTO = client.target(API_LINK)
@@ -5266,7 +5497,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SystemUserAdministrationUnitDTO>> responseDTO = client.target(API_LINK)
@@ -5301,7 +5531,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> deleteResponseDTO = client.target(API_LINK)
@@ -5340,7 +5569,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemUserGroupDTO> responseDto = client.target(API_LINK)
@@ -5369,7 +5597,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<TeacherClockInSummaryDTO>> responseDto = client.target(API_LINK).path("Reports")
@@ -5403,7 +5630,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfWeekTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5437,7 +5663,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfWeekTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5471,7 +5696,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfMonthTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5505,7 +5729,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfMonthTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5538,7 +5761,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfTermTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5575,7 +5797,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<SchoolEndOfTermTimeAttendanceDTO>> responseDto = client.target(API_LINK)
@@ -5611,7 +5832,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -5645,7 +5865,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -5679,7 +5898,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				// SchoolTimeOnTaskSummaryDTO
@@ -5715,7 +5933,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.DistrictEndOfWeekTimeAttendance);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<DistrictEndOfWeekTimeAttendanceDTO> list = new ArrayList<DistrictEndOfWeekTimeAttendanceDTO>();
@@ -5748,7 +5965,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.DistrictEndOfMonthTimeAttendance);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<DistrictEndOfMonthTimeAttendanceDTO> list = new ArrayList<DistrictEndOfMonthTimeAttendanceDTO>();
@@ -5781,7 +5997,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				DistrictReportFilterDTO filterDTO = (DistrictReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.DistrictEndOfTermTimeAttendance);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<DistrictEndOfTermTimeAttendanceDTO> list = new ArrayList<DistrictEndOfTermTimeAttendanceDTO>();
@@ -5819,7 +6034,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// Reports/TeacherClockInSummary/print
@@ -5871,7 +6085,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				/// Reports/TeacherClockInSummary/print
@@ -5923,7 +6136,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<HeadTeacherSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -5976,7 +6188,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SMCSupervisionReportDTO> responseDto = client.target(API_LINK).path("Reports")
@@ -6029,7 +6240,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndWeekTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6080,7 +6290,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndWeekTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6130,7 +6339,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndMonthTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6181,7 +6389,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndMonthTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6231,7 +6438,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndTermTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6282,7 +6488,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SchoolEndTermTimeOnSiteReport responseDto = client.target(API_LINK).path("Reports")
@@ -6331,7 +6536,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				TeacherTimeOnTaskReport responseDto = client.target(API_LINK).path("Reports")
@@ -6381,7 +6585,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DailyDistrictReport responseDto = client.target(API_LINK).path("districtEndOfWeekTimeAttendanceReport")
@@ -6430,7 +6633,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DistrictWeeklyReport responseDto = client.target(API_LINK)
@@ -6478,7 +6680,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				String refId = "kfredrick";
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				DistrictTermReport responseDto = client.target(API_LINK).path("districtEndOfTermTimeAttendanceReport")
@@ -6524,7 +6725,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfWeekTimeAttendance);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<NationalEndOfWeekTimeAttendanceDTO> list = new ArrayList<NationalEndOfWeekTimeAttendanceDTO>();
@@ -6561,7 +6761,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfWeekTimeAttendanceReport);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				NationalWeeklyReport responseDto = client.target(API_LINK).path("nationalEndOfWeekTimeAttendanceReport")
@@ -6604,7 +6803,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfMonthTimeAttendance);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<NationalEndOfMonthTimeAttendanceDTO> list = new ArrayList<NationalEndOfMonthTimeAttendanceDTO>();
@@ -6641,7 +6839,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfMonthTimeAttendanceReport);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				NationalMonthlyReport responseDto = client.target(API_LINK)
@@ -6687,7 +6884,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfTermTimeAttendance);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				List<NationalEndOfTermTimeAttendanceDTO> list = new ArrayList<NationalEndOfTermTimeAttendanceDTO>();
@@ -6718,7 +6914,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				SmsSchoolStaffDTO dto = (SmsSchoolStaffDTO) action.getRequestBody().get(SmsRequest.DATA);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("SmsSchoolStaff")
@@ -6750,7 +6945,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				NationalReportFilterDTO filterDTO = (NationalReportFilterDTO) action.getRequestBody()
 						.get(RequestConstant.NationalEndOfTermTimeAttendanceReport);
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				NationalTermlyReport responseDto = client.target(API_LINK).path("nationalEndOfTermTimeAttendanceReport")
@@ -6782,19 +6976,17 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 				return new RequestResult(feedback);
 
-			}else if (action.getRequest().equalsIgnoreCase(RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL)
+			} else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
-				
-				
-				
-				
+
 				@SuppressWarnings("unchecked")
 				List<SchoolStaffExportDTO> list = (List<SchoolStaffExportDTO>) action.getRequestBody()
 						.get(RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
-				
+
 				String refId = "kfredrick";
-				
+
 				Gson gson = new Gson();
 				String jsonString = gson.toJson(list);
 
@@ -6818,8 +7010,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				client.close();
 
 				return new RequestResult(feedback);
-				  
-				 
+
 			}
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_USER_ACCOUNT_REQUEST)) {
@@ -6831,7 +7022,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<UserAccountRequestDTO>> responseDto = client.target(API_LINK)
@@ -6862,7 +7053,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.get(RequestConstant.APPROVE_USER_ACCOUNT_REQUEST);
 
 				Client client = ClientBuilder.newClient();
-				
+
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
@@ -6895,7 +7086,6 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				Client client = ClientBuilder.newClient();
 
-				
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
 				SystemResponseDTO<List<LoginAuditDTO>> updateResponseDTO = client.target(API_LINK).path("login")

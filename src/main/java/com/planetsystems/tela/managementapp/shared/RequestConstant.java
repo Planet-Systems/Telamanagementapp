@@ -34,6 +34,10 @@ public class RequestConstant {
 	public static final String UPDATE_ACADEMIC_YEAR = "UPDATE_ACADEMIC_YEAR";
 	public static final String DELETE_ACADEMIC_YEAR = "DELETE_ACADEMIC_YEAR";
 	public static final String GET_ACADEMIC_YEAR = "GET_ACADEMIC_YEAR";
+	
+	public static final String ACTIVATE_ACADEMIC_YEAR = "ACTIVATE_ACADEMIC_YEAR";
+	public static final String DEACTIVATE_ACADEMIC_YEAR = "DEACTIVATE_ACADEMIC_YEAR";
+	
 
 	public static final String SAVE_ACADEMIC_TERM = "SAVE_ACADEMIC_TERM";
 	public static final String UPDATE_ACADEMIC_TERM = "UPDATE_ACADEMIC_TERM";
@@ -43,6 +47,12 @@ public class RequestConstant {
 	public static final String FILTER_ACADEMIC_TERMS_BY_ACADEMIC_YEAR = "FILTER_ACADEMIC_TERMS_BY_ACADEMIC_YEAR";
 	public static final String ACTIVATE_ACADEMIC_TERM = "ACTIVATE_ACADEMIC_TERM";
 	public static final String DEACTIVATE_ACADEMIC_TERM = "DEACTIVATE_ACADEMIC_TERM";
+	
+	public static final String SAVE_SCHOOL_CALENDAR = "SAVE_SCHOOL_CALENDAR";
+	public static final String UPDATE_SCHOOL_CALENDAR = "UPDATE_SCHOOL_CALENDAR";
+	public static final String DELETE_SCHOOL_CALENDAR = "DELETE_SCHOOL_CALENDAR";
+	public static final String RETRIEVE_SCHOOL_CALENDAR = "RETRIEVE_SCHOOL_CALENDAR";
+	public static final String RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS = "RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS";
 
 	public static final String SAVE_REGION = "SAVE_REGION";
 	public static final String UPDATE_REGION = "UPDATE_REGION";
@@ -313,5 +323,14 @@ public class RequestConstant {
 	public static final String DELETE_USER_ADMIN_UNITS = "DELETE_USER_ADMIN_UNITS";
 
 	public static final String GET_FILE_UPLOAD_LINK = "GET_FILE_UPLOAD_LINK";
+	
+	public static final String FILTER_LEARNER_DETAILS= "FILTER_LEARNER_DETAILS";
+	
+	public static final String SAVE_LEARNER_DETAILS = "SAVE_LEARNER_DETAILS";
+	
+	public static final String GET_LEARNER_DETAILS = "GET_LEARNER_DETAILS";
+	
+	 
+
 
 }

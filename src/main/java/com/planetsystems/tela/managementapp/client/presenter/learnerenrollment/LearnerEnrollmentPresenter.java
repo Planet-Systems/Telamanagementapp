@@ -23,7 +23,10 @@ import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
+import com.planetsystems.tela.dto.LearnerDetailDTO;
 import com.planetsystems.tela.dto.LearnerEnrollmentDTO;
+import com.planetsystems.tela.dto.LearnerGuardianDTO;
+import com.planetsystems.tela.dto.LearnerRegistrationDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
@@ -38,21 +41,32 @@ import com.planetsystems.tela.managementapp.shared.DatePattern;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 public class LearnerEnrollmentPresenter
 		extends Presenter<LearnerEnrollmentPresenter.MyView, LearnerEnrollmentPresenter.MyProxy> {
-	interface MyView extends View {
-		LearnerEnrollementPane getLearnerEnrollementPane();
 
-		ControlsPane getControlsPane();
+	interface MyView extends View {
+
+		public LearnerEnrollementPane getLearnerEnrollementPane();
+
+		public ControlsPane getControlsPane();
+
+		public LeanerDetailsPane getLeanerDetailsPane();
+
+		public TabSet getTabSet();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -68,7 +82,11 @@ public class LearnerEnrollmentPresenter
 
 	DateTimeFormat dateTimeFormat = DateTimeFormat
 			.getFormat(DatePattern.DAY_MONTH_YEAR_HOUR_MINUTE_SECONDS.getPattern());
-	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
+
+	// DateTimeFormat dateFormat =
+	// DateTimeFormat.getFormat(DatePattern.DAY_MONTH_YEAR.getPattern());
+
+	DateTimeFormat dateFormat = DateTimeFormat.getFormat(DatePattern.YEAR_MONTH_DAY.getPattern());
 
 	@NameToken(NameTokens.learnerEnrollment)
 	@ProxyCodeSplit
@@ -84,27 +102,71 @@ public class LearnerEnrollmentPresenter
 	@Override
 	protected void onBind() {
 		super.onBind();
+
 		setControlsPaneMenuButtons();
-		//getAllLearnerEnrollments();
+		onTabSelected();
+	}
+
+	private void onTabSelected() {
+		getView().getTabSet().addTabSelectedHandler(new TabSelectedHandler() {
+
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+
+				String selectedTab = event.getTab().getTitle();
+
+				if (selectedTab.equalsIgnoreCase("Learner Details")) {
+
+					MenuButton newButton = new MenuButton("New");
+					MenuButton edit = new MenuButton("Edit");
+					MenuButton delete = new MenuButton("Delete");
+					MenuButton filter = new MenuButton("Filter");
+					MenuButton details = new MenuButton("Details");
+
+					List<MenuButton> buttons = new ArrayList<>();
+					buttons.add(newButton);
+					buttons.add(edit);
+					buttons.add(delete);
+					buttons.add(details);
+					buttons.add(filter);
+
+					registerLearner(newButton);
+					filterLearnerOption(filter);
+					learnerDetailsFilter();
+					viewLearnerDetails(details);
+
+					getView().getControlsPane().addMenuButtons("Learner Details", buttons);
+
+				} else if (selectedTab.equalsIgnoreCase("Learner Head Count")) {
+
+					MenuButton newButton = new MenuButton("New");
+					MenuButton edit = new MenuButton("Edit");
+					MenuButton delete = new MenuButton("Delete");
+					MenuButton filter = new MenuButton("Filter");
+
+					List<MenuButton> buttons = new ArrayList<>();
+					buttons.add(newButton);
+					// buttons.add(edit);
+					// buttons.add(delete);
+					buttons.add(filter);
+
+					learnerEnrolmentFilter();
+					addLearnerEnrollment(newButton);
+					selectFilterOption(filter);
+
+					getView().getControlsPane().addMenuButtons("Learner Head Count", buttons);
+
+				} else {
+					List<MenuButton> buttons = new ArrayList<>();
+					getView().getControlsPane().addMenuButtons(buttons);
+				}
+
+			}
+
+		});
 	}
 
 	public void setControlsPaneMenuButtons() {
-		MenuButton newButton = new MenuButton("New");
-		MenuButton edit = new MenuButton("Edit");
-		MenuButton delete = new MenuButton("Delete");
-		MenuButton filter = new MenuButton("Filter");
-
-		List<MenuButton> buttons = new ArrayList<>();
-		buttons.add(newButton);
-		//buttons.add(edit);
-		//buttons.add(delete);
-		buttons.add(filter);
-
-		getView().getControlsPane().addMenuButtons("Learner Enrollment",buttons);
-		
-		learnerEnrolmentFilter();
-		addLearnerEnrollment(newButton);
-		selectFilterOption(filter);
 
 	}
 
@@ -135,13 +197,13 @@ public class LearnerEnrollmentPresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-//	   		SC.say("Advanced Search");
+				// SC.say("Advanced Search");
 				learnerEnrolmentFilter();
 			}
 		});
 
 	}
-	
+
 	private void learnerEnrolmentFilter() {
 		FilterLearnerHeadCountWindow window = new FilterLearnerHeadCountWindow();
 		loadFilterLearnerHeadCountAcademicYearCombo(window);
@@ -149,6 +211,14 @@ public class LearnerEnrollmentPresenter
 		loadFilterLearnerHeadCountDistrictCombo(window);
 		loadFilterLearnerHeadCountSchoolCombo(window);
 		filterLearnerEnrollmentByAcademicYearAcademicTermDistrictSchool(window);
+		window.show();
+	}
+
+	private void learnerDetailsFilter() {
+		FilterLearnerDetailsWindow window = new FilterLearnerDetailsWindow();
+		loadFilterLearnerDetailsDistrictCombo(window);
+		oadFilterLearnerDetailsSchoolCombo(window);
+		filterLearnerDetailsBySchool(window);
 		window.show();
 	}
 
@@ -355,9 +425,9 @@ public class LearnerEnrollmentPresenter
 		});
 	}
 
-///////////////////////FILTER LEARNER HEADCOUNT COMBOS(4)
+	/////////////////////// FILTER LEARNER HEADCOUNT COMBOS(4)
 
-//loads school combo in filter learner head count pane
+	// loads school combo in filter learner head count pane
 	private void loadFilterLearnerHeadCountSchoolCombo(final FilterLearnerHeadCountWindow window) {
 		window.getFilterLearnerHeadCountPane().getDistrictCombo().addChangedHandler(new ChangedHandler() {
 
@@ -371,13 +441,13 @@ public class LearnerEnrollmentPresenter
 
 	}
 
-//loads district combo in filter learner head count pane	
+	// loads district combo in filter learner head count pane
 	private void loadFilterLearnerHeadCountDistrictCombo(final FilterLearnerHeadCountWindow window) {
 		ComboUtil.loadDistrictCombo(window.getFilterLearnerHeadCountPane().getDistrictCombo(), dispatcher, placeManager,
 				null);
 	}
 
-//loads academic year combo in filter learner head count pane	
+	// loads academic year combo in filter learner head count pane
 	private void loadFilterLearnerHeadCountAcademicYearCombo(final FilterLearnerHeadCountWindow window) {
 		ComboUtil.loadAcademicYearCombo(window.getFilterLearnerHeadCountPane().getAcademicYearCombo(), dispatcher,
 				placeManager, null);
@@ -393,6 +463,24 @@ public class LearnerEnrollmentPresenter
 				ComboUtil.loadAcademicTermComboByAcademicYear(
 						window.getFilterLearnerHeadCountPane().getAcademicYearCombo(),
 						window.getFilterLearnerHeadCountPane().getAcademicTermCombo(), dispatcher, placeManager, null);
+			}
+		});
+
+	}
+
+	// loads district combo in filter learner head count pane
+	private void loadFilterLearnerDetailsDistrictCombo(final FilterLearnerDetailsWindow window) {
+		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, null);
+	}
+
+	private void oadFilterLearnerDetailsSchoolCombo(final FilterLearnerDetailsWindow window) {
+		window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(), dispatcher,
+						placeManager, null);
 			}
 		});
 
@@ -434,6 +522,376 @@ public class LearnerEnrollmentPresenter
 				});
 			}
 		});
+	}
+
+	private void filterLearnerDetailsBySchool(final FilterLearnerDetailsWindow window) {
+		window.getFilterButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				String districtId = window.getDistrictCombo().getValueAsString();
+				String schoolId = window.getSchoolCombo().getValueAsString();
+
+				FilterDTO dto = new FilterDTO();
+				dto.setDistrictDTO(new DistrictDTO(districtId));
+				dto.setSchoolDTO(new SchoolDTO(schoolId));
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestDelimeters.FILTER_LEARNER_DETAILS, dto);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.FILTER_LEARNER_DETAILS);
+
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						getView().getLeanerDetailsPane().getLeanerDetailsListgrid()
+								.addRecordsToGrid(result.getLearnerDetailDTOs());
+					}
+				});
+			}
+		});
+	}
+
+	// learner registration
+
+	private void registerLearner(final MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				final LearnerRegistrationWindow window = new LearnerRegistrationWindow();
+
+				ComboUtil.loadDistrictCombo(window.getHomeDistrict(), dispatcher, placeManager, null);
+				ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, null);
+				ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager, null);
+
+				window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+
+					@Override
+					public void onChanged(ChangedEvent event) {
+
+						ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(), window.getSchoolCombo(),
+								dispatcher, placeManager, null);
+
+					}
+				});
+
+				window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+
+					@Override
+					public void onChanged(ChangedEvent event) {
+
+						ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
+								window.getAcademicTermCombo(), dispatcher, placeManager, null);
+
+					}
+				});
+
+				window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+
+					@Override
+					public void onChanged(ChangedEvent event) {
+
+						ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(window.getAcademicTermCombo(),
+								window.getSchoolCombo(), window.getSchoolClassCombo(), dispatcher, placeManager, null);
+
+					}
+				});
+
+				ComboUtil.loadSpecialNeedsCombo(window.getSpecialNeedsCombo());
+				ComboUtil.loadOrphanStatusCombo(window.getOrphanStatusCombo());
+				ComboUtil.loadGendaCombo(window.getGenderCombo());
+
+				addParent(window);
+
+				registerLearner(window);
+
+				window.show();
+
+			}
+		});
+
+	}
+
+	private void addParent(final LearnerRegistrationWindow registrationWindow) {
+		registrationWindow.getAddButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				LearnerGuardianWindow window = new LearnerGuardianWindow();
+				onSave(registrationWindow, window);
+				ComboUtil.loadGuardianRelationshipCombo(window.getRelationshipCombo());
+				window.show();
+
+			}
+		});
+	}
+
+	private void onSave(final LearnerRegistrationWindow registrationWindow, final LearnerGuardianWindow window) {
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				LearnerGuardianDTO dto = new LearnerGuardianDTO();
+
+				dto.setFirstName(window.getFirstNameField().getValueAsString());
+				dto.setGuardianRelationship(window.getRelationshipCombo().getValueAsString());
+				dto.setLastName(window.getLastNameField().getValueAsString());
+				dto.setNationalId(window.getNationalIdField().getValueAsString());
+				dto.setNationality(window.getNationality().getValueAsString());
+				dto.setPhoneNumber(window.getPhoneNumberField().getValueAsString());
+				registrationWindow.getListgrid().addRecordToGrid(dto);
+
+			}
+		});
+	}
+
+	private void registerLearner(final LearnerRegistrationWindow registrationWindow) {
+		registrationWindow.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				LearnerRegistrationDTO dto = new LearnerRegistrationDTO();
+
+				LearnerDetailDTO learnerDetailDTO = new LearnerDetailDTO();
+
+				learnerDetailDTO.setDob(dateFormat.format(registrationWindow.getDobItem().getValueAsDate()));
+
+				learnerDetailDTO.setFirstName(registrationWindow.getFirstNameField().getValueAsString());
+				learnerDetailDTO.setGender(registrationWindow.getGenderCombo().getValueAsString());
+				if (registrationWindow.getSpecialNeedsCombo().getValueAsString() != null) {
+					if (registrationWindow.getSpecialNeedsCombo().getValueAsString().equalsIgnoreCase("Yes")) {
+						learnerDetailDTO.setHasSpecialNeeds(true);
+					} else {
+						learnerDetailDTO.setHasSpecialNeeds(false);
+					}
+				}
+
+				DistrictDTO homeDistrict = new DistrictDTO();
+				homeDistrict.setId(registrationWindow.getHomeDistrict().getValueAsString());
+				learnerDetailDTO.setHomeDistrict(homeDistrict);
+
+				learnerDetailDTO.setLastName(registrationWindow.getLastNameField().getValueAsString());
+				learnerDetailDTO.setNationalId(registrationWindow.getNationalIdField().getValueAsString());
+				learnerDetailDTO.setNationality(registrationWindow.getNationality().getValueAsString());
+				learnerDetailDTO.setOrphanCategory(registrationWindow.getOrphanStatusCombo().getValueAsString());
+				learnerDetailDTO.setOtherName(registrationWindow.getOtherNameField().getValueAsString());
+				learnerDetailDTO.setPhoneNumber(registrationWindow.getPhoneNumberField().getValueAsString());
+				// learnerDetailDTO.setStatus(registrationWindow.getStatus().getValueAsString());
+				// learnerDetailDTO.setLearnTelaNo(learnTelaNo);
+				dto.setLearnerDetailDTO(learnerDetailDTO);
+
+				dto.setAcademicTermId(registrationWindow.getAcademicTermCombo().getValueAsString());
+				dto.setSchoolClassId(registrationWindow.getSchoolClassCombo().getValueAsString());
+				dto.setSchoolId(registrationWindow.getSchoolCombo().getValueAsString());
+
+				List<LearnerGuardianDTO> guardians = new ArrayList<>();
+
+				for (ListGridRecord record : registrationWindow.getListgrid().getRecords()) {
+
+					LearnerGuardianDTO guardianDTO = new LearnerGuardianDTO();
+
+					guardianDTO.setFirstName(record.getAttribute(LearnerGuardianListgrid.FIRSTNAME));
+					guardianDTO.setGuardianRelationship(record.getAttribute(LearnerGuardianListgrid.RelationShip));
+					guardianDTO.setLastName(record.getAttribute(LearnerGuardianListgrid.LASTNAME));
+					guardianDTO.setNationalId(record.getAttribute(LearnerGuardianListgrid.NATIONAL_ID));
+					guardianDTO.setNationality(record.getAttribute(LearnerGuardianListgrid.NATIONALITY));
+					guardianDTO.setPhoneNumber(record.getAttribute(LearnerGuardianListgrid.PHONE_NUMBER));
+
+					guardians.add(guardianDTO);
+				}
+
+				dto.setGuardians(guardians);
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.SAVE_LEARNER_DETAILS, dto);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.SAVE_LEARNER_DETAILS);
+
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+						if (result.getSystemFeedbackDTO() != null) {
+							if (result.getSystemFeedbackDTO().isResponse()) {
+								SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+									@Override
+									public void execute(Boolean value) {
+
+										if (value) {
+											// kasoma
+										}
+
+									}
+								});
+							}
+						}
+
+					}
+				});
+
+			}
+		});
+	}
+
+	private void filterLearnerOption(final MenuButton filter) {
+
+		final Menu menu = new Menu();
+		MenuItem basic = new MenuItem("Base Filter");
+		MenuItem advanced = new MenuItem("Advanced Filter");
+
+		menu.setItems(basic, advanced);
+
+		filter.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				menu.showNextTo(filter, "bottom");
+			}
+		});
+
+		basic.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				getView().getLeanerDetailsPane().getLeanerDetailsListgrid().setShowFilterEditor(true);
+			}
+		});
+
+		advanced.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				learnerDetailsFilter();
+			}
+		});
+
+	}
+
+	private void viewLearnerDetails(final MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (getView().getLeanerDetailsPane().getLeanerDetailsListgrid().anySelected()) {
+
+					ListGridRecord record = getView().getLeanerDetailsPane().getLeanerDetailsListgrid()
+							.getSelectedRecord();
+
+					String learnerId = record.getAttribute(LeanerDetailsListgrid.ID);
+
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.GET_LEARNER_DETAILS, learnerId);
+					map.put(NetworkDataUtil.ACTION, RequestConstant.GET_LEARNER_DETAILS);
+
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+						@Override
+						public void onNetworkResult(final RequestResult result) {
+
+							final LearnerRegistrationDTO dto = result.getLearnerRegistrationDTO();
+
+							final LearnerRegistrationDetailWindow window = new LearnerRegistrationDetailWindow();
+
+							if (dto.getLearnerDetailDTO() != null
+									&& dto.getLearnerDetailDTO().getHomeDistrict() != null) {
+								
+								ComboUtil.loadDistrictCombo(window.getHomeDistrict(), dispatcher, placeManager,dto.getLearnerDetailDTO().getHomeDistrict().getId());
+							
+							}
+							
+							 
+
+							ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, dto.getSchoolDistrictId()); 
+							ComboUtil.loadAcademicYearCombo(window.getAcademicYearCombo(), dispatcher, placeManager,dto.getAcademicYearId());
+							
+
+							window.getDistrictCombo().addChangedHandler(new ChangedHandler() {
+
+								@Override
+								public void onChanged(ChangedEvent event) {
+
+									ComboUtil.loadSchoolComboByDistrict(window.getDistrictCombo(),
+											window.getSchoolCombo(), dispatcher, placeManager, dto.getSchoolId());
+
+								}
+							});
+
+							window.getAcademicYearCombo().addChangedHandler(new ChangedHandler() {
+
+								@Override
+								public void onChanged(ChangedEvent event) {
+
+									ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYearCombo(),
+											window.getAcademicTermCombo(), dispatcher, placeManager, dto.getAcademicTermId());
+
+								}
+							});
+
+							window.getSchoolCombo().addChangedHandler(new ChangedHandler() {
+
+								@Override
+								public void onChanged(ChangedEvent event) {
+
+									ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(dto.getAcademicTermId(),
+											dto.getSchoolId(), window.getSchoolClassCombo(), dispatcher,
+											placeManager, dto.getSchoolClassId());
+									 
+
+								}
+							});
+							
+
+							ComboUtil.loadSpecialNeedsCombo(window.getSpecialNeedsCombo());
+							ComboUtil.loadOrphanStatusCombo(window.getOrphanStatusCombo());
+							ComboUtil.loadGendaCombo(window.getGenderCombo());
+
+							
+							if(dto.getLearnerDetailDTO().getDob()!=null) {
+								window.getDobItem().setValue(dateFormat.parse(dto.getLearnerDetailDTO().getDob())); 
+							}
+							
+							window.getFirstNameField().setValue(dto.getLearnerDetailDTO().getFirstName()); 
+							window.getGenderCombo().setValue(dto.getLearnerDetailDTO().getGender());
+							window.getSpecialNeedsCombo().setValue(dto.getLearnerDetailDTO().isHasSpecialNeeds()); 
+							
+							if(dto.getLearnerDetailDTO().getHomeDistrict()!=null) {
+								window.getHomeDistrict().setValue(dto.getLearnerDetailDTO().getHomeDistrict().getId()); 
+							}
+							 
+							
+							window.getLastNameField().setValue(dto.getLearnerDetailDTO().getLastName());
+							window.getNationalIdField().setValue(dto.getLearnerDetailDTO().getNationalId());
+							window.getNationality().setValue(dto.getLearnerDetailDTO().getNationality());
+							window.getOrphanStatusCombo().setValue(dto.getLearnerDetailDTO().getOrphanCategory());
+							window.getOtherNameField().setValue(dto.getLearnerDetailDTO().getOtherName());
+							window.getPhoneNumberField().setValue(dto.getLearnerDetailDTO().getPhoneNumber());
+							
+							// learnerDetailDTO.setStatus(registrationWindow.getStatus().getValueAsString());
+							// learnerDetailDTO.setLearnTelaNo(learnTelaNo);
+							 
+							window.getListgrid().addRecordsToGrid(dto.getGuardians()); 
+							
+							window.show();
+
+						}
+					});
+
+				} else {
+
+					SC.say("ERROR", "Please select record to view details");
+				}
+
+			}
+		});
+
 	}
 
 }
