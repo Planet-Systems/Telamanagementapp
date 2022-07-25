@@ -57,7 +57,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 
-		ListGridField districtField = new ListGridField(DISTRICT, "District");
+		ListGridField districtField = new ListGridField(DISTRICT, "Local Government");
 		 districtField.setHidden(true);
 		
 		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");

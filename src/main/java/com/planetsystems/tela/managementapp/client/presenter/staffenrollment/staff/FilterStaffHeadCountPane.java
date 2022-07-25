@@ -19,7 +19,7 @@ public class FilterStaffHeadCountPane extends HLayout {
 		super();
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
+		districtCombo.setTitle("Local Government");
 		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 		
@@ -35,7 +35,7 @@ public class FilterStaffHeadCountPane extends HLayout {
 		academicYearCombo.setShowHintInField(true);
 		
 		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
+		academicTermCombo.setTitle("Academic Term");
 		academicTermCombo.setHint("Select");
 		academicTermCombo.setShowHintInField(true);
 		

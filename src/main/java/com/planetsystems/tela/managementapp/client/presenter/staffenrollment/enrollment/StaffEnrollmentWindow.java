@@ -45,22 +45,22 @@ public class StaffEnrollmentWindow extends Window {
 		
 		academicYearCombo = new ComboBox();
 		academicYearCombo.setTitle("Academic Year");
-		academicYearCombo.setHint("Academic Year");
+		academicYearCombo.setHint("Select");
 		academicYearCombo.setShowHintInField(true);
 		
 		academicTermCombo = new ComboBox();
 		academicTermCombo.setTitle("Academic Term");
-		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setHint("Select");
 		academicTermCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
-		districtCombo.setHint("District");
+		districtCombo.setTitle("Local Government");
+		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 		
 		schoolCombo = new ComboBox();
 		schoolCombo.setTitle("School");
-		schoolCombo.setHint("School");
+		schoolCombo.setHint("Select");
 		schoolCombo.setShowHintInField(true);
 		
 		staffTotalField = new TextItem();

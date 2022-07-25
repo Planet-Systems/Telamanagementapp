@@ -61,12 +61,12 @@ public class AddSchoolWindow extends Window {
 		longtitude.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
+		districtCombo.setTitle("Local Government");
 		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
-		regionCombo.setTitle("Region");
+		regionCombo.setTitle("Sub-Region");
 		regionCombo.setHint("Select");
 		regionCombo.setShowHintInField(true);
 
@@ -96,7 +96,7 @@ public class AddSchoolWindow extends Window {
 		schoolGenderCategory.setShowHintInField(true);
 
 		licensed = new ComboBox();
-		licensed.setTitle("Is Licensed");
+		licensed.setTitle("Is Licensed/Registered");
 		licensed.setHint("Select");
 		licensed.setShowHintInField(true);
 

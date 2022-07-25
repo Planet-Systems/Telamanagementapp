@@ -23,22 +23,19 @@
 
 	<inherits name="com.smartgwt.SmartGwtNoScript" />
 	<inherits name="com.smartgwt.SmartGwtNoTheme" />
-	<!-- <inherits name="com.smartclient.theme.tahoe.Tahoe" /> -->
+	<!-- <inherits name="com.smartclient.theme.tahoe.Tahoe" />  --> 
 
 	<inherits name="com.googlecode.gwt.charts.Charts" />
 
 	<inherits name="org.moxieapps.gwt.highcharts.Highcharts" />
 
-	<inherits name="com.smartclient.theme.stratus.Stratus" />
+ <inherits name="com.smartclient.theme.stratus.Stratus" /> 
 
 	<inherits name="com.planetsystems.tela.Model"></inherits>
 
 	<!-- exclude compilation for safari -->
 	<!-- <set-property name="user.agent" value="safari" /> -->
-
-
-
-
+ 
 	<!-- Specify the app entry point class. -->
 	<entry-point
 		class='com.planetsystems.tela.managementapp.client.Tela' />

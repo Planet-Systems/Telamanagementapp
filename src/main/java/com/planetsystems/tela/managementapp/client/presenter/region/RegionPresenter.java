@@ -135,7 +135,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					buttons.add(edit);
 					buttons.add(delete);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Sub-Regions",buttons);
 					addRegion(newButton);
 					deleteRegion(delete);
 					editRegion(edit);
@@ -151,7 +151,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					buttons.add(edit);
 					buttons.add(filter);
 
-					getView().getControlsPane().addMenuButtons(buttons);
+					getView().getControlsPane().addMenuButtons("Local Government",buttons);
 					addDistrict(newButton);
 					deleteDistrict(delete);
 					editDistrict(edit);

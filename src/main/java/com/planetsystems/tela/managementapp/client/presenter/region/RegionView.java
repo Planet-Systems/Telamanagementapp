@@ -20,8 +20,8 @@ class RegionView extends ViewImpl implements RegionPresenter.MyView {
 	private ControlsPane controlsPane;
 	private TabSet tabSet;
 	
-	public static final String REGION_TAB_TITLE="Regions";
-	public static final String DISTRICT_TAB_TITLE="Districts";
+	public static final String REGION_TAB_TITLE="Sub-Regions";
+	public static final String DISTRICT_TAB_TITLE="Local Government";
 
     @Inject
     RegionView() {

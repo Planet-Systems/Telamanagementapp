@@ -1,4 +1,4 @@
-package com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school;
+package com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff;
 
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -7,11 +7,10 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class SchoolImportWindow extends Window {
+public class StaffImportWindow extends Window {
 
 	private FormPanel uploadForm = new FormPanel();
 	private FileUpload upload = new FileUpload();
@@ -20,21 +19,25 @@ public class SchoolImportWindow extends Window {
 
 	private ComboBox region;
 	private ComboBox district;
+	private ComboBox school;
 
-	public SchoolImportWindow() {
+	public StaffImportWindow() {
 		super();
 		this.setAutoCenter(true);
-		this.setWidth("40%");
+		this.setWidth("35%");
 		this.setHeight("40%");
 		this.setTitle("Upload File");
 
 		uploadButton.setTitle("Upload");
 
 		region = new ComboBox();
-		region.setTitle("Region");
+		region.setTitle("Sub-Region");
 
 		district = new ComboBox();
 		district.setTitle("Local Government");
+		
+		school=new ComboBox();
+		school.setTitle("School");
 
 		// upload.setName("uploadFormElement");
 		upload.setTitle("File Upload");
@@ -47,7 +50,9 @@ public class SchoolImportWindow extends Window {
 		//uploadForm.
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(region, district);
+		form.setFields(region, district,school);
+		form.setColWidths("150", "300" , "150", "300");
+		form.setPadding(8); 
 
 		HLayout hlayout = new HLayout();
 		hlayout.setMargin(10);
@@ -92,5 +97,11 @@ public class SchoolImportWindow extends Window {
 	public ComboBox getDistrict() {
 		return district;
 	}
+
+	public ComboBox getSchool() {
+		return school;
+	}
+	
+	
 
 }

@@ -15,8 +15,8 @@ public class InitialSchoolClassListGrid extends SuperListGrid {
 	public InitialSchoolClassListGrid() {
 		super();
 
-		ListGridField codeField = new ListGridField(CODE, "Code");
-		ListGridField nameField = new ListGridField(NAME, "Name");
+		ListGridField codeField = new ListGridField(CODE, "Class Code");
+		ListGridField nameField = new ListGridField(NAME, "Class Name");
 
 		this.setFields(codeField, nameField);
 

@@ -7,7 +7,11 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
@@ -34,16 +38,20 @@ import com.planetsystems.tela.managementapp.client.presenter.comboutils.ComboUti
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.SchoolImportWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.enrollment.StaffEnrollmentWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.FilterStaffHeadCountWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.FilterStaffWindow;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.SchoolStaffListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.SchoolStaffPane;
 import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.SchoolStaffWindow;
+import com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff.StaffImportWindow;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SearchDataField;
+import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.DatePattern;
+import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestDelimeters;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
@@ -144,6 +152,7 @@ public class StaffEnrollmentPresenter
 					MenuButton edit = new MenuButton("Update");
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton generateCode = new MenuButton("Re-Assign Code");
+					MenuButton importButton = new MenuButton("Import");
 					MenuButton filter = new MenuButton("Filter");
 					MenuButton export = new MenuButton("Export");
 
@@ -152,8 +161,9 @@ public class StaffEnrollmentPresenter
 					buttons.add(edit);
 					buttons.add(delete);
 					buttons.add(generateCode);
-					buttons.add(filter);
+					buttons.add(importButton);
 					buttons.add(export);
+					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons("Teachers' Details List", buttons);
 
@@ -165,8 +175,8 @@ public class StaffEnrollmentPresenter
 					deleteStaff(delete);
 					selectFilterOption(filter);
 					reAssigCode(generateCode);
-
 					exportStaff(export);
+					importStaffList(importButton);
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -386,7 +396,7 @@ public class StaffEnrollmentPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
+
 				StaffEnrollmentWindow window = new StaffEnrollmentWindow();
 				setStaffTotal(window);
 
@@ -653,8 +663,7 @@ public class StaffEnrollmentPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
-				 
+
 				SchoolStaffWindow window = new SchoolStaffWindow();
 				loadGenderCombo(window, null);
 				loadRegisteredCombo(window, null);
@@ -678,7 +687,7 @@ public class StaffEnrollmentPresenter
 		valueMap.put("Deputy head teacher", "Deputy head teacher");
 		valueMap.put("Smc", "Smc");
 		valueMap.put("Principal", "Principal");
-		
+
 		window.getRoleCombo().setValueMap(valueMap);
 
 	}
@@ -1244,7 +1253,7 @@ public class StaffEnrollmentPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>(); 
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(NetworkDataUtil.ACTION, RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
 				map.put(RequestConstant.EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL, schoolStaffFilterDTO);
 
@@ -1264,7 +1273,7 @@ public class StaffEnrollmentPresenter
 	}
 
 	private void export(List<SchoolStaffExportDTO> dtos) {
-		
+
 		List<SchoolStaffExportDTO> list = new ArrayList<SchoolStaffExportDTO>();
 
 		for (SchoolStaffExportDTO dto : dtos) {
@@ -1273,7 +1282,7 @@ public class StaffEnrollmentPresenter
 
 		}
 
-		LinkedHashMap<String, Object> map = new LinkedHashMap<>(); 
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(NetworkDataUtil.ACTION, RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL);
 		map.put(RequestConstant.EXCEL_EXPORT_SCHOOL_STAFFS_BY_DISTRICT_SCHOOL, list);
 
@@ -1286,5 +1295,157 @@ public class StaffEnrollmentPresenter
 			}
 		});
 	}
+
+	private void importStaffList(final MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				fileUpload();
+			}
+		});
+	}
+
+	private void fileUpload() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_FILE_UPLOAD_LINK, map),
+				new AsyncCallback<RequestResult>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.say("ERROR", caught.getMessage());
+						SC.clearPrompt();
+					}
+
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+
+								// SC.say("GET_FILE_UPLOAD_LINK:: "+result.getSystemFeedbackDTO().getMessage());
+
+								StaffImportWindow window = new StaffImportWindow();
+								loadRegionCombo(window, null);
+								loadDistrictComboByRegion(window, null);
+								loadSchoolCombo(window, null);
+								uploadFile(window, result.getSystemFeedbackDTO().getMessage());
+								window.show();
+
+							}
+
+						} else {
+							SC.say("ERROR", "Unknow error");
+						}
+
+					}
+				});
+	}
+
+	private void loadRegionCombo(final StaffImportWindow window, String defaultValue) {
+		ComboUtil.loadRegionCombo(window.getRegion(), dispatcher, placeManager, defaultValue);
+	}
+
+	private void loadDistrictComboByRegion(final StaffImportWindow window, final String defaultValue) {
+		window.getRegion().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ComboUtil.loadDistrictComboByRegion(window.getRegion(), window.getDistrict(), dispatcher, placeManager,
+						defaultValue);
+			}
+		});
+	}
+
+	private void loadSchoolCombo(final StaffImportWindow window, final String defaultValue) {
+		window.getDistrict().addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+
+				ComboUtil.loadSchoolComboByDistrict(window.getDistrict(), window.getSchool(), dispatcher, placeManager,
+						defaultValue);
+			}
+		});
+
+	}
+	
+	
+	private void uploadFile(final StaffImportWindow window, final String link) {
+
+		window.getUploadButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+
+				final String fileName = window.getUpload().getFilename();
+
+				String fileExtension = UtilityManager.getInstance().getFileExtension(fileName);
+				final String schoolId = window.getSchool().getValueAsString();
+				 
+
+				if (fileExtension.equalsIgnoreCase("xlsx")) {
+
+					SC.showPrompt("", "", new SwizimaLoader());
+
+					final StringBuilder url = new StringBuilder();
+
+					url.append(link + "importStaff").append("?");
+
+					String arg0Name = URL.encodeQueryString("fileName");
+					url.append(arg0Name);
+					url.append("=");
+					String arg0Value = URL.encodeQueryString(fileName);
+					url.append(arg0Value);
+					url.append("&" + "schoolId" + "=" + schoolId);
+
+					window.getUploadForm().setAction(url.toString());
+					window.getUploadForm().submit();
+
+				} else {
+					SC.warn("ERROR", "Only xlsx files allowed");
+				}
+
+				window.getUploadForm().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+
+						SC.clearPrompt();
+
+						// String serverResponse = event.getResults();
+
+						SC.say("Sucess", "Upload Successful", new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									window.close();
+
+									//loadSchools(regionId, districtId);
+								}
+
+							}
+						});
+
+						GWT.log("serverResponse::::: " + event.getResults());
+
+					}
+
+				});
+
+			}
+
+		});
+
+	}
+
+	
+	
 
 }

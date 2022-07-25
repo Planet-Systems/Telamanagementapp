@@ -1883,7 +1883,7 @@ public class SystemUserPresenter extends Presenter<SystemUserPresenter.MyView, S
 			@Override
 			public void onClick(ClickEvent event) {
 
-				if (role.equalsIgnoreCase("district")) {
+				if (role.equalsIgnoreCase("district")||role.equalsIgnoreCase("Municiple")) {
 
 					final FilterSchoolsRegionDistrictWindow districtWindow = new FilterSchoolsRegionDistrictWindow();
 

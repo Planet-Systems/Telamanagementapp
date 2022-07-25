@@ -2,9 +2,11 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String timetableupload = "timetableupload";
+
 	public static final String loginaudits = "Login Audits";
 
-	public static final String dailyattendacedashboard = "Daily Attendance Dashboard";
+	public static final String dailyattendacedashboard = "Daily Attendance";
 
 	public static final String useraccountapproval = "User Account Requests";
 
@@ -41,7 +43,7 @@ public class NameTokens {
 	public static final String login = "Login";
 	public static final String authentication = "Authentication";
 
-	public static final String dashboard = "Overall Performance Dashboard";
+	public static final String dashboard = "Overall Performance";
 	public static final String assessmentperiod = "Assessment Periods";
 	public static final String locations = "Locations";
 	public static final String schoolClassCategory = "Schools";
@@ -188,6 +190,10 @@ public class NameTokens {
 
 	public static String getLoginaudits() {
 		return loginaudits;
+	}
+
+	public static String getTimetableupload() {
+		return timetableupload;
 	}
 
 }

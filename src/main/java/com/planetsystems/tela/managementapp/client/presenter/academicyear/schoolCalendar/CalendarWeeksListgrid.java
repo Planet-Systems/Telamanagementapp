@@ -25,9 +25,9 @@ public class CalendarWeeksListgrid extends SuperListGrid {
 
 		ListGridField calendarMonth = new ListGridField(CalendarMonth, "Month");
 		ListGridField calendarWeek = new ListGridField(CalendarWeek, "WeeK");
-		ListGridField startDate = new ListGridField(StartDate, "Expected Daily Hours");
-		ListGridField endDate = new ListGridField(EndDate, "Expected Weekly Hours");
-		ListGridField expectedHours = new ListGridField(ExpectedHours, "Expected Monthly Hours");
+		ListGridField startDate = new ListGridField(StartDate, "Start Date");
+		ListGridField endDate = new ListGridField(EndDate, "End Date");
+		ListGridField expectedHours = new ListGridField(ExpectedHours, "Expected Weekly Hours");
 
 		this.setFields(idField, calendarMonth, calendarWeek, startDate, endDate, expectedHours);
 

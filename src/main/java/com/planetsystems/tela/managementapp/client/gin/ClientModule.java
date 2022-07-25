@@ -11,6 +11,7 @@ import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.login.LoginModule;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainModule;
 import com.planetsystems.tela.managementapp.client.presenter.profiledetail.ProfileDetailModule;
+import com.planetsystems.tela.managementapp.client.presenter.timetableupload.TimetableUploadModule;
 import com.planetsystems.tela.managementapp.client.presenter.useraccountrequest.UserAccountRequestModule;
 /**
  * See more on setting up the PlaceManager on <a href="// See more on:
@@ -28,11 +29,14 @@ public class ClientModule extends AbstractPresenterModule {
 	    install(new ProfileDetailModule());
 	    install(new LoginModule());
 	    install(new UserAccountRequestModule());
+	    install(new TimetableUploadModule());
 	     
 		// DefaultPlaceManager Places
 		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.dashboard);
 		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.login);
 		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.login);
+		
+		
 		
 
 	}

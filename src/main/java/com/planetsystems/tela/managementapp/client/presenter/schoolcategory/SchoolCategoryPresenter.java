@@ -256,6 +256,8 @@ public class SchoolCategoryPresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				// SC.say("Advanced Search");
+				
+				 
 				FilterSchoolWindow window = new FilterSchoolWindow();
 				loadFilterRegionCombo(window);
 				loadFilterDistrictCombo(window);

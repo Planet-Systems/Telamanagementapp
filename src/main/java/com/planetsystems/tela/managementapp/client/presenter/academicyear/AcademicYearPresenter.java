@@ -208,14 +208,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 					addSchoolCalendar(newButton);
 					getAllSchoolCalendars();
 					onViewCalenda(view);
-
-					// editAcademicTerm(edit);
-					// deleteAcademicTerm(delete);
-					// selectFilterOption(filter);
-					// activateAcademicTerm(activate);
-					// deactivateAcademicTerm(deactivate);
-					// getAllAcademicTerms();
-
+					onEditCalenda(edit); 
 				} else {
 
 					List<MenuButton> buttons = new ArrayList<>();
@@ -925,6 +918,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onChanged(ChangedEvent event) {
 
+				GWT.log("testing for value::: "+window.getAcademicTerm().getValueAsString()); 
 				ComboUtil.loadAcademicTermComboByAcademicYear(window.getAcademicYear(), window.getAcademicTerm(),
 						dispatcher, placeManager, defaultValue);
 			}
@@ -1074,6 +1068,7 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 									public void execute(Boolean value) {
 
 										calendarWindow.close();
+										getAllSchoolCalendars();
 
 									}
 								});
@@ -1114,12 +1109,20 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 			@Override
 			public void onClick(ClickEvent event) {
 
-				SchoolCalendarWindow window = new SchoolCalendarWindow();
-				window.getSaveButton().hide(); 
-				loadSchoolCalendaToEdit(window);
-				 
-				 
-				window.show();
+				if(getView().getSchoolCalendarPane().getListGrid().anySelected()) {
+					
+					SchoolCalendarWindow window = new SchoolCalendarWindow();
+
+					window.getSaveButton().hide();
+					window.getAddPublicDayButton().hide();
+					window.getAddWeekButton().hide();
+
+					loadSchoolCalendaToEdit(window);
+					window.show();
+				}else {
+					SC.warn("ERROR","Select record to view");
+				}
+				
 
 			}
 		});
@@ -1129,8 +1132,8 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 		ListGridRecord record = getView().getSchoolCalendarPane().getListGrid().getSelectedRecord();
 
-		String calendarId=record.getAttribute(SchoolCalendarListgrid.ID);
-		
+		String calendarId = record.getAttribute(SchoolCalendarListgrid.ID);
+
 		calendarWindow.getDescription().setValue(record.getAttribute(SchoolCalendarListgrid.Description));
 		calendarWindow.getExpectedDailyHours().setValue(record.getAttribute(SchoolCalendarListgrid.ExpectedDailyHours));
 		calendarWindow.getExpectedMonthlyHours()
@@ -1140,10 +1143,10 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 		calendarWindow.getExpectedTermlyHours()
 				.setValue(record.getAttribute(SchoolCalendarListgrid.ExpectedTermlyHours));
 
-		loadAcademicYearCombo(calendarWindow, record.getAttribute(SchoolCalendarListgrid.AcademicYearId)); 
-		
+		loadAcademicYearCombo(calendarWindow, record.getAttribute(SchoolCalendarListgrid.AcademicYearId));
+
 		loadAssessmentPeriodCombo(calendarWindow, record.getAttribute(SchoolCalendarListgrid.AcademicTermId));
-		
+
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS, calendarId);
 		map.put(NetworkDataUtil.ACTION, RequestConstant.RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS);
@@ -1154,11 +1157,139 @@ public class AcademicYearPresenter extends Presenter<AcademicYearPresenter.MyVie
 
 				calendarWindow.getSchoolCalendarWeeksListgrid().addRecordsToGrid(result.getSchoolCalendarWeekDTOs());
 				calendarWindow.getPublicHolidayListgrid().addRecordsToGrid(result.getPublicHolidayDTOs());
-				 
+
 			}
 		});
-		 
 
+	}
+	
+	private void onEditCalenda(final MenuButton button) {
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if(getView().getSchoolCalendarPane().getListGrid().anySelected()) {
+					
+					SchoolCalendarWindow window = new SchoolCalendarWindow(); 
+					loadSchoolCalendaToEdit(window); 
+					addWeek(window);
+					addPublicHoliday(window);
+					onUpdateCalendar(window);
+					window.show();
+					
+				}else {
+					SC.warn("ERROR","Select record to edit"); 
+				}
+				
+
+			}
+		});
+	}
+	
+	private void onUpdateCalendar(final SchoolCalendarWindow calendarWindow) {
+		calendarWindow.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				//ListGridRecord record = getView().getSchoolCalendarPane().getListGrid().getSelectedRecord(); 
+				//String calendarId = record.getAttribute(SchoolCalendarListgrid.ID); 
+				
+				SchoolCalendarDTO schoolCalendarDTO = new SchoolCalendarDTO();
+				
+				schoolCalendarDTO.setId(getView().getSchoolCalendarPane().getListGrid().getSelectedRecord().getAttribute(SchoolCalendarListgrid.ID));
+				
+				AcademicTermDTO academicTerm = new AcademicTermDTO();
+				academicTerm.setId(calendarWindow.getAcademicTerm().getValueAsString());
+
+				schoolCalendarDTO.setAcademicTerm(academicTerm);
+
+				schoolCalendarDTO.setDescription(calendarWindow.getDescription().getValueAsString());
+
+				schoolCalendarDTO.setExpectedDailyHours(
+						Integer.parseInt(calendarWindow.getExpectedDailyHours().getValueAsString()));
+				schoolCalendarDTO.setExpectedWeeklyHours(
+						Integer.parseInt(calendarWindow.getExpectedMonthlyHours().getValueAsString()));
+				schoolCalendarDTO.setExpectedMonthlyHours(
+						Integer.parseInt(calendarWindow.getExpectedMonthlyHours().getValueAsString()));
+				schoolCalendarDTO.setExpectedTermlyHours(
+						Integer.parseInt(calendarWindow.getExpectedTermlyHours().getValueAsString()));
+
+				List<PublicHolidayDTO> publicHolidayDTOs = new ArrayList<>();
+				List<SchoolCalendarWeekDTO> schoolCalendarWeekDTOs = new ArrayList<>();
+
+				for (ListGridRecord record : calendarWindow.getSchoolCalendarWeeksListgrid().getRecords()) {
+
+					SchoolCalendarWeekDTO dto = new SchoolCalendarWeekDTO();
+					
+					if(record.getAttribute(CalendarWeeksListgrid.ID)!=null) {
+						dto.setId(record.getAttribute(CalendarWeeksListgrid.ID)); 
+					}
+
+					dto.setCalendarMonth(record.getAttribute(CalendarWeeksListgrid.CalendarMonth));
+					dto.setCalendarWeek(record.getAttribute(CalendarWeeksListgrid.CalendarWeek));
+
+					dto.setStartDate(record.getAttribute(CalendarWeeksListgrid.StartDate));
+					dto.setEndDate(record.getAttribute(CalendarWeeksListgrid.EndDate));
+					dto.setExpectedHours(Integer.parseInt(record.getAttribute(CalendarWeeksListgrid.ExpectedHours)));
+
+					schoolCalendarWeekDTOs.add(dto);
+
+				}
+
+				for (ListGridRecord record : calendarWindow.getPublicHolidayListgrid().getRecords()) {
+
+					PublicHolidayDTO dto = new PublicHolidayDTO();
+					if(record.getAttribute(PublicHolidaysListgrid.ID)!=null) {
+						dto.setId(record.getAttribute(PublicHolidaysListgrid.ID)); 
+					}
+
+					dto.setDate(record.getAttribute(PublicHolidaysListgrid.Date));
+					dto.setDescription(record.getAttribute(PublicHolidaysListgrid.Description));
+
+					publicHolidayDTOs.add(dto);
+
+				}
+
+				schoolCalendarDTO.setPublicHolidayDTOs(publicHolidayDTOs);
+				schoolCalendarDTO.setSchoolCalendarWeekDTOs(schoolCalendarWeekDTOs);
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.UPDATE_SCHOOL_CALENDAR, schoolCalendarDTO);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.UPDATE_SCHOOL_CALENDAR);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						if (result.getSystemFeedbackDTO() != null) {
+
+							if (result.getSystemFeedbackDTO().isResponse()) {
+								SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+									@Override
+									public void execute(Boolean value) {
+
+										calendarWindow.close();
+										getAllSchoolCalendars();
+
+									}
+								});
+							} else {
+								SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
+							}
+
+						} else {
+							SC.warn("ERROR", "Unknown error");
+						}
+
+						// getAllAcademicTerms();
+					}
+				});
+
+			}
+		});
 	}
 
 }

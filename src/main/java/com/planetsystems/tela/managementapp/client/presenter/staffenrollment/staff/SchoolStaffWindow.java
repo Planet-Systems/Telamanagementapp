@@ -95,8 +95,8 @@ public class SchoolStaffWindow extends Window {
 		schoolCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
-		districtCombo.setHint("District");
+		districtCombo.setTitle("Local Government <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 		
 		roleCombo=new ComboBox();

@@ -336,9 +336,11 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			@Override
 			public void onClick(ClickEvent event) {
 				// add create Lesson tab
+				
 				final CreateTimeTablePane createTimeTablePane = new CreateTimeTablePane();
 				final Tab createLessonTab = new Tab("create lesson");
 				createLessonTab.setCanClose(true);
+				
 				loadAcademicYearCombo(createTimeTablePane, null);
 				loadAcademicTermsInAcademicYearCombo(createTimeTablePane, null);
 				loadDistrictCombo(createTimeTablePane, null);
@@ -446,8 +448,10 @@ public class TimeTablePresenter extends Presenter<TimeTablePresenter.MyView, Tim
 			@Override
 			public void onClick(ClickEvent event) {
 				TimeTableLessonWindow window = new TimeTableLessonWindow();
+				
 				loadLessonDayCombo(window);
 				String defaultValue = null;
+				
 				ComboUtil.loadSchoolClassesComboBySchoolAcademicTerm(createTimeTablePane.getAcademicTermCombo() ,createTimeTablePane.getSchoolCombo() , window.getSchoolClassCombo(), dispatcher, placeManager,
 						defaultValue);
 				

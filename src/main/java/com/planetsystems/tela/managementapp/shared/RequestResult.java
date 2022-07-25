@@ -189,6 +189,16 @@ public class RequestResult implements Result {
 
 	private List<PublicHolidayDTO> publicHolidayDTOs;
 
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolClassDTO> schoolClassDTOs,
+			List<SubjectDTO> subjectDTOs, List<SchoolStaffDTO> schoolStaffDTOs) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+
+		this.subjectDTOs = subjectDTOs;
+		this.schoolStaffDTOs = schoolStaffDTOs;
+		this.schoolClassDTOs = schoolClassDTOs;
+	}
+
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolCalendarWeekDTO> schoolCalendarWeekDTOs,
 			List<PublicHolidayDTO> publicHolidayDTOs) {
 		super();

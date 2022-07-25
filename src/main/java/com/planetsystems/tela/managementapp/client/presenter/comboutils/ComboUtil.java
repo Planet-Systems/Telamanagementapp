@@ -2,6 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.comboutils;
 
 import java.util.LinkedHashMap;
 
+import com.google.gwt.core.client.GWT;
 import com.gwtplatform.dispatch.rpc.shared.DispatchAsync;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.planetsystems.tela.dto.AcademicTermDTO;
@@ -95,23 +96,28 @@ public class ComboUtil {
 				}
 
 				if (academicTermCombo.getValueAsString() != null) {
-					academicTermCombo.clearValue();
+					// academicTermCombo.clearValue();
 					academicTermCombo.setValueMap(valueMap);
 				} else {
+					// academicTermCombo.clearValue();
 					academicTermCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					
-					academicTermCombo.setValue(defaultValue);
-					
-					ChangedEvent event1 = new ChangedEvent(academicTermCombo.getJsObj());
-					academicTermCombo.fireEvent(event1);
+
+					if (academicTermCombo.getValueAsString() != null) {
+						academicTermCombo.clearValue();
+
+					} else {
+
+						academicTermCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(academicTermCombo.getJsObj());
+						academicTermCombo.fireEvent(event1);
+					}
 
 				} else {
 					academicTermCombo.clearValue();
-					
-					 
+
 				}
 			}
 		});
@@ -134,14 +140,18 @@ public class ComboUtil {
 					valueMap.put(academicTermDTO.getId(), academicTermDTO.getTerm());
 				}
 				if (academicTermCombo.getValueAsString() != null) {
-					academicTermCombo.clearValue();
+					// academicTermCombo.clearValue();
 					academicTermCombo.setValueMap(valueMap);
 				} else {
 					academicTermCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					academicTermCombo.setValue(defaultValue);
+					if (academicTermCombo.getValueAsString() != null) {
+						academicTermCombo.clearValue();
+					} else {
+						academicTermCombo.setValue(defaultValue);
+					}
 				}
 			}
 		});
@@ -195,21 +205,16 @@ public class ComboUtil {
 				comboBox.setPickListProperties(pickListProperties);
 				comboBox.setPickListWidth(300);
 
-				/*
-				 * for (RegionDto regionDto : result.getRegionDtos()) {
-				 * valueMap.put(regionDto.getId(), regionDto.getName()); }
-				 */
-				if (comboBox.getValueAsString() != null) {
-					comboBox.clearValue();
-					// comboBox.setValueMap(valueMap);
-				} else {
-					// comboBox.setValueMap(valueMap);
-				}
-
 				if (defaultValue != null && defaultValue.length() != 0) {
-					comboBox.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(comboBox.getJsObj());
-					comboBox.fireEvent(event1);
+
+					if (comboBox.getValueAsString() != null) {
+						comboBox.clearValue();
+					} else {
+						comboBox.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(comboBox.getJsObj());
+						comboBox.fireEvent(event1);
+					}
+
 				} else {
 
 					comboBox.setValue(result.getRegionDtos().get(0).getId());
@@ -268,24 +273,16 @@ public class ComboUtil {
 				districtCombo.setPickListProperties(pickListProperties);
 				districtCombo.setPickListWidth(300);
 
-				// LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
-
-				/*
-				 * for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-				 * valueMap.put(districtDTO.getId(), districtDTO.getName()); }
-				 */
-
-				if (districtCombo.getValueAsString() != null) {
-					districtCombo.clearValue();
-					// districtCombo.setValueMap(valueMap);
-				} else {
-					// districtCombo.setValueMap(valueMap);
-				}
-
 				if (defaultValue != null && defaultValue.length() != 0) {
-					districtCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
-					districtCombo.fireEvent(event1);
+
+					if (districtCombo.getValueAsString() != null) {
+						districtCombo.clearValue();
+					} else {
+						districtCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
+						districtCombo.fireEvent(event1);
+					}
+
 				} else {
 					districtCombo.setValue(result.getDistrictDTOs().get(0).getId());
 					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
@@ -296,7 +293,7 @@ public class ComboUtil {
 
 	}
 
-	public static void loadDistrictComboByRegion(final ComboBox regionCombo, final ComboBox districtCombo,
+	public static void loadDistrictComboByRegion(final ComboBox regionCombo, final ComboBox district,
 			final DispatchAsync dispatcher, final PlaceManager placeManager, final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestDelimeters.REGION_ID, regionCombo.getValueAsString());
@@ -335,34 +332,37 @@ public class ComboUtil {
 				id.setHidden(true);
 				ListGridField name = new ListGridField("name", "District");
 
-				districtCombo.setOptionDataSource(records);
+				district.setOptionDataSource(records);
 
-				districtCombo.setValueField("id");
-				districtCombo.setDisplayField("name");
-				districtCombo.setPickListFields(id, name);
-				districtCombo.setPickListProperties(pickListProperties);
-				districtCombo.setPickListWidth(300);
-
-				/*
-				 * for (DistrictDTO districtDTO : result.getDistrictDTOs()) {
-				 * valueMap.put(districtDTO.getId(), districtDTO.getName()); }
-				 */
-
-				if (districtCombo.getValueAsString() != null) {
-					districtCombo.clearValue();
-					// districtCombo.setValueMap(valueMap);
-				} else {
-					// districtCombo.setValueMap(valueMap);
-				}
+				district.setValueField("id");
+				district.setDisplayField("name");
+				district.setPickListFields(id, name);
+				district.setPickListProperties(pickListProperties);
+				district.setPickListWidth(300);
 
 				if (defaultValue != null && defaultValue.length() != 0) {
-					districtCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
-					districtCombo.fireEvent(event1);
+
+					if (district.getValueAsString() != null) {
+						district.clearValue();
+					} else {
+						district.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(district.getJsObj());
+						district.fireEvent(event1);
+					}
+
 				} else {
-					districtCombo.setValue(result.getDistrictDTOs().get(0).getId());
-					ChangedEvent event1 = new ChangedEvent(districtCombo.getJsObj());
-					districtCombo.fireEvent(event1);
+					
+					GWT.log("Testing district combo...>>>>:: " + district.getValueAsString());
+					district.clearValue();
+					 
+					if (result.getDistrictDTOs().isEmpty()) {
+						district.clearValue();
+					} else {
+						district.setValue(result.getDistrictDTOs().get(0).getId());
+						ChangedEvent event1 = new ChangedEvent(district.getJsObj());
+						district.fireEvent(event1);
+					}
+
 				}
 			}
 		});
@@ -416,22 +416,15 @@ public class ComboUtil {
 				schoolCombo.setPickListProperties(pickListProperties);
 				schoolCombo.setPickListWidth(400);
 
-				/*
-				 * for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-				 * valueMap.put(schoolDTO.getId(), schoolDTO.getName()); }
-				 */
-
-				if (schoolCombo.getValueAsString() != null) {
-					schoolCombo.clearValue();
-					// schoolCombo.setValueMap(valueMap);
-				} else {
-					// schoolCombo.setValueMap(valueMap);
-				}
-
 				if (defaultValue != null) {
-					schoolCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
-					schoolCombo.fireEvent(event1);
+					if (schoolCombo.getValueAsString() != null) {
+						schoolCombo.clearValue();
+					} else {
+						schoolCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
+						schoolCombo.fireEvent(event1);
+					}
+
 				}
 			}
 		});
@@ -485,23 +478,16 @@ public class ComboUtil {
 				schoolCombo.setPickListProperties(pickListProperties);
 				schoolCombo.setPickListWidth(400);
 
-				/*
-				 * for (SchoolDTO schoolDTO : result.getSchoolDTOs()) {
-				 * valueMap.put(schoolDTO.getId(), schoolDTO.getName()); }
-				 */
-
-				/*
-				 * if (schoolCombo.getValueAsString() != null) { schoolCombo.clearValue();
-				 * 
-				 * } else {
-				 * 
-				 * }
-				 */
-
 				if (defaultValue != null) {
-					schoolCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
-					schoolCombo.fireEvent(event1);
+
+					if (schoolCombo.getValueAsString() != null) {
+						schoolCombo.clearValue();
+					} else {
+						schoolCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolCombo.getJsObj());
+						schoolCombo.fireEvent(event1);
+					}
+
 				} else {
 					schoolCombo.clearValue();
 				}
@@ -563,24 +549,15 @@ public class ComboUtil {
 				schoolStaffCombo.setPickListProperties(pickListProperties);
 				schoolStaffCombo.setPickListWidth(400);
 
-				/*
-				 * for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { String
-				 * fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() + " " +
-				 * schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-				 * valueMap.put(schoolStaffDTO.getId(), fullName); }
-				 */
-
-				if (schoolStaffCombo.getValueAsString() != null) {
-					schoolStaffCombo.clearValue();
-					// schoolStaffCombo.setValueMap(valueMap);
-				} else {
-					// schoolStaffCombo.setValueMap(valueMap);
-				}
-
 				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
-					schoolStaffCombo.fireEvent(event1);
+					if (schoolStaffCombo.getValueAsString() != null) {
+						schoolStaffCombo.clearValue();
+					} else {
+						schoolStaffCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+						schoolStaffCombo.fireEvent(event1);
+					}
+
 				}
 			}
 		});
@@ -610,16 +587,21 @@ public class ComboUtil {
 				}
 
 				if (schoolStaffCombo.getValueAsString() != null) {
-					schoolStaffCombo.clearValue();
+					// schoolStaffCombo.clearValue();
 					schoolStaffCombo.setValueMap(valueMap);
 				} else {
 					schoolStaffCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
-					schoolStaffCombo.fireEvent(event1);
+					if (schoolStaffCombo.getValueAsString() != null) {
+						schoolStaffCombo.clearValue();
+					} else {
+						schoolStaffCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+						schoolStaffCombo.fireEvent(event1);
+					}
+
 				}
 			}
 		});
@@ -647,16 +629,22 @@ public class ComboUtil {
 				}
 
 				if (schoolStaffCombo.getValues() != null) {
-					schoolStaffCombo.clearValue();
+					// schoolStaffCombo.clearValue();
 					schoolStaffCombo.setValueMap(valueMap);
 				} else {
 					schoolStaffCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
-					schoolStaffCombo.fireEvent(event1);
+
+					if (schoolStaffCombo.getValues() != null) {
+						schoolStaffCombo.clearValue();
+					} else {
+						schoolStaffCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+						schoolStaffCombo.fireEvent(event1);
+					}
+
 				}
 			}
 		});
@@ -713,24 +701,16 @@ public class ComboUtil {
 				schoolStaffCombo.setPickListProperties(pickListProperties);
 				schoolStaffCombo.setPickListWidth(400);
 
-				/*
-				 * for (SchoolStaffDTO schoolStaffDTO : result.getSchoolStaffDTOs()) { String
-				 * fullName = schoolStaffDTO.getGeneralUserDetailDTO().getFirstName() +
-				 * schoolStaffDTO.getGeneralUserDetailDTO().getLastName();
-				 * valueMap.put(schoolStaffDTO.getId(), fullName); }
-				 */
-
-				if (schoolStaffCombo.getValueAsString() != null) {
-					schoolStaffCombo.clearValue();
-					// SchoolStaffCombo.setValueMap(valueMap);
-				} else {
-					// SchoolStaffCombo.setValueMap(valueMap);
-				}
-
 				if (defaultValue != null) {
-					schoolStaffCombo.setValue(defaultValue);
-					ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
-					schoolStaffCombo.fireEvent(event1);
+
+					if (schoolStaffCombo.getValueAsString() != null) {
+						schoolStaffCombo.clearValue();
+					} else {
+						schoolStaffCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolStaffCombo.getJsObj());
+						schoolStaffCombo.fireEvent(event1);
+					}
+
 				}
 			}
 		});
@@ -757,14 +737,20 @@ public class ComboUtil {
 				}
 
 				if (schoolCategoryCombo.getValueAsString() != null) {
-					schoolCategoryCombo.clearValue();
+					// schoolCategoryCombo.clearValue();
 					schoolCategoryCombo.setValueMap(valueMap);
 				} else {
 					schoolCategoryCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					schoolCategoryCombo.setValue(defaultValue);
+					if (schoolCategoryCombo.getValueAsString() != null) {
+						schoolCategoryCombo.clearValue();
+						schoolCategoryCombo.setValueMap(valueMap);
+					} else {
+						schoolCategoryCombo.setValue(defaultValue);
+					}
+
 				}
 			}
 		});
@@ -790,14 +776,19 @@ public class ComboUtil {
 				}
 
 				if (subjectCategoryCombo.getValueAsString() != null) {
-					subjectCategoryCombo.clearValue();
+					// subjectCategoryCombo.clearValue();
 					subjectCategoryCombo.setValueMap(valueMap);
 				} else {
 					subjectCategoryCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					subjectCategoryCombo.setValue(defaultValue);
+					if (subjectCategoryCombo.getValueAsString() != null) {
+						subjectCategoryCombo.clearValue();
+						subjectCategoryCombo.setValueMap(valueMap);
+					} else {
+						subjectCategoryCombo.setValue(defaultValue);
+					}
 				}
 			}
 		});
@@ -824,14 +815,19 @@ public class ComboUtil {
 				}
 
 				if (schoolClassCombo.getValueAsString() != null) {
-					schoolClassCombo.clearValue();
+					// schoolClassCombo.clearValue();
 					schoolClassCombo.setValueMap(valueMap);
 				} else {
 					schoolClassCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					schoolClassCombo.setValue(defaultValue);
+					if (schoolClassCombo.getValueAsString() != null) {
+						schoolClassCombo.clearValue();
+						schoolClassCombo.setValueMap(valueMap);
+					} else {
+						schoolClassCombo.setValue(defaultValue);
+					}
 				}
 			}
 		});
@@ -856,21 +852,25 @@ public class ComboUtil {
 				}
 
 				if (schoolClassComboBox.getValueAsString() != null) {
-					schoolClassComboBox.clearValue();
+					// schoolClassComboBox.clearValue();
 					schoolClassComboBox.setValueMap(valueMap);
 				} else {
 					schoolClassComboBox.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					schoolClassComboBox.setValue(defaultValue);
+					if (schoolClassComboBox.getValueAsString() != null) {
+						schoolClassComboBox.clearValue();
+						schoolClassComboBox.setValueMap(valueMap);
+					} else {
+						schoolClassComboBox.setValue(defaultValue);
+					}
 				}
 			}
 		});
 
 	}
 
-	 
 	public static void loadSchoolClassesComboBySchoolAcademicTerm(final ComboBox academicTermCombo,
 			final ComboBox schoolCombo, final ComboBox schoolClassCombo, final DispatchAsync dispatcher,
 			final PlaceManager placeManager, final String defaultValue) {
@@ -890,31 +890,33 @@ public class ComboUtil {
 				}
 
 				if (schoolClassCombo.getValueAsString() != null) {
-					schoolClassCombo.clearValue();
+					// schoolClassCombo.clearValue();
 					schoolClassCombo.setValueMap(valueMap);
 				} else {
 					schoolClassCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					schoolClassCombo.setValue(defaultValue); 
-					ChangedEvent event1 = new ChangedEvent(schoolClassCombo.getJsObj());
-					schoolClassCombo.fireEvent(event1);
-					
+					if (schoolClassCombo.getValueAsString() != null) {
+						schoolClassCombo.clearValue();
+					} else {
+						schoolClassCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolClassCombo.getJsObj());
+						schoolClassCombo.fireEvent(event1);
+					}
+
 				}
-				
-				 
+
 			}
 		});
 
 	}
-	
-	
-	public static void loadSchoolClassesComboBySchoolAcademicTerm(final String academicTermId,
-			final String schoolId, final ComboBox schoolClassCombo, final DispatchAsync dispatcher,
-			final PlaceManager placeManager, final String defaultValue) {
+
+	public static void loadSchoolClassesComboBySchoolAcademicTerm(final String academicTermId, final String schoolId,
+			final ComboBox schoolClassCombo, final DispatchAsync dispatcher, final PlaceManager placeManager,
+			final String defaultValue) {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-		
+
 		map.put(RequestDelimeters.SCHOOL_ID, schoolId);
 		map.put(RequestDelimeters.ACADEMIC_TERM_ID, academicTermId);
 		map.put(NetworkDataUtil.ACTION, RequestConstant.GET_SCHOOL_CLASSES_IN_SCHOOL_ACADEMIC_TERM);
@@ -930,20 +932,23 @@ public class ComboUtil {
 				}
 
 				if (schoolClassCombo.getValueAsString() != null) {
-					schoolClassCombo.clearValue();
+					// schoolClassCombo.clearValue();
 					schoolClassCombo.setValueMap(valueMap);
 				} else {
 					schoolClassCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					schoolClassCombo.setValue(defaultValue); 
-					ChangedEvent event1 = new ChangedEvent(schoolClassCombo.getJsObj());
-					schoolClassCombo.fireEvent(event1);
-					
+					if (schoolClassCombo.getValueAsString() != null) {
+						schoolClassCombo.clearValue();
+					} else {
+						schoolClassCombo.setValue(defaultValue);
+						ChangedEvent event1 = new ChangedEvent(schoolClassCombo.getJsObj());
+						schoolClassCombo.fireEvent(event1);
+					}
+
 				}
-				
-				 
+
 			}
 		});
 
@@ -967,14 +972,18 @@ public class ComboUtil {
 				}
 
 				if (subjectCombo.getValueAsString() != null) {
-					subjectCombo.clearValue();
+					// subjectCombo.clearValue();
 					subjectCombo.setValueMap(valueMap);
 				} else {
 					subjectCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					subjectCombo.setValue(defaultValue);
+					if (subjectCombo.getValueAsString() != null) {
+						subjectCombo.clearValue();
+					} else {
+						subjectCombo.setValue(defaultValue);
+					}
 				}
 			}
 		});
@@ -995,14 +1004,18 @@ public class ComboUtil {
 				}
 
 				if (systemUserGroupCombo.getValueAsString() != null) {
-					systemUserGroupCombo.clearValue();
+					// systemUserGroupCombo.clearValue();
 					systemUserGroupCombo.setValueMap(valueMap);
 				} else {
 					systemUserGroupCombo.setValueMap(valueMap);
 				}
 
 				if (defaultValue != null) {
-					systemUserGroupCombo.setValue(defaultValue);
+					if (systemUserGroupCombo.getValueAsString() != null) {
+						systemUserGroupCombo.clearValue();
+					} else {
+						systemUserGroupCombo.setValue(defaultValue);
+					}
 				}
 			}
 		});
@@ -1037,7 +1050,12 @@ public class ComboUtil {
 				}
 
 				if (defaultValue != null) {
-					schoolClassCombo.setValue(defaultValue);
+					if (schoolClassCombo.getValueAsString() != null) {
+
+						schoolClassCombo.clearValue();
+					} else {
+						schoolClassCombo.setValue(defaultValue);
+					}
 				} else {
 					schoolClassCombo.clearValue();
 				}
@@ -1069,29 +1087,27 @@ public class ComboUtil {
 
 		combo.setValueMap(valueMap);
 	}
-	
+
 	public static void loadGendaCombo(final ComboBox combo) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 		valueMap.put("Male", "Male");
 		valueMap.put("Female", "Female");
 		combo.setValueMap(valueMap);
 	}
-	
-	
-	public static void loadAssessmentPeriodTypeCombo(final ComboBox combo,final String defaultValue) {
+
+	public static void loadAssessmentPeriodTypeCombo(final ComboBox combo, final String defaultValue) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 		valueMap.put("Academic Term", "Academic Term");
 		valueMap.put("Semester", "Semester");
 		combo.setValueMap(valueMap);
-		
+
 		if (defaultValue != null) {
 			combo.setValue(defaultValue);
 		} else {
 			combo.clearValue();
 		}
 	}
-	
-	
+
 	public static void loadMonthsCombo(final ComboBox combo) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 		for (monthEnum month : monthEnum.values()) {
@@ -1099,7 +1115,7 @@ public class ComboUtil {
 		}
 		combo.setValueMap(valueMap);
 	}
-	
+
 	public static void loadWeeksCombo(final ComboBox combo) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 		for (CalendarWeek week : CalendarWeek.values()) {

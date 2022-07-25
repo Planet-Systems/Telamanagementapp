@@ -330,6 +330,10 @@ public class RequestConstant {
 	
 	public static final String GET_LEARNER_DETAILS = "GET_LEARNER_DETAILS";
 	
+	
+	
+	public static final String LOAD_TIMETABLE_LESSONS_DATA="LOAD_TIMETABLE_LESSONS_DATA";
+	
 	 
 
 
