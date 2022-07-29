@@ -7,8 +7,8 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
-public class TimetableUploadPane extends VLayout {
- 
+public class TimetableUploadHomePane extends VLayout {
+
 	private ComboBox district;
 	private ComboBox region;
 	private ComboBox school;
@@ -18,10 +18,8 @@ public class TimetableUploadPane extends VLayout {
 	private IButton saveButton;
 	private IButton submitButton;
 	private IButton backButton;
-	
-	private VLayout timetableLayout;
 
-	public TimetableUploadPane() {
+	public TimetableUploadHomePane() {
 		super();
 
 		academicTerm = new ComboBox();
@@ -55,16 +53,12 @@ public class TimetableUploadPane extends VLayout {
 		school.setShowHintInField(true);
 
 		DynamicForm filterForm = new DynamicForm();
-		filterForm.setNumCols(4);
-		filterForm.setColWidths(150, 250, 150, 250, 150, 250, 150, 250);
+		filterForm.setNumCols(2);
+		filterForm.setColWidths(250, 350);
 		filterForm.setCellPadding(10);
 		filterForm.setFields(academicYear, academicTerm, region, district, school);
 
-		timetableLayout = new VLayout();
-		
-		//timetableUploadListgrid = new TimetableUploadListgrid(  days,   clazes,   subjects,staffList);
-
-		saveButton = new IButton("Save");
+		saveButton = new IButton("Next");
 		submitButton = new IButton("Submit");
 		submitButton.hide();
 		backButton = new IButton("Back");
@@ -78,12 +72,9 @@ public class TimetableUploadPane extends VLayout {
 		buttonLayout.setAlign(Alignment.CENTER);
 
 		this.addMember(filterForm);
-		this.addMember(timetableLayout);
 		this.addMember(buttonLayout);
 
 	}
-
-	 
 
 	public ComboBox getDistrict() {
 		return district;
@@ -117,10 +108,6 @@ public class TimetableUploadPane extends VLayout {
 		return backButton;
 	}
 
-
-
-	public VLayout getTimetableLayout() {
-		return timetableLayout;
-	}
+	 
 
 }

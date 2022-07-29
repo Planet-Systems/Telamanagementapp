@@ -70,7 +70,7 @@ public class Masthead extends VLayout {
 		westLayout.setWidth(WEST_WIDTH);
 		westLayout.setHeight(MASTHEAD_HEIGHT);
 //		westLayout.addMember(menu);
-	    westLayout.addMember(logo);
+	    //westLayout.addMember(logo);
 	    westLayout.addMember(logo2);
 
 

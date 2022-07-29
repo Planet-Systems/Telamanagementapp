@@ -611,8 +611,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			}
-			else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_SCHOOL_CALENDAR)) {
+			} else if (action.getRequest().equalsIgnoreCase(RequestConstant.UPDATE_SCHOOL_CALENDAR)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
@@ -625,8 +624,8 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				headers.add(HttpHeaders.AUTHORIZATION, token);
 
-				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("schoolCalendars").path(dto.getId())
-						.request(MediaType.APPLICATION_JSON).headers(headers)
+				SystemResponseDTO<SystemFeedbackDTO> responseDTO = client.target(API_LINK).path("schoolCalendars")
+						.path(dto.getId()).request(MediaType.APPLICATION_JSON).headers(headers)
 						.put(Entity.entity(dto, MediaType.APPLICATION_JSON),
 								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
 								});
@@ -674,7 +673,7 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				List<SchoolCalendarWeekDTO> weeksList = new ArrayList<SchoolCalendarWeekDTO>();
 
 				List<PublicHolidayDTO> publicDaysList = new ArrayList<PublicHolidayDTO>();
- 
+
 				String calendarId = (String) action.getRequestBody()
 						.get(RequestConstant.RETRIEVE_SCHOOL_CALENDAR_WEEKS_PUBLICDAYS);
 
@@ -3811,6 +3810,40 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.SUBMIT_TIME_TABLE)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				TimeTableDTO dto = (TimeTableDTO) action.getRequestBody().get(RequestConstant.SUBMIT_TIME_TABLE);
+
+				Gson gson = new Gson();
+				String jsonString = gson.toJson(dto);
+
+				System.out.println("jsonString:: " + jsonString);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<SystemFeedbackDTO> postResponseDTO = client.target(API_LINK).path("timetables").path("public") 
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (postResponseDTO != null) {
+					feedback = postResponseDTO.getData();
+					System.out.print("FEEDBACK " + feedback);
+				}
+
+				client.close();
+				return new RequestResult(feedback);
+
 			}
 
 			///////////////////////////////////
@@ -7131,17 +7164,18 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback, list, null);
 
 			}
-			
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.LOAD_TIMETABLE_LESSONS_DATA)
 					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
 
-				 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
 
 				List<SchoolClassDTO> classList = new ArrayList<SchoolClassDTO>();
 				List<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
 				List<SchoolStaffDTO> staffList = new ArrayList<SchoolStaffDTO>();
 				
+				List<TimeTableLessonDTO> timeTableLessons= new ArrayList<TimeTableLessonDTO>();
+
 				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
 				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
 
@@ -7156,31 +7190,67 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SchoolClassDTO>>>() {
 						});
-				
-				
-				SystemResponseDTO<List<SchoolStaffDTO>> responseDto2 = client.target(API_LINK).path("schools").path(schoolId)
-						.path("schoolstaffs").request(MediaType.APPLICATION_JSON).headers(headers)
+
+				SystemResponseDTO<List<SchoolStaffDTO>> responseDto2 = client.target(API_LINK).path("schools")
+						.path(schoolId).path("schoolstaffs").request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SchoolStaffDTO>>>() {
 						});
-				
+
 				SystemResponseDTO<List<SubjectDTO>> responseDto3 = client.target(API_LINK).path("subjects")
 						.request(MediaType.APPLICATION_JSON).headers(headers)
 						.get(new GenericType<SystemResponseDTO<List<SubjectDTO>>>() {
 						});
+ 
+
+				SystemResponseDTO<List<TimeTableLessonDTO>> responseDto4 = client.target(API_LINK).path("timetables")
+						.path("timetablelessons").path(academicTermId).path("academicTermId").path(schoolId)
+						.path("schoolId").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<TimeTableLessonDTO>>>() {
+						});
 
 				classList = responseDto1.getData();
-				staffList=responseDto2.getData();
-				subjects=responseDto3.getData();
+				staffList = responseDto2.getData();
+				subjects = responseDto3.getData();
+				timeTableLessons=responseDto4.getData();
 
-				 
 				feedback.setResponse(true);
 				feedback.setMessage("Data found");
 
 				client.close();
-				return new RequestResult(feedback, classList, subjects,staffList);
+				return new RequestResult(feedback, classList, subjects, staffList,timeTableLessons);
 			}
-			
-			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.LOAD_TIMETABLE_LESSONS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+ 
+				List<TimeTableLessonDTO> timeTableLessons= new ArrayList<TimeTableLessonDTO>();
+
+				String schoolId = (String) action.getRequestBody().get(RequestDelimeters.SCHOOL_ID);
+				String academicTermId = (String) action.getRequestBody().get(RequestDelimeters.ACADEMIC_TERM_ID);
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+ 
+				SystemResponseDTO<List<TimeTableLessonDTO>> responseDto4 = client.target(API_LINK).path("timetables")
+						.path("timetablelessons").path(academicTermId).path("academicTermId").path(schoolId)
+						.path("schoolId").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<TimeTableLessonDTO>>>() {
+						});
+
+				 
+				timeTableLessons=responseDto4.getData();
+
+				feedback.setResponse(true);
+				feedback.setMessage("Data found");
+
+				client.close();
+				return new RequestResult(feedback,timeTableLessons,null);
+			}
+
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_FILE_UPLOAD_LINK)) {
 
 				SystemFeedbackDTO feedback = new SystemFeedbackDTO();

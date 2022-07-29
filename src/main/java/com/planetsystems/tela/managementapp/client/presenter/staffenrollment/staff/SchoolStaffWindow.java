@@ -13,55 +13,57 @@ import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 public class SchoolStaffWindow extends Window {
-    
-	    private TextItem firstNameField;
-	    private TextItem lastNameField;
-	    private TextItem phoneNumberField;
-	    private TextItem emailField;
-	    private DateItem dobItem;
-	    private TextItem nationalIdField;
-	    private ComboBox genderCombo;
-	    private TextItem nameAbrevField;
-	    private TextItem codeField;
-	    private ComboBox registeredCombo;
-	    private ComboBox districtCombo;
-	    private ComboBox schoolCombo;
-	    
-	    private ComboBox roleCombo;
-	   
-	    
-	    private IButton saveButton;
-		private IButton cancelButton;
-	
+
+	private TextItem firstNameField;
+	private TextItem lastNameField;
+	private TextItem phoneNumberField;
+	private TextItem emailField;
+	private DateItem dobItem;
+	private TextItem nationalIdField;
+	private ComboBox genderCombo;
+	private TextItem nameAbrevField;
+	private TextItem codeField;
+	private ComboBox registeredCombo;
+	private ComboBox districtCombo;
+	private ComboBox schoolCombo;
+
+	private ComboBox roleCombo;
+
+	private TextItem registrationNo;
+	private TextItem nationality;
+
+	private IButton saveButton;
+	private IButton cancelButton;
+
 	public SchoolStaffWindow() {
 		super();
 		firstNameField = new TextItem();
-		firstNameField.setTitle("First Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
-		firstNameField.setHint("First Name");
+		firstNameField.setTitle("Given Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		firstNameField.setHint("Given Name");
 		firstNameField.setShowHintInField(true);
-		
+
 		lastNameField = new TextItem();
-		lastNameField.setTitle("Last Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
-		lastNameField.setHint("Last Name");
+		lastNameField.setTitle("Surname <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		lastNameField.setHint("Surname");
 		lastNameField.setShowHintInField(true);
-		
+
 		phoneNumberField = new TextItem();
-		phoneNumberField.setTitle("Phone Number <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
-		phoneNumberField.setMask("#### ###-###");  
-        phoneNumberField.setHint("#### ###-###");  
-        phoneNumberField.setShowHintInField(true);  
-		
-		
+		phoneNumberField
+				.setTitle("Phone Number <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		phoneNumberField.setMask("#### ###-###");
+		phoneNumberField.setHint("#### ###-###");
+		phoneNumberField.setShowHintInField(true);
+
 		emailField = new TextItem();
 		emailField.setTitle("Email");
 		emailField.setHint("Email");
 		emailField.setShowHintInField(true);
 
 		dobItem = new DateItem();
-		dobItem.setTitle("DOB"); 
+		dobItem.setTitle("DOB");
 		dobItem.setUseTextField(false);
-		dobItem.setWidth("*"); 
-		
+		dobItem.setWidth("*");
+
 		nationalIdField = new TextItem();
 		nationalIdField.setTitle("National Id");
 		nationalIdField.setHint("NIN");
@@ -71,87 +73,97 @@ public class SchoolStaffWindow extends Window {
 		nameAbrevField.setTitle("Name Abbreviation");
 		nameAbrevField.setHint("Name Abbreviation");
 		nameAbrevField.setShowHintInField(true);
-		
+
 		codeField = new TextItem();
 		codeField.setTitle("Teacher PIN");
 		codeField.setHint("Teacher PIN");
 		codeField.setShowHintInField(true);
-		
+
 		genderCombo = new ComboBox();
 		genderCombo.setTitle("Gender <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		genderCombo.setHint("Gender");
 		genderCombo.setShowHintInField(true);
-		
+
 		registeredCombo = new ComboBox();
-		registeredCombo.setTitle("Payroll Status <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		registeredCombo
+				.setTitle("Payroll Status <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		registeredCombo.setHint("Payroll Status");
 		registeredCombo.setShowHintInField(true);
-		
-		
-		
+
 		schoolCombo = new ComboBox();
 		schoolCombo.setTitle("School <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolCombo.setHint("school");
 		schoolCombo.setShowHintInField(true);
-		
+
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("Local Government <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		districtCombo
+				.setTitle("Local Government <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
-		
-		roleCombo=new ComboBox();
+
+		roleCombo = new ComboBox();
 		roleCombo.setTitle("Role <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		roleCombo.setHint("Role");
 		roleCombo.setShowHintInField(true);
-		
+
+		// ;
+		// registrationNo,nationality;
+
+		registrationNo = new TextItem();
+		registrationNo.setTitle("Teacher. Reg No. /Employee's No.");
+		registrationNo.setHint("Teacher. Reg No. /Employee's No.");
+		registrationNo.setShowHintInField(true);
+
+		nationality = new TextItem();
+		nationality.setTitle("Nationality");
+		nationality.setHint("Nationality");
+		nationality.setShowHintInField(true);
+
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(firstNameField , lastNameField , nameAbrevField , emailField , nationalIdField , phoneNumberField , codeField , districtCombo , genderCombo , schoolCombo , dobItem , registeredCombo,roleCombo);
+		dynamicForm.setFields(lastNameField, firstNameField, nameAbrevField, emailField, nationality, nationalIdField,
+				phoneNumberField, registrationNo, districtCombo, genderCombo, schoolCombo, dobItem, registeredCombo,
+				roleCombo);
 		dynamicForm.setNumCols(4);
-		dynamicForm.setWrapItemTitles(false);
+		dynamicForm.setWrapItemTitles(true);
 		dynamicForm.setMargin(10);
 		dynamicForm.setCellPadding(8);
-		dynamicForm.setColWidths("80", "220" , "80", "220");
-	 
-        
+		dynamicForm.setColWidths("120", "220", "120", "220");
+
 		saveButton = new IButton("Save");
 		cancelButton = new IButton("Cancel");
 		cancelButton.setBaseStyle("cancel-button");
-	
+
 		HLayout buttonLayout = new HLayout();
-		buttonLayout.setMembers(cancelButton , saveButton);
+		buttonLayout.setMembers(cancelButton, saveButton);
 		buttonLayout.setAutoHeight();
 		buttonLayout.setAutoWidth();
 		buttonLayout.setMargin(5);
 		buttonLayout.setMembersMargin(4);
-		
-		
+
 		buttonLayout.setLayoutAlign(Alignment.CENTER);
-		
-		
-		
+
 		VLayout layout = new VLayout();
 		layout.addMember(dynamicForm);
 		layout.addMember(buttonLayout);
 		layout.setMembersMargin(10);
 		layout.setMargin(10);
 
-		
 		layout.setMargin(10);
 		this.addItem(layout);
-		this.setWidth("50%");
-		this.setHeight("60%");
+		this.setWidth("55%");
+		this.setHeight("65%");
 		this.setAutoCenter(true);
 		this.setTitle("School Staff");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
-		
+
 		closeWindow(this);
-		
+
 	}
-	
+
 	private void closeWindow(final Window window) {
 		cancelButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				window.close();
@@ -219,7 +231,12 @@ public class SchoolStaffWindow extends Window {
 		return roleCombo;
 	}
 
-	
-	
+	public TextItem getRegistrationNo() {
+		return registrationNo;
+	}
+
+	public TextItem getNationality() {
+		return nationality;
+	}
 
 }

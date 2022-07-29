@@ -3,6 +3,7 @@ package com.planetsystems.tela.managementapp.client.presenter.timetableupload;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.dto.SubjectDTO;
@@ -15,6 +16,8 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TimeItem;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellSavedEvent;
+import com.smartgwt.client.widgets.grid.events.CellSavedHandler;
 
 public class TimetableUploadListgrid extends SuperListGrid {
 
@@ -56,47 +59,44 @@ public class TimetableUploadListgrid extends SuperListGrid {
 		}
 		classField.setValueMap(classFieldValueMap);
 		classField.setEditorType(classFieldSelectItem);
-
+		  
 		ListGridField classIdField = new ListGridField(CLASS_ID, "ClassId");
 		classIdField.setHidden(true);
 
 		ListGridField subjectField = new ListGridField(SUBJECT, "Subject");
-		
-		SelectItem subjectFieldSelectItem = new SelectItem(); 
+
+		SelectItem subjectFieldSelectItem = new SelectItem();
 		LinkedHashMap<String, String> subjectFieldValueMap = new LinkedHashMap<>();
 		for (SubjectDTO dto : subjects) {
 			subjectFieldValueMap.put(dto.getId(), dto.getName());
 		}
 		subjectField.setValueMap(subjectFieldValueMap);
 		subjectField.setEditorType(subjectFieldSelectItem);
-		
 
-		
 		ListGridField subjectIdField = new ListGridField(SUBJECT_ID, "Subject Id");
 		subjectIdField.setHidden(true);
 
-		
 		ListGridField startTimeField = new ListGridField(START_TIME, "Start Time");
 		startTimeField.setType(ListGridFieldType.TIME);
-		TimeItem startTime=new TimeItem();
+		TimeItem startTime = new TimeItem();
 		startTimeField.setEditorType(startTime);
-		
-		
+
 		ListGridField endTimeField = new ListGridField(END_TIME, "End Time");
 		endTimeField.setType(ListGridFieldType.TIME);
-		TimeItem endTime=new TimeItem();
+		TimeItem endTime = new TimeItem();
 		endTimeField.setEditorType(endTime);
 
 		ListGridField staffField = new ListGridField(STAFF, "Staff");
-		
-		SelectItem staffFieldSelectItem = new SelectItem(); 
+
+		SelectItem staffFieldSelectItem = new SelectItem();
 		LinkedHashMap<String, String> staffFieldValueMap = new LinkedHashMap<>();
 		for (SchoolStaffDTO dto : staffList) {
-			staffFieldValueMap.put(dto.getId(), dto.getGeneralUserDetailDTO().getFirstName()+" "+dto.getGeneralUserDetailDTO().getLastName());
+			staffFieldValueMap.put(dto.getId(),
+					dto.getGeneralUserDetailDTO().getFirstName() + " " + dto.getGeneralUserDetailDTO().getLastName());
 		}
 		staffField.setValueMap(staffFieldValueMap);
 		staffField.setEditorType(staffFieldSelectItem);
-		
+
 		ListGridField staffIdField = new ListGridField(STAFF_ID, "Staff Id");
 		staffIdField.setHidden(true);
 
@@ -106,8 +106,12 @@ public class TimetableUploadListgrid extends SuperListGrid {
 		this.setAutoFetchData(true);
 		this.setCanEdit(true);
 		this.setEditEvent(ListGridEditEvent.CLICK);
-		//this.setEditByCell(true);
-
+		// this.setEditByCell(true);
+		
+		onSelectedValueChanged(CLASS,CLASS_ID);
+		onSelectedValueChanged(STAFF,STAFF_ID);
+		onSelectedValueChanged(SUBJECT,SUBJECT_ID);
+		 
 	}
 
 	public ListGridRecord addRowData(TimeTableLessonDTO timeTableLessonDTO) {
@@ -151,6 +155,30 @@ public class TimetableUploadListgrid extends SuperListGrid {
 
 	public void addRecordToGrid(TimeTableLessonDTO dto) {
 		this.addData(addRowData(dto));
+	}
+
+	private void onSelectedValueChanged(final String column1,final String column2) {
+		
+		this.getField(column1).addCellSavedHandler(new CellSavedHandler() {
+			
+			@Override
+			public void onCellSaved(CellSavedEvent event) {
+				
+				int row = event.getRowNum(); 
+				String id=getListgrid().getRecord(row).getAttribute(column1);
+				getListgrid().getRecord(row).setAttribute(column2, id);
+				
+				GWT.log("ID:: "+id);
+				
+				//SC.say(id);
+				
+			}
+		}); 
+		 
+	}
+	
+	private TimetableUploadListgrid getListgrid() {
+		return this;
 	}
 
 }

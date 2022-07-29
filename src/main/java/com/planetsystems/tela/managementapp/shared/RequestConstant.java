@@ -188,6 +188,9 @@ public class RequestConstant {
 	public static final String SAVE_TIME_TABLE = "SAVE_TIME_TABLE";
 	public static final String GET_TIME_TABLES = "GET_TIME_TABLES";
 	public static final String GET_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS = "GET_TIME_TABLES_BY_SYSTEM_USER_PROFILE_SCHOOLS";
+	
+	public static final String SUBMIT_TIME_TABLE = "SUBMIT_TIME_TABLE";
+	public static final String GET_TIME_TABLE_LESSONS = "GET_TIME_TABLE_LESSONS";
 
 	// system users
 	public static final String SAVE_SYSTEM_USER = "SAVE_SYSTEM_USER";
@@ -331,8 +334,9 @@ public class RequestConstant {
 	public static final String GET_LEARNER_DETAILS = "GET_LEARNER_DETAILS";
 	
 	
+	public static final String LOAD_TIMETABLE_LESSONS_DATA="LOAD_TIMETABLE_LESSONS_DATA"; 
+	public static final String LOAD_TIMETABLE_LESSONS="LOAD_TIMETABLE_LESSONS";
 	
-	public static final String LOAD_TIMETABLE_LESSONS_DATA="LOAD_TIMETABLE_LESSONS_DATA";
 	
 	 
 

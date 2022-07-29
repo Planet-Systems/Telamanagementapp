@@ -2,7 +2,6 @@ package com.planetsystems.tela.managementapp.client.presenter.staffenrollment.st
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
 import com.smartgwt.client.data.DataSource;
@@ -21,7 +20,6 @@ public class SchoolStaffListGrid extends SuperListGrid {
 	public static String DISTRICT_ID = "districtId";
 	public static String DISTRICT = "district";
 
-
 	public static String FIRSTNAME = "firstName";
 	public static String LASTNAME = "lastName";
 	public static String PHONE_NUMBER = "phoneNumber";
@@ -34,6 +32,9 @@ public class SchoolStaffListGrid extends SuperListGrid {
 	public static String STAFF_TYPE = "STAFF_TYPE";
 
 	public static String ROLE = "Role";
+
+	public static String RegistrationNo = "registrationNo";
+	public static String Nationality = "nationality";
 
 	SchoolStaffDataSource dataSource;
 
@@ -48,18 +49,18 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField staffCodeField = new ListGridField(STAFF_CODE, "Tela Code");
 		ListGridField staffTypeField = new ListGridField(STAFF_TYPE, "Staff Type");
 		staffTypeField.setHidden(true);
-		
+
 		ListGridField registeredField = new ListGridField(REGISTERED, "Payroll Status");
 
 		ListGridField schoolField = new ListGridField(SCHOOL, "School");
 		schoolField.setHidden(true);
-		
+
 		ListGridField schoolIdField = new ListGridField(SCHOOL_ID, "School Id");
 		schoolIdField.setHidden(true);
 
 		ListGridField districtField = new ListGridField(DISTRICT, "Local Government");
-		 districtField.setHidden(true);
-		
+		districtField.setHidden(true);
+
 		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
 		districtIdField.setHidden(true);
 
@@ -74,8 +75,14 @@ public class SchoolStaffListGrid extends SuperListGrid {
 
 		ListGridField role = new ListGridField(ROLE, "Role");
 
-		this.setFields(idField, schoolIdField, districtIdField, staffCodeField, role,firstNameField, lastNameField,staffTypeField , genderField,
-				phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField, districtField, schoolField, registeredField);
+		ListGridField registrationNo = new ListGridField(RegistrationNo, "RegistrationNo");
+		registrationNo.setHidden(true);
+		ListGridField nationality = new ListGridField(Nationality, "Nationality");
+		nationality.setHidden(true);
+
+		this.setFields(idField, schoolIdField, districtIdField, staffCodeField, role, firstNameField, lastNameField,
+				staffTypeField, genderField, phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField,
+				districtField, schoolField, registeredField, registrationNo, nationality);
 		this.setDataSource(dataSource);
 		this.setWrapHeaderTitles(true);
 		this.setSelectionType(SelectionStyle.SIMPLE);
@@ -119,6 +126,9 @@ public class SchoolStaffListGrid extends SuperListGrid {
 
 			record.setAttribute(PHONE_NUMBER, schoolStaffDTO.getGeneralUserDetailDTO().getPhoneNumber());
 		}
+
+		record.setAttribute(RegistrationNo, schoolStaffDTO.getRegistrationNo());
+		record.setAttribute(Nationality, schoolStaffDTO.getNationality());
 
 		return record;
 	}

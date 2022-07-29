@@ -3,7 +3,9 @@ package com.planetsystems.tela.managementapp.client.gin;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.dto.SystemErrorDTO;
+import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
 import com.smartgwt.client.util.BooleanCallback;
@@ -80,6 +82,12 @@ public class SessionManager {
 		Cookies.removeCookie(RequestConstant.LOGGED_IN_SYSTEM_USER_GROUP_COOKIE);
 		Cookies.removeCookie(RequestConstant.TENANT_URL); 
 		placeManager.revealCurrentPlace();
+	}
+	
+	public void accessLogin(PlaceManager placeManager) { 
+		PlaceRequest placeRequest = new PlaceRequest.Builder()
+				.nameToken(NameTokens.login).build();
+		placeManager.revealPlace(placeRequest);
 	}
 
 	public String getLoggedInUserGroup() {

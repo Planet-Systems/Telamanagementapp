@@ -67,7 +67,7 @@ public class Header extends VLayout {
 		westLayout.setWidth(WEST_WIDTH);
 		westLayout.setHeight(MASTHEAD_HEIGHT);
 		// westLayout.addMember(menu);
-		westLayout.addMember(logo);
+		//westLayout.addMember(logo);
 		westLayout.addMember(logo2);
 
 		HLayout hLayout = new HLayout();
@@ -93,7 +93,8 @@ public class Header extends VLayout {
 		this.setStyleName("crm-Masthead");
 		// this.setAutoHeight();
 		this.setHeight(MASTHEAD_HEIGHT);
-		this.setBackgroundColor("#00698C");
+		//this.setBackgroundColor("#00698C");
+		this.setBackgroundColor("#0087c3");
 
 	}
 

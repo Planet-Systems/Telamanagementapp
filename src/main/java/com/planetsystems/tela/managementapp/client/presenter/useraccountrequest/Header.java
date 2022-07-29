@@ -93,7 +93,8 @@ public class Header extends VLayout {
 		this.setStyleName("crm-Masthead");
 		// this.setAutoHeight();
 		this.setHeight(MASTHEAD_HEIGHT);
-		this.setBackgroundColor("#00698C");
+		//this.setBackgroundColor("#00698C");
+		this.setBackgroundColor("#0087c3");
 
 	}
 

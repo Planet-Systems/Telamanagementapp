@@ -7,6 +7,7 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -20,6 +21,10 @@ public class StaffImportWindow extends Window {
 	private ComboBox region;
 	private ComboBox district;
 	private ComboBox school;
+	private TextItem sheetNo;
+	private TextItem rowNo;
+	
+	//sheetNo,rowNo
 
 	public StaffImportWindow() {
 		super();
@@ -38,6 +43,12 @@ public class StaffImportWindow extends Window {
 		
 		school=new ComboBox();
 		school.setTitle("School");
+		
+		sheetNo=new TextItem();
+		sheetNo.setTitle("Sheet Number");
+		
+		rowNo=new TextItem();
+		rowNo.setTitle("Row Number");
 
 		// upload.setName("uploadFormElement");
 		upload.setTitle("File Upload");
@@ -50,7 +61,7 @@ public class StaffImportWindow extends Window {
 		//uploadForm.
 
 		DynamicForm form = new DynamicForm();
-		form.setFields(region, district,school);
+		form.setFields(region, district,school,sheetNo,rowNo);
 		form.setColWidths("150", "300" , "150", "300");
 		form.setPadding(8); 
 
@@ -100,6 +111,14 @@ public class StaffImportWindow extends Window {
 
 	public ComboBox getSchool() {
 		return school;
+	}
+
+	public TextItem getSheetNo() {
+		return sheetNo;
+	}
+
+	public TextItem getRowNo() {
+		return rowNo;
 	}
 	
 	

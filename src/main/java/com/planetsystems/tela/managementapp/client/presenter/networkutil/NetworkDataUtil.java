@@ -23,6 +23,7 @@ public class NetworkDataUtil {
 
 	public static void callNetwork(final DispatchAsync dispatcher, final PlaceManager placeManager,
 			Map<String, Object> map, final NetworkResult networkResult) {
+		
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 		
 		SC.showPrompt("", "", new SwizimaLoader());

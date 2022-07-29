@@ -160,9 +160,12 @@ public class UserAccountRequestPresenter
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				PlaceRequest placeRequest = new PlaceRequest.Builder()
+				
+				/*PlaceRequest placeRequest = new PlaceRequest.Builder()
 						.nameToken(NameTokens.login).build();
-				placeManager.revealPlace(placeRequest);
+				placeManager.revealPlace(placeRequest);*/
+				
+				SessionManager.getInstance().accessLogin(placeManager);
 				
 			}
 		});
