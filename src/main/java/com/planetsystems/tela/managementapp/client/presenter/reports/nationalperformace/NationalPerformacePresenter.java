@@ -98,6 +98,7 @@ public class NationalPerformacePresenter
 		getView().getControlsPane().addMenuButtons("National Performance", buttons);
 
 		showFilter(filter);
+		
 		refresh.addClickHandler(new ClickHandler() {
 			
 			@Override

@@ -8,7 +8,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.ListGridRecord; 
 
 public class SchoolListGrid extends SuperListGrid {
 	public static String ID = "id";
@@ -30,6 +30,8 @@ public class SchoolListGrid extends SuperListGrid {
 	public static String SchoolType="SchoolType";
 	public static String SchoolGenderCategory="SchoolGenderCategory";
 	public static String Licensed="Licensed";
+	
+	public static String Rollout="rollout";
 	
 	private SchoolDataSource dataSource;
 
@@ -73,9 +75,11 @@ public class SchoolListGrid extends SuperListGrid {
 		ListGridField schoolType = new ListGridField(SchoolType, "Type");
 		ListGridField schoolGenderCategory = new ListGridField(SchoolGenderCategory, "Gender Category");
 		ListGridField licensed = new ListGridField(Licensed, "license Status");
-
+		
+		ListGridField rollout = new ListGridField(Rollout, "Rollout Phase");
+		  
 		this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
-				latitudeField , latitudeField);
+				latitudeField , latitudeField,rollout);
 		this.setDataSource(dataSource);
 		this.setSelectionType(SelectionStyle.SIMPLE);
 		this.setWrapHeaderTitles(true);
@@ -113,6 +117,8 @@ public class SchoolListGrid extends SuperListGrid {
 		record.setAttribute(SchoolType, schoolDTO.getSchoolType());
 		record.setAttribute(SchoolGenderCategory, schoolDTO.getSchoolGenderCategory());
 		record.setAttribute(Licensed, schoolDTO.getLicensed());
+		
+		record.setAttribute(Rollout, schoolDTO.getRolloutPhase());
 		
 		return record;
 	}
@@ -176,9 +182,10 @@ public class SchoolListGrid extends SuperListGrid {
 			DataSourceTextField schoolGenderCategory = new DataSourceTextField(SchoolGenderCategory, "Gender Category");
 			DataSourceTextField licensed = new DataSourceTextField(Licensed, "license Status");
 			
-
+			DataSourceTextField rollout = new DataSourceTextField(Rollout, "Rollout Phase");
+			 
 			this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
-					latitudeField , latitudeField);
+					latitudeField , latitudeField,rollout);
 			
 			setClientOnly(true);
 

@@ -5,6 +5,7 @@ import com.planetsystems.tela.managementapp.client.presenter.academicyear.Academ
 import com.planetsystems.tela.managementapp.client.presenter.dailyattendancedashoard.DailyAttendanceDashoardModule;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardModule;
 import com.planetsystems.tela.managementapp.client.presenter.devicemanager.DeviceManagerModule;
+import com.planetsystems.tela.managementapp.client.presenter.emailattachmentdownload.EmailAttachmentDownloadModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerenrollment.LearnerEnrollmentModule;
 import com.planetsystems.tela.managementapp.client.presenter.loginaudit.LoginAuditModule;
@@ -62,6 +63,8 @@ public class MainModule extends AbstractPresenterModule {
 		install(new DailyAttendanceDashoardModule());
 
 		install(new LoginAuditModule());
+
+		install(new EmailAttachmentDownloadModule());
 
 	}
 

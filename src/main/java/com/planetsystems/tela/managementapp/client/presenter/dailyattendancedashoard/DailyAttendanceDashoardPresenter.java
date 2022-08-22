@@ -35,7 +35,11 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.events.RecordDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.RecordDoubleClickHandler;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.planetsystems.tela.dto.dashboard.AttendanceDashboardSummaryDTO;
+import com.planetsystems.tela.dto.reports.NationalReportFilterDTO;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 
@@ -194,14 +198,56 @@ public class DailyAttendanceDashoardPresenter
 		});
 	}
 
-	private void filter(MenuButton filterButton) {
+	private void filter(final MenuButton filterButton) {
+
 		filterButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				final FilterWindow window = new FilterWindow();
-				loadDataByDate(window);
-				window.show();
+
+				final Menu menu = new Menu();
+
+				MenuItem item1 = new MenuItem("Daily View");
+				MenuItem item2 = new MenuItem("Weekly View");
+
+				menu.setItems(item1, item2);
+
+				menu.showNextTo(filterButton, "bottom");
+
+				item1.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						final FilterWindow window = new FilterWindow();
+						loadDataByDate(window);
+						window.show();
+
+					}
+				});
+
+				item2.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+					@Override
+					public void onClick(MenuItemClickEvent event) {
+
+						final WeeklyFilterWindow window = new WeeklyFilterWindow();
+						window.getSaveButton().addClickHandler(new ClickHandler() {
+
+							@Override
+							public void onClick(ClickEvent event) {
+
+								String fromDate = dateFormat.format(window.getFromDate().getValueAsDate());
+								String toDate = dateFormat.format(window.getToDate().getValueAsDate());
+
+								loadWeeklyDashboard(fromDate, toDate);
+
+							}
+						});
+						window.show();
+
+					}
+				});
 
 			}
 		});
@@ -392,6 +438,51 @@ public class DailyAttendanceDashoardPresenter
 
 			}
 		});
+	}
+
+	private void loadWeeklyDashboard(final String fromDate, final String toDate) {
+
+		NationalReportFilterDTO dto = new NationalReportFilterDTO();
+		dto.setFromDate(fromDate);
+		dto.setToDate(toDate);
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+		map.put(RequestConstant.GET_WeeklyDailyAttendanceDashboard, dto);
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_WeeklyDailyAttendanceDashboard, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							WeeklyClockinSummaryPane pane = new WeeklyClockinSummaryPane();
+							pane.getListgrid().addRecordsToGrid(result.getWeeklyClockinSummaryDTOs());
+
+							getView().getDashboardPane().setMembers(pane);
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+
 	}
 
 }

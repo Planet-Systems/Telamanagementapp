@@ -478,8 +478,14 @@ public class MainPresenter extends Presenter<MainPresenter.MyView, MainPresenter
 					}
 
 					if (!utilityManager.isEmpty()) {
-						getView().getNavigationPane().addSection(RequestConstant.UTILITY_MANAGER,
+						
+					/*	getView().getNavigationPane().addSection(RequestConstant.UTILITY_MANAGER,
 								UtilityManagerDataSource.getInstance(UtilityManagerData.getNewRecords()));
+						getView().getNavigationPane().addRecordClickHandler(RequestConstant.UTILITY_MANAGER,
+								new NavigationPaneClickHandler());*/
+						
+						getView().getNavigationPane().addSection(RequestConstant.UTILITY_MANAGER,
+								SystemUserDataSource.getInstance(SystemUserData.getNewRecords(utilityManager))); 
 						getView().getNavigationPane().addRecordClickHandler(RequestConstant.UTILITY_MANAGER,
 								new NavigationPaneClickHandler());
 					}

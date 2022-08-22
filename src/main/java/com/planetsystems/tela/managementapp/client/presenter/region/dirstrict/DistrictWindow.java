@@ -30,13 +30,13 @@ public class DistrictWindow extends Window {
 		districtCode.setShowHintInField(true);
 
 		districtName = new TextField();
-		districtName.setTitle("District");
-		districtName.setHint("District");
+		districtName.setTitle("Local Government");
+		districtName.setHint("District/City/Municipality");
 		districtName.setShowHintInField(true);
 
 		region = new ComboBox();
-		region.setTitle("Region");
-		region.setHint("Region");
+		region.setTitle("Sub-Region");
+		region.setHint("Sub-Region");
 		region.setShowHintInField(true);
 
 		rolledOut = new ComboBox();
@@ -75,7 +75,7 @@ public class DistrictWindow extends Window {
 		this.setWidth("40%");
 		this.setHeight("60%");
 		this.setAutoCenter(true);
-		this.setTitle("Region");
+		this.setTitle("Local Government (District/City/Municipality) Setup");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

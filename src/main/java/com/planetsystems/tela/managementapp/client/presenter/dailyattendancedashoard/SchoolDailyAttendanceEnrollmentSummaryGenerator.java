@@ -28,10 +28,10 @@ public class SchoolDailyAttendanceEnrollmentSummaryGenerator {
 		long clockedLearners = dto.getClockedLearners();
 
 		VLayout col1 = new VLayout();
-		col1.addMember(getCard("Total Number of Teachers Enrolled", enrolledTeachers + "", "#6495ED"));
-		col1.addMember(getCard("Total Number of Teachers Clocked in", clockedInteachers + "", "#6495ED"));
-		col1.addMember(getCard("Total Number of Learners Enrolled", enroledLearners + "", "#6495ED"));
-		col1.addMember(getCard("Total Number of Learner Attendance Recorded", clockedLearners + "", "#f7b924"));
+		col1.addMember(getCard("Total Teachers Enrolled", enrolledTeachers + "", "#6495ED"));
+		col1.addMember(getCard("Total Teachers Clocked in", clockedInteachers + "", "#6495ED"));
+		col1.addMember(getCard("Total Learners Enrolled", enroledLearners + "", "#6495ED"));
+		col1.addMember(getCard("Total Learner Attendance Recorded", clockedLearners + "", "#f7b924"));
 
 		col1.setAutoHeight();
 		col1.setWidth("20%");

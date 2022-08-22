@@ -64,8 +64,8 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField districtIdField = new ListGridField(DISTRICT_ID, "District Id");
 		districtIdField.setHidden(true);
 
-		ListGridField firstNameField = new ListGridField(FIRSTNAME, "First Name");
-		ListGridField lastNameField = new ListGridField(LASTNAME, "Last Name");
+		ListGridField firstNameField = new ListGridField(FIRSTNAME, "Given Name");
+		ListGridField lastNameField = new ListGridField(LASTNAME, "Surname");
 		ListGridField phoneNumberField = new ListGridField(PHONE_NUMBER, "Phone Number");
 		ListGridField emailField = new ListGridField(EMAIL, "Email");
 		ListGridField dobField = new ListGridField(DOB, "D.O.B");
@@ -80,7 +80,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		ListGridField nationality = new ListGridField(Nationality, "Nationality");
 		nationality.setHidden(true);
 
-		this.setFields(idField, schoolIdField, districtIdField, staffCodeField, role, firstNameField, lastNameField,
+		this.setFields(idField, schoolIdField, districtIdField, lastNameField, firstNameField, staffCodeField, role,
 				staffTypeField, genderField, phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField,
 				districtField, schoolField, registeredField, registrationNo, nationality);
 		this.setDataSource(dataSource);

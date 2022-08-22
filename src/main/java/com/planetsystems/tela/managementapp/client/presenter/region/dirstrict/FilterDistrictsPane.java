@@ -12,8 +12,8 @@ public class FilterDistrictsPane extends HLayout {
 		super();
 
 		regionCombo = new ComboBox();
-		regionCombo.setTitle("Region");
-		regionCombo.setHint("Select Region");
+		regionCombo.setTitle("Sub-Region");
+		regionCombo.setHint("Select");
 		regionCombo.setShowHintInField(true);
 		
 		DynamicForm form = new DynamicForm();

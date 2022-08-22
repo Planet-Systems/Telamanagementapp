@@ -48,7 +48,7 @@ public class StaffImportWindow extends Window {
 		sheetNo.setTitle("Sheet Number");
 		
 		rowNo=new TextItem();
-		rowNo.setTitle("Row Number");
+		rowNo.setTitle("Headers Row Number");
 
 		// upload.setName("uploadFormElement");
 		upload.setTitle("File Upload");

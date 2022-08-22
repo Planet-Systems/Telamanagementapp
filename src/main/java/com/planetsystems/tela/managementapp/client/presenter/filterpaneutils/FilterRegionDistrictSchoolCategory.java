@@ -22,18 +22,18 @@ public class FilterRegionDistrictSchoolCategory extends VLayout {
 		form.setCellPadding(5);
 
 		regionCombo = new ComboBox();
-		regionCombo.setTitle("Region");
-		regionCombo.setHint("region");
+		regionCombo.setTitle("Sub-Region");
+		regionCombo.setHint("Select");
 		regionCombo.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
-		districtCombo.setHint("District");
+		districtCombo.setTitle("Local Government");
+		districtCombo.setHint("District/City/Municipality");
 		districtCombo.setShowHintInField(true);
 
 		schoolCategoryCombo = new ComboBox();
-		schoolCategoryCombo.setTitle("SchoolCategory");
-		schoolCategoryCombo.setHint("school category");
+		schoolCategoryCombo.setTitle("Foundation Body");
+		schoolCategoryCombo.setHint("Select");
 		schoolCategoryCombo.setShowHintInField(true);
 
 		form.setFields(regionCombo, districtCombo, schoolCategoryCombo);

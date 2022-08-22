@@ -258,6 +258,8 @@ public class RequestConstant {
 	public static final String GET_DistrictDailyAttendanceDashboard = "GET_DistrictDailyAttendanceDashboard";
 
 	public static final String GET_SchoolDailyAttendanceDashboard = "GET_SchoolDailyAttendanceDashboard";
+	
+	public static final String GET_WeeklyDailyAttendanceDashboard = "GET_WeeklyDailyAttendanceDashboard";
 
 	/// SYSTEM_USER_PROFILE_SCHOOLS_PROFILE
 	// public static final String SAVE_SYSTEM_USER_PROFILE_SCHOOLS =
@@ -337,8 +339,7 @@ public class RequestConstant {
 	public static final String LOAD_TIMETABLE_LESSONS_DATA="LOAD_TIMETABLE_LESSONS_DATA"; 
 	public static final String LOAD_TIMETABLE_LESSONS="LOAD_TIMETABLE_LESSONS";
 	
-	
+	public static final String LOAD_EMAIL_DOWNLOAD_ATTACHMENTS="LOAD_EMAIL_DOWNLOAD_ATTACHMENTS";
 	 
-
 
 }

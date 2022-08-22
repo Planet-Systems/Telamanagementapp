@@ -1,5 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.staffenrollment.staff;
 
+import java.util.Date;
+
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
@@ -62,7 +64,8 @@ public class SchoolStaffWindow extends Window {
 		dobItem = new DateItem();
 		dobItem.setTitle("DOB");
 		dobItem.setUseTextField(false);
-		dobItem.setWidth("*");
+		dobItem.setWidth("*"); 
+		dobItem.setStartDate(new Date(10, 0, 1));
 
 		nationalIdField = new TextItem();
 		nationalIdField.setTitle("National Id");
@@ -78,6 +81,7 @@ public class SchoolStaffWindow extends Window {
 		codeField.setTitle("Teacher PIN");
 		codeField.setHint("Teacher PIN");
 		codeField.setShowHintInField(true);
+		codeField.setHidden(true);
 
 		genderCombo = new ComboBox();
 		genderCombo.setTitle("Gender <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");

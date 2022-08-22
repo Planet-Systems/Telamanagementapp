@@ -9,6 +9,7 @@ import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
 import com.planetsystems.tela.dto.DateFilterDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
+import com.planetsystems.tela.dto.EmailAttachmentDownloadDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.LearnerAttendanceDTO;
 import com.planetsystems.tela.dto.LearnerDetailDTO;
@@ -61,6 +62,7 @@ import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolTimeOnTaskSummaryDTO;
 import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
+import com.planetsystems.tela.dto.reports.WeeklyClockinSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
@@ -189,15 +191,34 @@ public class RequestResult implements Result {
 
 	private List<PublicHolidayDTO> publicHolidayDTOs;
 
+	private List<EmailAttachmentDownloadDTO> emailAttachmentDownloadDTOs;
+	
+	private List<WeeklyClockinSummaryDTO> weeklyClockinSummaryDTOs;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<WeeklyClockinSummaryDTO> weeklyClockinSummaryDTOs, WeeklyClockinSummaryDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.weeklyClockinSummaryDTOs = weeklyClockinSummaryDTOs;
+	}
+	
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
+			List<EmailAttachmentDownloadDTO> emailAttachmentDownloadDTOs, EmailAttachmentDownloadDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.emailAttachmentDownloadDTOs = emailAttachmentDownloadDTOs;
+	}
+
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolClassDTO> schoolClassDTOs,
-			List<SubjectDTO> subjectDTOs, List<SchoolStaffDTO> schoolStaffDTOs,List<TimeTableLessonDTO> tableLessonDTOs) {
+			List<SubjectDTO> subjectDTOs, List<SchoolStaffDTO> schoolStaffDTOs,
+			List<TimeTableLessonDTO> tableLessonDTOs) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 
 		this.subjectDTOs = subjectDTOs;
 		this.schoolStaffDTOs = schoolStaffDTOs;
 		this.schoolClassDTOs = schoolClassDTOs;
-		this.tableLessonDTOs=tableLessonDTOs;
+		this.tableLessonDTOs = tableLessonDTOs;
 	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolCalendarWeekDTO> schoolCalendarWeekDTOs,
@@ -989,6 +1010,14 @@ public class RequestResult implements Result {
 
 	public List<PublicHolidayDTO> getPublicHolidayDTOs() {
 		return publicHolidayDTOs;
+	}
+
+	public List<EmailAttachmentDownloadDTO> getEmailAttachmentDownloadDTOs() {
+		return emailAttachmentDownloadDTOs;
+	}
+
+	public List<WeeklyClockinSummaryDTO> getWeeklyClockinSummaryDTOs() {
+		return weeklyClockinSummaryDTOs;
 	}
 
 }

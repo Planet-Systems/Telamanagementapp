@@ -149,6 +149,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
+					buttons.add(delete);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons("Local Government",buttons);
@@ -349,9 +350,10 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 						@Override
 						public void execute(Boolean value) {
 							if (value) {
+								
 								ListGridRecord record = getView().getRegionPane().getListGrid().getSelectedRecord();
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestConstant.DELETE_REGION, record.getAttributeAsString("id"));
+								map.put(RequestConstant.DELETE_REGION, record.getAttributeAsString(RegionListGrid.ID));
 								map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_REGION);
 
 								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -566,15 +568,15 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (getView().getRegionPane().getListGrid().anySelected()) {
+				if (getView().getDistrictPane().getListGrid().anySelected()) {
 					SC.ask("Confirm", "Are you sure you want to delete the selected record", new BooleanCallback() {
 
 						@Override
 						public void execute(Boolean value) {
 							if (value) {
-								ListGridRecord record = getView().getRegionPane().getListGrid().getSelectedRecord();
+								ListGridRecord record = getView().getDistrictPane().getListGrid().getSelectedRecord();
 								LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-								map.put(RequestDelimeters.DISTRICT_ID, record.getAttributeAsString("id"));
+								map.put(RequestDelimeters.DISTRICT_ID, record.getAttributeAsString(DistrictListGrid.ID));
 								map.put(NetworkDataUtil.ACTION, RequestConstant.DELETE_DISTRICT);
 
 								NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
@@ -626,7 +628,7 @@ public class RegionPresenter extends Presenter<RegionPresenter.MyView, RegionPre
 
 					@Override
 					public void onNetworkResult(RequestResult result) {
-						window.close();
+						//window.close();
 						getView().getDistrictPane().getListGrid().addRecordsToGrid(result.getDistrictDTOs());
 					}
 				});

@@ -30,15 +30,17 @@ public class DistrictListGrid extends SuperListGrid {
 		idField.setHidden(true);
 
 		ListGridField codeField = new ListGridField(CODE, "Code");
-		ListGridField nameField = new ListGridField(NAME, "Name");
-		ListGridField regionField = new ListGridField(REGION, "Region");
+		ListGridField nameField = new ListGridField(NAME, "Local Government");
+		ListGridField regionField = new ListGridField(REGION, "Sub-Region");
 		ListGridField regionIdField = new ListGridField(REGION_ID, "Region Id");
 		regionIdField.setHidden(true);
 
 		ListGridField rolledOutField = new ListGridField(ROLLEDOUT, "Rolled Out");
+		rolledOutField.setHidden(true);
 		ListGridField rolledOutStatusField = new ListGridField(ROLLEDOUT_STATUS, "Rolled Out Status");
+		rolledOutStatusField.setHidden(true);
 
-		this.setFields(idField, regionIdField, regionField, rolledOutStatusField, codeField, nameField, rolledOutField);
+		this.setFields(idField,  codeField, nameField, rolledOutField,regionIdField, regionField, rolledOutStatusField);
         this.setDataSource(dataSource); 
 	}
 

@@ -2,7 +2,7 @@ package com.planetsystems.tela.managementapp.client.presenter.schoolcategory.sch
 
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
-import com.smartgwt.client.types.Alignment; 
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -30,6 +30,8 @@ public class AddSchoolWindow extends Window {
 	private ComboBox schoolGenderCategory;
 	private ComboBox licensed;
 
+	private ComboBox rolloutPhaseCombo;
+
 	private IButton saveButton;
 	private IButton cancelButton;
 
@@ -39,6 +41,7 @@ public class AddSchoolWindow extends Window {
 		schoolCode.setTitle("School Code");
 		schoolCode.setHint("School Code");
 		schoolCode.setShowHintInField(true);
+		schoolCode.setHidden(true);
 
 		schoolName = new TextField();
 		schoolName.setTitle("School Name");
@@ -100,6 +103,11 @@ public class AddSchoolWindow extends Window {
 		licensed.setHint("Select");
 		licensed.setShowHintInField(true);
 
+		rolloutPhaseCombo = new ComboBox();
+		rolloutPhaseCombo.setTitle("Rollout Phase");
+		rolloutPhaseCombo.setHint("Select");
+		rolloutPhaseCombo.setShowHintInField(true);
+
 		saveButton = new IButton("Save");
 
 		cancelButton = new IButton("Cancel");
@@ -109,7 +117,7 @@ public class AddSchoolWindow extends Window {
 
 		DynamicForm form = new DynamicForm();
 		form.setFields(schoolLevel, schoolOwnership, schoolType, schoolGenderCategory, schoolCategoryCombo, regionCombo,
-				districtCombo, deviceNumber, schoolCode, schoolName, licensed, latitude, longtitude);
+				districtCombo, deviceNumber, schoolCode, schoolName, licensed, rolloutPhaseCombo, latitude, longtitude);
 
 		form.setWrapItemTitles(true);
 		form.setMargin(10);
@@ -204,6 +212,14 @@ public class AddSchoolWindow extends Window {
 
 	public ComboBox getLicensed() {
 		return licensed;
+	}
+
+	public ComboBox getRolloutPhaseCombo() {
+		return rolloutPhaseCombo;
+	}
+
+	public IButton getCancelButton() {
+		return cancelButton;
 	}
 
 }

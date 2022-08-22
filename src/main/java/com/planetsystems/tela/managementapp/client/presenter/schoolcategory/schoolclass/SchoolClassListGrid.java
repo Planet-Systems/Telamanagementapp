@@ -61,8 +61,10 @@ public class SchoolClassListGrid extends SuperListGrid {
 		academicYearIdField.setHidden(true);
 
 		ListGridField hasStreams = new ListGridField(HasStreams, "Has Streams");
+		hasStreams.setHidden(true);
 
 		ListGridField classLevel = new ListGridField(ClassLevel, "Is Parent Class");
+		classLevel.setHidden(true);
 
 		ListGridField schoolClassId = new ListGridField(SchoolClassId, "ParentId");
 		schoolClassId.setHidden(true);

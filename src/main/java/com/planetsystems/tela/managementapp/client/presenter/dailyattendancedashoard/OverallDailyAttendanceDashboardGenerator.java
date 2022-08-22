@@ -41,10 +41,10 @@ public class OverallDailyAttendanceDashboardGenerator {
 		long clockedLearners = dto.getClockedLearners();
 
 		VLayout col1 = new VLayout();
-		col1.addMember(getCard("Total Number of Districts Clocked in", clockedDistricts + "", "#6495ED"));
-		col1.addMember(getCard("Total Number of Schools Clocked in", clockedSchools + "", "#6495ED"));
-		col1.addMember(getCard("Total Number of Headteachers Clocked in", clockedHeadteachers + "", "#f7b924"));
-		col1.addMember(getCard("Total Number of Teachers Clocked in", clockedInteachers + "", "#6495ED"));
+		col1.addMember(getCard("Total Districts Clocked in", clockedDistricts + "", "#6495ED"));
+		col1.addMember(getCard("Total Schools Clocked in", clockedSchools + "", "#6495ED"));
+		col1.addMember(getCard("Total Headteachers Clocked in", clockedHeadteachers + "", "#f7b924"));
+		col1.addMember(getCard("Total Teachers Clocked in", clockedInteachers + "", "#6495ED"));
 
 		col1.setAutoHeight();
 		col1.setWidth("20%");

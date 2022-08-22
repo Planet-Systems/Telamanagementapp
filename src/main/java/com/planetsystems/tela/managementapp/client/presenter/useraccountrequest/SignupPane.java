@@ -1,5 +1,7 @@
 package com.planetsystems.tela.managementapp.client.presenter.useraccountrequest;
 
+import java.util.Date;
+
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.planetsystems.tela.managementapp.client.widget.ComboBox;
 import com.planetsystems.tela.managementapp.client.widget.TextField;
@@ -96,6 +98,7 @@ public class SignupPane extends VLayout {
 		// category.setUsePlaceholderForHint(true);
 		// category.setShowHintInField(true);
 		// category.setHint("Category");
+		dobItem.setStartDate(new Date(10, 0, 1));
 
 		systemUserGroupCombo = new ComboBox();
 		systemUserGroupCombo.setTitle(

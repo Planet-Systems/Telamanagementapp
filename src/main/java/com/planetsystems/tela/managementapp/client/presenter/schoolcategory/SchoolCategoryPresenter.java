@@ -33,6 +33,7 @@ import com.planetsystems.tela.dto.SchoolCategoryDTO;
 import com.planetsystems.tela.dto.SchoolClassDTO;
 import com.planetsystems.tela.dto.SchoolDTO;
 import com.planetsystems.tela.dto.SchoolStaffDTO;
+import com.planetsystems.tela.dto.enums.RolloutPhase;
 import com.planetsystems.tela.dto.enums.SchoolGenderCategory;
 import com.planetsystems.tela.dto.enums.SchoolLevel;
 import com.planetsystems.tela.dto.enums.SchoolOwnership;
@@ -46,6 +47,7 @@ import com.planetsystems.tela.managementapp.client.presenter.networkutil.Network
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.AddSchoolWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.FilterSchoolWindow;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.GeneralSchoolImportWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.InitialSchoolClassListGrid;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.InitialSchoolClassWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.InitialSchoolStaffWindow;
@@ -214,7 +216,8 @@ public class SchoolCategoryPresenter
 
 					getView().getControlsPane().addMenuButtons("School Registration & Setup", buttons);
 
-					getAllSchoolClasses();
+					loadSchoolClassFilter();
+					//getAllSchoolClasses();
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -256,18 +259,21 @@ public class SchoolCategoryPresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				// SC.say("Advanced Search");
-				
-				 
-				FilterSchoolWindow window = new FilterSchoolWindow();
-				loadFilterRegionCombo(window);
-				loadFilterDistrictCombo(window);
-				loadFilterSchoolCategoryCombo(window);
 
-				window.show();
-				filterSchoolsBYDistrictSchoolCategory(window);
+				loadSchoolFilter();
 			}
 		});
 
+	}
+	
+	private void loadSchoolFilter() {
+		FilterSchoolWindow window = new FilterSchoolWindow();
+		loadFilterRegionCombo(window);
+		loadFilterDistrictCombo(window);
+		loadFilterSchoolCategoryCombo(window);
+
+		window.show();
+		filterSchoolsBYDistrictSchoolCategory(window);
 	}
 
 	private void selectFilterSchoolClassOption(final MenuButton filter) {
@@ -298,16 +304,20 @@ public class SchoolCategoryPresenter
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				// SC.say("Advanced Search");
-				FilterSchoolClassWindow window = new FilterSchoolClassWindow();
-				loadFilterAcademicYearCombo(window);
-				loadFilterDistrictCombo(window);
-				loadFilterAcademicTermCombo(window);
-				loadFilterSchoolCombo(window);
-				window.show();
-				filterSchoolClassesByAcademicTermSchool(window);
+				loadSchoolClassFilter();
 			}
 		});
 
+	}
+	
+	private void loadSchoolClassFilter() {
+		FilterSchoolClassWindow window = new FilterSchoolClassWindow();
+		loadFilterAcademicYearCombo(window);
+		loadFilterDistrictCombo(window);
+		loadFilterAcademicTermCombo(window);
+		loadFilterSchoolCombo(window);
+		window.show();
+		filterSchoolClassesByAcademicTermSchool(window);
 	}
 
 	private void addSchoolCategory(MenuButton menuButton) {
@@ -504,6 +514,7 @@ public class SchoolCategoryPresenter
 				loadSchoolType(window);
 				loadSchoolLevels(window);
 				loadSchoolLicenseStatus(window);
+				loadRolloutPhase(window);
 
 				saveSchool(window);
 
@@ -544,7 +555,7 @@ public class SchoolCategoryPresenter
 				if (checkIfNoSchoolWindowFieldIsEmpty(window)) {
 
 					SchoolDTO dto = new SchoolDTO();
-					dto.setCode(window.getSchoolCode().getValueAsString());
+					dto.setCode(window.getDeviceNumber().getValueAsString());
 					dto.setLatitude(window.getLatitude().getValueAsString());
 					dto.setLongitude(window.getLongtitude().getValueAsString());
 					dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
@@ -564,6 +575,8 @@ public class SchoolCategoryPresenter
 					DistrictDTO districtDTO = new DistrictDTO();
 					districtDTO.setId(window.getDistrictCombo().getValueAsString());
 					dto.setDistrictDTO(districtDTO);
+
+					dto.setRolloutPhase(window.getRolloutPhaseCombo().getValueAsString());
 
 					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 					map.put(RequestConstant.SAVE_SCHOOL, dto);
@@ -654,6 +667,7 @@ public class SchoolCategoryPresenter
 					loadSchoolType(window);
 					loadSchoolLevels(window);
 					loadSchoolLicenseStatus(window);
+					loadRolloutPhase(window);
 
 					updateSchool(window);
 
@@ -681,6 +695,8 @@ public class SchoolCategoryPresenter
 		loadDistrictComboByRegion(window, record.getAttribute(SchoolListGrid.DISTRICT_ID));
 		loadSchoolCategoryCombo(window, record.getAttribute(SchoolListGrid.CATEGORY_ID));
 
+		window.getRolloutPhaseCombo().setValue(record.getAttribute(SchoolListGrid.Rollout));
+
 		window.getSchoolGenderCategory().setValue(record.getAttribute(SchoolListGrid.SchoolGenderCategory));
 		window.getSchoolLevel().setValue(record.getAttribute(SchoolListGrid.SchoolLevel));
 		window.getSchoolOwnership().setValue(record.getAttribute(SchoolListGrid.SchoolOwnership));
@@ -699,7 +715,7 @@ public class SchoolCategoryPresenter
 
 				SchoolDTO dto = new SchoolDTO();
 				dto.setId(record.getAttribute(SchoolListGrid.ID));
-				dto.setCode(window.getSchoolCode().getValueAsString());
+				dto.setCode(window.getDeviceNumber().getValueAsString());
 				dto.setLatitude(window.getLatitude().getValueAsString());
 				dto.setLongitude(window.getLongtitude().getValueAsString());
 				dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
@@ -719,6 +735,8 @@ public class SchoolCategoryPresenter
 				DistrictDTO districtDTO = new DistrictDTO();
 				districtDTO.setId(window.getDistrictCombo().getValueAsString());
 				dto.setDistrictDTO(districtDTO);
+
+				dto.setRolloutPhase(window.getRolloutPhaseCombo().getValueAsString());
 
 				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 				map.put(RequestConstant.UPDATE_SCHOOL, dto);
@@ -744,10 +762,11 @@ public class SchoolCategoryPresenter
 			public void onClick(ClickEvent event) {
 				if (getView().getSchoolPane().getListGrid().anySelected()) {
 
-					String schoolId = getView().getSchoolPane().getListGrid().getSelectedRecord().getAttribute(SchoolListGrid.ID);
+					String schoolId = getView().getSchoolPane().getListGrid().getSelectedRecord()
+							.getAttribute(SchoolListGrid.ID);
 
-					SchoolLevel level = SchoolLevel.getSchoolLevel(
-							getView().getSchoolPane().getListGrid().getSelectedRecord().getAttribute(SchoolListGrid.SchoolLevel));
+					SchoolLevel level = SchoolLevel.getSchoolLevel(getView().getSchoolPane().getListGrid()
+							.getSelectedRecord().getAttribute(SchoolListGrid.SchoolLevel));
 
 					initiateSchoolClasses(schoolId, level);
 
@@ -1207,7 +1226,7 @@ public class SchoolCategoryPresenter
 									@Override
 									public void onNetworkResult(RequestResult result) {
 										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-										getAllSchoolClasses();
+										//getAllSchoolClasses();
 									}
 								});
 							}
@@ -1306,14 +1325,81 @@ public class SchoolCategoryPresenter
 	}
 
 	private void importSchools(final MenuButton importbutton) {
+		final Menu menu = new Menu();
+		MenuItem importAll = new MenuItem("All");
+		MenuItem importByDistrict = new MenuItem("By District"); 
+		menu.setItems(importAll, importByDistrict);
+		
 		importbutton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 
-				fileUpload();
+			  
+				menu.showNextTo(importbutton, "bottom"); 
+ 
+
 			}
 		});
+		
+		importAll.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				generalfileUpload();
+			}
+		});
+
+		importByDistrict.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				
+				fileUpload();
+
+			}
+		});
+	}
+
+	private void generalfileUpload() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_FILE_UPLOAD_LINK, map),
+				new AsyncCallback<RequestResult>() {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.say("ERROR", caught.getMessage());
+						SC.clearPrompt();
+					}
+
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+
+						if (result != null) {
+
+							if (result.getSystemFeedbackDTO() != null) {
+
+								// SC.say("GET_FILE_UPLOAD_LINK:: "+result.getSystemFeedbackDTO().getMessage());
+
+								GeneralSchoolImportWindow window = new GeneralSchoolImportWindow();
+
+								generalUploadFile(window, result.getSystemFeedbackDTO().getMessage());
+								window.show();
+
+							}
+
+						} else {
+							SC.say("ERROR", "Unknow error");
+						}
+
+					}
+				});
 	}
 
 	private void fileUpload() {
@@ -1390,7 +1476,7 @@ public class SchoolCategoryPresenter
 
 					final StringBuilder url = new StringBuilder();
 
-					url.append(link + "importSchools").append("?");
+					url.append(link + "importSchools/district").append("?");
 
 					String arg0Name = URL.encodeQueryString("fileName");
 					url.append(arg0Name);
@@ -1422,6 +1508,72 @@ public class SchoolCategoryPresenter
 									window.close();
 
 									loadSchools(regionId, districtId);
+								}
+
+							}
+						});
+
+						GWT.log("serverResponse::::: " + event.getResults());
+
+					}
+
+				});
+
+			}
+
+		});
+
+	}
+
+	private void generalUploadFile(final GeneralSchoolImportWindow window, final String link) {
+
+		/// importSchools/all
+		/// importSchools/district
+		window.getUploadButton().addClickHandler(new ClickHandler() {
+
+			public void onClick(ClickEvent event) {
+
+				final String fileName = window.getUpload().getFilename();
+
+				String fileExtension = UtilityManager.getInstance().getFileExtension(fileName);
+
+				if (fileExtension.equalsIgnoreCase("xlsx")) {
+
+					SC.showPrompt("", "", new SwizimaLoader());
+
+					final StringBuilder url = new StringBuilder();
+
+					url.append(link + "importSchools/all").append("?");
+
+					String arg0Name = URL.encodeQueryString("fileName");
+					url.append(arg0Name);
+					url.append("=");
+					String arg0Value = URL.encodeQueryString(fileName);
+					url.append(arg0Value);
+
+					window.getUploadForm().setAction(url.toString());
+					window.getUploadForm().submit();
+
+				} else {
+					SC.warn("ERROR", "Only xlsx files allowed");
+				}
+
+				window.getUploadForm().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
+
+					public void onSubmitComplete(SubmitCompleteEvent event) {
+
+						SC.clearPrompt();
+
+						// String serverResponse = event.getResults();
+
+						SC.say("Sucess", "Upload Successful", new BooleanCallback() {
+
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									window.close();
+
+									getAllSchools();
 								}
 
 							}
@@ -1567,15 +1719,25 @@ public class SchoolCategoryPresenter
 		valueMap.put("Head teacher", "Head teacher");
 		valueMap.put("Deputy head teacher", "Deputy head teacher");
 		valueMap.put("Smc", "Smc");
-		valueMap.put("Principal", "Principal"); 
+		valueMap.put("Principal", "Principal");
 		valueMap.put("Bursar", "Bursar");
 		valueMap.put("Librarian", "Librarian");
 		valueMap.put("Lab technician", "Lab technician");
-		valueMap.put("Others", "Others"); 
-		 
-		
+		valueMap.put("Others", "Others");
+
 		window.getRoleCombo().setValueMap(valueMap);
 
+	}
+
+	private void loadRolloutPhase(final AddSchoolWindow window) {
+
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+		for (RolloutPhase phase : RolloutPhase.values()) {
+			valueMap.put(phase.getRolloutPhase(), phase.getRolloutPhase());
+		}
+
+		window.getRolloutPhaseCombo().setValueMap(valueMap);
 	}
 
 	private void saveSchoolStaff(final InitialSchoolStaffWindow window, final String schoolId,

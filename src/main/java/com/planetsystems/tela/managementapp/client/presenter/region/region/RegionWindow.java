@@ -27,7 +27,7 @@ public class RegionWindow extends Window {
 
 		nameField = new TextField();
 		nameField.setTitle("Name");
-		nameField.setHint("name");
+		nameField.setHint("Name");
 		nameField.setShowHintInField(true);
 	
 
@@ -60,7 +60,7 @@ public class RegionWindow extends Window {
 		this.setWidth("40%");
 		this.setHeight("40%");
 		this.setAutoCenter(true);
-		this.setTitle("Region");
+		this.setTitle("Sub-Region");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
 		cancel(this);

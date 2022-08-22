@@ -33,8 +33,8 @@ public class FilterYearTermDistrictSchool extends VLayout {
 		academicTermCombo.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
-		districtCombo.setHint("District");
+		districtCombo.setTitle("Local Government");
+		districtCombo.setHint("District/City/Munincipality");
 		districtCombo.setShowHintInField(true);
 
 		schoolCombo = new ComboBox();
