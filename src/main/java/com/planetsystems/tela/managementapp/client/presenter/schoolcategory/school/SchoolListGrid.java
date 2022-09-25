@@ -32,8 +32,12 @@ public class SchoolListGrid extends SuperListGrid {
 	public static String Licensed="Licensed";
 	
 	public static String Rollout="rollout";
+	public static String TelaSchoolNumber="telaSchoolNumber";
 	
 	private SchoolDataSource dataSource;
+	
+	public static String REGION = "region";
+	public static String REGION_ID = "regionId";
 
 
 	public SchoolListGrid() { 
@@ -77,12 +81,25 @@ public class SchoolListGrid extends SuperListGrid {
 		ListGridField licensed = new ListGridField(Licensed, "license Status");
 		
 		ListGridField rollout = new ListGridField(Rollout, "Rollout Phase");
+		
+		ListGridField telaSchoolNumber= new ListGridField(TelaSchoolNumber, "Tela School Number");
+		telaSchoolNumber.setHidden(true);
+		
+		ListGridField regionField = new ListGridField(REGION, "Sub-Region");
+		regionField.setHidden(true);
+		
+		ListGridField regionIdField = new ListGridField(REGION_ID, "Sub-Region Id");
+		regionIdField.setHidden(true);
 		  
 		this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
-				latitudeField , latitudeField,rollout);
+				regionField,regionIdField,latitudeField , latitudeField,rollout,telaSchoolNumber);
 		this.setDataSource(dataSource);
 		this.setSelectionType(SelectionStyle.SIMPLE);
 		this.setWrapHeaderTitles(true);
+		
+		ListGridField rowNumberFieldProperties=new ListGridField();
+		rowNumberFieldProperties.setWidth(40); 
+		this.setRowNumberFieldProperties(rowNumberFieldProperties);
 
 	}
 
@@ -99,6 +116,11 @@ public class SchoolListGrid extends SuperListGrid {
 		if(schoolDTO.getDistrictDTO() != null) {
 			record.setAttribute(DISTRICT, schoolDTO.getDistrictDTO().getName());
 			record.setAttribute(DISTRICT_ID, schoolDTO.getDistrictDTO().getId());
+			
+			if(schoolDTO.getDistrictDTO().getRegion()!=null) {
+				record.setAttribute(REGION, schoolDTO.getDistrictDTO().getRegion().getName());
+				record.setAttribute(REGION_ID, schoolDTO.getDistrictDTO().getRegion().getId());
+			}
 		}
 		
 		record.setAttribute(DEVICE_NUMBER, schoolDTO.getDeviceNumber());
@@ -119,6 +141,8 @@ public class SchoolListGrid extends SuperListGrid {
 		record.setAttribute(Licensed, schoolDTO.getLicensed());
 		
 		record.setAttribute(Rollout, schoolDTO.getRolloutPhase());
+		
+		record.setAttribute(TelaSchoolNumber, schoolDTO.getTelaSchoolNumber());
 		
 		return record;
 	}
@@ -183,9 +207,17 @@ public class SchoolListGrid extends SuperListGrid {
 			DataSourceTextField licensed = new DataSourceTextField(Licensed, "license Status");
 			
 			DataSourceTextField rollout = new DataSourceTextField(Rollout, "Rollout Phase");
+			
+			DataSourceTextField telaSchoolNumber = new DataSourceTextField(TelaSchoolNumber, "Tela School Number");
+			
+			DataSourceTextField regionField = new DataSourceTextField(REGION, "Sub-Region");
 			 
+			
+			DataSourceTextField regionIdField = new DataSourceTextField(REGION_ID, "Sub-Region Id");
+			 
+			  
 			this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
-					latitudeField , latitudeField,rollout);
+					regionField,regionIdField,latitudeField , latitudeField,rollout,telaSchoolNumber);
 			
 			setClientOnly(true);
 

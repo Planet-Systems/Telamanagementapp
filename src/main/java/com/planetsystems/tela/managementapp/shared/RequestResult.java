@@ -5,6 +5,7 @@ import java.util.List;
 import com.gwtplatform.dispatch.rpc.shared.Result;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.ActionDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
 import com.planetsystems.tela.dto.DateFilterDTO;
@@ -41,6 +42,8 @@ import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserProfileDTO;
 import com.planetsystems.tela.dto.SystemUserProfileSchoolDTO;
+import com.planetsystems.tela.dto.TelaLicenseKeyDTO;
+import com.planetsystems.tela.dto.TelaSchoolLicenseDTO;
 import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
@@ -63,6 +66,8 @@ import com.planetsystems.tela.dto.reports.SchoolEndOfWeekTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolTimeOnTaskSummaryDTO;
 import com.planetsystems.tela.dto.reports.TeacherClockInSummaryDTO;
 import com.planetsystems.tela.dto.reports.WeeklyClockinSummaryDTO;
+import com.planetsystems.tela.dto.reports.DataUploadStatDTO;
+import com.planetsystems.tela.dto.reports.DataUploadStatSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
@@ -192,16 +197,60 @@ public class RequestResult implements Result {
 	private List<PublicHolidayDTO> publicHolidayDTOs;
 
 	private List<EmailAttachmentDownloadDTO> emailAttachmentDownloadDTOs;
-	
+
 	private List<WeeklyClockinSummaryDTO> weeklyClockinSummaryDTOs;
 
-	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
-			List<WeeklyClockinSummaryDTO> weeklyClockinSummaryDTOs, WeeklyClockinSummaryDTO dto) {
+	private List<TelaLicenseKeyDTO> telaLicenseKeyDTOs;
+
+	private List<TelaSchoolLicenseDTO> telaSchoolLicenseDTOs;
+
+	private List<DataUploadStatDTO> dataUploadStatDTOs;
+
+	private List<DataUploadStatSummaryDTO> dataUploadStatSummaryDTOs;
+
+	private ActionDTO actionDTO;
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, ActionDTO actionDTO) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.actionDTO = actionDTO;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<DataUploadStatSummaryDTO> dataUploadStatSummaryDTOs,
+			DataUploadStatSummaryDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.dataUploadStatSummaryDTOs = dataUploadStatSummaryDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<DataUploadStatDTO> dataUploadStatDTOs,
+			DataUploadStatDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.dataUploadStatDTOs = dataUploadStatDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TelaSchoolLicenseDTO> telaSchoolLicenseDTOs,
+			TelaSchoolLicenseDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.telaSchoolLicenseDTOs = telaSchoolLicenseDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<TelaLicenseKeyDTO> telaLicenseKeyDTOs,
+			TelaLicenseKeyDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.telaLicenseKeyDTOs = telaLicenseKeyDTOs;
+	}
+
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<WeeklyClockinSummaryDTO> weeklyClockinSummaryDTOs,
+			WeeklyClockinSummaryDTO dto) {
 		super();
 		this.systemFeedbackDTO = systemFeedbackDTO;
 		this.weeklyClockinSummaryDTOs = weeklyClockinSummaryDTOs;
 	}
-	
+
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO,
 			List<EmailAttachmentDownloadDTO> emailAttachmentDownloadDTOs, EmailAttachmentDownloadDTO dto) {
 		super();
@@ -1018,6 +1067,26 @@ public class RequestResult implements Result {
 
 	public List<WeeklyClockinSummaryDTO> getWeeklyClockinSummaryDTOs() {
 		return weeklyClockinSummaryDTOs;
+	}
+
+	public List<TelaLicenseKeyDTO> getTelaLicenseKeyDTOs() {
+		return telaLicenseKeyDTOs;
+	}
+
+	public List<TelaSchoolLicenseDTO> getTelaSchoolLicenseDTOs() {
+		return telaSchoolLicenseDTOs;
+	}
+
+	public List<DataUploadStatDTO> getDataUploadStatDTOs() {
+		return dataUploadStatDTOs;
+	}
+
+	public List<DataUploadStatSummaryDTO> getDataUploadStatSummaryDTOs() {
+		return dataUploadStatSummaryDTOs;
+	}
+
+	public ActionDTO getActionDTO() {
+		return actionDTO;
 	}
 
 }

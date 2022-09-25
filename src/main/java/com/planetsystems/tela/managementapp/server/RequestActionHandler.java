@@ -22,6 +22,7 @@ import com.gwtplatform.dispatch.rpc.server.actionhandler.ActionHandler;
 import com.gwtplatform.dispatch.shared.ActionException;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.ActionDTO;
 import com.planetsystems.tela.dto.AuthenticationDTO;
 import com.planetsystems.tela.dto.ClockInDTO;
 import com.planetsystems.tela.dto.ClockOutDTO;
@@ -59,6 +60,8 @@ import com.planetsystems.tela.dto.SystemUserAdministrationUnitDTO;
 import com.planetsystems.tela.dto.SystemUserGroupDTO;
 import com.planetsystems.tela.dto.SystemUserGroupSystemMenuDTO;
 import com.planetsystems.tela.dto.SystemUserProfileDTO;
+import com.planetsystems.tela.dto.TelaLicenseKeyDTO;
+import com.planetsystems.tela.dto.TelaSchoolLicenseDTO;
 import com.planetsystems.tela.dto.TimeAttendanceSupervisionDTO;
 import com.planetsystems.tela.dto.TimeTableDTO;
 import com.planetsystems.tela.dto.TimeTableLessonDTO;
@@ -72,6 +75,8 @@ import com.planetsystems.tela.dto.dashboard.SchoolDailyAttendanceEnrollmentSumma
 import com.planetsystems.tela.dto.exports.DataExportRequestDTO;
 import com.planetsystems.tela.dto.exports.DataExportResponseDTO;
 import com.planetsystems.tela.dto.exports.SchoolStaffExportDTO;
+import com.planetsystems.tela.dto.reports.DataUploadStatDTO;
+import com.planetsystems.tela.dto.reports.DataUploadStatSummaryDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfTermTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.DistrictEndOfWeekTimeAttendanceDTO;
@@ -7314,6 +7319,220 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 
 				client.close();
 				return new RequestResult(feedback, list, null);
+
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_LICENSE_KEYS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<TelaLicenseKeyDTO> list = new ArrayList<TelaLicenseKeyDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<TelaLicenseKeyDTO>> responseDto = client.target(API_LINK).path("telaLicenseKeys")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<TelaLicenseKeyDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				return new RequestResult(feedback, list, null);
+			}
+
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_SCHOOL_LICENSE_KEYS)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<TelaSchoolLicenseDTO> list = new ArrayList<TelaSchoolLicenseDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<TelaSchoolLicenseDTO>> responseDto = client.target(API_LINK)
+						.path("telaSchoolLicenses").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<TelaSchoolLicenseDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				
+				return new RequestResult(feedback, list, null);
+			}
+			
+			//dataUploadStatSummaryReport
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_Data_upload_stat)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<DataUploadStatDTO> list = new ArrayList<DataUploadStatDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<DataUploadStatDTO>> responseDto = client.target(API_LINK)
+						.path("dataUploadStatReport").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<DataUploadStatDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				
+				return new RequestResult(feedback, list, null);
+			}
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_Data_upload_summary_stat)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				List<DataUploadStatSummaryDTO> list = new ArrayList<DataUploadStatSummaryDTO>();
+
+				Client client = ClientBuilder.newClient();
+
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+
+				SystemResponseDTO<List<DataUploadStatSummaryDTO>> responseDto = client.target(API_LINK)
+						.path("dataUploadStatSummaryReport").request(MediaType.APPLICATION_JSON).headers(headers)
+						.get(new GenericType<SystemResponseDTO<List<DataUploadStatSummaryDTO>>>() {
+						});
+
+				list = responseDto.getData();
+
+				feedback.setResponse(true);
+				feedback.setMessage(responseDto.getMessage());
+
+				client.close();
+				
+				return new RequestResult(feedback, list, null); 
+			}
+			 
+			else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.EXCEL_EXPORT_Data_upload_stat)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				@SuppressWarnings("unchecked")
+				List<DataUploadStatDTO> list = (List<DataUploadStatDTO>) action.getRequestBody()
+						.get(RequestConstant.EXCEL_EXPORT_Data_upload_stat);
+
+				String refId = "excel_download";
+
+				Gson gson = new Gson();
+				String jsonString = gson.toJson(list);
+
+				// System.out.println("jsonString: " + jsonString);
+
+				DataExportRequestDTO dto = new DataExportRequestDTO();
+				dto.setJson(jsonString);
+				dto.setFileName("detailed_data_upload_report.csv");
+				dto.setRefId(refId);
+
+				Client client = ClientBuilder.newClient();
+
+				DataExportResponseDTO response = client.target(REPORT_GEN_API).path("generatefile")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON), DataExportResponseDTO.class);
+
+				if (response != null) {
+					feedback.setResponse(response.isResponse());
+					feedback.setMessage(response.getMessage());
+				}
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.EXCEL_Data_upload_summary_stat)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				@SuppressWarnings("unchecked")
+				List<DataUploadStatSummaryDTO> list = (List<DataUploadStatSummaryDTO>) action.getRequestBody()
+						.get(RequestConstant.EXCEL_Data_upload_summary_stat);
+
+				String refId = "excel_download";
+
+				Gson gson = new Gson();
+				String jsonString = gson.toJson(list);
+
+				// System.out.println("jsonString: " + jsonString);
+
+				DataExportRequestDTO dto = new DataExportRequestDTO();
+				dto.setJson(jsonString);
+				dto.setFileName("summarized_data_upload_report.csv");
+				dto.setRefId(refId);
+
+				Client client = ClientBuilder.newClient();
+
+				DataExportResponseDTO response = client.target(REPORT_GEN_API).path("generatefile")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON), DataExportResponseDTO.class);
+
+				if (response != null) {
+					feedback.setResponse(response.isResponse());
+					feedback.setMessage(response.getMessage());
+				}
+				client.close();
+
+				return new RequestResult(feedback);
+
+			}
+			
+			else if (action.getRequest().equalsIgnoreCase(RequestConstant.School_Data_Batch_Process)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				System.out.println("School_Data_Batch_Process");
+				  
+				String token = (String) action.getRequestBody().get(RequestConstant.LOGIN_TOKEN);
+
+				ActionDTO dto = (ActionDTO) action.getRequestBody()
+						.get(RequestConstant.School_Data_Batch_Process);
+
+				Client client = ClientBuilder.newClient();
+
+				headers.add(HttpHeaders.AUTHORIZATION, token);
+ 
+				SystemResponseDTO<SystemFeedbackDTO> updateResponseDTO = client.target(API_LINK)
+						.path("schools").path("batchprocess").request(MediaType.APPLICATION_JSON)
+						.headers(headers).post(Entity.entity(dto, MediaType.APPLICATION_JSON),
+								new GenericType<SystemResponseDTO<SystemFeedbackDTO>>() {
+								});
+
+				if (updateResponseDTO != null) {
+					feedback = updateResponseDTO.getData();
+					feedback.setResponse(updateResponseDTO.isStatus());
+				}
+
+				client.close();
+				return new RequestResult(feedback);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}

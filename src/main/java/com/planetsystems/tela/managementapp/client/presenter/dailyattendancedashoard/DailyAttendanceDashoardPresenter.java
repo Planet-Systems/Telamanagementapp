@@ -21,7 +21,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardPane;
-import com.planetsystems.tela.managementapp.client.presenter.dashboard.OverallCountDashboardGenerator;
+import com.planetsystems.tela.managementapp.client.presenter.dashboard.PrimarySchoolDashboardGenerator;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;

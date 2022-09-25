@@ -83,18 +83,18 @@ public class CreateStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		form.setNumCols(4);
 
 		academicYearCombo = new ComboBox();
-		academicYearCombo.setTitle("AcademicYear");
-		academicYearCombo.setHint("Year");
+		academicYearCombo.setTitle("Academic Year");
+		academicYearCombo.setHint("Select");
 		academicYearCombo.setShowHintInField(true);
 
 		academicTermCombo = new ComboBox();
-		academicTermCombo.setTitle("AcademicTerm");
-		academicTermCombo.setHint("AcademicTerm");
+		academicTermCombo.setTitle("Academic Term");
+		academicTermCombo.setHint("Select");
 		academicTermCombo.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
-		districtCombo.setHint("District");
+		districtCombo.setTitle("Local Government");
+		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 
 		schoolCombo = new ComboBox();

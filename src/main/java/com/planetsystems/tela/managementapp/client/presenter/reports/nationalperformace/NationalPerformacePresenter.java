@@ -82,11 +82,11 @@ public class NationalPerformacePresenter
 	protected void onBind() {
 		super.onBind();
 		loadMenuButtons();
-		loadAttendanceDashboard();
+		//loadAttendanceDashboard();
 	}
 
 	private void loadMenuButtons() {
-		MenuButton filter = new MenuButton("More Views");
+		MenuButton filter = new MenuButton("Filter");
 		MenuButton refresh = new MenuButton("Dashboard");
 		MenuButton export = new MenuButton("Export");
 
@@ -164,13 +164,14 @@ public class NationalPerformacePresenter
 				MenuItem item2 = new MenuItem("End of Month Time Attendance Reports");
 				MenuItem item3 = new MenuItem("End of Term Time Attendance Reports");
 				
-				MenuItem item4 = new MenuItem("Number of Teachers Report"); 
-				MenuItem item5 = new MenuItem("End of Week Learner Attendance Report");
-				MenuItem item6 = new MenuItem("End of Month Learner Attendance Report");
-				MenuItem item7 = new MenuItem("End of Term Learner Attendance Report");
-				MenuItem item8 = new MenuItem("Learner Enrollment Report"); 
+				//MenuItem item4 = new MenuItem("Number of Teachers Report"); 
+				//MenuItem item5 = new MenuItem("End of Week Learner Attendance Report");
+				//MenuItem item6 = new MenuItem("End of Month Learner Attendance Report");
+				//MenuItem item7 = new MenuItem("End of Term Learner Attendance Report");
+				//MenuItem item8 = new MenuItem("Learner Enrollment Report"); 
 
-				menu.setItems(dashboard, item1, item2, item3,item4,item5,item6,item7,item8);
+				//menu.setItems(dashboard, item1, item2, item3,item4,item5,item6,item7,item8);
+				menu.setItems(dashboard, item1, item2, item3);
 
 				menu.showNextTo(button, "bottom");
 

@@ -2,6 +2,10 @@ package com.planetsystems.tela.managementapp.client.place;
 
 public class NameTokens {
 
+	public static final String datauploadstat = "Data Upload Report";
+
+	public static final String batchupload = "Batch Uploads";
+
 	public static final String emailattachmentdownload = "Email Attachment Downloads";
 
 	public static final String timetableupload = "timetableupload";
@@ -200,6 +204,14 @@ public class NameTokens {
 
 	public static String getEmailattachmentdownload() {
 		return emailattachmentdownload;
+	}
+
+	public static String getBatchupload() {
+		return batchupload;
+	}
+
+	public static String getDatauploadstat() {
+		return datauploadstat;
 	}
 
 }

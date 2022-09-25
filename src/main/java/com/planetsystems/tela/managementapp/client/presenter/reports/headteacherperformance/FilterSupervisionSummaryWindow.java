@@ -51,12 +51,12 @@ public class FilterSupervisionSummaryWindow extends Window {
 		academicTermCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
-		regionCombo.setTitle("Region");
+		regionCombo.setTitle("Sub-Region");
 		regionCombo.setHint("Select");
 		regionCombo.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
+		districtCombo.setTitle("Local Government");
 		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 

@@ -12,7 +12,7 @@ public class SuperListGrid extends ListGrid{
 		
 		
 		this.setFilterOnKeypress(true);
-		this.setFetchDelay(500);
+		//this.setFetchDelay(500);
 		this.setSelectionAppearance(SelectionAppearance.CHECKBOX);
 		this.setSelectionType(SelectionStyle.SINGLE);
 		this.setWrapCells(false);

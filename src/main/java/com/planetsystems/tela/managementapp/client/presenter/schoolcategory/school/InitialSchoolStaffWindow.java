@@ -35,13 +35,13 @@ public class InitialSchoolStaffWindow extends Window {
 	public InitialSchoolStaffWindow() {
 		super();
 		firstNameField = new TextItem();
-		firstNameField.setTitle("First Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
-		firstNameField.setHint("First Name");
+		firstNameField.setTitle("Given Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		firstNameField.setHint("Given Name");
 		firstNameField.setShowHintInField(true);
 
 		lastNameField = new TextItem();
-		lastNameField.setTitle("Last Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
-		lastNameField.setHint("Last Name");
+		lastNameField.setTitle("Surname <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
+		lastNameField.setHint("Surname");
 		lastNameField.setShowHintInField(true);
 
 		phoneNumberField = new TextItem();
@@ -52,7 +52,7 @@ public class InitialSchoolStaffWindow extends Window {
 		phoneNumberField.setShowHintInField(true);
 
 		emailField = new TextItem();
-		emailField.setTitle("Email");
+		emailField.setTitle("Email <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		emailField.setHint("Email");
 		emailField.setShowHintInField(true);
 
@@ -95,7 +95,7 @@ public class InitialSchoolStaffWindow extends Window {
 		roleCombo.setShowHintInField(true);
 
 		DynamicForm dynamicForm = new DynamicForm();
-		dynamicForm.setFields(firstNameField, lastNameField, nameAbrevField, emailField, nationalIdField,
+		dynamicForm.setFields(lastNameField, firstNameField, nameAbrevField, emailField, nationalIdField,
 				phoneNumberField, codeField, genderCombo, dobItem, registeredCombo, roleCombo);
 		dynamicForm.setNumCols(4);
 		dynamicForm.setWrapItemTitles(false);
@@ -130,14 +130,13 @@ public class InitialSchoolStaffWindow extends Window {
 		this.setTitle("Principal/Head Teacher Details");
 		this.setIsModal(true);
 		this.setShowModalMask(true);
-		this.setShowCloseButton(false); 
+		this.setShowCloseButton(false);
 		this.setShowMinimizeButton(false);
 		this.setShowMaximizeButton(false);
 
-		//closeWindow(this);
+		// closeWindow(this);
 
 	}
- 
 
 	public TextItem getFirstNameField() {
 		return firstNameField;
@@ -186,7 +185,6 @@ public class InitialSchoolStaffWindow extends Window {
 	public IButton getSaveButton() {
 		return saveButton;
 	}
-
 
 	public IButton getCancelButton() {
 		return cancelButton;

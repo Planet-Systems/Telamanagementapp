@@ -112,9 +112,9 @@ public class TimeAttendanceSupervisionPresenter
 					MenuButton delete = new MenuButton("Delete");
 
 					List<MenuButton> buttons = new ArrayList<>();
-					buttons.add(newButton);
-					buttons.add(edit);
-					buttons.add(delete);
+					//buttons.add(newButton);
+					//buttons.add(edit);
+					//buttons.add(delete);
 
 					getView().getControlsPane().addMenuButtons("Teacher Time Attendance Supervision Details",buttons);
 					loadAcademicYearCombo(getView().getClockInPane(), null);
@@ -132,8 +132,8 @@ public class TimeAttendanceSupervisionPresenter
 					MenuButton filter = new MenuButton("View");
 
 					List<MenuButton> buttons = new ArrayList<>();
-					buttons.add(newButton);
-					buttons.add(edit);
+					//buttons.add(newButton);
+					//buttons.add(edit);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons("Teacher Task Attendance Supervision Details",buttons);
@@ -152,8 +152,8 @@ public class TimeAttendanceSupervisionPresenter
 					MenuButton filter = new MenuButton("View");
 
 					List<MenuButton> buttons = new ArrayList<>();
-					buttons.add(newButton);
-					buttons.add(edit);
+					//buttons.add(newButton);
+					//buttons.add(edit);
 					buttons.add(filter);
 
 					getView().getControlsPane().addMenuButtons(buttons);

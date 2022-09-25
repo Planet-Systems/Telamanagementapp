@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -1423,6 +1424,8 @@ public class StaffEnrollmentPresenter
 								// SC.say("GET_FILE_UPLOAD_LINK:: "+result.getSystemFeedbackDTO().getMessage());
 
 								StaffImportWindow window = new StaffImportWindow();
+								window.getSheetNo().setValue("2");
+								window.getRowNo().setValue("6");
 								loadRegionCombo(window, null);
 								loadDistrictComboByRegion(window, null);
 								loadSchoolCombo(window, null);
@@ -1481,7 +1484,9 @@ public class StaffEnrollmentPresenter
 				
 				final String sheetNo= window.getSheetNo().getValueAsString();
 				final String rowNo= window.getRowNo().getValueAsString();
-
+				
+				final String userEmail=Cookies.getCookie(RequestConstant.USERNAME);
+				 
 				if (fileExtension.equalsIgnoreCase("xlsx")) {
 
 					SC.showPrompt("", "", new SwizimaLoader());
@@ -1498,6 +1503,8 @@ public class StaffEnrollmentPresenter
 					url.append("&" + "schoolId" + "=" + schoolId);
 					url.append("&" + "sheetNo" + "=" + sheetNo);
 					url.append("&" + "rowNo" + "=" + rowNo);
+					url.append("&" + "userEmail" + "=" + userEmail);
+					 
 
 					window.getUploadForm().setAction(url.toString());
 					window.getUploadForm().submit();

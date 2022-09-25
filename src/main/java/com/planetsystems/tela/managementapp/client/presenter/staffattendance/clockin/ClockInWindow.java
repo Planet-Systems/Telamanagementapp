@@ -60,8 +60,8 @@ public class ClockInWindow extends Window {
 		academicTermCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
-		districtCombo.setHint("District");
+		districtCombo.setTitle("Local Government");
+		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 		
 		schoolCombo = new ComboBox();

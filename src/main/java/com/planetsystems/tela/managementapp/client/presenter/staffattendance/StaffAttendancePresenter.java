@@ -116,9 +116,9 @@ public class StaffAttendancePresenter
 					MenuButton filter = new MenuButton("Filter");
 
 					List<MenuButton> buttons = new ArrayList<>();
-					buttons.add(clockInButton);
+					//buttons.add(clockInButton);
 					buttons.add(filter);
-					buttons.add(clockOut);
+					//buttons.add(clockOut);
 
 					getView().getControlsPane().addMenuButtons("Teacher Clockin Details",buttons);
 

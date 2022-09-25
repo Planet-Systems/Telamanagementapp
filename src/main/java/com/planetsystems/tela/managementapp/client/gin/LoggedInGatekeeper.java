@@ -31,8 +31,7 @@ public class LoggedInGatekeeper implements Gatekeeper {
 			if (logedIn != null) {
 				if (logedIn.equalsIgnoreCase("true")) { 
 					//Canvas.resizeFonts(1);
-					Canvas.resizeControls(1);
-
+					//Canvas.resizeControls(1);
 					//GWT.log("skinCookieName::: " + Cookies.getCookie(skinCookieName));
 					return true;
 				}

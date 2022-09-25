@@ -22,7 +22,7 @@ public class FilterLearnerDetailsWindow extends Window {
 		super();
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
+		districtCombo.setTitle("Local Government");
 		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 

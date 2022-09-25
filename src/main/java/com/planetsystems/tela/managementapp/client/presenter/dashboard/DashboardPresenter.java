@@ -1,8 +1,8 @@
 package com.planetsystems.tela.managementapp.client.presenter.dashboard;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import org.apache.bcel.generic.NEW;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -18,26 +18,24 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
 import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
-import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.widget.ControlsPane;
 import com.planetsystems.tela.managementapp.client.widget.MenuButton;
 import com.planetsystems.tela.managementapp.client.widget.SwizimaLoader;
 import com.planetsystems.tela.managementapp.shared.RequestAction;
 import com.planetsystems.tela.managementapp.shared.RequestConstant;
 import com.planetsystems.tela.managementapp.shared.RequestResult;
-import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.tab.events.TabSelectedEvent;
+import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
 
 @SuppressWarnings("deprecation")
 public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, DashboardPresenter.MyProxy> {
@@ -50,11 +48,18 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 	interface MyView extends View {
 
-		public DashboardPane getDashboardPane();
-
 		public ControlsPane getControlsPane();
-		
-		//public IButton getMesssageBtn();
+
+		public TabSet getTabSet();
+
+		public DashboardPane getSummaryDashboard();
+
+		public DashboardPane getPrimaryDashboard();
+
+		public DashboardPane getSecondaryDashboard();
+
+		public DashboardPane getInstitutionDashboard();
+
 	}
 
 	@ContentSlot
@@ -75,15 +80,84 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	protected void onBind() {
 		// TODO Auto-generated method stub
 		super.onBind();
- 
-		getView().getDashboardPane().hideDataImport();
-		//migrateData();
-		//migrateAttendanceData();
-		//migrateTimeTablesData();
 
-		loadMenuButtons();
+		onTabSelected(); 
+		loadSummaryDashboard();
+		
+	}
 
-		loadDashboard();
+	private void onTabSelected() {
+		getView().getTabSet().addTabSelectedHandler(new TabSelectedHandler() {
+
+			@Override
+			public void onTabSelected(TabSelectedEvent event) {
+
+				String selectedTab = event.getTab().getTitle();
+
+				if (selectedTab.equalsIgnoreCase(DashboardView.SUMMARY)) {
+
+					MenuButton filterButton = new MenuButton("Filter");
+					MenuButton refreshButton = new MenuButton("Refresh");
+
+					List<MenuButton> buttons = new ArrayList<>();
+
+					buttons.add(filterButton);
+					buttons.add(refreshButton);
+
+					getView().getControlsPane().addMenuButtons("Dashboard: National Overview", buttons);
+					
+					showFilter(filterButton);
+					refresh(refreshButton);
+					loadSummaryDashboard();
+
+				} else if (selectedTab.equalsIgnoreCase(DashboardView.PRIMARY)) {
+
+					MenuButton filterButton = new MenuButton("Filter");
+					MenuButton refreshButton = new MenuButton("Refresh");
+
+					List<MenuButton> buttons = new ArrayList<>();
+
+					buttons.add(filterButton);
+					buttons.add(refreshButton);
+
+					getView().getControlsPane().addMenuButtons("Dashboard: National Overview", buttons);
+					
+					//loadPrimarySchoolDashboard();
+
+				}
+
+				else if (selectedTab.equalsIgnoreCase(DashboardView.SECONDARY)) {
+
+					MenuButton filterButton = new MenuButton("Filter");
+					MenuButton refreshButton = new MenuButton("Refresh");
+
+					List<MenuButton> buttons = new ArrayList<>();
+
+					buttons.add(filterButton);
+					buttons.add(refreshButton);
+
+					getView().getControlsPane().addMenuButtons("Dashboard: National Overview", buttons);
+
+				} else if (selectedTab.equalsIgnoreCase(DashboardView.INSTITUTIONS)) {
+
+					MenuButton filterButton = new MenuButton("Filter");
+					MenuButton refreshButton = new MenuButton("Refresh");
+
+					List<MenuButton> buttons = new ArrayList<>();
+
+					buttons.add(filterButton);
+					buttons.add(refreshButton);
+
+					getView().getControlsPane().addMenuButtons("Dashboard: National Overview", buttons);
+
+				} else {
+					List<MenuButton> buttons = new ArrayList<>();
+					getView().getControlsPane().addMenuButtons(buttons);
+				}
+
+			}
+
+		});
 	}
 
 	private void loadMenuButtons() {
@@ -100,56 +174,38 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	}
 
 	private void migrateData() {
-		getView().getDashboardPane().getRefreshButton().addClickHandler(new ClickHandler() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA, map), new AsyncCallback<RequestResult>() {
 
 			@Override
-			public void onClick(ClickEvent event) {
+			public void onFailure(Throwable caught) {
+				System.out.println(caught.getMessage());
+				SC.warn("ERROR", caught.getMessage());
+				GWT.log("ERROR " + caught.getMessage());
+				SC.clearPrompt();
 
-				SC.ask("Confrim", "Are you sure you want to migrate data", new BooleanCallback() {
+			}
 
-					@Override
-					public void execute(Boolean value) {
+			@Override
+			public void onSuccess(RequestResult result) {
 
-						if (value) {
-							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+				SC.clearPrompt();
+				SessionManager.getInstance().manageSession(result, placeManager);
+				if (result != null) {
 
-							SC.showPrompt("", "", new SwizimaLoader());
+					if (result.getSystemFeedbackDTO() != null) {
 
-							dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA, map),
-									new AsyncCallback<RequestResult>() {
-
-										@Override
-										public void onFailure(Throwable caught) {
-											System.out.println(caught.getMessage());
-											SC.warn("ERROR", caught.getMessage());
-											GWT.log("ERROR " + caught.getMessage());
-											SC.clearPrompt();
-
-										}
-
-										@Override
-										public void onSuccess(RequestResult result) {
-
-											SC.clearPrompt();
-											SessionManager.getInstance().manageSession(result, placeManager);
-											if (result != null) {
-
-												if (result.getSystemFeedbackDTO() != null) {
-
-													SC.say(result.getSystemFeedbackDTO().getMessage());
-
-												}
-											} else {
-												SC.warn("ERROR", "Unknow error");
-											}
-
-										}
-									});
-						}
+						SC.say(result.getSystemFeedbackDTO().getMessage());
 
 					}
-				});
+				} else {
+					SC.warn("ERROR", "Unknow error");
+				}
 
 			}
 		});
@@ -157,178 +213,126 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 	}
 
 	private void migrateAttendanceData() {
-		getView().getDashboardPane().getImportAttendaceButton().addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
-				SC.ask("Confrim", "Are you sure you want to migrate Attendance data", new BooleanCallback() {
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_ATTENDACE, map),
+				new AsyncCallback<RequestResult>() {
 
 					@Override
-					public void execute(Boolean value) {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
 
-						if (value) {
-							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					}
 
-							SC.showPrompt("", "", new SwizimaLoader());
+					@Override
+					public void onSuccess(RequestResult result) {
 
-							dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_ATTENDACE, map),
-									new AsyncCallback<RequestResult>() {
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
 
-										@Override
-										public void onFailure(Throwable caught) {
-											System.out.println(caught.getMessage());
-											SC.warn("ERROR", caught.getMessage());
-											GWT.log("ERROR " + caught.getMessage());
-											SC.clearPrompt();
+							if (result.getSystemFeedbackDTO() != null) {
 
-										}
+								SC.say(result.getSystemFeedbackDTO().getMessage());
 
-										@Override
-										public void onSuccess(RequestResult result) {
-
-											SC.clearPrompt();
-											SessionManager.getInstance().manageSession(result, placeManager);
-											if (result != null) {
-
-												if (result.getSystemFeedbackDTO() != null) {
-
-													SC.say(result.getSystemFeedbackDTO().getMessage());
-
-												}
-											} else {
-												SC.warn("ERROR", "Unknow error");
-											}
-
-										}
-									});
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
 						}
 
 					}
 				});
-
-			}
-		});
 
 	}
 
 	private void migrateTimeTablesData() {
-		getView().getDashboardPane().getImportTimeTablesButton().addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
-				SC.ask("Confrim", "Are you sure you want to migrate Timetable data", new BooleanCallback() {
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_TIMETABLES, map),
+				new AsyncCallback<RequestResult>() {
 
 					@Override
-					public void execute(Boolean value) {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
 
-						if (value) {
-							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					}
 
-							SC.showPrompt("", "", new SwizimaLoader());
+					@Override
+					public void onSuccess(RequestResult result) {
 
-							dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_TIMETABLES, map),
-									new AsyncCallback<RequestResult>() {
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
 
-										@Override
-										public void onFailure(Throwable caught) {
-											System.out.println(caught.getMessage());
-											SC.warn("ERROR", caught.getMessage());
-											GWT.log("ERROR " + caught.getMessage());
-											SC.clearPrompt();
+							if (result.getSystemFeedbackDTO() != null) {
 
-										}
+								SC.say(result.getSystemFeedbackDTO().getMessage());
 
-										@Override
-										public void onSuccess(RequestResult result) {
-
-											SC.clearPrompt();
-											SessionManager.getInstance().manageSession(result, placeManager);
-											if (result != null) {
-
-												if (result.getSystemFeedbackDTO() != null) {
-
-													SC.say(result.getSystemFeedbackDTO().getMessage());
-
-												}
-											} else {
-												SC.warn("ERROR", "Unknow error");
-											}
-
-										}
-									});
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
 						}
 
 					}
 				});
 
-			}
-		});
-
 	}
-	
+
 	private void migrateSubjectsData() {
-		getView().getDashboardPane().getImportSubjects().addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
 
-				SC.ask("Confrim", "Are you sure you want to migrate Subjects data", new BooleanCallback() {
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_SUBJECTS, map),
+				new AsyncCallback<RequestResult>() {
 
 					@Override
-					public void execute(Boolean value) {
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
 
-						if (value) {
-							LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-							map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+					}
 
-							SC.showPrompt("", "", new SwizimaLoader());
+					@Override
+					public void onSuccess(RequestResult result) {
 
-							dispatcher.execute(new RequestAction(RequestConstant.MIGRATE_DATA_SUBJECTS, map),
-									new AsyncCallback<RequestResult>() {
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
 
-										@Override
-										public void onFailure(Throwable caught) {
-											System.out.println(caught.getMessage());
-											SC.warn("ERROR", caught.getMessage());
-											GWT.log("ERROR " + caught.getMessage());
-											SC.clearPrompt();
+							if (result.getSystemFeedbackDTO() != null) {
 
-										}
+								SC.say(result.getSystemFeedbackDTO().getMessage());
 
-										@Override
-										public void onSuccess(RequestResult result) {
-
-											SC.clearPrompt();
-											SessionManager.getInstance().manageSession(result, placeManager);
-											if (result != null) {
-
-												if (result.getSystemFeedbackDTO() != null) {
-
-													SC.say(result.getSystemFeedbackDTO().getMessage());
-
-												}
-											} else {
-												SC.warn("ERROR", "Unknow error");
-											}
-
-										}
-									});
+							}
+						} else {
+							SC.warn("ERROR", "Unknow error");
 						}
 
 					}
 				});
 
-			}
-		});
-
 	}
 
-
-	private void loadDashboard() {
+	private void loadSummaryDashboard() {
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
@@ -354,8 +358,57 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 						SessionManager.getInstance().manageSession(result, placeManager);
 						if (result != null) {
 
-							OverallCountDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane(),
+							SummaryDashboardGenerator.getInstance().generateDashboard(getView().getSummaryDashboard(),
 									result.getDashboardSummaryDTO());
+							
+							PrimarySchoolDashboardGenerator.getInstance().generateDashboard(
+									getView().getPrimaryDashboard(), result.getDashboardSummaryDTO());
+							
+							SecondarySchoolDashboardGenerator.getInstance().generateDashboard(
+									getView().getSecondaryDashboard(), result.getDashboardSummaryDTO());
+							
+							InstitutionDashboardGenerator.getInstance().generateDashboard(
+									getView().getInstitutionDashboard(), result.getDashboardSummaryDTO());
+
+						} else {
+							SC.warn("ERROR", "Unknow error");
+						}
+
+					}
+				});
+
+	}
+
+	private void loadPrimarySchoolDashboard2() {
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(RequestConstant.LOGIN_TOKEN, SessionManager.getInstance().getLoginToken());
+
+		SC.showPrompt("", "", new SwizimaLoader());
+
+		dispatcher.execute(new RequestAction(RequestConstant.GET_DEFAULT_ENROLLMENT_DASHBOARD, map),
+				new AsyncCallback<RequestResult>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						System.out.println(caught.getMessage());
+						SC.warn("ERROR", caught.getMessage());
+						GWT.log("ERROR " + caught.getMessage());
+						SC.clearPrompt();
+
+					}
+
+					@Override
+					public void onSuccess(RequestResult result) {
+
+						SC.clearPrompt();
+						SessionManager.getInstance().manageSession(result, placeManager);
+						if (result != null) {
+
+							PrimarySchoolDashboardGenerator.getInstance().generateDashboard(
+									getView().getPrimaryDashboard(), result.getDashboardSummaryDTO());
+							
+							
 
 						} else {
 							SC.warn("ERROR", "Unknow error");
@@ -393,7 +446,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 						if (result != null) {
 
 							OverallAttendanceDashboardGenerator.getInstance().generateDashboard(
-									getView().getDashboardPane(), result.getAttendanceDashboardSummaryDTO());
+									getView().getSummaryDashboard(), result.getAttendanceDashboardSummaryDTO());
 
 						} else {
 							SC.warn("ERROR", "Unknow error");
@@ -427,7 +480,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 					@Override
 					public void onClick(MenuItemClickEvent event) {
 
-						loadDashboard();
+						loadSummaryDashboard();
 					}
 				});
 
@@ -444,7 +497,8 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 					@Override
 					public void onClick(MenuItemClickEvent event) {
-						OverallImpactDashboardGenerator.getInstance().generateDashboard(getView().getDashboardPane());
+						OverallImpactDashboardGenerator.getInstance()
+								.generateDashboard(getView().getSummaryDashboard());
 					}
 				});
 
@@ -454,7 +508,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 					public void onClick(MenuItemClickEvent event) {
 
 						OverallAttendanceImpactDashboardGenerator.getInstance()
-								.generateDashboard(getView().getDashboardPane());
+								.generateDashboard(getView().getSummaryDashboard());
 					}
 				});
 
@@ -467,7 +521,7 @@ public class DashboardPresenter extends Presenter<DashboardPresenter.MyView, Das
 
 			@Override
 			public void onClick(ClickEvent event) {
-				loadDashboard();
+				loadSummaryDashboard();
 
 			}
 		});

@@ -106,7 +106,7 @@ public class HeadTeacherPerformancePresenter
 	final FilterDTO headTeacherSupervisionDTO = new FilterDTO();
 
 	private void loadMenuButtons() {
-		MenuButton filter = new MenuButton("View");
+		MenuButton filter = new MenuButton("Filter");
 		MenuButton refresh = new MenuButton("Refresh");
 		MenuButton export = new MenuButton("Export");
 
@@ -151,7 +151,7 @@ public class HeadTeacherPerformancePresenter
 						
 						getView().getContentPane().setMembers(pane);
 
-						MenuButton filter = new MenuButton("View");
+						MenuButton filter = new MenuButton("Filter");
 						MenuButton refresh = new MenuButton("Refresh");
 						MenuButton export = new MenuButton("Export");
 
@@ -213,7 +213,7 @@ public class HeadTeacherPerformancePresenter
 
 						getView().getContentPane().setMembers(clockInSummaryPane);
 
-						MenuButton filter = new MenuButton("View");
+						MenuButton filter = new MenuButton("Filter");
 						MenuButton refresh = new MenuButton("Refresh");
 						MenuButton export = new MenuButton("Export");
 
@@ -279,7 +279,7 @@ public class HeadTeacherPerformancePresenter
 					@Override
 					public void onClick(MenuItemClickEvent event) {
 
-						MenuButton filter = new MenuButton("View");
+						MenuButton filter = new MenuButton("Filter");
 						MenuButton refresh = new MenuButton("Refresh");
 						MenuButton export = new MenuButton("Export");
 
@@ -354,7 +354,7 @@ public class HeadTeacherPerformancePresenter
 					@Override
 					public void onClick(MenuItemClickEvent event) {
 
-						MenuButton filter = new MenuButton("View");
+						MenuButton filter = new MenuButton("Filter");
 						MenuButton refresh = new MenuButton("Refresh");
 						MenuButton export = new MenuButton("Export");
 
@@ -425,7 +425,7 @@ public class HeadTeacherPerformancePresenter
 					public void onClick(MenuItemClickEvent event) {
 						final HTEndOfTermTimeAttendancePane pane = new HTEndOfTermTimeAttendancePane();
 
-						MenuButton filter = new MenuButton("View");
+						MenuButton filter = new MenuButton("Filter");
 						MenuButton refresh = new MenuButton("Refresh");
 						MenuButton export = new MenuButton("Export");
 
@@ -522,7 +522,7 @@ public class HeadTeacherPerformancePresenter
 					public void onClick(MenuItemClickEvent event) {
 						final SchoolTimeOnTaskSummaryPane pane = new SchoolTimeOnTaskSummaryPane();
 
-						MenuButton filter = new MenuButton("View");
+						MenuButton filter = new MenuButton("Filter");
 						MenuButton refresh = new MenuButton("Refresh");
 						MenuButton export = new MenuButton("Export");
 
@@ -675,7 +675,7 @@ public class HeadTeacherPerformancePresenter
 			private void loadTeacherClockInSummary() {
 				HeadTeacherClockInSummaryPane pane = new HeadTeacherClockInSummaryPane();
 
-				MenuButton filter = new MenuButton("View");
+				MenuButton filter = new MenuButton("Filter");
 				MenuButton refresh = new MenuButton("Refresh");
 				MenuButton export = new MenuButton("Export");
 
@@ -696,7 +696,7 @@ public class HeadTeacherPerformancePresenter
 			private void loadSchoolEndOfWeekTimeAttendance() {
 				HTEndOfWeekTimeAttendancePane pane = new HTEndOfWeekTimeAttendancePane();
 
-				MenuButton filter = new MenuButton("View");
+				MenuButton filter = new MenuButton("Filter");
 				MenuButton refresh = new MenuButton("Refresh");
 				MenuButton export = new MenuButton("Export");
 
@@ -719,7 +719,7 @@ public class HeadTeacherPerformancePresenter
 
 				HTEndOfMonthTimeAttendancePane pane = new HTEndOfMonthTimeAttendancePane();
 
-				MenuButton filter = new MenuButton("View");
+				MenuButton filter = new MenuButton("Filter");
 				MenuButton refresh = new MenuButton("Refresh");
 				MenuButton export = new MenuButton("Export");
 
@@ -783,7 +783,7 @@ public class HeadTeacherPerformancePresenter
 			private void loadTeacherClockInSummary() {
 				HeadTeacherClockInSummaryPane pane = new HeadTeacherClockInSummaryPane();
 
-				MenuButton filter = new MenuButton("View");
+				MenuButton filter = new MenuButton("Filter");
 				MenuButton refresh = new MenuButton("Refresh");
 				MenuButton export = new MenuButton("Export");
 
@@ -804,7 +804,7 @@ public class HeadTeacherPerformancePresenter
 			private void loadSchoolEndOfWeekTimeAttendance() {
 				HTEndOfWeekTimeAttendancePane pane = new HTEndOfWeekTimeAttendancePane();
 
-				MenuButton filter = new MenuButton("View");
+				MenuButton filter = new MenuButton("Filter");
 				MenuButton refresh = new MenuButton("Refresh");
 				MenuButton export = new MenuButton("Export");
 
@@ -827,7 +827,7 @@ public class HeadTeacherPerformancePresenter
 
 				HTEndOfMonthTimeAttendancePane pane = new HTEndOfMonthTimeAttendancePane();
 
-				MenuButton filter = new MenuButton("View");
+				MenuButton filter = new MenuButton("Filter");
 				MenuButton refresh = new MenuButton("Refresh");
 				MenuButton export = new MenuButton("Export");
 

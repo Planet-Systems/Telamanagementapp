@@ -82,20 +82,20 @@ public class ViewStaffDailyAttendanceTaskSupervisionPane extends VLayout {
 		form.setNumCols(4);
 
 		academicYearField = new TextItem();
-		academicYearField.setTitle("AcademicYear");
-		academicYearField.setHint("Year");
+		academicYearField.setTitle("Academic Year");
+		academicYearField.setHint("Select");
 		academicYearField.setShowHintInField(true);
 		academicYearField.disable();
 
 		academicTermField = new TextItem();
-		academicTermField.setTitle("AcademicTerm");
-		academicTermField.setHint("AcademicTerm");
+		academicTermField.setTitle("Academic Term");
+		academicTermField.setHint("Select");
 		academicTermField.setShowHintInField(true);
 		academicTermField.disable();
 
 		districtField = new TextItem();
-		districtField.setTitle("District");
-		districtField.setHint("District");
+		districtField.setTitle("Local Government");
+		districtField.setHint("Select");
 		districtField.setShowHintInField(true);
 		districtField.disable();
 

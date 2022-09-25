@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.planetsystems.tela.dto.SchoolClassDTO; 
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -19,6 +20,7 @@ public class InitialSchoolClassListGrid extends SuperListGrid {
 		ListGridField nameField = new ListGridField(NAME, "Class Name");
 
 		this.setFields(codeField, nameField);
+		this.setSelectionType(SelectionStyle.NONE);
 
 	}
 

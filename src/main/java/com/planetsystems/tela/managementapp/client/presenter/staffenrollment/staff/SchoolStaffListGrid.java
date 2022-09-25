@@ -83,6 +83,7 @@ public class SchoolStaffListGrid extends SuperListGrid {
 		this.setFields(idField, schoolIdField, districtIdField, lastNameField, firstNameField, staffCodeField, role,
 				staffTypeField, genderField, phoneNumberField, emailField, nationalIdField, dobField, nameAbrevField,
 				districtField, schoolField, registeredField, registrationNo, nationality);
+		
 		this.setDataSource(dataSource);
 		this.setWrapHeaderTitles(true);
 		this.setSelectionType(SelectionStyle.SIMPLE);

@@ -31,7 +31,7 @@ public class ReportFilterWindow extends Window {
 		period.setTitle("Period");
 
 		district = new ComboBox();
-		district.setTitle("District");
+		district.setTitle("Local Government");
 
 		fromDate = new DateItem();
 		fromDate.setTitle("From");

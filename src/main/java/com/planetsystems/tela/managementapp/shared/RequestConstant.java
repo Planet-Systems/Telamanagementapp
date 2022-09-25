@@ -340,6 +340,18 @@ public class RequestConstant {
 	public static final String LOAD_TIMETABLE_LESSONS="LOAD_TIMETABLE_LESSONS";
 	
 	public static final String LOAD_EMAIL_DOWNLOAD_ATTACHMENTS="LOAD_EMAIL_DOWNLOAD_ATTACHMENTS";
+	
+	
+	public static final String GET_LICENSE_KEYS = "GET_LICENSE_KEYS";
+	public static final String GET_SCHOOL_LICENSE_KEYS = "GET_SCHOOL_LICENSE_KEYS";
+	
+	public static final String GET_Data_upload_stat = "GET_Data_upload_stat";
+	public static final String GET_Data_upload_summary_stat = "GET_Data_upload_summary_stat";
+	
+	public static final String EXCEL_EXPORT_Data_upload_stat = "EXCEL_EXPORT_Data_upload_stat"; 
+	public static final String EXCEL_Data_upload_summary_stat = "EXCEL_Data_upload_summary_stat";
+	
+	public static final String School_Data_Batch_Process = "School_Data_Batch_Process";
 	 
 
 }

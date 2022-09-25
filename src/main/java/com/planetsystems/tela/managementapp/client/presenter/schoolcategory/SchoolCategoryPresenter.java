@@ -19,12 +19,13 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import com.planetsystems.tela.dto.AcademicTermDTO;
 import com.planetsystems.tela.dto.AcademicYearDTO;
+import com.planetsystems.tela.dto.ActionDTO;
 import com.planetsystems.tela.dto.DistrictDTO;
 import com.planetsystems.tela.dto.FilterDTO;
 import com.planetsystems.tela.dto.GeneralUserDetailDTO;
@@ -46,6 +47,9 @@ import com.planetsystems.tela.managementapp.client.presenter.main.MainPresenter;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkDataUtil;
 import com.planetsystems.tela.managementapp.client.presenter.networkutil.NetworkResult;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.AddSchoolWindow;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.AssignLocalGovernmentWindow;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.AssignRolloutPhaseWindow;
+import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.AssignSchoolLevelWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.FilterSchoolWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.GeneralSchoolImportWindow;
 import com.planetsystems.tela.managementapp.client.presenter.schoolcategory.school.InitialSchoolClassListGrid;
@@ -114,7 +118,7 @@ public class SchoolCategoryPresenter
 	PlaceManager placeManager;
 
 	@NameToken(NameTokens.schoolClassCategory)
-	@ProxyStandard
+	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<SchoolCategoryPresenter> {
 	}
 
@@ -167,7 +171,7 @@ public class SchoolCategoryPresenter
 					editSchoolCategory(edit);
 
 					getAllSchoolCategories();
-					getView().getControlsPane().addMenuButtons("School Registration & Setup", buttons);
+					getView().getControlsPane().addMenuButtons("School/Institution Registration & Setup", buttons);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_TAB_TITLE)) {
 					MenuButton newButton = new MenuButton("New");
@@ -175,26 +179,30 @@ public class SchoolCategoryPresenter
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton filter = new MenuButton("Filter");
 					MenuButton importbutton = new MenuButton("Import");
-					MenuButton initiateClasses = new MenuButton("Setup Defualt Classes");
+					// MenuButton initiateClasses = new MenuButton("Setup Defualt Classes");
+
+					MenuButton moreButton = new MenuButton("More");
 
 					List<MenuButton> buttons = new ArrayList<>();
 					buttons.add(newButton);
 					buttons.add(edit);
 					buttons.add(delete);
 					buttons.add(importbutton);
-					buttons.add(initiateClasses);
+					// buttons.add(initiateClasses);
 					buttons.add(filter);
+					buttons.add(moreButton);
 
 					addSchool(newButton);
 					deleteSchool(delete);
 					editSchool(edit);
 					getAllSchools();
 					selectFilterSchoolOption(filter);
-					setupSchoolInitialClasses(initiateClasses);
+					// setupSchoolInitialClasses(initiateClasses);
 
 					importSchools(importbutton);
+					moreActions(moreButton);
 
-					getView().getControlsPane().addMenuButtons("School Registration & Setup", buttons);
+					getView().getControlsPane().addMenuButtons("School/Institution Registration & Setup", buttons);
 
 				} else if (selectedTab.equalsIgnoreCase(SchoolCategoryView.SCHOOL_CLASSES_TAB_TITLE)) {
 
@@ -214,10 +222,10 @@ public class SchoolCategoryPresenter
 					editSchoolClass(edit);
 					selectFilterSchoolClassOption(filter);
 
-					getView().getControlsPane().addMenuButtons("School Registration & Setup", buttons);
+					getView().getControlsPane().addMenuButtons("School/Institution Registration & Setup", buttons);
 
 					loadSchoolClassFilter();
-					//getAllSchoolClasses();
+					// getAllSchoolClasses();
 
 				} else {
 					List<MenuButton> buttons = new ArrayList<>();
@@ -265,7 +273,7 @@ public class SchoolCategoryPresenter
 		});
 
 	}
-	
+
 	private void loadSchoolFilter() {
 		FilterSchoolWindow window = new FilterSchoolWindow();
 		loadFilterRegionCombo(window);
@@ -309,7 +317,7 @@ public class SchoolCategoryPresenter
 		});
 
 	}
-	
+
 	private void loadSchoolClassFilter() {
 		FilterSchoolClassWindow window = new FilterSchoolClassWindow();
 		loadFilterAcademicYearCombo(window);
@@ -509,10 +517,10 @@ public class SchoolCategoryPresenter
 				loadSchoolCategoryCombo(window, null);
 				loadDistrictComboByRegion(window, null);
 
-				loadSchoolGenderCategory(window);
-				loadSchoolOwnership(window);
-				loadSchoolType(window);
-				loadSchoolLevels(window);
+				loadSchoolGenderCategory(window, null);
+				loadSchoolOwnership(window, null);
+				loadSchoolType(window, null);
+				loadSchoolLevels(window, null);
 				loadSchoolLicenseStatus(window);
 				loadRolloutPhase(window);
 
@@ -536,6 +544,7 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onChanged(ChangedEvent event) {
+
 				ComboUtil.loadDistrictComboByRegion(window.getRegionCombo(), window.getDistrictCombo(), dispatcher,
 						placeManager, defaultValue);
 			}
@@ -615,37 +624,49 @@ public class SchoolCategoryPresenter
 				}
 
 			}
-
-			private boolean checkIfNoSchoolWindowFieldIsEmpty(AddSchoolWindow window) {
-				boolean flag = true;
-
-				if (window.getSchoolName().getValueAsString() == null)
-					flag = false;
-
-				if (window.getSchoolCategoryCombo().getValueAsString() == null)
-					flag = false;
-
-				if (window.getDistrictCombo().getValueAsString() == null)
-					flag = false;
-
-				if (window.getRegionCombo().getValueAsString() == null)
-					flag = false;
-
-				if (window.getSchoolCode().getValueAsString() == null)
-					flag = false;
-
-				// if (window.getLatitude().getValueAsString() == null)
-				// flag = false;
-				//
-				// if (window.getLongtitude().getValueAsString() == null)
-				// flag = false;
-
-				// if (window.getDeviceNumber().getValueAsString() == null)
-				// flag = false;
-
-				return flag;
-			}
 		});
+	}
+
+	private boolean checkIfNoSchoolWindowFieldIsEmpty(AddSchoolWindow window) {
+		boolean flag = true;
+
+		if (window.getSchoolName().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolCategoryCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getDistrictCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getRegionCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getDeviceNumber().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolLevel().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolType().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolGenderCategory().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolOwnership().getValueAsString() == null)
+			flag = false;
+
+		if (window.getSchoolCategoryCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getDistrictCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getRolloutPhaseCombo().getValueAsString() == null)
+			flag = false;
+
+		return flag;
 	}
 
 	private void editSchool(MenuButton button) {
@@ -653,22 +674,13 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(ClickEvent event) {
+
 				if (getView().getSchoolPane().getListGrid().anySelected()) {
+
 					AddSchoolWindow window = new AddSchoolWindow();
 					window.getSaveButton().setTitle("Save");
 
-					loadRegionCombo(window, null);
-					loadSchoolCategoryCombo(window, null);
-					loadDistrictComboByRegion(window, null);
 					loadFieldsToEdit(window);
-
-					loadSchoolGenderCategory(window);
-					loadSchoolOwnership(window);
-					loadSchoolType(window);
-					loadSchoolLevels(window);
-					loadSchoolLicenseStatus(window);
-					loadRolloutPhase(window);
-
 					updateSchool(window);
 
 					window.show();
@@ -697,11 +709,22 @@ public class SchoolCategoryPresenter
 
 		window.getRolloutPhaseCombo().setValue(record.getAttribute(SchoolListGrid.Rollout));
 
-		window.getSchoolGenderCategory().setValue(record.getAttribute(SchoolListGrid.SchoolGenderCategory));
-		window.getSchoolLevel().setValue(record.getAttribute(SchoolListGrid.SchoolLevel));
-		window.getSchoolOwnership().setValue(record.getAttribute(SchoolListGrid.SchoolOwnership));
-		window.getSchoolType().setValue(record.getAttribute(SchoolListGrid.SchoolType));
+		// window.getSchoolGenderCategory().setValue(record.getAttribute(SchoolListGrid.SchoolGenderCategory));
+		// window.getSchoolLevel().setValue(record.getAttribute(SchoolListGrid.SchoolLevel));
+		// window.getSchoolOwnership().setValue(record.getAttribute(SchoolListGrid.SchoolOwnership));
+		// window.getSchoolType().setValue(record.getAttribute(SchoolListGrid.SchoolType));
 		window.getLicensed().setValue(record.getAttribute(SchoolListGrid.Licensed));
+
+		loadRegionCombo(window, record.getAttribute(SchoolListGrid.REGION_ID));
+		loadSchoolCategoryCombo(window, record.getAttribute(SchoolListGrid.CATEGORY_ID));
+		loadDistrictComboByRegion(window, record.getAttribute(SchoolListGrid.DISTRICT_ID));
+
+		loadSchoolGenderCategory(window, record.getAttribute(SchoolListGrid.SchoolGenderCategory));
+		loadSchoolOwnership(window, record.getAttribute(SchoolListGrid.SchoolOwnership));
+		loadSchoolType(window, record.getAttribute(SchoolListGrid.SchoolType));
+		loadSchoolLevels(window, record.getAttribute(SchoolListGrid.SchoolLevel));
+		loadSchoolLicenseStatus(window);
+		loadRolloutPhase(window);
 
 	}
 
@@ -711,70 +734,54 @@ public class SchoolCategoryPresenter
 			@Override
 			public void onClick(ClickEvent event) {
 
-				ListGridRecord record = getView().getSchoolPane().getListGrid().getSelectedRecord();
+				boolean isValid = checkIfNoSchoolWindowFieldIsEmpty(window);
 
-				SchoolDTO dto = new SchoolDTO();
-				dto.setId(record.getAttribute(SchoolListGrid.ID));
-				dto.setCode(window.getDeviceNumber().getValueAsString());
-				dto.setLatitude(window.getLatitude().getValueAsString());
-				dto.setLongitude(window.getLongtitude().getValueAsString());
-				dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
-				dto.setName(window.getSchoolName().getValueAsString());
-				dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
+				if (isValid) {
 
-				dto.setSchoolLevel(window.getSchoolLevel().getValueAsString());
-				dto.setSchoolType(window.getSchoolType().getValueAsString());
-				dto.setSchoolGenderCategory(window.getSchoolGenderCategory().getValueAsString());
-				dto.setSchoolOwnership(window.getSchoolOwnership().getValueAsString());
-				dto.setLicensed(window.getLicensed().getValueAsString());
+					ListGridRecord record = getView().getSchoolPane().getListGrid().getSelectedRecord();
 
-				SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
-				schoolCategoryDTO.setId(window.getSchoolCategoryCombo().getValueAsString());
-				dto.setSchoolCategoryDTO(schoolCategoryDTO);
+					SchoolDTO dto = new SchoolDTO();
+					dto.setId(record.getAttribute(SchoolListGrid.ID));
+					dto.setCode(window.getDeviceNumber().getValueAsString());
+					dto.setLatitude(window.getLatitude().getValueAsString());
+					dto.setLongitude(window.getLongtitude().getValueAsString());
+					dto.setDeviceNumber(window.getDeviceNumber().getValueAsString());
+					dto.setName(window.getSchoolName().getValueAsString());
+					dto.setUpdatedDateTime(dateTimeFormat.format(new Date()));
 
-				DistrictDTO districtDTO = new DistrictDTO();
-				districtDTO.setId(window.getDistrictCombo().getValueAsString());
-				dto.setDistrictDTO(districtDTO);
+					dto.setSchoolLevel(window.getSchoolLevel().getValueAsString());
+					dto.setSchoolType(window.getSchoolType().getValueAsString());
+					dto.setSchoolGenderCategory(window.getSchoolGenderCategory().getValueAsString());
+					dto.setSchoolOwnership(window.getSchoolOwnership().getValueAsString());
+					dto.setLicensed(window.getLicensed().getValueAsString());
 
-				dto.setRolloutPhase(window.getRolloutPhaseCombo().getValueAsString());
+					SchoolCategoryDTO schoolCategoryDTO = new SchoolCategoryDTO();
+					schoolCategoryDTO.setId(window.getSchoolCategoryCombo().getValueAsString());
+					dto.setSchoolCategoryDTO(schoolCategoryDTO);
 
-				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-				map.put(RequestConstant.UPDATE_SCHOOL, dto);
-				map.put(NetworkDataUtil.ACTION, RequestConstant.UPDATE_SCHOOL);
+					DistrictDTO districtDTO = new DistrictDTO();
+					districtDTO.setId(window.getDistrictCombo().getValueAsString());
+					dto.setDistrictDTO(districtDTO);
 
-				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+					dto.setRolloutPhase(window.getRolloutPhaseCombo().getValueAsString());
 
-					@Override
-					public void onNetworkResult(RequestResult result) {
-						clearSchoolWindowFields(window);
-						window.close();
-						getAllSchools();
-					}
-				});
-			}
-		});
-	}
+					LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+					map.put(RequestConstant.UPDATE_SCHOOL, dto);
+					map.put(NetworkDataUtil.ACTION, RequestConstant.UPDATE_SCHOOL);
 
-	private void setupSchoolInitialClasses(MenuButton button) {
-		button.addClickHandler(new ClickHandler() {
+					NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-				if (getView().getSchoolPane().getListGrid().anySelected()) {
-
-					String schoolId = getView().getSchoolPane().getListGrid().getSelectedRecord()
-							.getAttribute(SchoolListGrid.ID);
-
-					SchoolLevel level = SchoolLevel.getSchoolLevel(getView().getSchoolPane().getListGrid()
-							.getSelectedRecord().getAttribute(SchoolListGrid.SchoolLevel));
-
-					initiateSchoolClasses(schoolId, level);
-
+						@Override
+						public void onNetworkResult(RequestResult result) {
+							clearSchoolWindowFields(window);
+							window.close();
+							getAllSchools();
+						}
+					});
 				} else {
-					SC.say("Please select record to setup default classes");
+					SC.say("ERROR", "Please fill in all the required fields");
 				}
 			}
-
 		});
 	}
 
@@ -1226,7 +1233,7 @@ public class SchoolCategoryPresenter
 									@Override
 									public void onNetworkResult(RequestResult result) {
 										SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage());
-										//getAllSchoolClasses();
+										// getAllSchoolClasses();
 									}
 								});
 							}
@@ -1327,21 +1334,19 @@ public class SchoolCategoryPresenter
 	private void importSchools(final MenuButton importbutton) {
 		final Menu menu = new Menu();
 		MenuItem importAll = new MenuItem("All");
-		MenuItem importByDistrict = new MenuItem("By District"); 
+		MenuItem importByDistrict = new MenuItem("By District");
 		menu.setItems(importAll, importByDistrict);
-		
+
 		importbutton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 
-			  
-				menu.showNextTo(importbutton, "bottom"); 
- 
+				menu.showNextTo(importbutton, "bottom");
 
 			}
 		});
-		
+
 		importAll.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 			@Override
@@ -1355,7 +1360,7 @@ public class SchoolCategoryPresenter
 
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				
+
 				fileUpload();
 
 			}
@@ -1612,7 +1617,7 @@ public class SchoolCategoryPresenter
 
 	}
 
-	private void loadSchoolLevels(final AddSchoolWindow window) {
+	private void loadSchoolLevels(final AddSchoolWindow window, final String defaultValue) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 		for (SchoolLevel level : SchoolLevel.values()) {
@@ -1620,9 +1625,22 @@ public class SchoolCategoryPresenter
 		}
 
 		window.getSchoolLevel().setValueMap(valueMap);
+
+		if (defaultValue != null && defaultValue.length() != 0) {
+
+			if (window.getSchoolLevel().getValueAsString() != null) {
+				window.getSchoolLevel().clearValue();
+			} else {
+				window.getSchoolLevel().setValue(defaultValue);
+				ChangedEvent event1 = new ChangedEvent(window.getSchoolLevel().getJsObj());
+				window.getSchoolLevel().fireEvent(event1);
+			}
+
+		}
+
 	}
 
-	private void loadSchoolType(final AddSchoolWindow window) {
+	private void loadSchoolType(final AddSchoolWindow window, final String defaultValue) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 		for (SchoolType type : SchoolType.values()) {
@@ -1630,9 +1648,22 @@ public class SchoolCategoryPresenter
 		}
 
 		window.getSchoolType().setValueMap(valueMap);
+
+		if (defaultValue != null && defaultValue.length() != 0) {
+
+			if (window.getSchoolType().getValueAsString() != null) {
+				window.getSchoolType().clearValue();
+			} else {
+				window.getSchoolType().setValue(defaultValue);
+				ChangedEvent event1 = new ChangedEvent(window.getSchoolType().getJsObj());
+				window.getSchoolType().fireEvent(event1);
+			}
+
+		}
+
 	}
 
-	private void loadSchoolOwnership(final AddSchoolWindow window) {
+	private void loadSchoolOwnership(final AddSchoolWindow window, final String defaultValue) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 		for (SchoolOwnership ownership : SchoolOwnership.values()) {
@@ -1640,9 +1671,22 @@ public class SchoolCategoryPresenter
 		}
 
 		window.getSchoolOwnership().setValueMap(valueMap);
+
+		if (defaultValue != null && defaultValue.length() != 0) {
+
+			if (window.getSchoolOwnership().getValueAsString() != null) {
+				window.getSchoolOwnership().clearValue();
+			} else {
+				window.getSchoolOwnership().setValue(defaultValue);
+				ChangedEvent event1 = new ChangedEvent(window.getSchoolOwnership().getJsObj());
+				window.getSchoolOwnership().fireEvent(event1);
+			}
+
+		}
+
 	}
 
-	private void loadSchoolGenderCategory(final AddSchoolWindow window) {
+	private void loadSchoolGenderCategory(final AddSchoolWindow window, final String defaultValue) {
 		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
 
 		for (SchoolGenderCategory category : SchoolGenderCategory.values()) {
@@ -1650,6 +1694,18 @@ public class SchoolCategoryPresenter
 		}
 
 		window.getSchoolGenderCategory().setValueMap(valueMap);
+
+		if (defaultValue != null && defaultValue.length() != 0) {
+
+			if (window.getSchoolGenderCategory().getValueAsString() != null) {
+				window.getSchoolGenderCategory().clearValue();
+			} else {
+				window.getSchoolGenderCategory().setValue(defaultValue);
+				ChangedEvent event1 = new ChangedEvent(window.getSchoolGenderCategory().getJsObj());
+				window.getSchoolGenderCategory().fireEvent(event1);
+			}
+
+		}
 	}
 
 	private void loadSchoolLicenseStatus(final AddSchoolWindow window) {
@@ -1861,6 +1917,15 @@ public class SchoolCategoryPresenter
 		if (window.getRegisteredCombo().getValueAsString() == null)
 			flag = false;
 
+		if (window.getRoleCombo().getValueAsString() == null)
+			flag = false;
+
+		if (window.getPhoneNumberField().getValueAsString() == null)
+			flag = false;
+
+		if (window.getEmailField().getValueAsString() == null)
+			flag = false;
+
 		return flag;
 	}
 
@@ -2009,6 +2074,308 @@ public class SchoolCategoryPresenter
 		}
 
 		return list;
+
+	}
+
+	private void moreActions(final MenuButton menuButton) {
+		final Menu menu = new Menu();
+
+		MenuItem setDefaultClass = new MenuItem("Setup Defualt Classes");
+		MenuItem assignLocalGovernment = new MenuItem("Assign Local Government");
+		MenuItem assignSchoolLevel = new MenuItem("Assign School Level");
+		MenuItem assignRolloutPhanse = new MenuItem("Assign Rollout Phase");
+
+		menu.setItems(setDefaultClass, assignLocalGovernment, assignSchoolLevel, assignRolloutPhanse);
+
+		menuButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				menu.showNextTo(menuButton, "bottom");
+
+			}
+		});
+
+		setDefaultClass.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				if (getView().getSchoolPane().getListGrid().anySelected()) {
+
+					String schoolId = getView().getSchoolPane().getListGrid().getSelectedRecord()
+							.getAttribute(SchoolListGrid.ID);
+
+					SchoolLevel level = SchoolLevel.getSchoolLevel(getView().getSchoolPane().getListGrid()
+							.getSelectedRecord().getAttribute(SchoolListGrid.SchoolLevel));
+
+					initiateSchoolClasses(schoolId, level);
+
+				} else {
+					SC.say("Please select record to setup default classes");
+				}
+
+			}
+		});
+
+		 
+		assignLocalGovernment.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				if (getView().getSchoolPane().getListGrid().anySelected()) {
+
+					ListGridRecord[] gridRecords = getView().getSchoolPane().getListGrid().getSelectedRecords();
+
+					assignLocalGovernment(gridRecords);
+
+				} else {
+					SC.say("Please select record to Assign Local government");
+				}
+
+			}
+		});
+		
+		assignSchoolLevel.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				if (getView().getSchoolPane().getListGrid().anySelected()) {
+
+					ListGridRecord[] gridRecords = getView().getSchoolPane().getListGrid().getSelectedRecords();
+
+					assignSchoolLevel(gridRecords);
+
+				} else {
+					SC.say("Please select record to Assign School Level");
+				}
+
+			}
+		});
+		
+		assignRolloutPhanse.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+
+				if (getView().getSchoolPane().getListGrid().anySelected()) {
+
+					ListGridRecord[] gridRecords = getView().getSchoolPane().getListGrid().getSelectedRecords();
+
+					assignRolloutPhase(gridRecords);
+
+				} else {
+					SC.say("Please select record to Assign Rollout Phase");
+				}
+
+			}
+		});
+
+	}
+
+	private void assignLocalGovernment(final ListGridRecord[] schoolIds) {
+
+		final AssignLocalGovernmentWindow window = new AssignLocalGovernmentWindow();
+		ComboUtil.loadDistrictCombo(window.getDistrictCombo(), dispatcher, placeManager, null);
+
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				List<String> list = new ArrayList<>();
+				for (ListGridRecord record : schoolIds) {
+					list.add(record.getAttribute(SchoolListGrid.ID));
+				}
+
+				ActionDTO actionDTO = new ActionDTO();
+				actionDTO.setActionValue(window.getDistrictCombo().getValueAsString());
+				actionDTO.setAffectedEntities(list);
+				actionDTO.setRequiredAction("AssignLocalGovernment");
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.School_Data_Batch_Process, actionDTO);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.School_Data_Batch_Process);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						if (result.getSystemFeedbackDTO() != null) {
+
+							if (result.getSystemFeedbackDTO().isResponse()) {
+
+								SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+									@Override
+									public void execute(Boolean value) {
+
+										if (value) {
+
+											window.close();
+											getAllSchools();
+										}
+
+									}
+								});
+							} else {
+								SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
+							}
+						} else {
+
+							SC.warn("ERROR", "Unknown Server error");
+						}
+
+					}
+				});
+
+			}
+		});
+
+		window.show();
+
+	}
+
+	private void assignSchoolLevel(final ListGridRecord[] schoolIds) {
+
+		final AssignSchoolLevelWindow window = new AssignSchoolLevelWindow();
+
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+		for (SchoolLevel level : SchoolLevel.values()) {
+			valueMap.put(level.getLevel(), level.getLevel());
+		}
+
+		window.getSchoolLevelCombo().setValueMap(valueMap);
+
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				List<String> list = new ArrayList<>();
+				for (ListGridRecord record : schoolIds) {
+					list.add(record.getAttribute(SchoolListGrid.ID));
+				}
+
+				ActionDTO actionDTO = new ActionDTO();
+				actionDTO.setActionValue(window.getSchoolLevelCombo().getValueAsString());
+				actionDTO.setAffectedEntities(list);
+				actionDTO.setRequiredAction("AssignSchoolLevel");
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.School_Data_Batch_Process, actionDTO);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.School_Data_Batch_Process);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						if (result.getSystemFeedbackDTO() != null) {
+
+							if (result.getSystemFeedbackDTO().isResponse()) {
+
+								SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+									@Override
+									public void execute(Boolean value) {
+
+										if (value) {
+
+											window.close();
+											getAllSchools();
+										}
+
+									}
+								});
+							} else {
+								SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
+							}
+						} else {
+
+							SC.warn("ERROR", "Unknown Server error");
+						}
+
+					}
+				});
+
+			}
+		});
+
+		window.show();
+
+	}
+
+	private void assignRolloutPhase(final ListGridRecord[] schoolIds) {
+
+		final AssignRolloutPhaseWindow window = new AssignRolloutPhaseWindow();
+
+		LinkedHashMap<String, String> valueMap = new LinkedHashMap<>();
+
+		for (RolloutPhase phase : RolloutPhase.values()) {
+			valueMap.put(phase.getRolloutPhase(), phase.getRolloutPhase());
+		}
+
+		window.getRolloutPhaseCombo().setValueMap(valueMap);
+
+		window.getSaveButton().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				List<String> list = new ArrayList<>();
+				for (ListGridRecord record : schoolIds) {
+					list.add(record.getAttribute(SchoolListGrid.ID));
+				}
+
+				ActionDTO actionDTO = new ActionDTO();
+				actionDTO.setActionValue(window.getRolloutPhaseCombo().getValueAsString());
+				actionDTO.setAffectedEntities(list);
+				actionDTO.setRequiredAction("AssignRolloutPhase");
+
+				LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+				map.put(RequestConstant.School_Data_Batch_Process, actionDTO);
+				map.put(NetworkDataUtil.ACTION, RequestConstant.School_Data_Batch_Process);
+				NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+					@Override
+					public void onNetworkResult(RequestResult result) {
+
+						if (result.getSystemFeedbackDTO() != null) {
+
+							if (result.getSystemFeedbackDTO().isResponse()) {
+
+								SC.say("SUCCESS", result.getSystemFeedbackDTO().getMessage(), new BooleanCallback() {
+
+									@Override
+									public void execute(Boolean value) {
+
+										if (value) {
+
+											window.close();
+											getAllSchools();
+										}
+
+									}
+								});
+							} else {
+								SC.warn("ERROR", result.getSystemFeedbackDTO().getMessage());
+							}
+						} else {
+
+							SC.warn("ERROR", "Unknown Server error");
+						}
+
+					}
+				});
+
+			}
+		});
+
+		window.show();
 
 	}
 

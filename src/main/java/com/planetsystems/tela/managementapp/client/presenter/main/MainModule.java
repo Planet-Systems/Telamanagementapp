@@ -2,8 +2,10 @@ package com.planetsystems.tela.managementapp.client.presenter.main;
 
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.planetsystems.tela.managementapp.client.presenter.academicyear.AcademicYearModule;
+import com.planetsystems.tela.managementapp.client.presenter.batchupload.BatchUploadModule;
 import com.planetsystems.tela.managementapp.client.presenter.dailyattendancedashoard.DailyAttendanceDashoardModule;
 import com.planetsystems.tela.managementapp.client.presenter.dashboard.DashboardModule;
+import com.planetsystems.tela.managementapp.client.presenter.datauploadstat.DataUploadStatModule;
 import com.planetsystems.tela.managementapp.client.presenter.devicemanager.DeviceManagerModule;
 import com.planetsystems.tela.managementapp.client.presenter.emailattachmentdownload.EmailAttachmentDownloadModule;
 import com.planetsystems.tela.managementapp.client.presenter.learnerattendance.LearnerAttendanceModule;
@@ -65,6 +67,10 @@ public class MainModule extends AbstractPresenterModule {
 		install(new LoginAuditModule());
 
 		install(new EmailAttachmentDownloadModule());
+		
+		install(new BatchUploadModule());
+		
+		install(new DataUploadStatModule());
 
 	}
 

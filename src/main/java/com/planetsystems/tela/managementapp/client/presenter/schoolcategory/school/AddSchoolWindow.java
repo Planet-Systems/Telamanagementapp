@@ -38,18 +38,18 @@ public class AddSchoolWindow extends Window {
 	public AddSchoolWindow() {
 		super();
 		schoolCode = new TextField();
-		schoolCode.setTitle("School Code");
+		schoolCode.setTitle("School Code <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolCode.setHint("School Code");
 		schoolCode.setShowHintInField(true);
 		schoolCode.setHidden(true);
 
 		schoolName = new TextField();
-		schoolName.setTitle("School Name");
+		schoolName.setTitle("School Name <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolName.setHint("School Name");
 		schoolName.setShowHintInField(true);
 
 		schoolCategoryCombo = new ComboBox();
-		schoolCategoryCombo.setTitle("Foundation Body");
+		schoolCategoryCombo.setTitle("Foundation Body <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolCategoryCombo.setHint("Select");
 		schoolCategoryCombo.setShowHintInField(true);
 
@@ -64,37 +64,37 @@ public class AddSchoolWindow extends Window {
 		longtitude.setShowHintInField(true);
 
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("Local Government");
+		districtCombo.setTitle("Local Government <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
-		regionCombo.setTitle("Sub-Region");
+		regionCombo.setTitle("Sub-Region <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		regionCombo.setHint("Select");
 		regionCombo.setShowHintInField(true);
 
 		deviceNumber = new TextField();
-		deviceNumber.setTitle("Tela Phone Number");
+		deviceNumber.setTitle("Tela Phone Number <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		deviceNumber.setHint("Tela Phone Number");
 		deviceNumber.setShowHintInField(true);
 
 		schoolLevel = new ComboBox();
-		schoolLevel.setTitle("School Level");
+		schoolLevel.setTitle("School Level <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolLevel.setHint("Select");
 		schoolLevel.setShowHintInField(true);
 
 		schoolOwnership = new ComboBox();
-		schoolOwnership.setTitle("School Ownership");
+		schoolOwnership.setTitle("School Ownership <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolOwnership.setHint("Select");
 		schoolOwnership.setShowHintInField(true);
 
 		schoolType = new ComboBox();
-		schoolType.setTitle("School Type");
+		schoolType.setTitle("School Type <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolType.setHint("Select");
 		schoolType.setShowHintInField(true);
 
 		schoolGenderCategory = new ComboBox();
-		schoolGenderCategory.setTitle("Gender Category");
+		schoolGenderCategory.setTitle("Gender Category <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		schoolGenderCategory.setHint("Select");
 		schoolGenderCategory.setShowHintInField(true);
 
@@ -104,7 +104,7 @@ public class AddSchoolWindow extends Window {
 		licensed.setShowHintInField(true);
 
 		rolloutPhaseCombo = new ComboBox();
-		rolloutPhaseCombo.setTitle("Rollout Phase");
+		rolloutPhaseCombo.setTitle("Rollout Phase <span style=' color: red; font-weight: bold; font-size: 11px;'>*</span>");
 		rolloutPhaseCombo.setHint("Select");
 		rolloutPhaseCombo.setShowHintInField(true);
 

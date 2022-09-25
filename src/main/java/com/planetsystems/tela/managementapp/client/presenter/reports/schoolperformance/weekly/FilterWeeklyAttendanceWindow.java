@@ -52,13 +52,13 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 		academicTermCombo.setShowHintInField(true);
 
 		regionCombo = new ComboBox();
-		regionCombo.setTitle("Region");
-		regionCombo.setHint("Region");
+		regionCombo.setTitle("Sub-Region");
+		regionCombo.setHint("Select");
 		regionCombo.setShowHintInField(true);
 		
 		districtCombo = new ComboBox();
-		districtCombo.setTitle("District");
-		districtCombo.setHint("District");
+		districtCombo.setTitle("Local Government");
+		districtCombo.setHint("Select");
 		districtCombo.setShowHintInField(true);
 
 		schoolCombo = new ComboBox();
@@ -76,9 +76,7 @@ public class FilterWeeklyAttendanceWindow extends Window  {
 		weekCombo.setHint("Week");
 		weekCombo.setShowHintInField(true);
 		
-		
-		
-				
+		 
 				
 		
 		form.setFields(academicYearCombo , academicTermCombo ,regionCombo, districtCombo , schoolCombo, monthCombo  , weekCombo );
