@@ -76,11 +76,14 @@ public class DistrictDashboard {
 
 		LearnerEnrollmentSummaryListgrid listgrid = new LearnerEnrollmentSummaryListgrid();
 		listgrid.setHeight(300);
-		listgrid.addRecordsToGrid(dto.getLearnsEnrolledByGender());
+		//listgrid.addRecordsToGrid(dto.getLearnsEnrolledByGender());
+		listgrid.addRecordsToGrid(dto.getPrimarylearnersEnrolledByGenderRegion());
 
 		TeacherEnrollmentSummaryListgrid teacherEnrollmentSummaryListgrid = new TeacherEnrollmentSummaryListgrid();
 		teacherEnrollmentSummaryListgrid.setHeight(300);
-		teacherEnrollmentSummaryListgrid.addRecordsToGrid(dto.getStaffEnrolledByGender());
+		//teacherEnrollmentSummaryListgrid.addRecordsToGrid(dto.getStaffEnrolledByGender());
+		
+		teacherEnrollmentSummaryListgrid.addRecordsToGrid(dto.getPrimaryStaffEnrolledByGenderByRegion());
 
 		VLayout col3 = new VLayout();
 		col3.addMember(listgrid);

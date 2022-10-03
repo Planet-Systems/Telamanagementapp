@@ -39,6 +39,8 @@ import com.planetsystems.tela.dto.enums.SchoolGenderCategory;
 import com.planetsystems.tela.dto.enums.SchoolLevel;
 import com.planetsystems.tela.dto.enums.SchoolOwnership;
 import com.planetsystems.tela.dto.enums.SchoolType;
+import com.planetsystems.tela.dto.exports.SchoolExportDTO;
+import com.planetsystems.tela.dto.reports.DataUploadStatSummaryDTO;
 import com.planetsystems.tela.managementapp.client.event.HighlightActiveLinkEvent;
 import com.planetsystems.tela.managementapp.client.gin.SessionManager;
 import com.planetsystems.tela.managementapp.client.place.NameTokens;
@@ -137,6 +139,8 @@ public class SchoolCategoryPresenter
 
 	}
 
+	List<SchoolDTO> schoolDTOs = new ArrayList<>();
+
 	@Override
 	protected void onReset() {
 		super.onReset();
@@ -179,7 +183,7 @@ public class SchoolCategoryPresenter
 					MenuButton delete = new MenuButton("Delete");
 					MenuButton filter = new MenuButton("Filter");
 					MenuButton importbutton = new MenuButton("Import");
-					// MenuButton initiateClasses = new MenuButton("Setup Defualt Classes");
+					MenuButton exportbutton = new MenuButton("Export");
 
 					MenuButton moreButton = new MenuButton("More");
 
@@ -188,7 +192,7 @@ public class SchoolCategoryPresenter
 					buttons.add(edit);
 					buttons.add(delete);
 					buttons.add(importbutton);
-					// buttons.add(initiateClasses);
+					buttons.add(exportbutton);
 					buttons.add(filter);
 					buttons.add(moreButton);
 
@@ -197,10 +201,10 @@ public class SchoolCategoryPresenter
 					editSchool(edit);
 					getAllSchools();
 					selectFilterSchoolOption(filter);
-					// setupSchoolInitialClasses(initiateClasses);
 
 					importSchools(importbutton);
 					moreActions(moreButton);
+					exportSchoolList(exportbutton);
 
 					getView().getControlsPane().addMenuButtons("School/Institution Registration & Setup", buttons);
 
@@ -872,6 +876,8 @@ public class SchoolCategoryPresenter
 			@Override
 			public void onNetworkResult(RequestResult result) {
 				getView().getSchoolPane().getListGrid().addRecordsToGrid(result.getSchoolDTOs());
+
+				schoolDTOs = result.getSchoolDTOs();
 			}
 		});
 	}
@@ -1289,6 +1295,7 @@ public class SchoolCategoryPresenter
 					@Override
 					public void onNetworkResult(RequestResult result) {
 						getView().getSchoolPane().getListGrid().addRecordsToGrid(result.getSchoolDTOs());
+						schoolDTOs = result.getSchoolDTOs();
 					}
 				});
 
@@ -2119,7 +2126,6 @@ public class SchoolCategoryPresenter
 			}
 		});
 
-		 
 		assignLocalGovernment.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 			@Override
@@ -2137,7 +2143,7 @@ public class SchoolCategoryPresenter
 
 			}
 		});
-		
+
 		assignSchoolLevel.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 			@Override
@@ -2155,7 +2161,7 @@ public class SchoolCategoryPresenter
 
 			}
 		});
-		
+
 		assignRolloutPhanse.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 			@Override
@@ -2374,9 +2380,127 @@ public class SchoolCategoryPresenter
 
 			}
 		});
-
 		window.show();
 
+	}
+
+	private void exportSchoolList(MenuButton menuButton) {
+		menuButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (schoolDTOs != null && !schoolDTOs.isEmpty()) {
+					exportSchoolList(schoolDTOs);
+				} else {
+					SC.warn("ERROR", "There is no data to export");
+				}
+
+			}
+		});
+
+	}
+
+	private void exportSchoolList(List<SchoolDTO> dtos) {
+
+		List<SchoolExportDTO> list = new ArrayList<SchoolExportDTO>();
+
+		for (SchoolDTO schoolDTO : dtos) {
+
+			SchoolExportDTO dto = new SchoolExportDTO();
+			// dto.setEmisNumber(null);
+			// dto.setTelaUID(null);
+
+			dto.setName(schoolDTO.getName());
+
+			if (schoolDTO.getSchoolCategoryDTO() != null) {
+				dto.setCategory(schoolDTO.getSchoolCategoryDTO().getName());
+			} else {
+				dto.setCategory("-");
+			}
+
+			if (schoolDTO.getLatitude() != null) {
+				dto.setLatitude(schoolDTO.getLatitude());
+			} else {
+				dto.setLatitude("-");
+			}
+
+			if (schoolDTO.getLongitude() != null) {
+				dto.setLongitude(schoolDTO.getLongitude());
+			} else {
+				dto.setLongitude("-");
+			}
+
+			if (schoolDTO.getDistrictDTO() != null) {
+				dto.setDistrict(schoolDTO.getDistrictDTO().getName());
+			} else {
+				dto.setDistrict("-");
+			}
+
+			if (schoolDTO.getDeviceNumber() != null) {
+				dto.setTelephoneNumber(schoolDTO.getDeviceNumber());
+			} else {
+				dto.setTelephoneNumber("-");
+			}
+
+			if (schoolDTO.getSchoolLevel() != null) {
+				dto.setSchoolLevel(schoolDTO.getSchoolLevel());
+			} else {
+				dto.setSchoolLevel("-");
+			}
+
+			if (schoolDTO.getSchoolOwnership() != null) {
+				dto.setSchoolOwnership(schoolDTO.getSchoolOwnership());
+			} else {
+				dto.setSchoolOwnership("-");
+			}
+
+			if (schoolDTO.getSchoolType() != null) {
+				dto.setSchoolType(schoolDTO.getSchoolType());
+			} else {
+				dto.setSchoolType("-");
+			}
+
+			if (schoolDTO.getSchoolGenderCategory() != null) {
+				dto.setSchoolGenderCategory(schoolDTO.getSchoolGenderCategory());
+			} else {
+				dto.setSchoolGenderCategory("-");
+			}
+
+			if (schoolDTO.getLicensed() != null) {
+				dto.setLicensed(schoolDTO.getLicensed());
+			} else {
+				dto.setLicensed("-");
+			}
+
+			if (schoolDTO.getRolloutPhase() != null) {
+				dto.setRolloutPhase(schoolDTO.getRolloutPhase());
+			} else {
+				dto.setRolloutPhase("-");
+			}
+
+			if (schoolDTO.getTelaSchoolNumber() != null) {
+				dto.setTelaSchoolNumber(schoolDTO.getTelaSchoolNumber());
+			} else {
+				dto.setTelaSchoolNumber("-");
+			}
+
+			list.add(dto);
+
+		}
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+		map.put(NetworkDataUtil.ACTION, RequestConstant.EXCEL_SCHOOL_LIST_EXPORT);
+		map.put(RequestConstant.EXCEL_SCHOOL_LIST_EXPORT, list);
+
+		NetworkDataUtil.callNetwork(dispatcher, placeManager, map, new NetworkResult() {
+
+			@Override
+			public void onNetworkResult(RequestResult result) {
+
+				UtilityManager.getInstance().download(result.getSystemFeedbackDTO().getMessage());
+			}
+		});
 	}
 
 }

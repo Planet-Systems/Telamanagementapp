@@ -352,6 +352,8 @@ public class RequestConstant {
 	public static final String EXCEL_Data_upload_summary_stat = "EXCEL_Data_upload_summary_stat";
 	
 	public static final String School_Data_Batch_Process = "School_Data_Batch_Process";
+	
+	public static final String EXCEL_SCHOOL_LIST_EXPORT = "EXCEL_SCHOOL_LIST_EXPORT";
 	 
 
 }

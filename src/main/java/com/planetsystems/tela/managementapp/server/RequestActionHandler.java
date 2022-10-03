@@ -74,6 +74,7 @@ import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSumm
 import com.planetsystems.tela.dto.dashboard.SchoolDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.exports.DataExportRequestDTO;
 import com.planetsystems.tela.dto.exports.DataExportResponseDTO;
+import com.planetsystems.tela.dto.exports.SchoolExportDTO;
 import com.planetsystems.tela.dto.exports.SchoolStaffExportDTO;
 import com.planetsystems.tela.dto.reports.DataUploadStatDTO;
 import com.planetsystems.tela.dto.reports.DataUploadStatSummaryDTO;
@@ -7535,6 +7536,42 @@ public class RequestActionHandler implements ActionHandler<RequestAction, Reques
 				return new RequestResult(feedback);
 
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}else if (action.getRequest()
+					.equalsIgnoreCase(RequestConstant.EXCEL_SCHOOL_LIST_EXPORT)
+					&& action.getRequestBody().get(RequestConstant.LOGIN_TOKEN) != null) {
+				
+				SystemFeedbackDTO feedback = new SystemFeedbackDTO();
+
+				@SuppressWarnings("unchecked")
+				List<SchoolExportDTO> list = (List<SchoolExportDTO>) action.getRequestBody()
+						.get(RequestConstant.EXCEL_SCHOOL_LIST_EXPORT);
+
+				String refId = "excel_download";
+
+				Gson gson = new Gson();
+				String jsonString = gson.toJson(list);
+
+				// System.out.println("jsonString: " + jsonString);
+
+				DataExportRequestDTO dto = new DataExportRequestDTO();
+				dto.setJson(jsonString);
+				dto.setFileName("school_list.csv");
+				dto.setRefId(refId);
+
+				Client client = ClientBuilder.newClient();
+
+				DataExportResponseDTO response = client.target(REPORT_GEN_API).path("generatefile")
+						.request(MediaType.APPLICATION_JSON).headers(headers)
+						.post(Entity.entity(dto, MediaType.APPLICATION_JSON), DataExportResponseDTO.class);
+
+				if (response != null) {
+					feedback.setResponse(response.isResponse());
+					feedback.setMessage(response.getMessage());
+				}
+				client.close();
+
+				return new RequestResult(feedback);
+
 			}
 
 			else if (action.getRequest().equalsIgnoreCase(RequestConstant.GET_FILE_UPLOAD_LINK)) {

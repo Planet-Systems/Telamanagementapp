@@ -59,6 +59,7 @@ import com.planetsystems.tela.dto.dashboard.DataOutPutDTO;
 import com.planetsystems.tela.dto.dashboard.DistrictDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.OverallDailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.SchoolDailyAttendanceEnrollmentSummaryDTO;
+import com.planetsystems.tela.dto.exports.SchoolExportDTO;
 import com.planetsystems.tela.dto.exports.SchoolStaffExportDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfMonthTimeAttendanceDTO;
 import com.planetsystems.tela.dto.reports.SchoolEndOfTermTimeAttendanceDTO;
@@ -209,6 +210,14 @@ public class RequestResult implements Result {
 	private List<DataUploadStatSummaryDTO> dataUploadStatSummaryDTOs;
 
 	private ActionDTO actionDTO;
+	
+	private List<SchoolExportDTO> schoolExportDTOs;
+	
+	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, List<SchoolExportDTO> schoolExportDTOs,SchoolExportDTO dto) {
+		super();
+		this.systemFeedbackDTO = systemFeedbackDTO;
+		this.schoolExportDTOs = schoolExportDTOs;
+	}
 
 	public RequestResult(SystemFeedbackDTO systemFeedbackDTO, ActionDTO actionDTO) {
 		super();
@@ -1087,6 +1096,10 @@ public class RequestResult implements Result {
 
 	public ActionDTO getActionDTO() {
 		return actionDTO;
+	}
+
+	public List<SchoolExportDTO> getSchoolExportDTOs() {
+		return schoolExportDTOs;
 	}
 
 }
