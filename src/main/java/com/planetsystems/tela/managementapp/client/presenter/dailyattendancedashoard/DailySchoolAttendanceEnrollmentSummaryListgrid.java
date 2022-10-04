@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.planetsystems.tela.dto.dashboard.DailySchoolAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -20,15 +21,16 @@ public class DailySchoolAttendanceEnrollmentSummaryListgrid extends SuperListGri
 		ListGridField staffId = new ListGridField(StaffId, "Id");
 		staffId.setHidden(true);
 
-		ListGridField staff = new ListGridField(Staff, "Name");
+		ListGridField staff = new ListGridField(Staff, "Staff Name");
 
-		ListGridField role = new ListGridField(Role, "Role");
+		ListGridField role = new ListGridField(Role, "Position");
 
 		ListGridField clockInTime = new ListGridField(ClockInTime, "Clock-In Time");
 
 		this.setFields(staffId, staff, role, clockInTime);
 		this.setWrapHeaderTitles(true);
-		this.setHeaderHeight(50);
+		//this.setHeaderHeight(50);
+		this.setSelectionType(SelectionStyle.NONE);
 	}
 
 	public ListGridRecord addRowData(DailySchoolAttendanceEnrollmentSummaryDTO dto) {

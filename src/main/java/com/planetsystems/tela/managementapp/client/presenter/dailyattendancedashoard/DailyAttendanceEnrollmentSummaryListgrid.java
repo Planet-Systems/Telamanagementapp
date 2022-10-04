@@ -5,6 +5,7 @@ import java.util.List;
 import com.planetsystems.tela.dto.dashboard.DailyAttendanceEnrollmentSummaryDTO;
 import com.planetsystems.tela.dto.dashboard.DataOutPutByGenderDTO;
 import com.planetsystems.tela.managementapp.client.widget.SuperListGrid;
+import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -42,6 +43,7 @@ public class DailyAttendanceEnrollmentSummaryListgrid  extends SuperListGrid {
 		this.setFields(id,district, enroledSchools, clockedSchools, enrolledTeachers, clockedInteachers,enroledLearners,clockedLearners);
 		this.setWrapHeaderTitles(true);
 		this.setHeaderHeight(50);
+		this.setSelectionType(SelectionStyle.NONE);
 	}
 
 	public ListGridRecord addRowData(DailyAttendanceEnrollmentSummaryDTO dto) {
