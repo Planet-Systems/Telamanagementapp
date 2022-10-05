@@ -2408,8 +2408,18 @@ public class SchoolCategoryPresenter
 		for (SchoolDTO schoolDTO : dtos) {
 
 			SchoolExportDTO dto = new SchoolExportDTO();
-			// dto.setEmisNumber(null);
-			// dto.setTelaUID(null);
+			if(schoolDTO.getEmisNumber()!=null) {
+				dto.setEmisNumber(schoolDTO.getEmisNumber());
+			}else {
+				dto.setEmisNumber("-");
+			}
+			
+			if(schoolDTO.getTelaSchoolUID()!=null) {
+				 dto.setTelaUID(schoolDTO.getTelaSchoolUID());
+			}else {
+				dto.setTelaUID("-");
+			}
+			
 
 			dto.setName(schoolDTO.getName());
 
@@ -2484,6 +2494,7 @@ public class SchoolCategoryPresenter
 			} else {
 				dto.setTelaSchoolNumber("-");
 			}
+			 
 
 			list.add(dto);
 

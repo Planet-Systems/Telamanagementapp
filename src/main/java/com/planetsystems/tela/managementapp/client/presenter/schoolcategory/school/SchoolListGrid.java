@@ -38,6 +38,9 @@ public class SchoolListGrid extends SuperListGrid {
 	
 	public static String REGION = "region";
 	public static String REGION_ID = "regionId";
+	
+	public static String TelaSchoolUID="telaSchoolUID";
+	public static String EMISNumber="EMISNumber";
 
 
 	public SchoolListGrid() { 
@@ -90,9 +93,14 @@ public class SchoolListGrid extends SuperListGrid {
 		
 		ListGridField regionIdField = new ListGridField(REGION_ID, "Sub-Region Id");
 		regionIdField.setHidden(true);
+		
+		ListGridField telaSchoolUID= new ListGridField(TelaSchoolUID, "Tela School Number");
+		ListGridField emisNumber= new ListGridField(EMISNumber, "EMIS Number");
+		codeField.setHidden(true); 
+		emisNumber.setHidden(true); 
 		  
-		this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
-				regionField,regionIdField,latitudeField , latitudeField,rollout,telaSchoolNumber);
+		this.setFields(idField ,categoryIdField , districtIdField , telaSchoolUID,deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
+				regionField,regionIdField,latitudeField , latitudeField,rollout,telaSchoolNumber,emisNumber);
 		this.setDataSource(dataSource);
 		this.setSelectionType(SelectionStyle.SIMPLE);
 		this.setWrapHeaderTitles(true);
@@ -143,6 +151,9 @@ public class SchoolListGrid extends SuperListGrid {
 		record.setAttribute(Rollout, schoolDTO.getRolloutPhase());
 		
 		record.setAttribute(TelaSchoolNumber, schoolDTO.getTelaSchoolNumber());
+		
+		record.setAttribute(TelaSchoolUID, schoolDTO.getTelaSchoolUID());
+		record.setAttribute(EMISNumber, schoolDTO.getEmisNumber());
 		
 		return record;
 	}
@@ -214,10 +225,12 @@ public class SchoolListGrid extends SuperListGrid {
 			 
 			
 			DataSourceTextField regionIdField = new DataSourceTextField(REGION_ID, "Sub-Region Id");
-			 
+			
+			DataSourceTextField telaSchoolUID= new DataSourceTextField(TelaSchoolUID, "Tela School Number");
+			DataSourceTextField emisNumber= new DataSourceTextField(EMISNumber, "EMIS Number");
 			  
-			this.setFields(idField ,categoryIdField , districtIdField , deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
-					regionField,regionIdField,latitudeField , latitudeField,rollout,telaSchoolNumber);
+			this.setFields(idField ,categoryIdField , districtIdField , telaSchoolUID,deviceNumberField, codeField , nameField , schoolLevel,schoolOwnership,schoolType,schoolGenderCategory,licensed,categoryField, districtField , attendanceTrackedField , locationField , 
+					regionField,regionIdField,latitudeField , latitudeField,rollout,telaSchoolNumber,emisNumber);
 			
 			setClientOnly(true);
 
