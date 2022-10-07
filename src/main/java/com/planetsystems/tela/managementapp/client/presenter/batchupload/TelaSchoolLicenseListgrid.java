@@ -16,6 +16,7 @@ public class TelaSchoolLicenseListgrid extends SuperListGrid {
 	public static String LicenseKey = "licenseKey";
 	public static String School = "school";
 	public static String District = "district";
+	public static String SchoolTelaNumber = "schoolTelaNumber";
 
 	private TelaSchoolLicenseSource dataSource;
 
@@ -30,11 +31,18 @@ public class TelaSchoolLicenseListgrid extends SuperListGrid {
 		ListGridField licenseKey = new ListGridField(LicenseKey, "License Key");
 		ListGridField school = new ListGridField(School, "School");
 		ListGridField district = new ListGridField(District, "District");
+		
+		ListGridField schoolTelaNumber = new ListGridField(SchoolTelaNumber, "Tela Number");
+		 
 
 		this.setDataSource(dataSource);
-		this.setFields(idField, district, school, licenseKey);
+		this.setFields(idField, district, school,schoolTelaNumber, licenseKey);
 		this.setSelectionType(SelectionStyle.SIMPLE);
 		this.setWrapHeaderTitles(true);
+		
+		ListGridField rowNumberFieldProperties=new ListGridField();
+		rowNumberFieldProperties.setWidth(40); 
+		this.setRowNumberFieldProperties(rowNumberFieldProperties);
 	}
 
 	public ListGridRecord addRowData(TelaSchoolLicenseDTO dto) {
@@ -47,10 +55,13 @@ public class TelaSchoolLicenseListgrid extends SuperListGrid {
 
 		if (dto.getSchool() != null) {
 			record.setAttribute(School, dto.getSchool().getName());
+			record.setAttribute(SchoolTelaNumber, dto.getSchool().getTelaSchoolUID());
 
+			
 			if (dto.getSchool().getDistrictDTO() != null) {
 				record.setAttribute(District, dto.getSchool().getDistrictDTO().getName());
 			}
+			
 		}
 
 		return record;
@@ -88,8 +99,9 @@ public class TelaSchoolLicenseListgrid extends SuperListGrid {
 			DataSourceTextField licenseKey = new DataSourceTextField(LicenseKey, "License Key");
 			DataSourceTextField school = new DataSourceTextField(School, "School");
 			DataSourceTextField district = new DataSourceTextField(District, "District");
+			DataSourceTextField schoolTelaNumber = new DataSourceTextField(SchoolTelaNumber, "Tela Number");
 
-			this.setFields(idField, district, school, licenseKey);
+			this.setFields(idField, district, school, schoolTelaNumber,licenseKey);
 			setClientOnly(true);
 
 		}

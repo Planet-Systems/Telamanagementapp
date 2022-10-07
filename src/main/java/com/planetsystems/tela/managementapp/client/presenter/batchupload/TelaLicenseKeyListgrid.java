@@ -46,6 +46,10 @@ public class TelaLicenseKeyListgrid extends SuperListGrid {
 				expirationDate);
 		this.setSelectionType(SelectionStyle.SIMPLE);
 		this.setWrapHeaderTitles(true);
+		
+		ListGridField rowNumberFieldProperties=new ListGridField();
+		rowNumberFieldProperties.setWidth(40); 
+		this.setRowNumberFieldProperties(rowNumberFieldProperties);
 	}
 
 	public ListGridRecord addRowData(TelaLicenseKeyDTO dto) {
